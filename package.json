@@ -1,0 +1,19 @@
+{
+  "name": "tree-of-builder",
+  "version": "1.0.0",
+  "description": "",
+  "main": "hello.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/PieceOfPaper/tree-of-builder.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/PieceOfPaper/tree-of-builder/issues"
+  },
+  "homepage": "https://gitlab.com/PieceOfPaper/tree-of-builder#README"
+}
