@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://gitlab.com/PieceOfPaper/tree-of-builder/issues"
   },
-  "homepage": "https://gitlab.com/PieceOfPaper/tree-of-builder#README"
+  "homepage": "https://gitlab.com/PieceOfPaper/tree-of-builder#README",
+  "dependencies": {
+    "express": "^4.16.3"
+  }
 }
