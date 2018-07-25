@@ -17,6 +17,7 @@
   },
   "homepage": "https://gitlab.com/PieceOfPaper/tree-of-builder#README",
   "dependencies": {
+    "csv-parser": "^1.12.1",
     "express": "^4.16.3"
   }
 }

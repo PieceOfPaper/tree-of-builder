@@ -1,7 +1,9 @@
 var express = require('express');
 var fs = require('fs');
-var app = express();
 
+var csv = require('csv-parser');
+
+var app = express();
 var port = 3000;
 
 app.use(express.static('web'));
@@ -25,6 +27,25 @@ app.get('/', function (req, response) {
          }
     });
   res.send('Tree of Builder')
+});
+
+var configTable = [];
+fs.createReadStream('web/Test/config.ies')
+  .pipe(csv())
+  .on('data', function (data) {
+    //console.log('ClassID: %s DefNumValue: %s ClassName: %s Type: %s', data.ClassID, data.DefNumValue, data.ClassName, data.Type);
+    configTable.push(data);
+  });
+
+app.get('/Test_CSV', function (req, response) {
+  var output = '<h1>Test SCV</h1>';
+  for(var i = 0; i < configTable.length; i ++) {
+    //console.log('ClassID: %s ClassName: %s', item.ClassID, item.ClassName);
+    output += '<p>[' + configTable[i].ClassID + '] ' + configTable[i].ClassName + '</p>';
+  }
+    //response.writeHead(200, {'Content-Type': 'text/html'});	
+    response.send(output);
+    
 });
 
 // TO DO : 라우트 쪼개서 작업하자
