@@ -27,7 +27,7 @@ app.get('/', function (req, response) {
     });
 });
 
-var skillPage = require('./web_script/web_skill');
+var skillPage = require('./web_script/web_skill')(app);
 app.use('/Skill', skillPage);
 
 var testPage = require('./web_script/web_test')(app);
