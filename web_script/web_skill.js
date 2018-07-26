@@ -7,7 +7,8 @@ module.exports = function(app){
 
   var search_box = fs.readFileSync('./web/Skill/search_box.html');
 
-  route.get('/', function (req, response) {
+  route.get('/', function (request, response) {
+
     var output = '<html>';
     output +=   '<head>';
     output +=     '<title>Skill Page</title>';
@@ -20,7 +21,26 @@ module.exports = function(app){
     output += '</html>';
 
     response.send(output);
+    console.log(request.query.searchType + " " + request.query.searchName);
   });
+
+  app.get('/:searchType/:searchName', function(request, response){
+
+    var output = '<html>';
+    output +=   '<head>';
+    output +=     '<title>Skill Page (Searched)</title>';
+    output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+    output +=   '</head>';
+    output +=   '<body>';
+    output += search_box.toString();
+    output +=     '<br/>';
+    output +=   '</body>';
+    output += '</html>';
+
+    response.send(output);
+    
+    console.log(request.params.searchType + " " + request.params.searchName);
+  })
 
   return route;
 }
