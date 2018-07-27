@@ -44,6 +44,7 @@ module.exports = function(app){
     for (var i = 0; i < resultArray.length; i ++){
       output += '<tr>';
       output += '<td>' + resultArray[i].ClassID + '</td>';
+      output += '<td><img src="../img/icon/icon_' + resultArray[i].Icon  + '.png"/></td>';
       output += '<td>' + resultArray[i].Name + '</td>';
       output += '<td>' + resultArray[i].ClassName + '</td>';
       output += '</tr>';

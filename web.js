@@ -5,6 +5,29 @@ var app = express();
 var port = 3000;
 
 
+// 아이콘 이미지 복사
+if (!fs.existsSync('./web/img')) fs.mkdirSync('./web/img');
+if (!fs.existsSync('./web/img/icon')) fs.mkdirSync('./web/img/icon');
+
+copyIconImage('../Tree-of-IPF/kr/ui.ipf/icon');
+function copyIconImage(path) {
+  fs.readdir(path, function(error, files) {
+    if (files === undefined || files.length === 0)
+      return;
+
+    for (var i = 0; i < files.length; i ++) {
+      if (files[i].indexOf('.png') > -1 || files[i].indexOf('.PNG') > -1) {
+        var inStr = fs.createReadStream(path + '/' + files[i]);
+        var outStr = fs.createWriteStream('./web/img/icon/' + files[i]);
+        inStr.pipe(outStr);
+      } else {
+        copyIconImage(path + '/' + files[i])
+      }
+    }
+  });
+}
+
+
 app.use(express.static('web'));
  
 app.get('/', function (req, response) {
