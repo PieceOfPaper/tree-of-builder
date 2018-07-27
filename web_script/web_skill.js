@@ -7,8 +7,7 @@ module.exports = function(app){
 
   var search_box = fs.readFileSync('./web/Skill/search_box.html');
   var skillTable = [];
-  //fs.createReadStream('../Tree-of-IPF/kr/ies.ipf//skill.ies')
-  fs.createReadStream('./data/skill.ies')
+  fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies')
     .pipe(csv())
     .on('data', function (data) {
       skillTable.push(data);
