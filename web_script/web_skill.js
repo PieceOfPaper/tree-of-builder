@@ -2,6 +2,7 @@ module.exports = function(app){
   var express = require('express');
   var fs = require('fs');
   var csv = require('csv-parser');
+  var url = require('url');
   
   var route = express.Router();
 
@@ -14,7 +15,13 @@ module.exports = function(app){
     });
 
   route.get('/', function (request, response) {
+    // id값이 존재하는 경우, 상세 페이지로 이동
+    if (request.query.id != undefined && request.query.id != ''){
+      skillDetailPage(request.query.id, request, response);
+      return;
+    }
 
+    // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
     if (request.query.searchName === undefined || request.query.searchName === ''){
       for (var i = 0; i < skillTable.length; i ++){
@@ -43,7 +50,7 @@ module.exports = function(app){
     output +=     '<table style="width:100%">';
     for (var i = 0; i < resultArray.length; i ++){
       output += '<tr>';
-      output += '<td>' + resultArray[i].ClassID + '</td>';
+      output += '<td><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
       output += '<td><img src="../img/icon/icon_' + resultArray[i].Icon  + '.png"/></td>';
       output += '<td>' + resultArray[i].Name + '</td>';
       output += '<td>' + resultArray[i].ClassName + '</td>';
@@ -56,6 +63,10 @@ module.exports = function(app){
     response.send(output);
     //console.log(request.query.searchType + " " + request.query.searchName);
   });
+
+  function skillDetailPage(classId, request, response) {
+    response.send(classId);
+  }
 
   return route;
 }
