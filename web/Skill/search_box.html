@@ -3,7 +3,7 @@
         <option value="Name">Name</option>
         <option value="ClassName">ClassName</option>
     </select>
-    <input type="text" id="searchName">
+    <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
     <button id="searchBtn" onclick="search()">Search</button>
 </div>
 <div class="filder-area">
@@ -25,6 +25,12 @@
 
         if (!searchType.value || searchType.value === undefined || searchType.value === ""){
             searchType.value = "Name";
+        }
+    }
+
+    function searchName_enterCheck(){
+        if(event.keyCode == 13){
+            search();
         }
     }
 
