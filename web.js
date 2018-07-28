@@ -1,6 +1,7 @@
 var express = require('express');
 var fs = require('fs');
 var csv = require('csv-parser');
+var xml = require('xml-parser');
 
 var app = express();
 var port = 3000;
@@ -39,6 +40,18 @@ function copyIconImage(path) {
     }
   });
 }
+
+var classiconXmlData;
+var classiconXmlList;
+fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/classicon.xml', function(error, data){
+  var classiconXmlData = xml(data.toString());
+  classiconXmlList = classiconXmlData.root.children[0].children;
+  // console.log(xmlData.root.children.length);
+  // console.log(xmlData.root.children[0].children.length);
+  // console.log(xmlData.root.children[0].children[0].name);
+  // console.log(xmlData.root.children[0].children[0].attributes['name']);
+  // console.log(xmlData.root.children[0].children[0].attributes[0]);
+});
 
 
 // ---------- 페이지 세팅
