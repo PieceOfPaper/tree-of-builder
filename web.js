@@ -1,11 +1,20 @@
 var express = require('express');
 var fs = require('fs');
+var csv = require('csv-parser');
 
 var app = express();
 var port = 3000;
 
 
-// 아이콘 이미지 복사
+// ---------- 테이블 데이터 불러오기
+var tableData = [];
+tableData['skill'] = [];
+fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies').pipe(csv()).on('data', function (data) {
+  tableData['skill'].push(data);
+});
+
+
+// ---------- 아이콘 이미지 복사
 if (!fs.existsSync('./web/img')) fs.mkdirSync('./web/img');
 if (!fs.existsSync('./web/img/icon')) fs.mkdirSync('./web/img/icon');
 
@@ -28,6 +37,7 @@ function copyIconImage(path) {
 }
 
 
+// ---------- 페이지 세팅
 app.use(express.static('web'));
  
 app.get('/', function (req, response) {
@@ -50,14 +60,15 @@ app.get('/', function (req, response) {
     });
 });
 
-var skillPage = require('./web_script/web_skill')(app);
+var skillPage = require('./web_script/web_skill')(app, tableData);
 app.use('/Skill', skillPage);
 
-var testPage = require('./web_script/web_test')(app);
+var testPage = require('./web_script/web_test')(app, tableData);
 app.use('/Test', testPage);
 
 
 
+// ---------- ON!
 app.listen(port, function (){
   console.log("Connect " + port);
 });

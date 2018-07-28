@@ -1,18 +1,12 @@
-module.exports = function(app){
+module.exports = function(app, tableData){
   var express = require('express');
   var fs = require('fs');
-  var csv = require('csv-parser');
   var url = require('url');
   
   var route = express.Router();
 
   var search_box = fs.readFileSync('./web/Skill/search_box.html');
-  var skillTable = [];
-  fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies')
-    .pipe(csv())
-    .on('data', function (data) {
-      skillTable.push(data);
-    });
+  var skillTable = tableData['skill'];
 
   route.get('/', function (request, response) {
     // id값이 존재하는 경우, 상세 페이지로 이동
