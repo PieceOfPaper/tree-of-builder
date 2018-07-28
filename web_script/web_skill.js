@@ -6,6 +6,7 @@ module.exports = function(app, tableData){
   var route = express.Router();
 
   var search_box = fs.readFileSync('./web/Skill/search_box.html');
+  var jobTable = tableData['job'];
   var skillTable = tableData['skill'];
 
   route.get('/', function (request, response) {
@@ -81,7 +82,7 @@ module.exports = function(app, tableData){
     output +=       '<tr>';
     output +=         '<td>' + skillTable[index].ClassID + '</td>';
     output +=         '<td>' + skillTable[index].ClassName + '</td>';
-    output +=         '<td>' + skillTable[index].Job + '</td>';
+    output +=         '<td>' + JobToJobName(skillTable[index].Job) + '</td>';
     output +=         '<td>' + skillTable[index].Rank + '</td>';
     output +=       '</tr>';
     output +=     '</table>';
@@ -111,6 +112,13 @@ module.exports = function(app, tableData){
     output += '</html>';
 
     response.send(output);
+  }
+
+  function JobToJobName(job){
+    for (var i = 0; i < jobTable.length; i ++){
+      if (jobTable[i].EngName === job) return jobTable[i].Name;
+    }
+    return job;
   }
 
   return route;

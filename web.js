@@ -8,6 +8,10 @@ var port = 3000;
 
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
+tableData['job'] = [];
+fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/job.ies').pipe(csv()).on('data', function (data) {
+  tableData['job'].push(data);
+});
 tableData['skill'] = [];
 fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies').pipe(csv()).on('data', function (data) {
   tableData['skill'].push(data);
