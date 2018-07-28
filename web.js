@@ -3,6 +3,9 @@ var fs = require('fs');
 var csv = require('csv-parser');
 var xml = require('xml-parser');
 
+var TGA = require('tga');
+var PNG = require('pngjs').PNG;
+
 var app = express();
 var port = 3000;
 
@@ -46,6 +49,20 @@ var classiconXmlList;
 fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/classicon.xml', function(error, data){
   var classiconXmlData = xml(data.toString());
   classiconXmlList = classiconXmlData.root.children[0].children;
+
+  for (var i = 0; i < classiconXmlList.length; i ++){
+    // tga 2 png
+    var tgapath = classiconXmlList[i].attributes['file'].replace(/\\/g, '/');
+    var tga = new TGA(fs.readFileSync('../Tree-of-IPF/kr/ui.ipf' + tgapath));
+    var png = new PNG({
+        width: tga.width,
+        height: tga.height
+    });
+    png.data = tga.pixels;
+    png.pack().pipe(fs.createWriteStream('./web/img' + tgapath + '.png'));
+
+    
+  }
   // console.log(xmlData.root.children.length);
   // console.log(xmlData.root.children[0].children.length);
   // console.log(xmlData.root.children[0].children[0].name);
