@@ -5,6 +5,7 @@ var xml = require('xml-parser');
 
 var TGA = require('tga');
 var PNG = require('pngjs').PNG;
+var PNGCrop = require('png-crop');
 
 var app = express();
 var port = 3000;
@@ -44,31 +45,48 @@ function copyIconImage(path) {
   });
 }
 
+
+// ---------- 클래스 아이콘 이미지 복사
 var classiconXmlData;
 var classiconXmlList;
 fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/classicon.xml', function(error, data){
   var classiconXmlData = xml(data.toString());
   classiconXmlList = classiconXmlData.root.children[0].children;
-
-  for (var i = 0; i < classiconXmlList.length; i ++){
-    // tga 2 png
-    var tgapath = classiconXmlList[i].attributes['file'].replace(/\\/g, '/');
-    var tga = new TGA(fs.readFileSync('../Tree-of-IPF/kr/ui.ipf' + tgapath));
-    var png = new PNG({
-        width: tga.width,
-        height: tga.height
-    });
-    png.data = tga.pixels;
-    png.pack().pipe(fs.createWriteStream('./web/img' + tgapath + '.png'));
-
-    
-  }
-  // console.log(xmlData.root.children.length);
-  // console.log(xmlData.root.children[0].children.length);
-  // console.log(xmlData.root.children[0].children[0].name);
-  // console.log(xmlData.root.children[0].children[0].attributes['name']);
-  // console.log(xmlData.root.children[0].children[0].attributes[0]);
+  classiconXmlListIndex = 0;
+  classiconTGA2PNG(0);
 });
+function classiconTGA2PNG(index){
+  if (index >= classiconXmlList.length){
+    classiconXmlListIndex = 0;
+    classiconCrop(classiconXmlListIndex);
+    return;
+  }
+  var tgapath = classiconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var tga = new TGA(fs.readFileSync('../Tree-of-IPF/kr/ui.ipf' + tgapath));
+  var png = new PNG({
+      width: tga.width,
+      height: tga.height
+  });
+  png.data = tga.pixels;
+  png.pack().pipe(fs.createWriteStream('./web/img' + tgapath + '.png').on('close', function() {
+    console.log('file done ' + classiconXmlListIndex);
+    classiconTGA2PNG(classiconXmlListIndex ++);
+  }));
+}
+function classiconCrop(index){
+  if (index >= classiconXmlList.length){
+    return;
+  }
+  var tgapath = classiconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var rect = classiconXmlList[index].attributes['imgrect'].split(' ');
+  //console.log(classiconXmlList[i].attributes['name'] + ' ' + rect[0] + ' ' + rect[1] + ' ' + rect[2] + ' ' + rect[3]);
+  var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
+  PNGCrop.crop('./web/img' + tgapath + '.png', './web/img/icon/' + classiconXmlList[index].attributes['name'] + '.png', config1, function(err) {
+    if (err) throw err;
+    console.log('done! ' + classiconXmlListIndex);
+    classiconCrop(classiconXmlListIndex ++);
+  });
+}
 
 
 // ---------- 페이지 세팅
