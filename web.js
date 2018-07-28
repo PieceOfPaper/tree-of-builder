@@ -1,6 +1,11 @@
 var express = require('express');
 var fs = require('fs');
 var csv = require('csv-parser');
+var xml = require('xml-parser');
+
+var TGA = require('tga');
+var PNG = require('pngjs').PNG;
+var PNGCrop = require('png-crop');
 
 var app = express();
 var port = 3000;
@@ -41,6 +46,167 @@ function copyIconImage(path) {
 }
 
 
+// ---------- 클래스 아이콘 이미지 복사
+var classiconXmlData;
+var classiconXmlList = [];
+var classiconXmlListIndex = 0;
+classiconLoad();
+function classiconLoad(){
+  fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/classicon.xml', function(error, data){
+    var classiconXmlData = xml(data.toString());
+    //classiconXmlList = classiconXmlData.root.children[0].children;
+    for (var i = 0; i < classiconXmlData.root.children.length; i ++){
+      for (var j = 0; j < classiconXmlData.root.children[i].children.length; j ++){
+        if (classiconXmlData.root.children[i].children[j].attributes['file'].indexOf('.tga') < 0) continue;
+        classiconXmlList.push(classiconXmlData.root.children[i].children[j]);
+      }
+    }
+    console.log('classiconTGA2PNG Start');
+    classiconXmlListIndex = 0;
+    classiconTGA2PNG(0);
+  });
+}
+function classiconTGA2PNG(index){
+  if (index >= classiconXmlList.length){
+    return;
+  }
+  if (fs.existsSync('./web/img' + classiconXmlList[index].attributes['file'].replace(/\\/g, '/') + '.png')){
+    //console.log('file done ' + classiconXmlListIndex);
+    if ((classiconXmlListIndex + 1) < classiconXmlList.length){
+      classiconTGA2PNG(classiconXmlListIndex ++);
+    } else {
+      console.log('classiconTGA2PNG End');
+      console.log('classiconCrop Start');
+      classiconXmlListIndex = 0;
+      classiconCrop(classiconXmlListIndex);
+    }
+    return;
+  }
+  var tgapath = classiconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var tga = new TGA(fs.readFileSync('../Tree-of-IPF/kr/ui.ipf' + tgapath));
+  var png = new PNG({
+      width: tga.width,
+      height: tga.height
+  });
+  png.data = tga.pixels;
+  png.pack().pipe(fs.createWriteStream('./web/img' + tgapath + '.png').on('close', function() {
+    //console.log('file done ' + classiconXmlListIndex);
+    if ((classiconXmlListIndex + 1) < classiconXmlList.length){
+      classiconTGA2PNG(classiconXmlListIndex ++);
+    } else {
+      console.log('classiconTGA2PNG End');
+      console.log('classiconCrop Start');
+      classiconXmlListIndex = 0;
+      classiconCrop(classiconXmlListIndex);
+    }
+  }));
+}
+function classiconCrop(index){
+  if (index >= classiconXmlList.length){
+    return;
+  }
+  var tgapath = classiconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var rect = classiconXmlList[index].attributes['imgrect'].split(' ');
+  //console.log(classiconXmlList[i].attributes['name'] + ' ' + rect[0] + ' ' + rect[1] + ' ' + rect[2] + ' ' + rect[3]);
+  var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
+  PNGCrop.crop('./web/img' + tgapath + '.png', './web/img/icon/' + classiconXmlList[index].attributes['name'] + '.png', config1, function(err) {
+    if (err) throw err;
+    //console.log('done! ' + classiconXmlListIndex);
+    if ((classiconXmlListIndex + 1) < classiconXmlList.length){
+      classiconCrop(classiconXmlListIndex ++);
+    } else {
+      console.log('classiconCrop End');
+      skilliconLoad();
+    }
+  });
+}
+
+
+// ---------- 스킬 아이콘 이미지 복사
+var skilliconXmlData;
+var skilliconXmlList = [];
+var skilliconXmlListIndex = 0;
+function skilliconLoad(){
+  fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/skillicon.xml', function(error, data){
+    var skilliconXmlData = xml(data.toString());
+    //skilliconXmlList = skilliconXmlData.root.children[0].children;
+    for (var i = 0; i < skilliconXmlData.root.children.length; i ++){
+      if (skilliconXmlData.root.children[i].attributes['category'] === 'skillicon') continue;
+      for (var j = 0; j < skilliconXmlData.root.children[i].children.length; j ++){
+        if (skilliconXmlData.root.children[i].children[j].attributes['file'].indexOf('.tga') < 0) continue;
+        skilliconXmlList.push(skilliconXmlData.root.children[i].children[j]);
+      }
+    }
+    console.log('skilliconTGA2PNG Start');
+    skilliconXmlListIndex = 0;
+    skilliconTGA2PNG(0);
+  });
+}
+function skilliconTGA2PNG(index){
+  if (index >= skilliconXmlList.length){
+    return;
+  }
+  if (skilliconXmlList[index].attributes['file'].indexOf('.tga') < 0 ||
+  fs.existsSync('./web/img' + skilliconXmlList[index].attributes['file'].replace(/\\/g, '/') + '.png')){
+    //console.log('file done ' + skilliconXmlListIndex);
+    if ((skilliconXmlListIndex + 1) < skilliconXmlList.length){
+      skilliconTGA2PNG(skilliconXmlListIndex ++);
+    } else {
+      console.log('skilliconTGA2PNG End');
+      console.log('skilliconCrop Start');
+      skilliconXmlListIndex = 0;
+      skilliconCrop(skilliconXmlListIndex);
+    }
+    return;
+  }
+  var tgapath = skilliconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var tga = new TGA(fs.readFileSync('../Tree-of-IPF/kr/ui.ipf' + tgapath));
+  var png = new PNG({
+      width: tga.width,
+      height: tga.height
+  });
+  png.data = tga.pixels;
+  png.pack().pipe(fs.createWriteStream('./web/img' + tgapath + '.png').on('close', function() {
+    //console.log('file done ' + skilliconXmlListIndex);
+    if ((skilliconXmlListIndex + 1) < skilliconXmlList.length){
+      skilliconTGA2PNG(skilliconXmlListIndex ++);
+    } else {
+      console.log('skilliconTGA2PNG End');
+      console.log('skilliconCrop Start');
+      skilliconXmlListIndex = 0;
+      skilliconCrop(skilliconXmlListIndex);
+    }
+  }));
+}
+function skilliconCrop(index){
+  if (index >= skilliconXmlList.length){
+    return;
+  }
+  if (skilliconXmlList[index].attributes['file'].indexOf('.tga') < 0){
+    //console.log('done! ' + skilliconXmlListIndex);
+    if ((skilliconXmlListIndex + 1) < skilliconXmlList.length){
+      skilliconCrop(skilliconXmlListIndex ++);
+    } else {
+      console.log('skilliconCrop End');
+    }
+    return;
+  }
+  var tgapath = skilliconXmlList[index].attributes['file'].replace(/\\/g, '/');
+  var rect = skilliconXmlList[index].attributes['imgrect'].split(' ');
+  //console.log(skilliconXmlList[i].attributes['name'] + ' ' + rect[0] + ' ' + rect[1] + ' ' + rect[2] + ' ' + rect[3]);
+  var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
+  PNGCrop.crop('./web/img' + tgapath + '.png', './web/img/icon/' + skilliconXmlList[index].attributes['name'] + '.png', config1, function(err) {
+    if (err) throw err;
+    //console.log('done! ' + skilliconXmlListIndex);
+    if ((skilliconXmlListIndex + 1) < skilliconXmlList.length){
+      skilliconCrop(skilliconXmlListIndex ++);
+    } else {
+      console.log('skilliconCrop End');
+    }
+  });
+}
+
+
 // ---------- 페이지 세팅
 app.use(express.static('web'));
  
@@ -74,5 +240,5 @@ app.use('/Test', testPage);
 
 // ---------- ON!
 app.listen(port, function (){
-  console.log("Connect " + port);
+  console.log("Server Open! port:" + port);
 });
