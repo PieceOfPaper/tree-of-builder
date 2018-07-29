@@ -1,0 +1,74 @@
+<script>
+    var url = window.location.href.split('?')[0];
+    var classArray = [];
+
+    onInit();
+    function onInit(){
+        var query_class = getQueryVariable("class");
+        for (var i = 0; i < query_class.length; i ++){
+            classArray.push(AsciiToNumber(query_class[i]));
+        }
+    }
+
+    function onClickClass(num1, num2){
+        if (classArray.length < 2){
+            window.location.href = url + "?class=" + NumberToAscii(num1) + NumberToAscii(num2);
+            return;
+        }
+        if (classArray[0] === num1){
+            classArray.push(num2);
+            updatePage();
+        }
+    }
+
+    function onClickClassDelete(index){
+        var classStr = "";
+        for (var i = 0; i < classArray.length; i ++){
+            if (index >= i){
+                break;
+            }
+            classStr += NumberToAscii(classArray[i]);
+        }
+        window.location.href = url + "?class=" + classStr;
+    }
+
+    function AsciiToNumber(char){
+        var ascii = char.charCodeAt(0);
+        if (ascii >= 48 && ascii <= 57){
+            return ascii - 48;
+        } else if (ascii >= 97 && ascii <= 122){
+            return ascii - 97 + 10;
+        } else if (ascii >= 65 && ascii <= 90){
+            return ascii - 65 + 26;
+        }
+        return -1;
+    }
+
+    function NumberToAscii(num){
+        if (num >= 0 && num <= 9){
+            return String.fromCharCode(48 + num);
+        } else if (num >= 10 && num <= 35){
+            return String.fromCharCode(97 + num - 10);
+        } else if (num >= 36 && num <= 51){
+            return String.fromCharCode(65 + num - 26);
+        }
+    }
+
+    function getQueryVariable(variable){
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return decodeURIComponent(pair[1]);}
+        }
+        return("");
+    }
+
+    function updatePage(){
+        var classStr = "";
+        for (var i = 0; i < classArray.length; i ++){
+            classStr += NumberToAscii(classArray[i]);
+        }
+        window.location.href = url + "?class=" + classStr;
+    }
+</script>

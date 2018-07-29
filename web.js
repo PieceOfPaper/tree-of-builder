@@ -498,6 +498,9 @@ app.get('/', function (req, response) {
 var skillPage = require('./web_script/web_skill')(app, tableData);
 app.use('/Skill', skillPage);
 
+var skillPage = require('./web_script/web_builder')(app, tableData);
+app.use('/Builder', skillPage);
+
 var testPage = require('./web_script/web_test')(app, tableData);
 app.use('/Test', testPage);
 
