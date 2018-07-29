@@ -23,13 +23,13 @@ module.exports = function(app, tableData){
     // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
     if (request.query.searchName === undefined || request.query.searchName === ''){
-      for (var i = 0; i < skillTable.length; i ++){
-        if (resultArray.length >= 10) break;
-        resultArray.push(skillTable[i]);
-      }
+      // for (var i = 0; i < skillTable.length; i ++){
+      //   if (resultArray.length >= 10) break;
+      //   resultArray.push(skillTable[i]);
+      // }
     } else {
       for (var i = 0; i < skillTable.length; i ++){
-        if (resultArray.length >= 10) break;
+        //if (resultArray.length >= 10) break;
 
         if (request.query.searchType === "Name" && skillTable[i].Name.indexOf(request.query.searchName) > -1)
           resultArray.push(skillTable[i]);
@@ -50,7 +50,7 @@ module.exports = function(app, tableData){
     for (var i = 0; i < resultArray.length; i ++){
       output += '<tr>';
       output += '<td><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      output += '<td><img src="../img/icon/icon_' + resultArray[i].Icon  + '.png"/></td>';
+      output += '<td><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
       output += '<td>' + resultArray[i].Name + '</td>';
       output += '<td>' + resultArray[i].ClassName + '</td>';
       output += '</tr>';
