@@ -8,9 +8,11 @@ module.exports = function(app, tableData){
     var builder_script = fs.readFileSync('./web/Builder/builder_script.html');
     var jobTable = tableData['job'];
     var skillTable = tableData['skill'];
+    var skilltreeTable = tableData['skilltree'];
   
     route.get('/', function (request, response) {
         var classArray = [];
+        var skillArray = [];
         var classCount = [];
         if (request.query.class != undefined && request.query.class.length > 0){
             for (var i = 0; i < jobTable.length; i ++){
@@ -27,6 +29,16 @@ module.exports = function(app, tableData){
                         }
                     }
                 }
+            }
+        }
+        if (request.query.skill != undefined && request.query.skill.length > 0){
+            var splited_query_skill = request.query.skill.split(".");
+            for (var i = 0; i < splited_query_skill.length; i ++){
+                var skill = [];
+                for (var j = 0; j < splited_query_skill[i].length; j ++){
+                    skill.push(AsciiToNumber(splited_query_skill[i][j]));
+                }
+                skillArray.push(skill);
             }
         }
 
@@ -75,6 +87,48 @@ module.exports = function(app, tableData){
             }
         }
         output +=           '</div>';
+        output +=       '</div>';
+        output +=       '<div class="builder-skill-area">';
+        var classIndex = 0;
+        var skillIndex = 0;
+        for (var i = 0; i < classCount.length; i ++){
+            if (classCount[i] <= 0)
+                continue;
+            output +=       '<div class="class">';
+            output +=       '<p>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</p>';
+            for (var j = 0; j < skilltreeTable.length; j ++){
+                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
+                    skilltreeTable[j].UnlockGrade <= classCount[i]){
+                    var skillTableIndex;
+                    for (var k = 0; k < skillTable.length; k ++){
+                        if (skilltreeTable[j].SkillName === skillTable[k].ClassName){
+                            skillTableIndex = k;
+                            break;
+                        }
+                    }
+                    var skillLv = 0;
+                    for (var k = 0; k < skillArray.length; k ++){
+                        if (skillArray[k][0] == classIndex){
+                            for (var l = 1; l < skillArray[k].length; l +=2){
+                                if (skillArray[k][l] == skillIndex){
+                                    skillLv = skillArray[k][l + 1];
+                                }
+                            }
+                        }
+                    }
+                    var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
+                    if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
+                    output +=   '<div class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + classIndex + ',' + skillIndex+ ',' + skillLvMax + ')">';
+                    output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
+                    output +=       '<p>' + skillTable[skillTableIndex].Name + ' (' + skillLv + '/' + skillLvMax + ')</p>';
+                    output +=   '</div>';
+                    skillIndex ++;
+                }
+            }
+            output +=       '</div>';
+            skillIndex = 0;
+            classIndex ++;
+        }
         output +=       '</div>';
         output += builder_script.toString();
         output +=   '</body>';

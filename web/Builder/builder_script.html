@@ -1,12 +1,24 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
     var url = window.location.href.split('?')[0];
     var classArray = [];
+    var skillArray = [];
 
     onInit();
     function onInit(){
         var query_class = getQueryVariable("class");
         for (var i = 0; i < query_class.length; i ++){
             classArray.push(AsciiToNumber(query_class[i]));
+        }
+
+        var query_skill = getQueryVariable("skill");
+        var splited_query_skill = query_skill.split(".");
+        for (var i = 0; i < splited_query_skill.length; i ++){
+            var skill = [];
+            for (var j = 0; j < splited_query_skill[i].length; j ++){
+                skill.push(AsciiToNumber(splited_query_skill[i][j]));
+            }
+            skillArray.push(skill);
         }
     }
 
@@ -30,6 +42,35 @@
             classStr += NumberToAscii(classArray[i]);
         }
         window.location.href = url + "?class=" + classStr;
+    }
+
+    function addSkillLevel(classIndex, skillIndex, skillMax){
+        for (var i = 0; i < skillArray.length; i ++){
+            if (skillArray[i][0] == classIndex){
+                for (var j = 1; j < skillArray[i].length; j +=2){
+                    if (skillArray[i][j] == skillIndex){
+                        if ((skillArray[i][j + 1] + 1) > skillMax){
+                            skillArray[i][j + 1] = 0;
+                        } else {
+                            skillArray[i][j + 1] += 1;
+                        }
+                        updatePage();
+                        return;
+                    }
+                }
+                skillArray[i].push(skillIndex);
+                skillArray[i].push(1);
+                updatePage();
+                return;
+            }
+        }
+        var skill = [];
+        skill.push(classIndex);
+        skill.push(skillIndex);
+        skill.push(1);
+        skillArray.push(skill);
+        updatePage();
+        return;
     }
 
     function AsciiToNumber(char){
@@ -69,6 +110,35 @@
         for (var i = 0; i < classArray.length; i ++){
             classStr += NumberToAscii(classArray[i]);
         }
-        window.location.href = url + "?class=" + classStr;
+
+        var skillStr = "";
+        for (var i = 0; i < skillArray.length; i ++){
+            for (var j = 0; j < skillArray[i].length; j ++){
+                skillStr += NumberToAscii(skillArray[i][j]);
+            }
+            if ((i + 1) < skillArray.length) skillStr += ".";
+        }
+
+        var queryStr = "?";
+        if (classStr.length > 0 || skillStr.length > 0){
+            if (classStr.length > 0){
+                queryStr += "class=" + classStr;
+            }
+            if (skillStr.length > 0){
+                queryStr += "&";
+                queryStr += "skill=" + skillStr;
+            }
+            window.location.href = url + queryStr;
+        }
     }
+
+    $(window).scroll(function() {
+        sessionStorage.scrollTop = $(this).scrollTop();
+    });
+
+    $(document).ready(function() {
+        if (sessionStorage.scrollTop != "undefined") {
+            $(window).scrollTop(sessionStorage.scrollTop);
+        }
+    });
 </script>
