@@ -34,21 +34,61 @@
     }
 
     function onClickClassDelete(index){
-        var classStr = "";
-        for (var i = 0; i < classArray.length; i ++){
-            if (index >= i){
-                break;
+        var removedClass = [];
+        var isAdded;
+        for (var i = classArray.length - 1; i >= index; i --){
+            isAdded = false;
+            for (var j = 0; j < removedClass.length; j ++){
+                if (removedClass[j][0] == classArray[i]){
+                    removedClass[j][1] ++;
+                    isAdded = true;
+                    break;
+                }
             }
-            classStr += NumberToAscii(classArray[i]);
+            if(!isAdded){
+                var classData = [];
+                classData.push(classArray[i]);
+                classData.push(1);
+                removedClass.push(classData);
+            }
+
         }
-        window.location.href = url + "?class=" + classStr;
+        for (var i = 0; i < removedClass.length; i ++){
+            var removeCount = 0;
+            var circleCount = 0;
+            for (var j = 0; j < classArray.length; j ++){
+                if (classArray[j] === removedClass[i][0]) circleCount ++;
+            }
+            for (var j = 0; j < skillArray.length; j ++){
+                if (removedClass[i][1] <= removeCount) break;
+                if (skillArray[j][0] === removedClass[i][0] && skillArray[j][1] === circleCount){
+                    skillArray.splice(j, 1);
+                    j = 0;
+                    circleCount --;
+                    removeCount ++;
+                }
+            }
+        }
+        for (var i = 0; i < skillArray.length; i ++){
+            var circleCount = 0;
+            for (var j = 0; j < index; j ++){
+                if (classArray[j] === skillArray[i][0]) circleCount ++;
+            }
+            for (var j = 2; j < skillArray[i].length; j +=2){
+                if (skillArray[i][j + 1] > (circleCount - skillArray[i][1] + 1) * 5){
+                    skillArray[i][j + 1] = (circleCount - skillArray[i][1] + 1) * 5;
+                }
+            }
+        }
+        classArray.splice(index, classArray.length - index - 1);
+        updatePage();
     }
 
-    function addSkillLevel(classIndex, skillIndex, skillMax){
+    function addSkillLevel(classNum2, grade, skillIndex, skillMax){
         for (var i = 0; i < skillArray.length; i ++){
-            if (skillArray[i][0] == classIndex){
-                for (var j = 1; j < skillArray[i].length; j +=2){
-                    if (skillArray[i][j] == skillIndex){
+            if (skillArray[i][0] === classNum2 && skillArray[i][1] === grade){
+                for (var j = 2; j < skillArray[i].length; j +=2){
+                    if (skillArray[i][j] === skillIndex){
                         if ((skillArray[i][j + 1] + 1) > skillMax){
                             skillArray[i][j + 1] = 0;
                         } else {
@@ -65,7 +105,8 @@
             }
         }
         var skill = [];
-        skill.push(classIndex);
+        skill.push(classNum2);
+        skill.push(grade);
         skill.push(skillIndex);
         skill.push(1);
         skillArray.push(skill);
@@ -113,10 +154,12 @@
 
         var skillStr = "";
         for (var i = 0; i < skillArray.length; i ++){
-            for (var j = 0; j < skillArray[i].length; j ++){
-                skillStr += NumberToAscii(skillArray[i][j]);
+            if (skillArray[i].length > 0){
+                for (var j = 0; j < skillArray[i].length; j ++){
+                    skillStr += NumberToAscii(skillArray[i][j]);
+                }
+                if ((i + 1) < skillArray.length) skillStr += ".";
             }
-            if ((i + 1) < skillArray.length) skillStr += ".";
         }
 
         var queryStr = "?";

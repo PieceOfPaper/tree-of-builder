@@ -89,13 +89,13 @@ module.exports = function(app, tableData){
         output +=           '</div>';
         output +=       '</div>';
         output +=       '<div class="builder-skill-area">';
-        var classIndex = 0;
         var skillIndex = 0;
         for (var i = 0; i < classCount.length; i ++){
             if (classCount[i] <= 0)
                 continue;
             output +=       '<div class="class">';
             output +=       '<p>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</p>';
+            var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
                     skilltreeTable[j].UnlockGrade <= classCount[i]){
@@ -108,8 +108,8 @@ module.exports = function(app, tableData){
                     }
                     var skillLv = 0;
                     for (var k = 0; k < skillArray.length; k ++){
-                        if (skillArray[k][0] == classIndex){
-                            for (var l = 1; l < skillArray[k].length; l +=2){
+                        if (skillArray[k][0] == jobNum2 && skillArray[k][1] == skilltreeTable[j].UnlockGrade){
+                            for (var l = 2; l < skillArray[k].length; l +=2){
                                 if (skillArray[k][l] == skillIndex){
                                     skillLv = skillArray[k][l + 1];
                                 }
@@ -118,7 +118,7 @@ module.exports = function(app, tableData){
                     }
                     var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
                     if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
-                    output +=   '<div class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + classIndex + ',' + skillIndex+ ',' + skillLvMax + ')">';
+                    output +=   '<div class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ')">';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
                     output +=       '<p>' + skillTable[skillTableIndex].Name + ' (' + skillLv + '/' + skillLvMax + ')</p>';
                     output +=   '</div>';
@@ -127,7 +127,6 @@ module.exports = function(app, tableData){
             }
             output +=       '</div>';
             skillIndex = 0;
-            classIndex ++;
         }
         output +=       '</div>';
         output += builder_script.toString();
