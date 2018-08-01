@@ -1,0 +1,187 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+    var url = window.location.href.split('?')[0];
+    var classArray = [];
+    var skillArray = [];
+
+    onInit();
+    function onInit(){
+        var query_class = getQueryVariable("class");
+        for (var i = 0; i < query_class.length; i ++){
+            classArray.push(AsciiToNumber(query_class[i]));
+        }
+
+        var query_skill = getQueryVariable("skill");
+        var splited_query_skill = query_skill.split(".");
+        for (var i = 0; i < splited_query_skill.length; i ++){
+            var skill = [];
+            for (var j = 0; j < splited_query_skill[i].length; j ++){
+                skill.push(AsciiToNumber(splited_query_skill[i][j]));
+            }
+            skillArray.push(skill);
+        }
+    }
+
+    function onClickClass(num1, num2){
+        if (classArray.length < 2){
+            window.location.href = url + "?class=" + NumberToAscii(num1) + NumberToAscii(num2);
+            return;
+        }
+        if (classArray[0] === num1){
+            classArray.push(num2);
+            updatePage();
+        }
+    }
+
+    function onClickClassDelete(index){
+        var removedClass = [];
+        var isAdded;
+        for (var i = classArray.length - 1; i >= index; i --){
+            isAdded = false;
+            for (var j = 0; j < removedClass.length; j ++){
+                if (removedClass[j][0] == classArray[i]){
+                    removedClass[j][1] ++;
+                    isAdded = true;
+                    break;
+                }
+            }
+            if(!isAdded){
+                var classData = [];
+                classData.push(classArray[i]);
+                classData.push(1);
+                removedClass.push(classData);
+            }
+
+        }
+        for (var i = 0; i < removedClass.length; i ++){
+            var removeCount = 0;
+            var circleCount = 0;
+            for (var j = 0; j < classArray.length; j ++){
+                if (classArray[j] === removedClass[i][0]) circleCount ++;
+            }
+            for (var j = 0; j < skillArray.length; j ++){
+                if (removedClass[i][1] <= removeCount) break;
+                if (skillArray[j][0] === removedClass[i][0] && skillArray[j][1] === circleCount){
+                    skillArray.splice(j, 1);
+                    j = 0;
+                    circleCount --;
+                    removeCount ++;
+                }
+            }
+        }
+        for (var i = 0; i < skillArray.length; i ++){
+            var circleCount = 0;
+            for (var j = 0; j < index; j ++){
+                if (classArray[j] === skillArray[i][0]) circleCount ++;
+            }
+            for (var j = 2; j < skillArray[i].length; j +=2){
+                if (skillArray[i][j + 1] > (circleCount - skillArray[i][1] + 1) * 5){
+                    skillArray[i][j + 1] = (circleCount - skillArray[i][1] + 1) * 5;
+                }
+            }
+        }
+        classArray.splice(index, classArray.length - index - 1);
+        updatePage();
+    }
+
+    function addSkillLevel(classNum2, grade, skillIndex, skillMax){
+        for (var i = 0; i < skillArray.length; i ++){
+            if (skillArray[i][0] === classNum2 && skillArray[i][1] === grade){
+                for (var j = 2; j < skillArray[i].length; j +=2){
+                    if (skillArray[i][j] === skillIndex){
+                        if ((skillArray[i][j + 1] + 1) > skillMax){
+                            skillArray[i][j + 1] = 0;
+                        } else {
+                            skillArray[i][j + 1] += 1;
+                        }
+                        updatePage();
+                        return;
+                    }
+                }
+                skillArray[i].push(skillIndex);
+                skillArray[i].push(1);
+                updatePage();
+                return;
+            }
+        }
+        var skill = [];
+        skill.push(classNum2);
+        skill.push(grade);
+        skill.push(skillIndex);
+        skill.push(1);
+        skillArray.push(skill);
+        updatePage();
+        return;
+    }
+
+    function AsciiToNumber(char){
+        var ascii = char.charCodeAt(0);
+        if (ascii >= 48 && ascii <= 57){
+            return ascii - 48;
+        } else if (ascii >= 97 && ascii <= 122){
+            return ascii - 97 + 10;
+        } else if (ascii >= 65 && ascii <= 90){
+            return ascii - 65 + 26;
+        }
+        return -1;
+    }
+
+    function NumberToAscii(num){
+        if (num >= 0 && num <= 9){
+            return String.fromCharCode(48 + num);
+        } else if (num >= 10 && num <= 35){
+            return String.fromCharCode(97 + num - 10);
+        } else if (num >= 36 && num <= 51){
+            return String.fromCharCode(65 + num - 26);
+        }
+    }
+
+    function getQueryVariable(variable){
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return decodeURIComponent(pair[1]);}
+        }
+        return("");
+    }
+
+    function updatePage(){
+        var classStr = "";
+        for (var i = 0; i < classArray.length; i ++){
+            classStr += NumberToAscii(classArray[i]);
+        }
+
+        var skillStr = "";
+        for (var i = 0; i < skillArray.length; i ++){
+            if (skillArray[i].length > 0){
+                for (var j = 0; j < skillArray[i].length; j ++){
+                    skillStr += NumberToAscii(skillArray[i][j]);
+                }
+                if ((i + 1) < skillArray.length) skillStr += ".";
+            }
+        }
+
+        var queryStr = "?";
+        if (classStr.length > 0 || skillStr.length > 0){
+            if (classStr.length > 0){
+                queryStr += "class=" + classStr;
+            }
+            if (skillStr.length > 0){
+                queryStr += "&";
+                queryStr += "skill=" + skillStr;
+            }
+            window.location.href = url + queryStr;
+        }
+    }
+
+    $(window).scroll(function() {
+        sessionStorage.scrollTop = $(this).scrollTop();
+    });
+
+    $(document).ready(function() {
+        if (sessionStorage.scrollTop != "undefined") {
+            $(window).scrollTop(sessionStorage.scrollTop);
+        }
+    });
+</script>

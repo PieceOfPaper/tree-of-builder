@@ -21,6 +21,10 @@ tableData['skill'] = [];
 fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies').pipe(csv()).on('data', function (data) {
   tableData['skill'].push(data);
 });
+tableData['skilltree'] = [];
+fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skilltree.ies').pipe(csv()).on('data', function (data) {
+  tableData['skilltree'].push(data);
+});
 
 
 // ---------- 아이콘 이미지 복사
@@ -497,6 +501,9 @@ app.get('/', function (req, response) {
 
 var skillPage = require('./web_script/web_skill')(app, tableData);
 app.use('/Skill', skillPage);
+
+var skillPage = require('./web_script/web_builder')(app, tableData);
+app.use('/Builder', skillPage);
 
 var testPage = require('./web_script/web_test')(app, tableData);
 app.use('/Test', testPage);
