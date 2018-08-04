@@ -45,16 +45,16 @@ module.exports = function(app, tableData){
     output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
     output +=   '</head>';
     output +=   '<body>';
+    output += fs.readFileSync('./web/TopMenu/topMenu.html');
     output += search_box.toString();
     output +=     '<br/>';
     output +=     '<table class="search-result-table" style="width:100%">';
     for (var i = 0; i < resultArray.length; i ++){
       output += '<tr>';
-      output += '<td><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      output += '<td><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
+      output += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      output += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
       output += '<td>';
-      output +=   '<p>' + resultArray[i].Name + '</p>';
-      output +=   '<p>' + resultArray[i].ClassName + '</p>';
+      output +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
       output += '</td>';
       output += '</tr>';
     }
@@ -74,6 +74,7 @@ module.exports = function(app, tableData){
     output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
     output +=   '</head>';
     output +=   '<body>';
+    output += fs.readFileSync('./web/TopMenu/topMenu.html');
     output +=     '<h1>' + skillTable[index].Name + '</h1>';
     output +=     '<p>' + skillTable[index].EngName + '</p>';
     output +=     '<table style="width:100%">';

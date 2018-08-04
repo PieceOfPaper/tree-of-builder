@@ -26,9 +26,14 @@ head {
 }
 
 body {
+    padding: 0;
+    margin: 0;
+    padding-top: 50px;
     font-family: IMCM_Origin;
     background-image: url("../img/minimap/jilgam.png");
     /*font-size: 2.5vw;*/
+    max-width: 100%;
+    overflow-x: hidden;
 }
 @media only screen and (max-device-width : 640px) {
     /* Styles */
@@ -51,6 +56,20 @@ table, td, th {
     border: 1px solid black;
 }
 
+.top-menu {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    height: 50px;
+    background-color: bisque;
+}
+.top-menu button {
+    margin: 0;
+    height: 100%;
+}
+
 
 /* ======== Main ======== */
 .main-illust {
@@ -59,8 +78,9 @@ table, td, th {
 }
 
 
-/* ======== Main ======== */
+/* ======== Skill ======== */
 .search-area {
+    padding: 5px;
     width: 100%;
 }
 .search-area select{
@@ -75,6 +95,7 @@ table, td, th {
 }
 
 .search-result-table {
+    padding: 5px;
     width:100%;
 }
 .search-result-table table {
@@ -83,4 +104,49 @@ table, td, th {
 .search-result-table img {
     width: 64px;
     height: 64px;
+}
+
+
+/* ======== Builder ======== */
+.builder-class-area {
+}
+.builder-class-area img{
+    width:64px;
+    height:64px;
+}
+
+.builder-class-selected {
+}
+
+.builder-class-select {
+}
+
+.builder-skill-area {
+    padding: 10px;
+}
+.builder-skill-area .class {
+    width: 100%;
+}
+.builder-skill-area .class .skill {
+    display: inline-block;
+    white-space: nowrap;
+    width: 150px;
+}
+@media only screen and (max-device-width : 640px) {
+    .builder-skill-area .class .skill {
+        width: 50%;
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    .builder-skill-area .class .skill {
+        width: 50%;
+    }
+}
+.builder-skill-area .class .skill img {
+    width:64px;
+    height:64px;
+}
+.builder-skill-area .class .skill p {
+    padding: 0;
+    margin: 0;
 }

@@ -49,6 +49,7 @@ module.exports = function(app, tableData){
         output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
         output +=   '</head>';
         output +=   '<body>';
+        output += fs.readFileSync('./web/TopMenu/topMenu.html');
         output +=       '<div class="builder-class-area">';
         output +=           '<div class="builder-class-selected">';
         if (request.query.class === undefined || request.query.class === ''){
@@ -63,7 +64,7 @@ module.exports = function(app, tableData){
            } 
         }
         output +=           '</div>';
-        output +=           '<br/>';
+        output +=           '<hr>';
         output +=           '<div class="builder-class-select">';
         if (request.query.class === undefined || request.query.class === ''){
             for (var i = 1; i <= 4; i ++){
@@ -89,13 +90,14 @@ module.exports = function(app, tableData){
         }
         output +=           '</div>';
         output +=       '</div>';
+        output +=       '<hr>';
         output +=       '<div class="builder-skill-area">';
         var skillIndex = 0;
         for (var i = 0; i < classCount.length; i ++){
             if (classCount[i] <= 0)
                 continue;
             output +=       '<div class="class">';
-            output +=       '<p>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</p>';
+            output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
             var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
@@ -119,9 +121,9 @@ module.exports = function(app, tableData){
                     }
                     var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
                     if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
-                    output +=   '<div class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ')">';
+                    output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ')">';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
-                    output +=       '<p>' + skillTable[skillTableIndex].Name + ' (' + skillLv + '/' + skillLvMax + ')</p>';
+                    output +=       '<p>' + skillTable[skillTableIndex].Name + '<br/> (' + skillLv + '/' + skillLvMax + ')</p>';
                     output +=   '</div>';
                     skillIndex ++;
                 }
