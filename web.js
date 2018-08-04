@@ -451,7 +451,7 @@ function mongemCrop(){
   mongemXmlListIndex ++;
   if (mongemXmlListIndex >= mongemXmlList.length){
     console.log('mongemCrop End ' + mongemXmlListIndex);
-    //mongemLoad();
+    //baseskinsetLoad();
     return;
   }
   if (!fs.existsSync('./web/img' + mongemXmlList[mongemXmlListIndex].attributes['file'].replace(/\\/g, '/') + '.png')){
@@ -472,6 +472,159 @@ function mongemCrop(){
     if (err) throw err;
     console.log('mongemCrop Done [' + mongemXmlListIndex + '] ' + mongemXmlList[mongemXmlListIndex].attributes['name']);
     mongemCrop();
+  });
+}
+
+
+// ---------- UI 이미지 복사
+// 하드코딩이 많으므로 주의 하도록
+var baseskinsetXmlData;
+var baseskinsetXmlList = [];
+var baseskinsetXmlListIndex = -1;
+//baseskinsetLoad();
+function baseskinsetLoad(){
+  fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/baseskinset.xml', function(error, data){
+    baseskinsetXmlData = xml(data.toString());
+    for (var i = 0; i < baseskinsetXmlData.root.children.length; i ++){
+      for (var j = 0; j < baseskinsetXmlData.root.children[i].children.length; j ++){
+        if (baseskinsetXmlData.root.children[i].attributes['texture'] != undefined){
+          baseskinsetXmlData.root.children[i].children[j].attributes['file'] = baseskinsetXmlData.root.children[i].attributes['texture'];
+        }
+        if (baseskinsetXmlData.root.children[i].attributes['name'] != undefined){
+          baseskinsetXmlData.root.children[i].children[j].attributes['folder'] = baseskinsetXmlData.root.children[i].attributes['name'];
+        }
+        baseskinsetXmlList.push(baseskinsetXmlData.root.children[i].children[j]);
+      }
+    }
+    console.log('baseskinsetTGA2PNG Start ' + baseskinsetXmlList.length);
+    baseskinsetXmlListIndex = -1;
+    baseskinsetTGA2PNG();
+  });
+}
+function baseskinsetTGA2PNG(){
+  baseskinsetXmlListIndex ++;
+  if (baseskinsetXmlListIndex >= baseskinsetXmlList.length){
+    console.log('baseskinsetTGA2PNG End ' + baseskinsetXmlListIndex);
+    console.log('baseskinsetCrop Start ' + baseskinsetXmlList.length);
+    baseskinsetXmlListIndex = -1;
+    baseskinsetCrop();
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'] === undefined){
+    console.log('baseskinsetTGA2PNG Skip Undefined[' + baseskinsetXmlListIndex + '] ');
+    baseskinsetTGA2PNG();
+    return;
+  }
+  if (!fs.existsSync(pathMerge('../Tree-of-IPF/kr/ui.ipf', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'])) || 
+    fs.existsSync(pathMerge('./web/img', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']) + '.png')){
+      console.log('baseskinsetTGA2PNG Skip [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+      baseskinsetTGA2PNG();
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].indexOf('.png') > -1){
+    var folder = '';
+    if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] != undefined)
+      folder = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'];
+    var subfolder = removeFileName(baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var inPath = pathMerge('../Tree-of-IPF/kr/ui.ipf', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var outPath = pathMerge(pathMerge(pathMerge('./web/img/', folder), subfolder), baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']) + '.png';
+    autoMkDir(outPath);
+    fs.createReadStream(inPath).pipe(fs.createWriteStream(outPath).on('close', function() {
+      console.log('baseskinsetTGA2PNG PNG Copy [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+      baseskinsetTGA2PNG();
+    }));
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].indexOf('.jpg') > -1){
+    var folder = '';
+    if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] != undefined)
+      folder = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'];
+    var subfolder = removeFileName(baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var inPath = pathMerge('../Tree-of-IPF/kr/ui.ipf', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var outPath = pathMerge(pathMerge(pathMerge('./web/img/', folder), subfolder), baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']) + '.jpg';
+    autoMkDir(outPath);
+    fs.createReadStream(inPath).pipe(fs.createWriteStream(outPath).on('close', function() {
+      console.log('baseskinsetTGA2PNG JPG Copy [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+      baseskinsetTGA2PNG();
+    }));
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].indexOf('.bmp') > -1){
+    var folder = '';
+    if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] != undefined)
+      folder = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] + '/';
+    var subfolder = removeFileName(baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var inPath = pathMerge('../Tree-of-IPF/kr/ui.ipf', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    var outPath = pathMerge(pathMerge(pathMerge('./web/img/', folder), subfolder), baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']) + '.bmp';
+    autoMkDir(outPath);
+    fs.createReadStream(inPath).pipe(fs.createWriteStream(outPath).on('close', function() {
+      console.log('baseskinsetTGA2PNG BMP Copy [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+      baseskinsetTGA2PNG();
+    }));
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].indexOf('.dds') > -1){
+    console.log('baseskinsetTGA2PNG Skip DDS [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    baseskinsetTGA2PNG();
+    return;
+  }
+  //var tgapath = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].replace(/\\/g, '/');
+  var tga = new TGA(fs.readFileSync(pathMerge('../Tree-of-IPF/kr/ui.ipf', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'])));
+  var png = new PNG({
+      width: tga.width,
+      height: tga.height
+  });
+  png.data = tga.pixels;
+  var outputPath = pathMerge('./web/img', baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']) + '.png';
+  autoMkDir(outputPath);
+  png.pack().pipe(fs.createWriteStream(outputPath).on('close', function() {
+    console.log('baseskinsetTGA2PNG Done [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    baseskinsetTGA2PNG();
+  }));
+}
+function baseskinsetCrop(){
+  baseskinsetXmlListIndex ++;
+  if (baseskinsetXmlListIndex >= baseskinsetXmlList.length){
+    console.log('baseskinsetCrop End ' + baseskinsetXmlListIndex);
+    //baseskinsetLoad();
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'] === undefined){
+    console.log('baseskinsetCrop Skip Undefined[' + baseskinsetXmlListIndex + '] ');
+    baseskinsetCrop();
+    return;
+  }
+  if (!fs.existsSync('./web/img' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].replace(/\\/g, '/') + '.png')){
+    console.log('baseskinsetCrop NoFile [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    baseskinsetCrop();
+    return;
+  }
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].indexOf('.tga') < 0){
+    console.log('baseskinsetCrop NoTGA [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file']);
+    baseskinsetCrop();
+    return;
+  }
+  var tgapath = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['file'].replace(/\\/g, '/');
+  //var rect = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['imgrect'].split(' ');
+  //console.log(baseskinsetXmlList[i].attributes['name'] + ' ' + rect[0] + ' ' + rect[1] + ' ' + rect[2] + ' ' + rect[3]);
+  //var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
+  var folder = '';
+  if (baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] != undefined)
+    folder = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['folder'] + '/';
+
+  autoMkDir('./web/img/icon/' + folder);
+  fs.readFile(pathMerge('./web/img', tgapath) + '.png', function (err, data){
+    if (err) throw err;
+    //console.log('baseskinsetCrop 1.Read [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']);
+    var rect = baseskinsetXmlList[baseskinsetXmlListIndex].attributes['imgrect'].split(' ');
+    var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
+    PNGCrop.cropToStream(data, config1, function(err, outputStream) {
+      if (err) throw err;
+      //console.log('baseskinsetCrop 2.Crop [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']);
+      outputStream.pipe(fs.createWriteStream('./web/img/icon/' + folder + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name'] + '.png'));
+      console.log('baseskinsetCrop 3.Save [' + baseskinsetXmlListIndex + '] ' + baseskinsetXmlList[baseskinsetXmlListIndex].attributes['name']);
+      baseskinsetCrop();
+    });
   });
 }
 
@@ -514,3 +667,53 @@ app.use('/Test', testPage);
 app.listen(port, function (){
   console.log("Server Open! port:" + port);
 });
+
+
+
+
+
+
+
+function pathMerge(pathA, pathB){
+  if (pathA === undefined || pathA.length === 0)
+    return pathB;
+  else if (pathB === undefined || pathB.length === 0)
+      return pathA;
+
+  pathA = pathA.replace(/\\/g, '/');
+  pathB = pathB.replace(/\\/g, '/');
+  if (pathA[0] === '/') pathA = pathA.substring(1, pathA.length)
+  if (pathB[0] === '/') pathB = pathB.substring(1, pathB.length)
+  if (pathA[pathA.length - 1] === '/') pathA = pathA.substring(0, pathA.length - 1)
+  if (pathB[pathB.length - 1] === '/') pathB = pathB.substring(0, pathB.length - 1)
+
+  return pathA + '/' + pathB;
+}
+
+function removeFileName(filepath){
+  if (filepath === undefined || filepath.length === 0)
+    return path;
+
+    filepath = filepath.replace(/\\/g, '/');
+  var splited = filepath.split('/');
+  var lastDir = splited[splited.length - 1];
+  if (lastDir.indexOf('.') > -1){
+    return filepath.substring(0, filepath.length - lastDir.length);
+  }
+  return filepath;
+}
+
+function autoMkDir(filepath){
+  if (filepath === undefined || filepath.length === 0)
+    return;
+
+  var dirPath = removeFileName(filepath);
+  var splited = dirPath.split('/');
+
+  var fullPath = splited[0] + '/';
+  for (var i = 1; i < splited.length; i ++){
+    fullPath += splited[i];
+    if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath);
+    fullPath += '/';
+  }
+}
