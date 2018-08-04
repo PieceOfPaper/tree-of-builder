@@ -66,6 +66,7 @@ app.get('/', function (req, response) {
     output += '<head>';
     output +=     '<title>Tree of Builder</title>';
     output +=     '<link rel="stylesheet" type="text/css" href="style.css">';
+    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
     output += '</head>';
     output += '<body align="center">';
     output +=     '<h1>Tree of Builder</h1>';

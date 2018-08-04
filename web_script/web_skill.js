@@ -42,17 +42,20 @@ module.exports = function(app, tableData){
     output +=   '<head>';
     output +=     '<title>Skill Page</title>';
     output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
     output +=   '</head>';
     output +=   '<body>';
     output += search_box.toString();
     output +=     '<br/>';
-    output +=     '<table style="width:100%">';
+    output +=     '<table class="search-result-table" style="width:100%">';
     for (var i = 0; i < resultArray.length; i ++){
       output += '<tr>';
       output += '<td><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
       output += '<td><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
-      output += '<td>' + resultArray[i].Name + '</td>';
-      output += '<td>' + resultArray[i].ClassName + '</td>';
+      output += '<td>';
+      output +=   '<p>' + resultArray[i].Name + '</p>';
+      output +=   '<p>' + resultArray[i].ClassName + '</p>';
+      output += '</td>';
       output += '</tr>';
     }
     output +=     '</table>';
@@ -68,6 +71,7 @@ module.exports = function(app, tableData){
     output +=   '<head>';
     output +=     '<title>' + skillTable[index].Name + '</title>';
     output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
     output +=   '</head>';
     output +=   '<body>';
     output +=     '<h1>' + skillTable[index].Name + '</h1>';

@@ -46,6 +46,7 @@ module.exports = function(app, tableData){
         output +=   '<head>';
         output +=     '<title>Builder Page</title>';
         output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+        output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
         output +=   '</head>';
         output +=   '<body>';
         output +=       '<div class="builder-class-area">';

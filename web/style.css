@@ -1,3 +1,23 @@
+@font-face {
+    font-family: IMCM_Origin;
+    src: url('imcm_original-webfont.eot'); /* IE9 Compat Modes */
+    src: url('imcm_original-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('imcm_original-webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('imcm_original-webfont.woff') format('woff'), /* Pretty Modern Browsers */
+       url('https://github.com/PieceOfPaper/Tree-of-IPF/raw/master/kr/font.ipf/imcm_original.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('imcm_original-webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+@font-face {
+    font-family: IMCM_Book;
+    src: url('imcm_book-webfont.eot'); /* IE9 Compat Modes */
+    src: url('imcm_book-webfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('imcm_book-webfont.woff2') format('woff2'), /* Super Modern Browsers */
+       url('imcm_book-webfont.woff') format('woff'), /* Pretty Modern Browsers */
+       url('https://github.com/PieceOfPaper/Tree-of-IPF/raw/master/kr/font.ipf/imcm_book.ttf')  format('truetype'), /* Safari, Android, iOS */
+       url('imcm_book-webfont.svg#svgFontName') format('svg'); /* Legacy iOS */
+}
+
+
 /* ======== Default ======== */
 head {
     height: 0;
@@ -6,9 +26,31 @@ head {
 }
 
 body {
+    font-family: IMCM_Origin;
     background-image: url("../img/minimap/jilgam.png");
-    font-size: 2.5vw;
+    /*font-size: 2.5vw;*/
 }
+@media only screen and (max-device-width : 640px) {
+    /* Styles */
+    body {
+        font-size: 20px;
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    /* Styles */
+    body {
+        font-size: 20px;
+    }
+}
+
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
 
 /* ======== Main ======== */
 .main-illust {
@@ -16,7 +58,29 @@ body {
     max-width: 100vh;
 }
 
+
 /* ======== Main ======== */
 .search-area {
     width: 100%;
+}
+.search-area select{
+    font-size: 1em;
+}
+.search-area input{
+    font-size: 1em;
+}
+
+.search-area button{
+    font-size: 1em;
+}
+
+.search-result-table {
+    width:100%;
+}
+.search-result-table table {
+
+}
+.search-result-table img {
+    width: 64px;
+    height: 64px;
 }
