@@ -25,6 +25,10 @@ tableData['skilltree'] = [];
 fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skilltree.ies').pipe(csv()).on('data', function (data) {
   tableData['skilltree'].push(data);
 });
+tableData['dialogtext'] = [];
+fs.createReadStream('../Tree-of-IPF/kr/ies_client.ipf/dialogtext.ies').pipe(csv()).on('data', function (data) {
+  tableData['dialogtext'].push(data);
+});
 
 
 // ---------- 아이콘 이미지 복사
@@ -60,7 +64,7 @@ if (!fs.existsSync('./web/img/icon/mongem')) fs.mkdirSync('./web/img/icon/mongem
 var classiconXmlData;
 var classiconXmlList = [];
 var classiconXmlListIndex = -1;
-classiconLoad();
+//classiconLoad();
 function classiconLoad(){
   fs.readFile('../Tree-of-IPF/kr/ui.ipf/baseskinset/classicon.xml', function(error, data){
     classiconXmlData = xml(data.toString());
@@ -451,7 +455,7 @@ function mongemCrop(){
   mongemXmlListIndex ++;
   if (mongemXmlListIndex >= mongemXmlList.length){
     console.log('mongemCrop End ' + mongemXmlListIndex);
-    //baseskinsetLoad();
+    baseskinsetLoad();
     return;
   }
   if (!fs.existsSync('./web/img' + mongemXmlList[mongemXmlListIndex].attributes['file'].replace(/\\/g, '/') + '.png')){
@@ -633,23 +637,44 @@ function baseskinsetCrop(){
 app.use(express.static('web'));
  
 app.get('/', function (req, response) {
-    fs.readFile('index.html', function(error, data){
-        if (error) {
-            console.log(error);
-            // 페이지를 찾을 수 없음
-            // HTTP Status: 404 : NOT FOUND
-            // Content Type: text/plain
-            response.writeHead(404, {'Content-Type': 'text/html'});
-         }else{	
-            // 페이지를 찾음	  
-            // HTTP Status: 200 : OK
-            // Content Type: text/plain
-            response.writeHead(200, {'Content-Type': 'text/html'});	
-            
-            // 파일을 읽어와서 responseBody 에 작성
-            response.send(data);	
-         }
-    });
+  fs.readdir('./web/img/npcimg', (err, files) => {
+    var randomIndex = Math.floor(Math.random()*files.length);
+    var imgname = files[randomIndex].split('.')[0];
+    var dialogTable = tableData['dialogtext'];
+    var captionList = [];
+    for (var i = 0; i < dialogTable.length; i++){
+      if (dialogTable[i].ImgName.indexOf(imgname) > -1){
+        captionList.push(dialogTable[i]);
+      }
+    }
+    var illustNpcName = imgname.replace('Dlg_port_', '');
+    var illustNpcText = [];
+    if (captionList.length > 0){
+      var caption = captionList[Math.floor(Math.random()*captionList.length)];
+      illustNpcName = caption.Caption;
+      illustNpcText = caption.Text.split(/{np}|{nl}/g);
+    }
+
+    var output = '';
+    output += '<html>';
+    output += '<head>';
+    output +=     '<title>Tree of Builder</title>';
+    output +=     '<link rel="stylesheet" type="text/css" href="style.css">';
+    output += '</head>';
+    output += '<body align="center">';
+    output +=     '<h1>Tree of Builder</h1>';
+    output +=     '<img class="main-illust" src="../img/npcimg/' + files[randomIndex] + '" />';
+    output +=     '<h2>' + illustNpcName + '</h2>';
+    output +=     '<p>';
+    for (var i = 0; i < illustNpcText.length; i ++){
+      output +=     illustNpcText[i] + '<br/>';
+    }
+    output +=     '</p>';
+    output += '</body>';
+    output += '</html>';
+  
+    response.send(output);
+  })
 });
 
 var skillPage = require('./web_script/web_skill')(app, tableData);
