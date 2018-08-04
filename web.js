@@ -1,5 +1,7 @@
 var express = require('express');
 var fs = require('fs');
+var http = require('https');
+
 var csv = require('csv-parser');
 var xml = require('xml-parser');
 
@@ -11,24 +13,30 @@ var app = express();
 var port = 3000;
 
 
+var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
+var serverCode = 'kr';
+
+
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
-tableData['job'] = [];
-fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/job.ies').pipe(csv()).on('data', function (data) {
-  tableData['job'].push(data);
-});
-tableData['skill'] = [];
-fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skill.ies').pipe(csv()).on('data', function (data) {
-  tableData['skill'].push(data);
-});
-tableData['skilltree'] = [];
-fs.createReadStream('../Tree-of-IPF/kr/ies.ipf/skilltree.ies').pipe(csv()).on('data', function (data) {
-  tableData['skilltree'].push(data);
-});
-tableData['dialogtext'] = [];
-fs.createReadStream('../Tree-of-IPF/kr/ies_client.ipf/dialogtext.ies').pipe(csv()).on('data', function (data) {
-  tableData['dialogtext'].push(data);
-});
+if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
+
+loadTable('job', 'ies.ipf/job.ies');
+loadTable('skill', 'ies.ipf/skill.ies');
+loadTable('skilltree', 'ies.ipf/skilltree.ies');
+loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
+function loadTable(name, path){
+  tableData[name] = [];
+  var file = fs.createWriteStream('./web/data/' + name + '.ies');
+  var request = http.get(dataServerPath + serverCode + '/' + path, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('download table [' + name + ']');
+      fs.createReadStream('./web/data/' + name + '.ies').pipe(csv()).on('data', function (data) {
+        tableData[name].push(data);
+      });
+    });
+  });
+}
 
 
 // ---------- 페이지 세팅
