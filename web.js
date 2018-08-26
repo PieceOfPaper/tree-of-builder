@@ -9,6 +9,8 @@ var TGA = require('tga');
 var PNG = require('pngjs').PNG;
 var PNGCrop = require('png-crop');
 
+var tos = require('./my_modules/TosModule');
+
 var app = express();
 var port = 3000;
 
@@ -61,19 +63,20 @@ app.get('/', function (req, response) {
     if (captionList.length > 0){
       var caption = captionList[Math.floor(Math.random()*captionList.length)];
       illustNpcName = caption.Caption;
-      illustNpcText = caption.Text.split(/{np}|{nl}/g);
+      //illustNpcText = caption.Text.split(/{np}|{nl}/g);
+      illustNpcText = tos.parseCaption(caption.Text);
     }
 
-    var illustNpcMention = '';
-    for (var i = 0; i < illustNpcText.length; i ++){
-      illustNpcMention +=     illustNpcText[i] + '<br/>';
-    }
+    // var illustNpcMention = '';
+    // for (var i = 0; i < illustNpcText.length; i ++){
+    //   illustNpcMention +=     illustNpcText[i] + '<br/>';
+    // }
 
     var output = layout.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%IllustPath%/g, '../img/npcimg/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
-    output = output.replace(/%IllustMention%/g, illustNpcMention);
+    output = output.replace(/%IllustMention%/g, illustNpcText);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
