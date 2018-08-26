@@ -2,6 +2,7 @@ module.exports = function(app, tableData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
+  var tos = require('../my_modules/TosModule');
   
   var route = express.Router();
 
@@ -86,8 +87,8 @@ module.exports = function(app, tableData){
     output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
     output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
 
-    output = output.replace(/%Caption%/g, skillTable[index].Caption);
-    output = output.replace(/%Caption2%/g, skillTable[index].Caption2);
+    output = output.replace(/%Caption%/g, tos.parseCaptionSkill(skillTable[index].Caption, skillTable[index], 1));
+    output = output.replace(/%Caption2%/g, tos.parseCaptionSkill(skillTable[index].Caption2, skillTable[index], 1));
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
