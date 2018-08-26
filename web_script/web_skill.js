@@ -80,10 +80,12 @@ module.exports = function(app, tableData){
     output = output.replace(/%Attribute%/g, skillTable[index].Attribute);
     output = output.replace(/%AttackType%/g, skillTable[index].AttackType);
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
-    output = output.replace(/%SklFactor%/g, skillTable[index].SklFactor);
-    output = output.replace(/%SklFactorByLevel%/g, skillTable[index].SklFactorByLevel);
-    output = output.replace(/%BasicSP%/g, skillTable[index].BasicSP);
-    output = output.replace(/%LvUpSpendSp%/g, skillTable[index].LvUpSpendSp);
+
+    output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
+    output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
+    output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
+    output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
+
     output = output.replace(/%Caption%/g, skillTable[index].Caption);
     output = output.replace(/%Caption2%/g, skillTable[index].Caption2);
 
