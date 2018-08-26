@@ -87,8 +87,9 @@ module.exports = function(app, tableData){
     output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
     output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
 
-    output = output.replace(/%Caption%/g, tos.parseCaptionSkill(skillTable[index].Caption, skillTable[index], 1));
-    output = output.replace(/%Caption2%/g, tos.parseCaptionSkill(skillTable[index].Caption2, skillTable[index], 1));
+    output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
+    output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
+    output = output.replace(/%AddCaptionScript%/g, 'Caption Script');
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
