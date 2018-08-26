@@ -5,7 +5,10 @@ module.exports = function(app, tableData){
   
   var route = express.Router();
 
-  var search_box = fs.readFileSync('./web/Skill/search_box.html');
+  var layout = fs.readFileSync('./web/Layout/index-skill.html');
+  var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
+
+  //var search_box = fs.readFileSync('./web/Skill/search_box.html');
   var jobTable = tableData['job'];
   var skillTable = tableData['skill'];
 
@@ -38,83 +41,53 @@ module.exports = function(app, tableData){
       }
     }
 
-    var output = '<html>';
-    output +=   '<head>';
-    output +=     '<title>Skill Page</title>';
-    output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
-    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
-    output +=   '</head>';
-    output +=   '<body>';
-    output += fs.readFileSync('./web/TopMenu/topMenu.html');
-    output += search_box.toString();
-    output +=     '<br/>';
-    output +=     '<table class="search-result-table" style="width:100%">';
+    var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
-      output += '<tr>';
-      output += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      output += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
-      output += '<td>';
-      output +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
-      output += '</td>';
-      output += '</tr>';
+      resultString += '<tr>';
+      resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
+      resultString += '<td>';
+      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
+      resultString += '</td>';
+      resultString += '</tr>';
     }
-    output +=     '</table>';
-    output +=   '</body>';
-    output += '</html>';
+
+
+    var output = layout.toString();
+    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/%SearchResult%/g, resultString);
+
+    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
     //console.log(request.query.searchType + " " + request.query.searchName);
   });
 
+  var layout_detail = fs.readFileSync('./web/Layout/index-skilldetail.html');
+
   function skillDetailPage(index, request, response) {
-    var output = '<html>';
-    output +=   '<head>';
-    output +=     '<title>' + skillTable[index].Name + '</title>';
-    output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
-    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
-    output +=   '</head>';
-    output +=   '<body>';
-    output += fs.readFileSync('./web/TopMenu/topMenu.html');
-    output +=     '<h1>' + skillTable[index].Name + '</h1>';
-    output +=     '<p>' + skillTable[index].EngName + '</p>';
-    output +=     '<table style="width:100%">';
-    output +=       '<tr>';
-    output +=         '<td>ClassId</td>';
-    output +=         '<td>ClassName</td>';
-    output +=         '<td>Job</td>';
-    output +=         '<td>Rank</td>';
-    output +=       '</tr>';
-    output +=       '<tr>';
-    output +=         '<td>' + skillTable[index].ClassID + '</td>';
-    output +=         '<td>' + skillTable[index].ClassName + '</td>';
-    output +=         '<td>' + JobToJobName(skillTable[index].Job) + '</td>';
-    output +=         '<td>' + skillTable[index].Rank + '</td>';
-    output +=       '</tr>';
-    output +=     '</table>';
-    output +=     '<table style="width:100%">';
-    output +=       '<tr>';
-    output +=         '<td>ClassType</td>';
-    output +=         '<td>ValueType</td>';
-    output +=         '<td>Attribute</td>';
-    output +=         '<td>AttackType</td>';
-    output +=         '<td>HitType</td>';
-    output +=         '<td>SkillFactor</td>';
-    output +=         '<td>BasicSP</td>';
-    output +=       '</tr>';
-    output +=       '<tr>';
-    output +=         '<td>' + skillTable[index].ClassType + '</td>';
-    output +=         '<td>' + skillTable[index].ValueType + '</td>';
-    output +=         '<td>' + skillTable[index].Attribute + '</td>';
-    output +=         '<td>' + skillTable[index].AttackType + '</td>';
-    output +=         '<td>' + skillTable[index].HitType + '</td>';
-    output +=         '<td>' + skillTable[index].SklFactor + '%(+' + skillTable[index].SklFactorByLevel  + '%)</td>';
-    output +=         '<td>' + skillTable[index].BasicSP + '(+' + skillTable[index].LvUpSpendSp  + ')</td>';
-    output +=       '</tr>';
-    output +=     '</table>';
-    output +=     '<p>' + skillTable[index].Caption + '</p>';
-    output +=     '<p>' + skillTable[index].Caption2 + '</p>';
-    output +=   '</body>';
-    output += '</html>';
+
+    var output = layout_detail.toString();
+    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/%Name%/g, skillTable[index].Name);
+    output = output.replace(/%EngName%/g, skillTable[index].EngName);
+    output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
+    output = output.replace(/%ClassID%/g, skillTable[index].ClassID);
+    output = output.replace(/%Rank%/g, skillTable[index].Rank);
+    output = output.replace(/%JobName%/g, JobToJobName(skillTable[index].Job));
+    output = output.replace(/%ClassType%/g, skillTable[index].ClassType);
+    output = output.replace(/%ValueType%/g, skillTable[index].ValueType);
+    output = output.replace(/%Attribute%/g, skillTable[index].Attribute);
+    output = output.replace(/%AttackType%/g, skillTable[index].AttackType);
+    output = output.replace(/%HitType%/g, skillTable[index].HitType);
+    output = output.replace(/%SklFactor%/g, skillTable[index].SklFactor);
+    output = output.replace(/%SklFactorByLevel%/g, skillTable[index].SklFactorByLevel);
+    output = output.replace(/%BasicSP%/g, skillTable[index].BasicSP);
+    output = output.replace(/%LvUpSpendSp%/g, skillTable[index].LvUpSpendSp);
+    output = output.replace(/%Caption%/g, skillTable[index].Caption);
+    output = output.replace(/%Caption2%/g, skillTable[index].Caption2);
+
+    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }

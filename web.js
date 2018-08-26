@@ -41,6 +41,9 @@ function loadTable(name, path){
 
 // ---------- 페이지 세팅
 app.use(express.static('web'));
+
+var layout = fs.readFileSync('./web/Layout/index-main.html');
+var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
   fs.readdir('./web/img/npcimg', (err, files) => {
@@ -61,24 +64,18 @@ app.get('/', function (req, response) {
       illustNpcText = caption.Text.split(/{np}|{nl}/g);
     }
 
-    var output = '';
-    output += '<html>';
-    output += '<head>';
-    output +=     '<title>Tree of Builder</title>';
-    output +=     '<link rel="stylesheet" type="text/css" href="style.css">';
-    output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
-    output += '</head>';
-    output += '<body align="center">';
-    output +=     '<h1>Tree of Builder</h1>';
-    output +=     '<img class="main-illust" src="../img/npcimg/' + files[randomIndex] + '" />';
-    output +=     '<h2>' + illustNpcName + '</h2>';
-    output +=     '<p>';
+    var illustNpcMention = '';
     for (var i = 0; i < illustNpcText.length; i ++){
-      output +=     illustNpcText[i] + '<br/>';
+      illustNpcMention +=     illustNpcText[i] + '<br/>';
     }
-    output +=     '</p>';
-    output += '</body>';
-    output += '</html>';
+
+    var output = layout.toString();
+    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/%IllustPath%/g, '../img/npcimg/' + files[randomIndex]);
+    output = output.replace(/%IllustName%/g, illustNpcName);
+    output = output.replace(/%IllustMention%/g, illustNpcMention);
+
+    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
     response.send(output);
   })
