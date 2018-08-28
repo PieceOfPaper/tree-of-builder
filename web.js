@@ -1,6 +1,7 @@
 var express = require('express');
 var fs = require('fs');
-var http = require('https');
+var http = require('http');
+var https = require('https');
 
 var csv = require('csv-parser');
 var xml = require('xml-parser');
@@ -12,7 +13,6 @@ var PNGCrop = require('png-crop');
 var tos = require('./my_modules/TosModule');
 
 var app = express();
-var port = 3000;
 
 
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
@@ -30,7 +30,7 @@ loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 function loadTable(name, path){
   tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + name + '.ies');
-  var request = http.get(dataServerPath + serverCode + '/' + path, function(response) {
+  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
       console.log('download table [' + name + ']');
       fs.createReadStream('./web/data/' + name + '.ies').pipe(csv()).on('data', function (data) {
@@ -49,6 +49,11 @@ var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
   fs.readdir('./web/img/npcimg', (err, files) => {
+    if (files === undefined){
+      response.send(layout.toString());
+      return;
+    }
+
     var randomIndex = Math.floor(Math.random()*files.length);
     var imgname = files[randomIndex].split('.')[0];
     var dialogTable = tableData['dialogtext'];
@@ -96,6 +101,22 @@ app.use('/Skill', skillPage);
 
 
 // ---------- ON!
-app.listen(port, function (){
-  console.log("Server Open! port:" + port);
+// app.listen(port, function (){
+//   console.log("Server Open! port:" + port);
+// });
+// var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+// var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+// var credentials = {key: privateKey, cert: certificate};
+
+var httpServer = http.createServer(app);
+//var httpsServer = https.createServer(credentials, app);
+
+var http_port = 3000;
+var https_port = 3000;
+
+httpServer.listen(http_port, function (){
+  console.log("Http Server Open! port:" + http_port);
 });
+// httpsServer.listen(https_port, function (){
+//   console.log("Https Server Open! port:" + https_port);
+// });
