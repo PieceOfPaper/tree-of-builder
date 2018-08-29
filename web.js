@@ -48,7 +48,7 @@ var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
-  fs.readdir('./web/img/npcimg', (err, files) => {
+  fs.readdir('./web/img/Dlg_portrait', (err, files) => {
     if (files === undefined){
       response.send(layout.toString());
       return;
@@ -63,7 +63,7 @@ app.get('/', function (req, response) {
         captionList.push(dialogTable[i]);
       }
     }
-    var illustNpcName = imgname.replace('Dlg_port_', '');
+    var illustNpcName = imgname;
     var illustNpcText = [];
     if (captionList.length > 0){
       var caption = captionList[Math.floor(Math.random()*captionList.length)];
@@ -79,7 +79,7 @@ app.get('/', function (req, response) {
 
     var output = layout.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
-    output = output.replace(/%IllustPath%/g, '../img/npcimg/' + files[randomIndex]);
+    output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
     output = output.replace(/%IllustMention%/g, illustNpcText);
 

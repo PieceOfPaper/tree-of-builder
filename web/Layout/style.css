@@ -30,7 +30,7 @@ body {
     margin: 0;
     padding-top: 50px;
     font-family: IMCM_Origin;
-    background-image: url("../img/minimap/jilgam.png");
+    background-image: url("../img/minimap_imgs/jilgam.png");
     /*font-size: 2.5vw;*/
     max-width: 100%;
     overflow-x: hidden;
