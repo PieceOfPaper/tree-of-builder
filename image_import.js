@@ -57,6 +57,7 @@ importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', true);
 importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', true);
 importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', true);
 function importImage(srcPath, dstPath, useCategory){
+  autoMkDir('./web/data/' + srcPath);
   var file = fs.createWriteStream('./web/data/' + srcPath);
   var request = https.get(dataServerPath + serverCode + '/' + srcPath, function(response) {
     response.pipe(file).on('close', function(){
