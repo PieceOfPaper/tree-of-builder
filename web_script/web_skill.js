@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, tableData, scriptData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -12,6 +12,7 @@ module.exports = function(app, tableData){
   //var search_box = fs.readFileSync('./web/Skill/search_box.html');
   var jobTable = tableData['job'];
   var skillTable = tableData['skill'];
+  var skillTreeTable = tableData['skilltree'];
 
   route.get('/', function (request, response) {
     // id값이 존재하는 경우, 상세 페이지로 이동
@@ -68,6 +69,46 @@ module.exports = function(app, tableData){
 
   function skillDetailPage(index, request, response) {
 
+    var skillMaxLevel = 1;
+    for (var i = 0; i < skillTreeTable.length; i ++){
+      if (skillTreeTable[i].ClassID == skillTable[index].ClassID){
+        skillMaxLevel = skillTreeTable[i].MaxLevel;
+        break;
+      }
+    }
+
+    var captionScript = '';
+    captionScript += '<script>';
+
+    captionScript += 'function GetSkillOwner(skill){ return undefined; }';
+    captionScript += 'function GetAbility(pc, ability){ return undefined; }';
+
+    captionScript += 'var currentSkill = {';
+    captionScript +=  'Level: 1,';
+    captionScript +=  'SklFactor:' +  + Number(skillTable[index].SklFactor) + ',';
+    captionScript +=  'SklFactorByLevel:' +  + Number(skillTable[index].SklFactorByLevel) + ',';
+    captionScript += '};';
+
+    captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
+    captionScript += 'onChangeSkillLevel();';
+
+    captionScript += 'function onChangeSkillLevel(){';
+    captionScript +=  'currentSkill.Level = document.getElementById("SkillLevel").value;';
+    captionScript +=  'updateSkillFactor();';
+    captionScript += '}';
+
+    captionScript += 'function updateSkillFactor(){';
+    captionScript +=  'document.getElementById("SkillFactor").innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
+    captionScript += '}';
+
+    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
+    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
+    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    captionScript += '</script>';
+
+    // console.log(scriptData[skillTable[index].SkillFactor])
+    // console.log(tos.Lua2JS(scriptData[skillTable[index].SkillFactor]))
+
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Name%/g, skillTable[index].Name);
@@ -89,7 +130,7 @@ module.exports = function(app, tableData){
 
     output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
     output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
-    output = output.replace(/%AddCaptionScript%/g, 'Caption Script');
+    output = output.replace(/%AddCaptionScript%/g, captionScript);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
