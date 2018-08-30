@@ -19,10 +19,9 @@ var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF
 var serverCode = 'kr';
 
 
+if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
-if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
-
 loadTable('job', 'ies.ipf/job.ies');
 loadTable('skill', 'ies.ipf/skill.ies');
 loadTable('skilltree', 'ies.ipf/skilltree.ies');
@@ -35,6 +34,29 @@ function loadTable(name, path){
       console.log('download table [' + name + ']');
       fs.createReadStream('./web/data/' + name + '.ies').pipe(csv()).on('data', function (data) {
         tableData[name].push(data);
+      });
+    });
+  });
+}
+
+
+// ---------- 스크립트 데이터 불러오기
+var scriptData = [];
+loadScript('shared.ipf/script/calc_property_skill.lua');
+function loadScript(path){
+  var pathSplited = path.split('/');
+  var filename = pathSplited[pathSplited.length - 1];
+  var file = fs.createWriteStream('./web/data/' + filename);
+  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('download script [' + filename + ']');
+      fs.readFile('./web/data/' + filename, function(err, data){
+        var luaFuncSplit = data.toString().split('function');
+        for (var i = 0; i < luaFuncSplit.length; i ++){
+          var methodName = luaFuncSplit[i].split('(')[0].trim();
+          scriptData[methodName] = 'function' + luaFuncSplit[i];
+          //console.log('[' + i + ']' + methodName);
+        }
       });
     });
   });
@@ -89,7 +111,7 @@ app.get('/', function (req, response) {
   })
 });
 
-var skillPage = require('./web_script/web_skill')(app, tableData);
+var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
 
 // var skillPage = require('./web_script/web_builder')(app, tableData);
