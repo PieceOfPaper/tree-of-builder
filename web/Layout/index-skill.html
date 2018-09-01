@@ -14,10 +14,30 @@
             <option value="ClassName">ClassName</option>
         </select>
         <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
-        <button id="searchBtn" onclick="search()">Search</button>
     </div>
     <div class="filler-area">
+        <select id="jobFilter">
+            %JobFilter%
+        </select>
+        <select id="classTypeFilter">
+            %ClassTypeFilter%
+        </select>
+        <select id="valueTypeFilter">
+            %ValueTypeFilter%
+        </select>
+        <select id="attributeFilter">
+            %AttributeFilter%
+        </select>
+        <select id="attackTypeFilter">
+            %AttackTypeFilter%
+        </select>
+        <select id="hitTypeFilter">
+            %HitTypeFilter%
+        </select>
+        <br>
+        <input type="checkbox" id="simonyFilter">Simony<br>
     </div>
+    <button id="searchBtn" onclick="search()">Search</button>
     <br/>
     <table class="search-result-table" style="width:100%">
     %SearchResult%
@@ -48,11 +68,29 @@
         var searchType = document.getElementById("searchType");
         var searchName = document.getElementById("searchName");
 
+        var jobFilter = document.getElementById("jobFilter");
+        var classTypeFilter = document.getElementById("classTypeFilter");
+        var valueTypeFilter = document.getElementById("valueTypeFilter");
+        var attributeFilter = document.getElementById("attributeFilter");
+        var attackTypeFilter = document.getElementById("attackTypeFilter");
+        var hitTypeFilter = document.getElementById("hitTypeFilter");
+
+        var simonyFilter = document.getElementById("simonyFilter");
+
         onInit();
 
         function onInit() {
             searchType.value = getQueryVariable("searchType");
             searchName.value = getQueryVariable("searchName");
+
+            jobFilter.value = getQueryVariable("jobFilter");
+            classTypeFilter.value = getQueryVariable("classTypeFilter");
+            valueTypeFilter.value = getQueryVariable("valueTypeFilter");
+            attributeFilter.value = getQueryVariable("attributeFilter");
+            attackTypeFilter.value = getQueryVariable("attackTypeFilter");
+            hitTypeFilter.value = getQueryVariable("hitTypeFilter");
+
+            simonyFilter.checked = getQueryVariable("simonyFilter");
 
             if (!searchType.value || searchType.value === undefined || searchType.value === "") {
                 searchType.value = "Name";
@@ -76,7 +114,45 @@
         }
 
         function search() {
-            window.location.href = url + "?searchType=" + searchType.value + "&searchName=" + searchName.value;
+            
+            var queryString = [];
+            if (searchType.value != undefined && searchType.value.length > 0){
+                queryString.push("searchType=" + searchType.value);
+            }
+            if (searchName.value != undefined && searchName.value.length > 0){
+                queryString.push("searchName=" + searchName.value);
+            }
+            if (jobFilter.value != undefined && jobFilter.value.length > 0){
+                queryString.push("jobFilter=" + jobFilter.value);
+            }
+            if (classTypeFilter.value != undefined && classTypeFilter.value.length > 0){
+                queryString.push("classTypeFilter=" + classTypeFilter.value);
+            }
+            if (valueTypeFilter.value != undefined && valueTypeFilter.value.length > 0){
+                queryString.push("valueTypeFilter=" + valueTypeFilter.value);
+            }
+            if (attributeFilter.value != undefined && attributeFilter.value.length > 0){
+                queryString.push("attributeFilter=" + attributeFilter.value);
+            }
+            if (attackTypeFilter.value != undefined && attackTypeFilter.value.length > 0){
+                queryString.push("attackTypeFilter=" + attackTypeFilter.value);
+            }
+            if (hitTypeFilter.value != undefined && hitTypeFilter.value.length > 0){
+                queryString.push("hitTypeFilter=" + hitTypeFilter.value);
+            }
+            if (simonyFilter.checked){
+                queryString.push("simonyFilter=" + simonyFilter.checked);
+            }
+
+            var newUrl = url;
+            for (var i = 0; i < queryString.length; i ++){
+                if (i == 0){
+                    newUrl += "?" + queryString[i];
+                } else {
+                    newUrl += "&" + queryString[i];
+                }
+            }
+            window.location.href = newUrl;
         }
     </script>
 

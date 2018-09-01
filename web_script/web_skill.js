@@ -16,33 +16,172 @@ module.exports = function(app, tableData, scriptData){
 
   route.get('/', function (request, response) {
     var skillTable = tableData['skill'];
+    var skillTreeTable = tableData['skilltree'];
+    var jobTable = tableData['job'];
+    var skillAttributeTable = tableData['skill_attribute'];
+    var skillSimonyTable = tableData['skill_Simony'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < skillTable.length; i ++){
-        if (skillTable[i].ClassID.indexOf(request.query.id) > -1){
+        if (skillTable[i].ClassID === request.query.id){
           skillDetailPage(i, request, response);
           return;
         }
       }
     }
 
+    var filteredTable = [];
+
+    // 필터 - 직업
+    if (request.query.jobFilter != undefined && request.query.jobFilter != ''){
+      if (request.query.jobFilter === 'Unused'){
+        for (var i = 0; i < skillTable.length; i ++){
+          var isUse = false;
+          for (var j = 0; j < skillTreeTable.length; j ++){
+            if (skillTreeTable[j].SkillName === skillTable[i].ClassName){
+              isUse = true;
+              break;
+            }
+          }
+          if (!isUse) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          var isUse = false;
+          for (var j = 0; j < skillTreeTable.length; j ++){
+            if (skillTreeTable[j].SkillName === skillTable[i].ClassName){
+              isUse = true;
+              break;
+            }
+          }
+          if (isUse) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+        for (var i = 0; i < skillTreeTable.length; i ++){
+          if (tos.GetJobNumber1(skillTreeTable[i].ClassName) === tos.GetJobNumber1(request.query.jobFilter) &&
+            tos.GetJobNumber2(skillTreeTable[i].ClassName) === tos.GetJobNumber2(request.query.jobFilter))
+            continue;
+          if (!filteredTable.includes(skillTreeTable[i].SkillName)) filteredTable.push(skillTreeTable[i].SkillName);
+        }
+      }
+    }
+
+    // 필터 - ClassType
+    if (request.query.classTypeFilter != undefined && request.query.classTypeFilter != ''){
+      if (request.query.attributeFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].ClassType.length === 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].ClassType === request.query.classTypeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - ValueType
+    if (request.query.valueTypeFilter != undefined && request.query.valueTypeFilter != ''){
+      if (request.query.valueTypeFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].ValueType.length === 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].ValueType === request.query.valueTypeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - 속성(Attribute)
+    if (request.query.attributeFilter != undefined && request.query.attributeFilter != ''){
+      if (request.query.attributeFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          var isUse = false;
+          for (var j = 0; j < skillAttributeTable.length; j ++){
+            if (skillAttributeTable[j].ClassName === skillTable[i].Attribute){
+              isUse = true;
+              break;
+            }
+          }
+          if (!isUse) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].Attribute === request.query.attributeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - AttackType
+    if (request.query.attackTypeFilter != undefined && request.query.attackTypeFilter != ''){
+      if (request.query.attackTypeFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].AttackType.length === 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].AttackType === request.query.attackTypeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - HitType
+    if (request.query.hitTypeFilter != undefined && request.query.hitTypeFilter != ''){
+      if (request.query.hitTypeFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].HitType.length === 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].HitType === request.query.hitTypeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - 시모니
+    if (request.query.simonyFilter != undefined && request.query.simonyFilter.toLowerCase().indexOf('true') > -1){
+      for (var i = 0; i < skillTable.length; i ++){
+        var isSimony = false;
+        for (var j = 0; j < skillSimonyTable.length; j ++){
+          if (skillSimonyTable[j].ClassID === skillTable[i].ClassID){
+            isSimony = true;
+            break;
+          }
+        }
+        if (isSimony) continue;
+        if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+      }
+    }
+
     // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
-    if (request.query.searchName === undefined || request.query.searchName === ''){
-      // for (var i = 0; i < skillTable.length; i ++){
-      //   if (resultArray.length >= 10) break;
-      //   resultArray.push(skillTable[i]);
-      // }
-    } else {
-      for (var i = 0; i < skillTable.length; i ++){
-        //if (resultArray.length >= 10) break;
-
-        if (request.query.searchType === "Name" && skillTable[i].Name.indexOf(request.query.searchName) > -1)
-          resultArray.push(skillTable[i]);
-        else if (request.query.searchType === "ClassName" && skillTable[i].ClassName.indexOf(request.query.searchName) > -1)
-        resultArray.push(skillTable[i]);
+    for (var i = 0; i < skillTable.length; i ++){
+      //if (resultArray.length >= 10) break;
+      var filter = false;
+      for (var j = 0; j < filteredTable.length; j ++){
+        if (filteredTable[j] === skillTable[i].ClassName){
+          filter = true;
+          break;
+        }
       }
+      if (filter) continue;
+
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || skillTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(skillTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || skillTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(skillTable[i]);
     }
 
     var resultString = '';
@@ -56,9 +195,81 @@ module.exports = function(app, tableData, scriptData){
       resultString += '</tr>';
     }
 
+    var jobFilterString = '';
+    jobFilterString += '<option value="">Job</option>';
+    jobFilterString += '<option value="Unused">Unused</option>';
+    for (var i = 0; i < jobTable.length; i ++){
+      if (jobTable[i].Name != undefined && jobTable[i].Name.length > 0){
+        jobFilterString += '<option value="' + jobTable[i].ClassName + '">' + jobTable[i].Name + '</option>';
+      } else if (jobTable[i].ClassName != undefined && jobTable[i].ClassName.length > 0){
+        jobFilterString += '<option value="' + jobTable[i].ClassName + '">' + jobTable[i].ClassName + '</option>';
+      }
+    }
+
+    var classTypeFilterString = '';
+    classTypeFilterString += '<option value="">ClassType</option>';
+    classTypeFilterString += '<option value="None">None</option>';
+    classTypeFilterString += '<option value="Melee">Melee</option>';
+    classTypeFilterString += '<option value="Magic">Magic</option>';
+    classTypeFilterString += '<option value="Missile">Missile</option>';
+
+    var valueTypeFilterString = '';
+    valueTypeFilterString += '<option value="">ValueType</option>';
+    valueTypeFilterString += '<option value="None">None</option>';
+    valueTypeFilterString += '<option value="Attack">Attack</option>';
+    valueTypeFilterString += '<option value="Buff">Buff</option>';
+
+    var attributeFilterString = '';
+    attributeFilterString += '<option value="">Attribute</option>';
+    attributeFilterString += '<option value="None">None</option>';
+    for (var i = 0; i < skillAttributeTable.length; i ++){
+      if (skillAttributeTable[i].TextEffectMsg != undefined && skillAttributeTable[i].TextEffectMsg.length > 0){
+        attributeFilterString += '<option value="' + skillAttributeTable[i].ClassName + '">' + skillAttributeTable[i].TextEffectMsg + '</option>';
+      } else if (skillAttributeTable[i].ClassName != undefined && skillAttributeTable[i].ClassName.length > 0){
+        attributeFilterString += '<option value="' + skillAttributeTable[i].ClassName + '">' + skillAttributeTable[i].ClassName + '</option>';
+      }
+    }
+
+    var attackTypeFilterString = '';
+    attackTypeFilterString += '<option value="">AttackType</option>';
+    attackTypeFilterString += '<option value="None">None</option>';
+    // attackTypeFilterString += '<option value="Aries">Aries</option>';
+    // attackTypeFilterString += '<option value="Arrow">Arrow</option>';
+    // attackTypeFilterString += '<option value="Cannon">Cannon</option>';
+    // attackTypeFilterString += '<option value="Gun">Gun</option>';
+    // attackTypeFilterString += '<option value="Holy">Holy</option>';
+    // attackTypeFilterString += '<option value="Magic">Magic</option>';
+    // attackTypeFilterString += '<option value="Slash">Slash</option>';
+    // attackTypeFilterString += '<option value="Strike">Strike</option>';
+    for (var i = 0; i < skillAttributeTable.length; i ++){
+      if (skillAttributeTable[i].TextEffectMsg != undefined && skillAttributeTable[i].TextEffectMsg.length > 0){
+        attackTypeFilterString += '<option value="' + skillAttributeTable[i].ClassName + '">' + skillAttributeTable[i].TextEffectMsg + '</option>';
+      } else if (skillAttributeTable[i].ClassName != undefined && skillAttributeTable[i].ClassName.length > 0){
+        attackTypeFilterString += '<option value="' + skillAttributeTable[i].ClassName + '">' + skillAttributeTable[i].ClassName + '</option>';
+      }
+    }
+
+    var hitTypeFilterString = '';
+    hitTypeFilterString += '<option value="">HitType</option>';
+    hitTypeFilterString += '<option value="None">None</option>';
+    hitTypeFilterString += '<option value="Companion">Companion</option>';
+    hitTypeFilterString += '<option value="Companion_Flying">Companion_Flying</option>';
+    hitTypeFilterString += '<option value="Force">Force</option>';
+    hitTypeFilterString += '<option value="Magic">Magic</option>';
+    hitTypeFilterString += '<option value="Melee">Melee</option>';
+    hitTypeFilterString += '<option value="Pad">Pad</option>';
+
 
     var output = layout.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
+
+    output = output.replace(/%JobFilter%/g, jobFilterString);
+    output = output.replace(/%ClassTypeFilter%/g, classTypeFilterString);
+    output = output.replace(/%ValueTypeFilter%/g, valueTypeFilterString);
+    output = output.replace(/%AttributeFilter%/g, attributeFilterString);
+    output = output.replace(/%AttackTypeFilter%/g, attackTypeFilterString);
+    output = output.replace(/%HitTypeFilter%/g, hitTypeFilterString);
+
     output = output.replace(/%SearchResult%/g, resultString);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
@@ -158,11 +369,11 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
     output = output.replace(/%ClassID%/g, skillTable[index].ClassID);
     output = output.replace(/%Rank%/g, skillTable[index].Rank);
-    output = output.replace(/%JobName%/g, JobToJobName(skillTable[index].Job));
+    output = output.replace(/%JobName%/g, tos.JobToJobName(tableData, skillTable[index].Job));
     output = output.replace(/%ClassType%/g, skillTable[index].ClassType);
     output = output.replace(/%ValueType%/g, skillTable[index].ValueType);
-    output = output.replace(/%Attribute%/g, skillTable[index].Attribute);
-    output = output.replace(/%AttackType%/g, skillTable[index].AttackType);
+    output = output.replace(/%Attribute%/g, tos.AttributeToName(tableData, skillTable[index].Attribute));
+    output = output.replace(/%AttackType%/g, tos.AttributeToName(tableData, skillTable[index].AttackType));
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
 
     output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
@@ -177,13 +388,6 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
-  }
-
-  function JobToJobName(job){
-    for (var i = 0; i < tableData['job'].length; i ++){
-      if (tableData['job'][i].EngName === job) return tableData['job'][i].Name;
-    }
-    return job;
   }
 
   return route;

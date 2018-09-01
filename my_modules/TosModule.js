@@ -40,5 +40,40 @@ class TosModule {
 
         return output;
     }
+
+    static GetJobData(tableData, num1, num2){
+        for (var i = 0; i < tableData['job'].length; i ++){
+            if (tableData['job'][i].ClassName === 'Char' + num1 + '_' + num2)
+                return tableData['job'][i];
+        }
+        return undefined;
+    }
+
+    static GetJobNumber1(className) {
+        var replaced = className.replace('Char', '');
+        var splited = replaced.split('_');
+        return Number(splited[0]);
+    }
+
+    static GetJobNumber2(className) {
+        var replaced = className.replace('Char', '');
+        var splited = replaced.split('_');
+        if (splited.length < 2) return 0;
+        return Number(splited[1]);
+    }
+
+    static JobToJobName(tableData, job){
+      for (var i = 0; i < tableData['job'].length; i ++){
+        if (tableData['job'][i].EngName === job) return tableData['job'][i].Name;
+      }
+      return job;
+    }
+    
+    static AttributeToName(tableData, attribute){
+      for (var i = 0; i < tableData['skill_attribute'].length; i ++){
+        if (tableData['skill_attribute'][i].ClassName === attribute) return tableData['skill_attribute'][i].TextEffectMsg;
+      }
+      return job;
+    }
 }
 module.exports = TosModule;

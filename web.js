@@ -26,6 +26,8 @@ loadTable('job', 'ies.ipf/job.ies');
 loadTable('skill', 'ies.ipf/skill.ies');
 loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
+loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
+loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
 function loadTable(name, path){
   tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + name + '.ies');
