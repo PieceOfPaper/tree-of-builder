@@ -40,11 +40,21 @@ loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
 loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
-loadTable('buff', 'ies.ipf/buff.ies');
-loadTable('buff', 'ies.ipf/buff_contents.ies');
-loadTable('buff', 'ies.ipf/buff_hardskill.ies');
-loadTable('buff', 'ies.ipf/buff_mgame.ies');
-loadTable('buff', 'ies.ipf/buff_monster.ies');
+loadTable('buff', 'ies.ipf/buff.ies', function(){
+  loadTable('buff', 'ies.ipf/buff_contents.ies', function(){
+    loadTable('buff', 'ies.ipf/buff_hardskill.ies', function(){
+      loadTable('buff', 'ies.ipf/buff_mgame.ies', function(){
+        loadTable('buff', 'ies.ipf/buff_monster.ies', function(){
+          tableData['buff'].sort(function(a,b){
+            if (a.ClassID > b.ClassID) return 1;
+            else if (a.ClassID < b.ClassID) return -1;
+            else return 0;
+          });
+        });
+      });
+    });
+  });
+});
 function loadTable(name, path, callback){
   tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + path);
