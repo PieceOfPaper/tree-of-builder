@@ -28,12 +28,17 @@ loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
 loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
+loadTable('buff', 'ies.ipf/buff.ies');
+loadTable('buff', 'ies.ipf/buff_contents.ies');
+loadTable('buff', 'ies.ipf/buff_hardskill.ies');
+loadTable('buff', 'ies.ipf/buff_mgame.ies');
+loadTable('buff', 'ies.ipf/buff_monster.ies');
 function loadTable(name, path){
   tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + name + '.ies');
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('download table [' + name + ']');
+      console.log('download table [' + name + '] ' + path);
       fs.createReadStream('./web/data/' + name + '.ies').pipe(csv()).on('data', function (data) {
         tableData[name].push(data);
       });
