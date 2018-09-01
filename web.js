@@ -20,9 +20,21 @@ var serverCode = 'kr';
 
 
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
+if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
+if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_client.ipf');
+if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_ability.ipf');
+
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
-loadTable('job', 'ies.ipf/job.ies');
+loadTable('job', 'ies.ipf/job.ies', function(){
+  loadTable('ability', 'ies_ability.ipf/ability.ies', function(){
+    loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
+    for (var i = 0; i < tableData['job'].length; i ++){
+      if (tableData['job'][i].EngName === 'Warrior') continue;
+      loadTable('ability_job', 'ies_ability.ipf/ability_' + tableData['job'][i].EngName + '.ies');
+    }
+  });
+});
 loadTable('skill', 'ies.ipf/skill.ies');
 loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
@@ -33,15 +45,18 @@ loadTable('buff', 'ies.ipf/buff_contents.ies');
 loadTable('buff', 'ies.ipf/buff_hardskill.ies');
 loadTable('buff', 'ies.ipf/buff_mgame.ies');
 loadTable('buff', 'ies.ipf/buff_monster.ies');
-function loadTable(name, path){
+function loadTable(name, path, callback){
   tableData[name] = [];
-  var file = fs.createWriteStream('./web/data/' + name + '.ies');
+  var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
       console.log('download table [' + name + '] ' + path);
-      fs.createReadStream('./web/data/' + name + '.ies').pipe(csv()).on('data', function (data) {
+      fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
         tableData[name].push(data);
       });
+      if (callback != undefined){
+        callback();
+      }
     });
   });
 }
