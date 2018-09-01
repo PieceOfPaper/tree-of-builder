@@ -110,8 +110,19 @@ table, td, th {
     font-size: 1em;
 }
 
-.search-area button{
+.filler-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.filler-area select{
     font-size: 1em;
+}
+
+#searchBtn {
+    float: right;
+    font-size: 1.5em;
+    font-family: IMCM_Book;
 }
 
 .search-result-table {
