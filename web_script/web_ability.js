@@ -165,45 +165,66 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
 
-    captionScript += 'var currentAbility = {';
-    captionScript +=  'Level: Number(1),';
-    captionScript += '};';
+    captionScript += 'var abilLvPrev = Number(0);';
+    captionScript += 'var abilLvNext = Number(1);';
 
-    //captionScript += 'document.getElementById("AbilityLevel").max=' + skillMaxLevel + ';';
-    //captionScript += 'onChangeAbilityLevel();';
+    if (abilityJob != undefined){
+      captionScript += 'document.getElementById("AbilityLevelPrev").min=0;';
+      captionScript += 'document.getElementById("AbilityLevelPrev").max=' + abilityJob.MaxLevel + ';';
+      captionScript += 'document.getElementById("AbilityLevelNext").min=0;';
+      captionScript += 'document.getElementById("AbilityLevelNext").max=' + abilityJob.MaxLevel + ';';
+    }
+
+    captionScript += 'onChangeAbilityLevel();';
 
     captionScript += 'function onChangeAbilityLevel(){';
-    captionScript +=  'currentAbility.Level = document.getElementById("AbilityLevel").value;';
+    captionScript +=  'abilLvPrev = document.getElementById("AbilityLevelPrev").value;';
+    captionScript +=  'abilLvNext = document.getElementById("AbilityLevelNext").value;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
-    captionScript += 'function onClickLevelUp(){';
-    captionScript +=  'currentAbility.Level ++;';
-    captionScript +=  'if (currentAbility.Level > document.getElementById("AbilityLevel").max) currentAbility.Level = document.getElementById("AbilityLevel").max;';
-    captionScript +=  'document.getElementById("AbilityLevel").value = currentAbility.Level;';
+    captionScript += 'function onClickLevelUpPrev(){';
+    captionScript +=  'abilLvPrev ++;';
+    captionScript +=  'if (abilLvPrev > document.getElementById("AbilityLevelPrev").max) abilLvPrev = document.getElementById("AbilityLevelPrev").max;';
+    captionScript +=  'document.getElementById("AbilityLevelPrev").value = abilLvPrev;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
-    captionScript += 'function onClickLevelDown(){';
-    captionScript +=  'currentAbility.Level --;';
-    captionScript +=  'if (currentAbility.Level < document.getElementById("AbilityLevel").min) currentAbility.Level = document.getElementById("AbilityLevel").min;';
-    captionScript +=  'document.getElementById("AbilityLevel").value = currentAbility.Level;';
+    captionScript += 'function onClickLevelDownPrev(){';
+    captionScript +=  'abilLvPrev --;';
+    captionScript +=  'if (abilLvPrev < document.getElementById("AbilityLevelPrev").min) abilLvPrev = document.getElementById("AbilityLevelPrev").min;';
+    captionScript +=  'document.getElementById("AbilityLevelPrev").value = abilLvPrev;';
+    captionScript +=  'updateLuaScripts();';
+    captionScript += '}';
+
+    captionScript += 'function onClickLevelUpNext(){';
+    captionScript +=  'abilLvNext ++;';
+    captionScript +=  'if (abilLvNext > document.getElementById("AbilityLevelNext").max) abilLvNext = document.getElementById("AbilityLevelNext").max;';
+    captionScript +=  'document.getElementById("AbilityLevelNext").value = abilLvNext;';
+    captionScript +=  'updateLuaScripts();';
+    captionScript += '}';
+
+    captionScript += 'function onClickLevelDownNext(){';
+    captionScript +=  'abilLvNext --;';
+    captionScript +=  'if (abilLvNext < document.getElementById("AbilityLevelNext").min) abilLvNext = document.getElementById("AbilityLevelNext").min;';
+    captionScript +=  'document.getElementById("AbilityLevelNext").value = abilLvNext;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function updateLuaScripts(){';
+    if (abilityJob != undefined){
+      captionScript += 'var price = Number(0);';
+      captionScript += 'for (var i = Number(abilLvPrev + 1); i <= abilLvNext; i ++){';
+      captionScript +=  'price+=Number(' + abilityJob.ScrCalcPrice + '(undefined,"' + abilityTable[index].ClassName + '",i,' + abilityJob.MaxLevel + '));';
+      captionScript += '}';
+      captionScript += 'if (document.getElementById("PricePoint") != undefined) document.getElementById("PricePoint").innerHTML=price;';
+    }
     captionScript += '}';
 
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
-    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
-
-    // captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
-    // captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    if (abilityJob != undefined){
+      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price');
+    }
+    
     captionScript += '</script>';
 
     
