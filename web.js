@@ -75,6 +75,7 @@ function loadTable(name, path, callback){
 // ---------- 스크립트 데이터 불러오기
 var scriptData = [];
 loadScript('shared.ipf/script/calc_property_skill.lua');
+loadScript('shared.ipf/script/ability.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];
@@ -145,6 +146,9 @@ app.get('/', function (req, response) {
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
+
+var abilityPage = require('./web_script/web_ability')(app, tableData, scriptData);
+app.use('/Ability', abilityPage);
 
 // var skillPage = require('./web_script/web_builder')(app, tableData);
 // app.use('/Builder', skillPage);
