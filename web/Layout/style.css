@@ -98,6 +98,14 @@ table, td, th {
 .top-menu #ability:active img{
 }
 
+.top-menu #buff img{
+    content: url("../img/bufficon/icon_attack_blessing_up.png");
+}
+.top-menu #buff:hover img{
+}
+.top-menu #buff:active img{
+}
+
 
 /* ======== Main ======== */
 .main-illust {
