@@ -63,11 +63,26 @@ class TosModule {
         return Number(splited[1]);
     }
 
+
+    static JobClassNameToJobName(tableData, job){
+        for (var i = 0; i < tableData['job'].length; i ++){
+          if (tableData['job'][i].ClassName === job) return tableData['job'][i].Name;
+        }
+        return job;
+    }
+
     static JobToJobName(tableData, job){
       for (var i = 0; i < tableData['job'].length; i ++){
         if (tableData['job'][i].EngName === job) return tableData['job'][i].Name;
       }
       return job;
+    }
+
+    static SkillClassNameToSkillName(tableData, skill){
+        for (var i = 0; i < tableData['skill'].length; i ++){
+          if (tableData['skill'][i].ClassName === skill) return tableData['skill'][i].Name;
+        }
+        return job;
     }
     
     static AttributeToName(tableData, attribute){

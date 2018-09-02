@@ -15,9 +15,9 @@ module.exports = function(app, tableData, scriptData){
   // var skillTreeTable = tableData['skilltree'];
 
   route.get('/', function (request, response) {
-    var skillTable = tableData['skill'];
+    //var skillTable = tableData['skill'];
     var abilityTable = tableData['ability'];
-    var skillTreeTable = tableData['skilltree'];
+    //var skillTreeTable = tableData['skilltree'];
     var jobTable = tableData['job'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
@@ -119,15 +119,25 @@ module.exports = function(app, tableData, scriptData){
     //console.log(request.query.searchType + " " + request.query.searchName);
   });
 
-  var layout_detail = fs.readFileSync('./web/Layout/index-skilldetail.html');
+  var layout_detail = fs.readFileSync('./web/Layout/index-abilitydetail.html');
 
   function abilityDetailPage(index, request, response) {
     var skillTable = tableData['skill'];
+    var abilityTable = tableData['ability'];
     var skillTreeTable = tableData['skilltree'];
+    var jobTable = tableData['job'];
+
+    var abilityJob;
+    for (var i = 0; i < tableData['ability_job'].length; i ++){
+      if (tableData['ability_job'][i].ClassName === abilityTable[index].ClassName){
+        abilityJob = tableData['ability_job'][i];
+        break;
+      }
+    }
 
     var skillMaxLevel = 1;
     for (var i = 0; i < skillTreeTable.length; i ++){
-      if (skillTreeTable[i].SkillName == skillTable[index].ClassName){
+      if (skillTreeTable[i].SkillName == abilityTable[index].ClassName){
         skillMaxLevel = skillTreeTable[i].MaxLevel;
         break;
       }
@@ -154,84 +164,100 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
 
-    captionScript += 'var currentSkill = {';
+    captionScript += 'var currentAbility = {';
     captionScript +=  'Level: Number(1),';
-    captionScript +=  'SklFactor:' + Number(skillTable[index].SklFactor) + ',';
-    captionScript +=  'SklFactorByLevel:' + Number(skillTable[index].SklFactorByLevel) + ',';
-    captionScript +=  'SklSR:' + Number(skillTable[index].SklSR) + ',';
-    captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
-    captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
-    captionScript +=  'SpendItemBaseCount:"' + skillTable[index].SpendItemBaseCount + '",';
     captionScript += '};';
 
-    captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
-    captionScript += 'onChangeSkillLevel();';
+    captionScript += 'document.getElementById("AbilityLevel").max=' + skillMaxLevel + ';';
+    captionScript += 'onChangeAbilityLevel();';
 
-    captionScript += 'function onChangeSkillLevel(){';
-    captionScript +=  'currentSkill.Level = document.getElementById("SkillLevel").value;';
+    captionScript += 'function onChangeAbilityLevel(){';
+    captionScript +=  'currentAbility.Level = document.getElementById("AbilityLevel").value;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function onClickLevelUp(){';
-    captionScript +=  'currentSkill.Level ++;';
-    captionScript +=  'if (currentSkill.Level > document.getElementById("SkillLevel").max) currentSkill.Level = document.getElementById("SkillLevel").max;';
-    captionScript +=  'document.getElementById("SkillLevel").value = currentSkill.Level;';
+    captionScript +=  'currentAbility.Level ++;';
+    captionScript +=  'if (currentAbility.Level > document.getElementById("AbilityLevel").max) currentAbility.Level = document.getElementById("AbilityLevel").max;';
+    captionScript +=  'document.getElementById("AbilityLevel").value = currentAbility.Level;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function onClickLevelDown(){';
-    captionScript +=  'currentSkill.Level --;';
-    captionScript +=  'if (currentSkill.Level < document.getElementById("SkillLevel").min) currentSkill.Level = document.getElementById("SkillLevel").min;';
-    captionScript +=  'document.getElementById("SkillLevel").value = currentSkill.Level;';
+    captionScript +=  'currentAbility.Level --;';
+    captionScript +=  'if (currentAbility.Level < document.getElementById("AbilityLevel").min) currentAbility.Level = document.getElementById("AbilityLevel").min;';
+    captionScript +=  'document.getElementById("AbilityLevel").value = currentAbility.Level;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function updateLuaScripts(){';
-    captionScript +=  'if (document.getElementById("SkillFactor") != undefined) document.getElementById("SkillFactor").innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SkillSR") != undefined) document.getElementById("SkillSR").innerHTML=' + skillTable[index].SkillSR + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionTime") != undefined) document.getElementById("CaptionTime").innerHTML=' + skillTable[index].CaptionTime + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio") != undefined) document.getElementById("CaptionRatio").innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio2") != undefined) document.getElementById("CaptionRatio2").innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio3") != undefined) document.getElementById("CaptionRatio3").innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SpendItemCount") != undefined) document.getElementById("SpendItemCount").innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
     captionScript += '}';
 
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
+    // captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
 
-    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
-    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    // captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
+    // captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
     captionScript += '</script>';
 
-    // console.log(scriptData[skillTable[index].SkillFactor])
-    // console.log(tos.Lua2JS(scriptData[skillTable[index].SkillFactor]))
+    
+    var jobsString = '';
+    if (abilityTable[index].Job != undefined){
+      var splited = abilityTable[index].Job.split(';');
+      for (var i = 0; i < splited.length; i ++){
+        jobsString += tos.JobClassNameToJobName(tableData, splited[i]);
+        if ((i+1) < splited.length) jobsString += ', ';
+      }
+    }
+
+    var skillString = '';
+    if (abilityTable[index].SkillCategory != undefined){
+      for (var i = 0; i < skillTable.length; i ++){
+        if (skillTable[i].ClassName === abilityTable[index].SkillCategory){
+          skillString = '<a href="../Skill/?id=' + skillTable[i].ClassID + '">' + skillTable[i].Name + '</a>';
+          break;
+        }
+      }
+    }
+
+    var spendString = '';
+    if (abilityTable[index].AddSpend != undefined){
+      var splited = abilityTable[index].AddSpend.split('/');
+      for (var i = 0; i < splited.length; i += 2) {
+        if (splited[i] === 'SP'){
+          spendString += 'SP+';
+          if ((i + 1) < splited.length) spendString += splited[i+1] + '%';
+        } else if (splited[i] === 'CoolDown'){
+          spendString += 'CoolDown';
+          if ((i + 1) < splited.length) {
+            if (Number(splited[i+1]) > 0) spendString += '+' + (Number(splited[i+1])/1000) + 'Sec';
+            else spendString += (Number(splited[i+1])/1000) + 's';
+          }
+        }
+        
+        if ((i + 2) < splited.length) spendString += '<br/>';
+      }
+    }
 
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
-    output = output.replace(/%Name%/g, skillTable[index].Name);
-    output = output.replace(/%EngName%/g, skillTable[index].EngName);
-    output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
-    output = output.replace(/%ClassID%/g, skillTable[index].ClassID);
-    output = output.replace(/%Rank%/g, skillTable[index].Rank);
-    output = output.replace(/%JobName%/g, tos.JobToJobName(tableData, skillTable[index].Job));
-    output = output.replace(/%ClassType%/g, skillTable[index].ClassType);
-    output = output.replace(/%ValueType%/g, skillTable[index].ValueType);
-    output = output.replace(/%Attribute%/g, tos.AttributeToName(tableData, skillTable[index].Attribute));
-    output = output.replace(/%AttackType%/g, tos.AttributeToName(tableData, skillTable[index].AttackType));
-    output = output.replace(/%HitType%/g, skillTable[index].HitType);
+    output = output.replace(/%Name%/g, abilityTable[index].Name);
+    output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);
+    output = output.replace(/%ClassID%/g, abilityTable[index].ClassID);
+    output = output.replace(/%SkillCategory%/g, skillString);
+    output = output.replace(/%ActiveState%/g, abilityTable[index].ActiveState);
+    output = output.replace(/%AddSpend%/g, spendString);
+    output = output.replace(/%AlwaysActive%/g, abilityTable[index].AlwaysActive);
+    output = output.replace(/%IsEquipItemAbil%/g, abilityTable[index].IsEquipItemAbil);
 
-    output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
-    output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
-    output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
-    output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
+    output = output.replace(/%Desc%/g, tos.parseCaption(abilityTable[index].Desc));
+    output = output.replace(/%Jobs%/g, jobsString);
 
-    output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
-    output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());

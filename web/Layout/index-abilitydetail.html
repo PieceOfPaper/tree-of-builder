@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <title>%Name%</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    %AddTopMenu%
+</head>
+
+<body>
+    <h1>%Name%</h1>
+    <p>%Desc%</p>
+    <table>
+        <tr>
+            <td>ClassID</td>
+            <td>ClassName</td>
+            <td>SkillCategory</td>
+            <td>ActiveState</td>
+        </tr>
+        <tr>
+            <td>%ClassID%</td>
+            <td>%ClassName%</td>
+            <td>%SkillCategory%</td>
+            <td>%ActiveState%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>AddSpend</td>
+            <td>AlwaysActive</td>
+            <td>IsEquipItemAbil</td>
+        </tr>
+        <tr>
+            <td>%AddSpend%</td>
+            <td>%AlwaysActive%</td>
+            <td>%IsEquipItemAbil%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Jobs</td>
+        </tr>
+        <tr>
+            <td>%Jobs%</td>
+        </tr>
+    </table>
+
+    <br/>
+    
+    <input type="number" id="AbilityLevel" min="1" max="5" value = "1" onchange="onChangeAbilityLevel()">
+    <div><button onclick="onClickLevelUp()">UP</button><button onclick="onClickLevelDown()">DOWN</button></div>
+
+    <script>
+    </script>
+
+    %AddCaptionScript%
+</body>
+
+</html>
