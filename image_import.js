@@ -91,7 +91,8 @@ function importImage(srcPath, dstPath, useCategory, callback){
                 if (xmlData.root.children[i].attributes['category'] != undefined && useCategory){
                   data['category'] = xmlData.root.children[i].attributes['category'];
                 }
-                data['name'] = xmlData.root.children[i].children[j].attributes['name'] + '_' + xmlData.root.children[i].children[j].children[k].attributes['name'].toLowerCase();
+                if (xmlData.root.children[i].children[j].attributes['name'] === undefined || xmlData.root.children[i].children[j].children[k].attributes['name'] === undefined) continue;
+                data['name'] = xmlData.root.children[i].children[j].attributes['name'].toString().toLowerCase() + '_' + xmlData.root.children[i].children[j].children[k].attributes['name'].toString().toLowerCase();
                 data['file'] = xmlData.root.children[i].children[j].attributes['texture'];
                 data['imgrect'] = xmlData.root.children[i].children[j].children[k].attributes['imgrect'];
                 dataList.push(data);
@@ -101,7 +102,8 @@ function importImage(srcPath, dstPath, useCategory, callback){
               if (xmlData.root.children[i].attributes['category'] != undefined && useCategory){
                 data['category'] = xmlData.root.children[i].attributes['category'];
               }
-              data['name'] = xmlData.root.children[i].children[j].attributes['name'].toLowerCase();
+              if (xmlData.root.children[i].children[j].attributes['name'] === undefined) continue;
+              data['name'] = xmlData.root.children[i].children[j].attributes['name'].toString().toLowerCase();
               data['file'] = xmlData.root.children[i].children[j].attributes['file'];
               data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
               dataList.push(data);
