@@ -320,7 +320,10 @@ module.exports = function(app, tableData, scriptData){
       if (skillAbilityJob[i] === undefined){
         abilityString += '<td></td>';
       } else {
-        abilityString += '<td align="center"><input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()"></td>';
+        abilityString += '<td align="center">';
+        abilityString +=  '<input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()">';
+        abilityString +=  '<button onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()">UP</button><button onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()">DOWN</button>';
+        abilityString += '</td>';
       }
       abilityString += '<td align="center"><img src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
       abilityString += '<td>';
@@ -354,7 +357,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  '}';
     captionScript +=  'return undefined;';
     captionScript += '}';
-    
+
     captionScript += 'function TryGetProp(data, prop){ return data[prop]; }';
     captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
@@ -401,6 +404,26 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if (document.getElementById("CaptionRatio3") != undefined) document.getElementById("CaptionRatio3").innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
     captionScript +=  'if (document.getElementById("SpendItemCount") != undefined) document.getElementById("SpendItemCount").innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
     captionScript += '}';
+
+    for (var i = 0; i < skillAbility.length; i ++){
+      captionScript += 'var Ability_' + skillAbility[i].ClassName + '=Number(0);';
+
+      captionScript += 'function onClickLevelUpAbility_' + skillAbility[i].ClassName + '(){';
+      captionScript +=  'Ability_' + skillAbility[i].ClassName + '++;';
+      captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' > document.getElementById("Ability_' + skillAbility[i].ClassName + '").max) Ability_' + skillAbility[i].ClassName + ' = document.getElementById("Ability_' + skillAbility[i].ClassName + '").max;';
+      captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
+      captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
+      captionScript +=  'updateLuaScripts();';
+      captionScript += '}';
+
+      captionScript += 'function onClickLevelDownAbility_' + skillAbility[i].ClassName + '(){';
+      captionScript +=  'Ability_' + skillAbility[i].ClassName + '--;';
+      captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' < document.getElementById("Ability_' + skillAbility[i].ClassName + '").min) Ability_' + skillAbility[i].ClassName + '= document.getElementById("Ability_' + skillAbility[i].ClassName + '").min;';
+      captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
+      captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
+      captionScript +=  'updateLuaScripts();';
+      captionScript += '}';
+    }
 
     captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
     captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
