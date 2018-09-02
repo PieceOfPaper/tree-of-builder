@@ -188,7 +188,7 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon  + '.png"/></td>';
+      resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
       resultString += '<td>';
       resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
       resultString += '</td>';
