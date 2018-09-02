@@ -297,13 +297,18 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += 'function GetSkillOwner(skill){'
     captionScript += 'var playerSetting = {';
-    captionScript +=  'Level: 1,';
-    captionScript +=  'SR:' + 3 + ',';
+    captionScript +=  'Level:Number(1),';
+    captionScript +=  'SR:Number(3),';
+    captionScript +=  'STR:Number(0),';
+    captionScript +=  'CON:Number(0),';
+    captionScript +=  'INT:Number(0),';
+    captionScript +=  'SPR:Number(0),';
+    captionScript +=  'DEX:Number(0),';
     captionScript += '};';
     captionScript += 'return playerSetting; }';
 
     captionScript += 'function GetAbility(pc, ability){ return undefined; }';
-    captionScript += 'function TryGetProp(pc, prop){ return 0; }';
+    captionScript += 'function TryGetProp(data, prop){ return data[prop]; }';
     captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
