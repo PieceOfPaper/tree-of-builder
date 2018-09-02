@@ -90,6 +90,17 @@ table, td, th {
     content: url("../img/joo_button/sysmenu_skill_clicked.png");
 }
 
+.top-menu #ability img{
+    width: 50px;
+    content: url("../img/joo_button/sysmenu_skill.png");
+}
+.top-menu #ability:hover img{
+    content: url("../img/joo_button/sysmenu_skill_cursoron.png");
+}
+.top-menu #ability:active img{
+    content: url("../img/joo_button/sysmenu_skill_clicked.png");
+}
+
 
 /* ======== Main ======== */
 .main-illust {
