@@ -17,6 +17,7 @@ module.exports = function(app, tableData, scriptData){
   route.get('/', function (request, response) {
     //var skillTable = tableData['skill'];
     var abilityTable = tableData['ability'];
+    var abilityJobTable = tableData['ability_job'];
     //var skillTreeTable = tableData['skilltree'];
     var jobTable = tableData['job'];
 
@@ -124,8 +125,8 @@ module.exports = function(app, tableData, scriptData){
   function abilityDetailPage(index, request, response) {
     var skillTable = tableData['skill'];
     var abilityTable = tableData['ability'];
-    var skillTreeTable = tableData['skilltree'];
-    var jobTable = tableData['job'];
+    //var skillTreeTable = tableData['skilltree'];
+    //var jobTable = tableData['job'];
 
     var abilityJob;
     for (var i = 0; i < tableData['ability_job'].length; i ++){
@@ -135,13 +136,13 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
-    var skillMaxLevel = 1;
-    for (var i = 0; i < skillTreeTable.length; i ++){
-      if (skillTreeTable[i].SkillName == abilityTable[index].ClassName){
-        skillMaxLevel = skillTreeTable[i].MaxLevel;
-        break;
-      }
-    }
+    // var skillMaxLevel = 1;
+    // for (var i = 0; i < skillTreeTable.length; i ++){
+    //   if (skillTreeTable[i].SkillName == abilityTable[index].ClassName){
+    //     skillMaxLevel = skillTreeTable[i].MaxLevel;
+    //     break;
+    //   }
+    // }
 
     var captionScript = '';
     captionScript += '<script>';
@@ -255,8 +256,13 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AlwaysActive%/g, abilityTable[index].AlwaysActive);
     output = output.replace(/%IsEquipItemAbil%/g, abilityTable[index].IsEquipItemAbil);
 
-    output = output.replace(/%MaxLevel%/g, abilityJob.MaxLevel);
-    output = output.replace(/%UnlockDesc%/g, abilityJob.UnlockDesc);
+    if (abilityJob === undefined){
+      output = output.replace(/%MaxLevel%/g, 0);
+      output = output.replace(/%UnlockDesc%/g, '');
+    } else {
+      output = output.replace(/%MaxLevel%/g, abilityJob.MaxLevel);
+      output = output.replace(/%UnlockDesc%/g, abilityJob.UnlockDesc);
+    }
 
     output = output.replace(/%Desc%/g, tos.parseCaption(abilityTable[index].Desc));
     output = output.replace(/%Jobs%/g, jobsString);
