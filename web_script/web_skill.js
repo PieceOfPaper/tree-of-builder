@@ -292,6 +292,44 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    var skillAbility = [];
+    for (var i = 0; i < tableData['ability'].length; i ++) {
+      if (tableData['ability'][i].SkillCategory === skillTable[index].ClassName){
+        skillAbility.push(tableData['ability'][i]);
+      }
+    }
+    var skillAbilityJob = [];
+    for (var i = 0; i < skillAbility.length; i ++){
+      var hasJob = false;
+      for (var j = 0; j < tableData['ability_job'].length; j ++){
+        if (skillAbility[i].ClassName === tableData['ability_job'][j].ClassName){
+          skillAbilityJob.push(tableData['ability_job'][j]);
+          hasJob = true;
+          break;
+        }
+      }
+      if (!hasJob){
+        skillAbilityJob.push(undefined);
+      }
+    }
+    
+    var abilityString = '';
+    abilityString += '<table>';
+    for (var i = 0; i < skillAbility.length; i ++){
+      abilityString += '<tr>';
+      if (skillAbilityJob[i] === undefined){
+        abilityString += '<td></td>';
+      } else {
+        abilityString += '<td align="center"><input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()"></td>';
+      }
+      abilityString += '<td align="center"><img src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
+      abilityString += '<td>';
+      abilityString +=   '<p>' + skillAbility[i].Name + '<br/>' + skillAbility[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(skillAbility[i].Desc) + '</p>';
+      abilityString += '</td>';
+      abilityString += '</tr>';
+    }
+    abilityString += '</table>';
+
     var captionScript = '';
     captionScript += '<script>';
 
@@ -307,7 +345,16 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '};';
     captionScript += 'return playerSetting; }';
 
-    captionScript += 'function GetAbility(pc, ability){ return undefined; }';
+    captionScript += 'function GetAbility(pc, ability){';
+    captionScript +=  'if(document.getElementById("Ability_" + ability)!=undefined){';
+    captionScript +=     'var abilitySetting = {';
+    captionScript +=      'Level:Number(document.getElementById("Ability_" + ability).value),';
+    captionScript +=    '};';
+    captionScript +=    'return abilitySetting;';
+    captionScript +=  '}';
+    captionScript +=  'return undefined;';
+    captionScript += '}';
+    
     captionScript += 'function TryGetProp(data, prop){ return data[prop]; }';
     captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
@@ -367,9 +414,6 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
     captionScript += '</script>';
 
-    // console.log(scriptData[skillTable[index].SkillFactor])
-    // console.log(tos.Lua2JS(scriptData[skillTable[index].SkillFactor]))
-
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Name%/g, skillTable[index].Name);
@@ -391,6 +435,9 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
     output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
+
+    output = output.replace(/%AddAbility%/g, abilityString);
+
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());

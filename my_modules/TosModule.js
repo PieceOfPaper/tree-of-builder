@@ -17,13 +17,7 @@ class TosModule {
         if (lua_script === undefined)
             return '';
 
-        var output = '';
-        var splited = lua_script.split('\n');
-        for (var i = 0; i < splited.length; i ++){
-            output += splited[i] + '\n';
-            if (i == 0)
-                output += '{';
-        }
+        var output = lua_script;
 
         output = output.replace(/if/g, 'if(');
         output = output.replace(/else/g, '}else{');
@@ -34,10 +28,26 @@ class TosModule {
         output = output.replace(/--/g, '\/\/');
         output = output.replace(/~=/g, '!=');
         output = output.replace(/nil/g, 'undefined');
-        output = output.replace(/and/g, '&&');
+        output = output.replace(/ and /g, '&&');
         output = output.replace(/\'YES\'/g, 'true');
         output = output.replace(/\'NO\'/g, 'false');
 
+        var splited = output.split('\n');
+        output = '';
+        for (var i = 0; i < splited.length; i ++){
+            splited[i] = splited[i].trim();
+            output += splited[i];
+            if (i == 0)
+                output += '{';
+            // if (i > 0 && splited[i].length > 0 &&
+            //     splited[i][splited[i].length - 1] != ' ' &&
+            //     splited[i][splited[i].length - 1] != '{' &&
+            //     splited[i][splited[i].length - 1] != '}' &&
+            //     splited[i][splited[i].length - 1] != ';'){
+            //     output += ';';
+            // }
+            output += '\n';
+        }
 
         return output;
     }

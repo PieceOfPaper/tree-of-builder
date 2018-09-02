@@ -109,7 +109,7 @@ table, td, th {
 }
 
 
-/* ======== Skill ======== */
+/* ======== Search ======== */
 .search-area {
     padding: 5px;
     width: 100%;
@@ -148,6 +148,14 @@ table, td, th {
     height: 64px;
 }
 
+/* ======== Detail ======== */
+.add-ability-area {
+
+}
+.add-ability-area img {
+    width: 64px;
+    height: 64px;
+}
 
 /* ======== Builder ======== */
 .builder-class-area {
