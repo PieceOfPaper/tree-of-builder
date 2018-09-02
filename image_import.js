@@ -144,7 +144,7 @@ function importImage(srcPath, dstPath, useCategory, callback){
               //console.log('downloading ' + dataList[dataIndex]['file']);
               var rawFileReq = https.get(rawSrcPath, function(response) {
                 response.pipe(rawFile).on('close', function(){
-                  console.log('downloaded ' + dataList[dataIndex]['file']);
+                  //console.log('downloaded ' + dataList[dataIndex]['file']);
                   
                   var targetPath = pathMerge('./web/img/raw', dataList[dataIndex]['file']);
 
@@ -163,7 +163,7 @@ function importImage(srcPath, dstPath, useCategory, callback){
                     });
                     png.data = tga.pixels;
                     png.pack().pipe(fs.createWriteStream(targetPath + '.png').on('close', function() {
-                      console.log('tga2png ' + dataList[dataIndex]['file']);
+                      //console.log('tga2png ' + dataList[dataIndex]['file']);
                       downloadFunc(nextFunc);
                     }));
                   } else {
