@@ -106,6 +106,14 @@ table, td, th {
 .top-menu #buff:active img{
 }
 
+.top-menu #builder img{
+    content: url("../img/hud_status_icon/skillpower_icon.png");
+}
+.top-menu #builder:hover img{
+}
+.top-menu #builder:active img{
+}
+
 
 /* ======== Main ======== */
 .main-illust {
