@@ -76,6 +76,8 @@ function loadTable(name, path, callback){
 var scriptData = [];
 loadScript('shared.ipf/script/calc_property_skill.lua');
 loadScript('shared.ipf/script/ability.lua');
+loadScript('shared.ipf/script/ability_price.lua');
+loadScript('shared.ipf/script/ability_unlock.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];
