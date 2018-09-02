@@ -112,11 +112,11 @@ app.get('/', function (req, response) {
     }
 
     var randomIndex = Math.floor(Math.random()*files.length);
-    var imgname = files[randomIndex].split('.')[0];
+    var imgname = files[randomIndex].split('.')[0].toLowerCase();
     var dialogTable = tableData['dialogtext'];
     var captionList = [];
     for (var i = 0; i < dialogTable.length; i++){
-      if (dialogTable[i].ImgName.indexOf(imgname) > -1){
+      if (dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
         captionList.push(dialogTable[i]);
       }
     }
