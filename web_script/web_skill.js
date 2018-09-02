@@ -322,7 +322,7 @@ module.exports = function(app, tableData, scriptData){
       } else {
         abilityString += '<td align="center">';
         abilityString +=  '<input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()">';
-        abilityString +=  '<button onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()">UP</button><button onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()">DOWN</button>';
+        abilityString +=  '<div><button onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()">▲</button><button onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()">▼</button></div>';
         abilityString += '</td>';
       }
       abilityString += '<td align="center"><img src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
