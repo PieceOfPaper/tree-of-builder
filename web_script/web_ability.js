@@ -168,8 +168,8 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'Level: Number(1),';
     captionScript += '};';
 
-    captionScript += 'document.getElementById("AbilityLevel").max=' + skillMaxLevel + ';';
-    captionScript += 'onChangeAbilityLevel();';
+    //captionScript += 'document.getElementById("AbilityLevel").max=' + skillMaxLevel + ';';
+    //captionScript += 'onChangeAbilityLevel();';
 
     captionScript += 'function onChangeAbilityLevel(){';
     captionScript +=  'currentAbility.Level = document.getElementById("AbilityLevel").value;';
@@ -254,6 +254,9 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AddSpend%/g, spendString);
     output = output.replace(/%AlwaysActive%/g, abilityTable[index].AlwaysActive);
     output = output.replace(/%IsEquipItemAbil%/g, abilityTable[index].IsEquipItemAbil);
+
+    output = output.replace(/%MaxLevel%/g, abilityJob.MaxLevel);
+    output = output.replace(/%UnlockDesc%/g, abilityJob.UnlockDesc);
 
     output = output.replace(/%Desc%/g, tos.parseCaption(abilityTable[index].Desc));
     output = output.replace(/%Jobs%/g, jobsString);
