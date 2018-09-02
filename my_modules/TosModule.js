@@ -9,6 +9,7 @@ class TosModule {
         output = output.replace(/#{CaptionRatio}#/g, '<span id="CaptionRatio"></span>');
         output = output.replace(/#{CaptionRatio2}#/g, '<span id="CaptionRatio2"></span>');
         output = output.replace(/#{CaptionRatio3}#/g, '<span id="CaptionRatio3"></span>');
+        output = output.replace(/#{SpendItemCount}#/g, '<span id="SpendItemCount"></span>');
         return output;
     }
 
@@ -27,7 +28,7 @@ class TosModule {
         output = output.replace(/if/g, 'if(');
         output = output.replace(/else/g, '}else{');
         output = output.replace(/then/g, '){');
-        output = output.replace(/end/g, '}');
+        output = output.replace(/end\n/g, '}\n');
         output = output.replace(/local/g, 'var');
         output = output.replace(/math/g, 'Math');
         output = output.replace(/--/g, '\/\/');

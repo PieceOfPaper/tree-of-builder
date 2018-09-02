@@ -320,6 +320,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'SklSR:' + Number(skillTable[index].SklSR) + ',';
     captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
     captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
+    captionScript +=  'SpendItemBaseCount:"' + skillTable[index].SpendItemBaseCount + '",';
     captionScript += '};';
 
     captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
@@ -351,6 +352,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if (document.getElementById("CaptionRatio") != undefined) document.getElementById("CaptionRatio").innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
     captionScript +=  'if (document.getElementById("CaptionRatio2") != undefined) document.getElementById("CaptionRatio2").innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
     captionScript +=  'if (document.getElementById("CaptionRatio3") != undefined) document.getElementById("CaptionRatio3").innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
+    captionScript +=  'if (document.getElementById("SpendItemCount") != undefined) document.getElementById("SpendItemCount").innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
     captionScript += '}';
 
     captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
@@ -359,6 +361,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
     captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
     captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
+    captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
 
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
