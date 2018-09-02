@@ -67,45 +67,43 @@ table, td, th {
 .top-menu button img {
     width: 40px;
 }
+.top-menu button:hover img{
+    transform:scale(1.1);
+}
+.top-menu button:active img{
+    transform:scale(0.9);
+}
 
 .top-menu #home img{
-    width: 30px;
-    content: url("../img/friend_list/friend_team_off.png");
+    content: url("../img/minimap_icons/questinfo_return.png");
 }
 .top-menu #home:hover img{
-    content: url("../img/friend_list/friend_team.png");
 }
 .top-menu #home:active img{
-    content: url("../img/friend_list/friend_team.png");
 }
 
 .top-menu #skill img{
-    width: 50px;
-    content: url("../img/joo_button/sysmenu_skill.png");
+    content: url("../img/icon/skillicon/icon_warri_tercioformation.png");
 }
 .top-menu #skill:hover img{
-    content: url("../img/joo_button/sysmenu_skill_cursoron.png");
 }
 .top-menu #skill:active img{
-    content: url("../img/joo_button/sysmenu_skill_clicked.png");
 }
 
 .top-menu #ability img{
-    width: 50px;
-    content: url("../img/joo_button/sysmenu_skill.png");
+    content: url("../img/icon/skillicon/ability_warrior_centurion2.png");
 }
 .top-menu #ability:hover img{
-    content: url("../img/joo_button/sysmenu_skill_cursoron.png");
 }
 .top-menu #ability:active img{
-    content: url("../img/joo_button/sysmenu_skill_clicked.png");
 }
 
 
 /* ======== Main ======== */
 .main-illust {
-    width: 100%;
-    max-width: 100vh;
+    /*width: 100%;*/
+    /*max-width: 100vh;*/
+    max-width: 95vw;
 }
 
 
