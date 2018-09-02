@@ -48,15 +48,22 @@ function deleteFolderRecursive(path){
 // if (!fs.existsSync('./web/img/icon/monillust')) fs.mkdirSync('./web/img/icon/monillust');
 // if (!fs.existsSync('./web/img/icon/mongem')) fs.mkdirSync('./web/img/icon/mongem');
 
-importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', false);
-importImage('ui.ipf/baseskinset/skillicon.xml', './web/img/icon/skillicon', false);
-importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false);
-importImage('ui.ipf/baseskinset/monillust.xml', './web/img/icon/monillust', false);
-importImage('ui.ipf/baseskinset/mongem.xml', './web/img/icon/mongem', false);
-importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', true);
-importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', true);
-importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', true);
-function importImage(srcPath, dstPath, useCategory){
+importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', false, function(){
+  importImage('ui.ipf/baseskinset/skillicon.xml', './web/img/icon/skillicon', false, function(){
+    importImage('ui.ipf/baseskinset/monillust.xml', './web/img/icon/monillust', false, function(){
+      importImage('ui.ipf/baseskinset/mongem.xml', './web/img/icon/mongem', false, function(){
+        importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', false, function(){
+          importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
+            importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
+              console.log("IMAGE IMPORT SUCCESS");
+            });
+          });
+        });
+      });
+    });
+  });
+});
+function importImage(srcPath, dstPath, useCategory, callback){
   autoMkDir('./web/data/' + srcPath);
   var file = fs.createWriteStream('./web/data/' + srcPath);
   var request = https.get(dataServerPath + serverCode + '/' + srcPath, function(response) {
@@ -72,7 +79,7 @@ function importImage(srcPath, dstPath, useCategory){
           return;
 
         //console.log(xmlData.root.name + ' ' + xmlData.root.children.length);
-
+        
         //xml 데이터 세팅
         for (var i = 0; i < xmlData.root.children.length; i ++){
           //console.log(xmlData.root.children[i].name + ' ' + xmlData.root.children[i].children.length);
@@ -84,7 +91,7 @@ function importImage(srcPath, dstPath, useCategory){
                 if (xmlData.root.children[i].attributes['category'] != undefined && useCategory){
                   data['category'] = xmlData.root.children[i].attributes['category'];
                 }
-                data['name'] = xmlData.root.children[i].children[j].attributes['name'] + '_' + xmlData.root.children[i].children[j].children[k].attributes['name'];
+                data['name'] = xmlData.root.children[i].children[j].attributes['name'] + '_' + xmlData.root.children[i].children[j].children[k].attributes['name'].toLowerCase();
                 data['file'] = xmlData.root.children[i].children[j].attributes['texture'];
                 data['imgrect'] = xmlData.root.children[i].children[j].children[k].attributes['imgrect'];
                 dataList.push(data);
@@ -94,7 +101,7 @@ function importImage(srcPath, dstPath, useCategory){
               if (xmlData.root.children[i].attributes['category'] != undefined && useCategory){
                 data['category'] = xmlData.root.children[i].attributes['category'];
               }
-              data['name'] = xmlData.root.children[i].children[j].attributes['name'];
+              data['name'] = xmlData.root.children[i].children[j].attributes['name'].toLowerCase();
               data['file'] = xmlData.root.children[i].children[j].attributes['file'];
               data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
               dataList.push(data);
@@ -107,6 +114,9 @@ function importImage(srcPath, dstPath, useCategory){
         downloadFunc(function(){
           copyFunc(function(){
             console.log('import success ' + srcPath);
+            if (callback != undefined){
+              callback();
+            }
           });
         });
 
@@ -134,7 +144,7 @@ function importImage(srcPath, dstPath, useCategory){
               //console.log('downloading ' + dataList[dataIndex]['file']);
               var rawFileReq = https.get(rawSrcPath, function(response) {
                 response.pipe(rawFile).on('close', function(){
-                  //console.log('downloaded ' + dataList[dataIndex]['file']);
+                  console.log('downloaded ' + dataList[dataIndex]['file']);
                   
                   var targetPath = pathMerge('./web/img/raw', dataList[dataIndex]['file']);
 
@@ -153,7 +163,7 @@ function importImage(srcPath, dstPath, useCategory){
                     });
                     png.data = tga.pixels;
                     png.pack().pipe(fs.createWriteStream(targetPath + '.png').on('close', function() {
-                      //onsole.log('tga2png ' + dataList[dataIndex]['file']);
+                      console.log('tga2png ' + dataList[dataIndex]['file']);
                       downloadFunc(nextFunc);
                     }));
                   } else {
