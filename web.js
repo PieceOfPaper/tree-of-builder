@@ -46,8 +46,8 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
       loadTable('buff', 'ies.ipf/buff_mgame.ies', function(){
         loadTable('buff', 'ies.ipf/buff_monster.ies', function(){
           tableData['buff'].sort(function(a,b){
-            if (a.ClassID > b.ClassID) return 1;
-            else if (a.ClassID < b.ClassID) return -1;
+            if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+            else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
             else return 0;
           });
         });
@@ -56,7 +56,7 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
   });
 });
 function loadTable(name, path, callback){
-  tableData[name] = [];
+  if (tableData[name] === undefined) tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
@@ -151,6 +151,9 @@ app.use('/Skill', skillPage);
 
 var abilityPage = require('./web_script/web_ability')(app, tableData, scriptData);
 app.use('/Ability', abilityPage);
+
+var buffPage = require('./web_script/web_buff')(app, tableData, scriptData);
+app.use('/Buff', buffPage);
 
 // var skillPage = require('./web_script/web_builder')(app, tableData);
 // app.use('/Builder', skillPage);
