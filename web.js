@@ -45,11 +45,11 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
     loadTable('buff', 'ies.ipf/buff_hardskill.ies', function(){
       loadTable('buff', 'ies.ipf/buff_mgame.ies', function(){
         loadTable('buff', 'ies.ipf/buff_monster.ies', function(){
-          tableData['buff'].sort(function(a,b){
-            if (Number(a.ClassID) > Number(b.ClassID)) return 1;
-            else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
-            else return 0;
-          });
+          // tableData['buff'].sort(function(a,b){
+          //   if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+          //   else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+          //   else return 0;
+          // });
         });
       });
     });

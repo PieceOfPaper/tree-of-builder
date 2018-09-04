@@ -43,16 +43,17 @@ module.exports = function(app, tableData, scriptData){
       else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || buffTable[i].ClassName.indexOf(request.query.searchName) > -1))
       resultArray.push(buffTable[i]);
     }
+    resultArray.sort(function(a,b){
+      if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+      else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+      else return 0;
+    });
 
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
-      var iconPath = resultArray[i].Icon.toLowerCase() + '.png';
-      if (iconPath.indexOf('icon_') < 0) iconPath = 'icon_' + iconPath;
-      if (fs.existsSync('../img/bufficon/' + iconPath)) iconPath = '../img/bufficon/' + iconPath;
-      else if (fs.existsSync('../img/icon/skillicon/' + iconPath)) iconPath = '../img/icon/skillicon/' + iconPath;
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      resultString += '<td align="center"><img src="' + iconPath  + '"/></td>';
+      resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
       resultString += '<td>';
       resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].ToolTip) + '</p>';
       resultString += '</td>';

@@ -56,6 +56,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
           importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
             importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
               console.log("IMAGE IMPORT SUCCESS");
+              copyImage('./web/img/bufficon', './web/img/icon/skillicon');
             });
           });
         });
@@ -236,6 +237,21 @@ function importImage(srcPath, dstPath, useCategory, callback){
       });
     });
   });
+}
+//copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+function copyImage(srcPath, dstPath, callback){
+  if (fs.existsSync(srcPath)) {
+      fs.readdirSync(srcPath).forEach(function(file, index){
+        var curPath = srcPath + '/' + file;
+        var outPath = dstPath + '/' + file;
+        if (fs.lstatSync(curPath).isDirectory() == false) {
+          if (fs.existsSync(outPath)) fs.unlinkSync(outPath);
+          fs.createReadStream(curPath).pipe(fs.createWriteStream(outPath).on('close', function() {
+            //console.log('copy ' + index);
+          }));
+        } 
+      });
+    }
 }
 
 
