@@ -51,9 +51,11 @@ module.exports = function(app, tableData, scriptData){
 
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
+      var iconName = resultArray[i].Icon.toLowerCase();
+      if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
+      resultString += '<td align="center"><img src="../img/icon/skillicon/' + iconName  + '.png"/></td>';
       resultString += '<td>';
       resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].ToolTip) + '</p>';
       resultString += '</td>';
