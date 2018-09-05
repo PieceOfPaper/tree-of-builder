@@ -24,6 +24,69 @@ module.exports = function(app, tableData, scriptData){
 
     var filteredTable = [];
 
+    // 필터 - 레벨
+    if (request.query.lvFilter != undefined && request.query.lvFilter != ''){
+      if (request.query.lvFilter === 'Upper'){
+        for (var i = 0; i < buffTable.length; i ++){
+          if (Number(buffTable[i].Lv) > 5) continue;
+          if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < buffTable.length; i ++){
+          if (buffTable[i].Lv === request.query.lvFilter) continue;
+          if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - Group1
+    if (request.query.group1Filter != undefined && request.query.group1Filter != ''){
+      for (var i = 0; i < buffTable.length; i ++){
+        if (buffTable[i].Group1 != undefined && buffTable[i].Group1.toLowerCase() === request.query.group1Filter.toLowerCase()) continue;
+        if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+      }
+    }
+
+    // 필터 - Group2
+    if (request.query.group2Filter != undefined && request.query.group1Filter != ''){
+      for (var i = 0; i < buffTable.length; i ++){
+        if (buffTable[i].Group2 != undefined && buffTable[i].Group2.toLowerCase() === request.query.group2Filter.toLowerCase()) continue;
+        if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+      }
+    }
+
+    // 필터 - Group3
+    if (request.query.group3Filter != undefined && request.query.group3Filter != ''){
+      if (request.query.group3Filter === 'None'){
+        for (var i = 0; i < buffTable.length; i ++){
+          if (buffTable[i].Group3 === undefined || buffTable[i].Group3.length <= 0) continue;
+          if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < buffTable.length; i ++){
+          if (buffTable[i].Group3 != undefined && buffTable[i].Group3.toLowerCase() === request.query.group3Filter.toLowerCase()) continue;
+          if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - SlotType
+    if (request.query.slotTypeFilter != undefined && request.query.slotTypeFilter != ''){
+      for (var i = 0; i < buffTable.length; i ++){
+        if (buffTable[i].SlotType != undefined && buffTable[i].SlotType.toLowerCase() === request.query.slotTypeFilter.toLowerCase()) continue;
+        if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+      }
+    }
+
+    // 필터 - Position
+    if (request.query.positionFilter != undefined && request.query.positionFilter != ''){
+      for (var i = 0; i < buffTable.length; i ++){
+        if (buffTable[i].Position != undefined && buffTable[i].Position.toLowerCase() === request.query.positionFilter.toLowerCase()) continue;
+        if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
+      }
+    }
+
+
 
     // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];

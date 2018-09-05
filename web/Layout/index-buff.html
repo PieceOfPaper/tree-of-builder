@@ -17,8 +17,55 @@
         <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
     </div>
     <div class="filler-area">
-        <select id="jobFilter">
-            %JobFilter%
+        <select id="lvFilter">
+            <option value="">Level</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="Upper">Upper</option>
+        </select>
+        <select id="group1Filter">
+            <option value="">Group1</option>
+            <option value="Buff">Buff</option>
+            <option value="Debuff">Debuff</option>
+        </select>
+        <select id="group2Filter">
+            <option value="">Group2</option>
+            <option value="Confuse">Confuse</option>
+            <option value="Drug">Drug</option>
+            <option value="Fire">Fire</option>
+            <option value="Freeze">Freeze</option>
+            <option value="HardWound">HardWound</option>
+            <option value="Ice">Ice</option>
+            <option value="Magic">Magic</option>
+            <option value="Melee">Melee</option>
+            <option value="Normal">Normal</option>
+            <option value="Petrify">Petrify</option>
+            <option value="Poison">Poison</option>
+            <option value="Shield">Shield</option>
+            <option value="Wound">Wound</option>
+        </select>
+        <select id="group3Filter">
+            <option value="">Group3</option>
+            <option value="None">None</option>
+            <option value="PhysicalCC">PhysicalCC</option>
+            <option value="Solid">Solid</option>
+            <option value="False">False</option>
+        </select>
+        <select id="slotTypeFilter">
+            <option value="">SlotType</option>
+            <option value="slot_ability">slot_ability</option>
+            <option value="slot_type02">slot_type02</option>
+            <option value="slot_type03">slot_type03</option>
+        </select>
+        <select id="positionFilter">
+            <option value="">Position</option>
+            <option value="top">Top</option>
+            <option value="middle">Middle</option>
+            <option value="bottom">Bottom</option>
+            <option value="ground">Ground</option>
         </select>
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
@@ -52,7 +99,12 @@
         var searchType = document.getElementById("searchType");
         var searchName = document.getElementById("searchName");
 
-        var jobFilter = document.getElementById("jobFilter");
+        var lvFilter = document.getElementById("lvFilter");
+        var group1Filter = document.getElementById("group1Filter");
+        var group2Filter = document.getElementById("group2Filter");
+        var group3Filter = document.getElementById("group3Filter");
+        var slotTypeFilter = document.getElementById("slotTypeFilter");
+        var positionFilter = document.getElementById("positionFilter");
 
         onInit();
 
@@ -60,7 +112,12 @@
             searchType.value = getQueryVariable("searchType");
             searchName.value = getQueryVariable("searchName");
 
-            jobFilter.value = getQueryVariable("jobFilter");
+            lvFilter.value = getQueryVariable("lvFilter");
+            group1Filter.value = getQueryVariable("group1Filter");
+            group2Filter.value = getQueryVariable("group2Filter");
+            group3Filter.value = getQueryVariable("group3Filter");
+            slotTypeFilter.value = getQueryVariable("slotTypeFilter");
+            positionFilter.value = getQueryVariable("positionFilter");
 
             if (!searchType.value || searchType.value === undefined || searchType.value === "") {
                 searchType.value = "Name";
@@ -92,8 +149,23 @@
             if (searchName.value != undefined && searchName.value.length > 0){
                 queryString.push("searchName=" + searchName.value);
             }
-            if (jobFilter.value != undefined && jobFilter.value.length > 0){
-                queryString.push("jobFilter=" + jobFilter.value);
+            if (lvFilter.value != undefined && lvFilter.value.length > 0){
+                queryString.push("lvFilter=" + lvFilter.value);
+            }
+            if (group1Filter.value != undefined && group1Filter.value.length > 0){
+                queryString.push("group1Filter=" + group1Filter.value);
+            }
+            if (group2Filter.value != undefined && group2Filter.value.length > 0){
+                queryString.push("group2Filter=" + group2Filter.value);
+            }
+            if (group3Filter.value != undefined && group3Filter.value.length > 0){
+                queryString.push("group3Filter=" + group3Filter.value);
+            }
+            if (slotTypeFilter.value != undefined && slotTypeFilter.value.length > 0){
+                queryString.push("slotTypeFilter=" + slotTypeFilter.value);
+            }
+            if (positionFilter.value != undefined && positionFilter.value.length > 0){
+                queryString.push("positionFilter=" + positionFilter.value);
             }
 
             var newUrl = url;
