@@ -41,7 +41,9 @@ module.exports = function(app, tableData, scriptData){
       if (request.query.searchType === "Name" && (request.query.searchName === undefined || buffTable[i].Name.indexOf(request.query.searchName) > -1))
         resultArray.push(buffTable[i]);
       else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || buffTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(buffTable[i]);
+        resultArray.push(buffTable[i]);
+      else if (request.query.searchType === "Keyword" && (request.query.searchName === undefined || (buffTable[i].Keyword != undefined && buffTable[i].Keyword.toLowerCase().indexOf(request.query.searchName.toLowerCase()) > -1)))
+        resultArray.push(buffTable[i]);
     }
     resultArray.sort(function(a,b){
       if (Number(a.ClassID) > Number(b.ClassID)) return 1;
