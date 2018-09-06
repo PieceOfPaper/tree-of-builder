@@ -450,6 +450,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%Attribute%/g, tos.AttributeToName(tableData, skillTable[index].Attribute));
     output = output.replace(/%AttackType%/g, tos.AttributeToName(tableData, skillTable[index].AttackType));
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
+    output = output.replace(/%EnableCompanion%/g, skillTable[index].EnableCompanion);
+    output = output.replace(/%ReqStance%/g, skillTable[index].ReqStance.replace(/;/g,', '));
 
     output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
     output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
