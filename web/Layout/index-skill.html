@@ -34,6 +34,14 @@
         <select id="hitTypeFilter">
             %HitTypeFilter%
         </select>
+        <select id="companionFilter">
+            <option value="">Companion</option>
+            <option value="None">Stand Only</option>
+            <option value="YES">Companion Only</option>
+            <option value="BOTH">Both</option>
+            <option value="!YES">Stand Both</option>
+            <option value="!None">Companion Both</option>
+        </select>
         <br>
         <input type="checkbox" id="simonyFilter">Simony<br>
     </div>
@@ -74,6 +82,7 @@
         var attributeFilter = document.getElementById("attributeFilter");
         var attackTypeFilter = document.getElementById("attackTypeFilter");
         var hitTypeFilter = document.getElementById("hitTypeFilter");
+        var companionFilter = document.getElementById("companionFilter");
 
         var simonyFilter = document.getElementById("simonyFilter");
 
@@ -89,6 +98,7 @@
             attributeFilter.value = getQueryVariable("attributeFilter");
             attackTypeFilter.value = getQueryVariable("attackTypeFilter");
             hitTypeFilter.value = getQueryVariable("hitTypeFilter");
+            companionFilter.value = getQueryVariable("companionFilter");
 
             simonyFilter.checked = getQueryVariable("simonyFilter");
 
@@ -139,6 +149,9 @@
             }
             if (hitTypeFilter.value != undefined && hitTypeFilter.value.length > 0){
                 queryString.push("hitTypeFilter=" + hitTypeFilter.value);
+            }
+            if (companionFilter.value != undefined && companionFilter.value.length > 0){
+                queryString.push("companionFilter=" + companionFilter.value);
             }
             if (simonyFilter.checked){
                 queryString.push("simonyFilter=" + simonyFilter.checked);

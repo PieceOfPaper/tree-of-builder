@@ -99,7 +99,20 @@ class TosModule {
       for (var i = 0; i < tableData['skill_attribute'].length; i ++){
         if (tableData['skill_attribute'][i].ClassName === attribute) return tableData['skill_attribute'][i].TextEffectMsg;
       }
-      return job;
+      return attribute;
+    }
+
+    static StanceToName(tableData, stance){
+        for (var i = 0; i < tableData['stance'].length; i ++){
+          if (tableData['stance'][i].ClassName === stance) return tableData['stance'][i].Name;
+        }
+        return stance;
+    }
+    static StanceToIcon(tableData, stance){
+        for (var i = 0; i < tableData['stance'].length; i ++){
+          if (tableData['stance'][i].ClassName === stance) return tableData['stance'][i].Icon;
+        }
+        return stance;
     }
 }
 module.exports = TosModule;

@@ -20,6 +20,7 @@ module.exports = function(app, tableData, scriptData){
     var jobTable = tableData['job'];
     var skillAttributeTable = tableData['skill_attribute'];
     var skillSimonyTable = tableData['skill_Simony'];
+    var stanceTable = tableData['stance'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
@@ -145,6 +146,31 @@ module.exports = function(app, tableData, scriptData){
       } else {
         for (var i = 0; i < skillTable.length; i ++){
           if (skillTable[i].HitType === request.query.hitTypeFilter) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      }
+    }
+
+    // 필터 - EnableCompanion
+    if (request.query.companionFilter != undefined && request.query.companionFilter != ''){
+      if (request.query.companionFilter === 'None'){
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].EnableCompanion.length === 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else if(request.query.companionFilter === '!None') {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].EnableCompanion.length > 0) continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else if(request.query.companionFilter === '!YES') {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].EnableCompanion != 'YES') continue;
+          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+        }
+      } else {
+        for (var i = 0; i < skillTable.length; i ++){
+          if (skillTable[i].EnableCompanion === request.query.companionFilter) continue;
           if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
         }
       }
@@ -437,6 +463,16 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
     captionScript += '</script>';
 
+    var stanceString = '';
+    if (skillTable[index].ReqStance != undefined){
+      var splited = skillTable[index].ReqStance.split(';');
+      for (var i = 0; i < splited.length; i ++){
+        stanceString += tos.StanceToName(tableData, splited[i]);
+        if ((i+1) < splited.length) stanceString += ', ';
+      }
+    }
+
+
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Name%/g, skillTable[index].Name);
@@ -451,7 +487,7 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AttackType%/g, tos.AttributeToName(tableData, skillTable[index].AttackType));
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
     output = output.replace(/%EnableCompanion%/g, skillTable[index].EnableCompanion);
-    output = output.replace(/%ReqStance%/g, skillTable[index].ReqStance.replace(/;/g,', '));
+    output = output.replace(/%ReqStance%/g, stanceString);
 
     output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
     output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
