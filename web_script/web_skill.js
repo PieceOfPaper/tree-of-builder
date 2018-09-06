@@ -61,9 +61,14 @@ module.exports = function(app, tableData, scriptData){
           if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
         }
         for (var i = 0; i < skillTreeTable.length; i ++){
-          if (tos.GetJobNumber1(skillTreeTable[i].ClassName) === tos.GetJobNumber1(request.query.jobFilter) &&
-            tos.GetJobNumber2(skillTreeTable[i].ClassName) === tos.GetJobNumber2(request.query.jobFilter))
-            continue;
+          if (tos.GetJobNumber2(request.query.jobFilter) > 0){
+            if (tos.GetJobNumber1(skillTreeTable[i].ClassName) === tos.GetJobNumber1(request.query.jobFilter) &&
+              tos.GetJobNumber2(skillTreeTable[i].ClassName) === tos.GetJobNumber2(request.query.jobFilter))
+              continue;
+          } else {
+            if (tos.GetJobNumber1(skillTreeTable[i].ClassName) === tos.GetJobNumber1(request.query.jobFilter))
+              continue;
+          }
           if (!filteredTable.includes(skillTreeTable[i].SkillName)) filteredTable.push(skillTreeTable[i].SkillName);
         }
       }
@@ -224,6 +229,10 @@ module.exports = function(app, tableData, scriptData){
     var jobFilterString = '';
     jobFilterString += '<option value="">Job</option>';
     jobFilterString += '<option value="Unused">Unused</option>';
+    jobFilterString += '<option value="Char1">' + tos.JobClassNameToJobName(tableData, 'Char1_1') + ' Line</option>';
+    jobFilterString += '<option value="Char2">' + tos.JobClassNameToJobName(tableData, 'Char2_1') + ' Line</option>';
+    jobFilterString += '<option value="Char3">' + tos.JobClassNameToJobName(tableData, 'Char3_1') + ' Line</option>';
+    jobFilterString += '<option value="Char4">' + tos.JobClassNameToJobName(tableData, 'Char4_1') + ' Line</option>';
     for (var i = 0; i < jobTable.length; i ++){
       if (jobTable[i].Name != undefined && jobTable[i].Name.length > 0){
         jobFilterString += '<option value="' + jobTable[i].ClassName + '">' + jobTable[i].Name + '</option>';
