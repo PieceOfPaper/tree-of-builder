@@ -146,9 +146,12 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '<script>';
     captionScript += '</script>';
 
+    var iconName = buffTable[index].Icon.toLowerCase();
+    if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
 
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
     output = output.replace(/%ClassID%/g, buffTable[index].ClassID);
