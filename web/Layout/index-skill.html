@@ -44,6 +44,7 @@
         </select>
         <br>
         <input type="checkbox" id="simonyFilter">Simony<br>
+        <input type="checkbox" id="nocoolFilter">No-Cool Skill<br>
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
     <br/>
@@ -85,6 +86,7 @@
         var companionFilter = document.getElementById("companionFilter");
 
         var simonyFilter = document.getElementById("simonyFilter");
+        var nocoolFilter = document.getElementById("nocoolFilter");
 
         onInit();
 
@@ -101,6 +103,7 @@
             companionFilter.value = getQueryVariable("companionFilter");
 
             simonyFilter.checked = getQueryVariable("simonyFilter");
+            nocoolFilter.checked = getQueryVariable("nocoolFilter");
 
             if (!searchType.value || searchType.value === undefined || searchType.value === "") {
                 searchType.value = "Name";
@@ -155,6 +158,9 @@
             }
             if (simonyFilter.checked){
                 queryString.push("simonyFilter=" + simonyFilter.checked);
+            }
+            if (nocoolFilter.checked){
+                queryString.push("nocoolFilter=" + nocoolFilter.checked);
             }
 
             var newUrl = url;

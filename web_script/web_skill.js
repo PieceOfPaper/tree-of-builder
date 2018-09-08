@@ -196,6 +196,14 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    // 필터 - 무쿨기
+    if (request.query.nocoolFilter != undefined && request.query.nocoolFilter.toLowerCase().indexOf('true') > -1){
+      for (var i = 0; i < skillTable.length; i ++){
+        if (Number(skillTable[i].BasicCoolDown) == 0) continue;
+        if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+      }
+    }
+
     // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
     for (var i = 0; i < skillTable.length; i ++){
