@@ -56,6 +56,7 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
   });
 });
 loadTable('stance', 'ies.ipf/stance.ies');
+loadTable('cooldown', 'ies.ipf/cooldown.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + path);

@@ -354,6 +354,7 @@ module.exports = function(app, tableData, scriptData){
   function skillDetailPage(index, request, response) {
     var skillTable = tableData['skill'];
     var skillTreeTable = tableData['skilltree'];
+    var cooldownTable = tableData['cooldown'];
 
     var skillMaxLevel = 1;
     for (var i = 0; i < skillTreeTable.length; i ++){
@@ -517,6 +518,16 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    var overHeat = 1;
+    if (skillTable[index].OverHeatGroup != undefined && skillTable[index].OverHeatGroup.length > 0 && skillTable[index].SklUseOverHeat > 0){
+      for (var i = 0; i < cooldownTable.length; i ++){
+        if (cooldownTable[i].ClassName === skillTable[index].OverHeatGroup){
+          overHeat = cooldownTable[i].MaxOverTime / skillTable[index].SklUseOverHeat;
+          break;
+        }
+      }
+    }
+
 
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
@@ -539,6 +550,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
     output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
     output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
+    output = output.replace(/%BasicCoolDown%/g, Number(skillTable[index].BasicCoolDown)/1000 + 's');
+    output = output.replace(/%OverHeat%/g, overHeat);
 
     output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
     output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
