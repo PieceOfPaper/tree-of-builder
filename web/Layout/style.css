@@ -150,6 +150,31 @@ table, td, th {
     font-size: 1em;
 }
 
+
+.checkboxList {
+    padding: 0;
+    width: fit-content;
+}
+.checkboxList-head {
+    margin: 0;
+    font-size: 1em;
+    width: 100%;
+}
+.checkboxList-head.open {
+}
+.checkboxList-head span{
+}
+.checkboxList-head.close span{
+}
+.checkboxList-head.open span{
+    color: red;
+}
+.checkboxList-body {
+    margin: 0;
+    width: 100%;
+    border: 1px solid black;
+}
+
 #searchBtn {
     float: right;
     font-size: 1.5em;

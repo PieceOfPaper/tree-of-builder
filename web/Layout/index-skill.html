@@ -42,7 +42,20 @@
             <option value="!YES">Stand Both</option>
             <option value="!None">Companion Both</option>
         </select>
-        <br>
+        <br/>
+        <br/>
+        <div id="stanceFilter" class="checkboxList">
+            <button class="checkboxList-head" onclick='toggle_checkboxList("stanceFilter")'>
+                Select Stance<span>▼</span>
+            </button>
+            <div class="checkboxList-body" style="display:none;">
+                %StanceFilter%
+            </div>
+            <div class="checkboxList-foot" style="display:none;">
+                <button onclick='onclick_all_checkboxList("stanceFilter")'>All</button><button onclick='onclick_none_checkboxList("stanceFilter")'>None</button>
+            </div>
+        </div>
+        <br/>
         <input type="checkbox" id="simonyFilter">Simony<br>
         <input type="checkbox" id="nocoolFilter">No-Cool Skill<br>
     </div>
@@ -84,6 +97,7 @@
         var attackTypeFilter = document.getElementById("attackTypeFilter");
         var hitTypeFilter = document.getElementById("hitTypeFilter");
         var companionFilter = document.getElementById("companionFilter");
+        var stanceFilter = document.getElementById("stanceFilter");
 
         var simonyFilter = document.getElementById("simonyFilter");
         var nocoolFilter = document.getElementById("nocoolFilter");
@@ -102,10 +116,21 @@
             hitTypeFilter.value = getQueryVariable("hitTypeFilter");
             companionFilter.value = getQueryVariable("companionFilter");
 
+            var stanceFilterQueryVar = getQueryVariable("stanceFilter");
+            if (stanceFilterQueryVar.length > 0) {
+                var stanceSplited = stanceFilterQueryVar.split(";");
+                for (var i = 0 ; i < stanceSplited.length; i ++){
+                    var stanceCheckbox = document.getElementById("stanceFilter_" + stanceSplited[i]);
+                    if (stanceCheckbox === undefined) continue;
+                    stanceCheckbox.checked = false;
+                }
+                toggle_checkboxList("stanceFilter")
+            }
+
             simonyFilter.checked = getQueryVariable("simonyFilter");
             nocoolFilter.checked = getQueryVariable("nocoolFilter");
 
-            if (!searchType.value || searchType.value === undefined || searchType.value === "") {
+            if (!searchType.value || searchType.value === undefined || searchType.value.length <= 0) {
                 searchType.value = "Name";
             }
         }
@@ -124,6 +149,37 @@
                 if (pair[0] == variable) { return decodeURIComponent(pair[1]); }
             }
             return ("");
+        }
+
+        function toggle_checkboxList(id){
+            var checkboxList = document.getElementById(id);
+            var checkboxList_head = checkboxList.children[0];
+            var checkboxList_body = checkboxList.children[1];
+            var checkboxList_foot = checkboxList.children[2];
+
+            if (checkboxList_body.style.display === "none"){
+                checkboxList_head.classList.remove("close");
+                checkboxList_head.classList.add("open");
+                checkboxList_body.style.display = "block";
+                checkboxList_foot.style.display = "block";
+            } else {
+                checkboxList_head.classList.remove("open");
+                checkboxList_head.classList.add("close");
+                checkboxList_body.style.display = "none";
+                checkboxList_foot.style.display = "none";
+            }
+        }
+        function onclick_all_checkboxList(id){
+            var checkboxList = document.getElementById(id).children[1].children;
+            for (var i = 0; i < checkboxList.length; i ++){
+                checkboxList[i].checked = true;
+            }
+        }
+        function onclick_none_checkboxList(id){
+            var checkboxList = document.getElementById(id).children[1].children;
+            for (var i = 0; i < checkboxList.length; i ++){
+                checkboxList[i].checked = false;
+            }
         }
 
         function search() {
@@ -155,6 +211,18 @@
             }
             if (companionFilter.value != undefined && companionFilter.value.length > 0){
                 queryString.push("companionFilter=" + companionFilter.value);
+            }
+            var checkboxList = stanceFilter.children[1].children;
+            var stanceFilterString = '';
+            for (var i = 0 ; i < checkboxList.length; i ++){
+                if (checkboxList[i].checked == true) continue;
+                if (checkboxList[i].id.indexOf("stanceFilter_") < 0) continue;
+                var name = checkboxList[i].id.replace("stanceFilter_" , "");;
+                if (stanceFilterString.length > 0) stanceFilterString += ";";
+                stanceFilterString += name;
+            }
+            if (stanceFilterString.length > 0){
+                queryString.push("stanceFilter=" + stanceFilterString);
             }
             if (simonyFilter.checked){
                 queryString.push("simonyFilter=" + simonyFilter.checked);

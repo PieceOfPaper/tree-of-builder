@@ -181,6 +181,27 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    if (request.query.stanceFilter != undefined && request.query.stanceFilter.length > 0){
+      var filteredStanceList = request.query.stanceFilter.split(';');
+      for (var i = 0; i < skillTable.length; i ++){
+        var isFiltered = false;
+        if (skillTable[i].ReqStance != undefined && skillTable[i].ReqStance.length > 0){
+          var skillStanceList = skillTable[i].ReqStance.split(';');
+          for (var j = 0; j < skillStanceList.length; j ++){
+            for (var k = 0; k < filteredStanceList.length; k ++){
+              if (skillStanceList[j].toLowerCase() === filteredStanceList[k].toLowerCase()){
+                isFiltered = true;
+                break;
+              }
+            }
+            if (isFiltered) break;
+          }
+        }
+        if (isFiltered == false) continue;
+        if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+      }
+    }
+
     // 필터 - 시모니
     if (request.query.simonyFilter != undefined && request.query.simonyFilter.toLowerCase().indexOf('true') > -1){
       for (var i = 0; i < skillTable.length; i ++){
@@ -303,6 +324,11 @@ module.exports = function(app, tableData, scriptData){
     hitTypeFilterString += '<option value="Pad">Pad</option>';
 
 
+    var stanceFilterString = '';
+    for (var i = 0; i < stanceTable.length; i ++){
+      stanceFilterString += '<input type="checkbox" id="stanceFilter_' + stanceTable[i].ClassName + '" checked>' + stanceTable[i].Name + '<br>';
+    }
+
     var output = layout.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
 
@@ -312,6 +338,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AttributeFilter%/g, attributeFilterString);
     output = output.replace(/%AttackTypeFilter%/g, attackTypeFilterString);
     output = output.replace(/%HitTypeFilter%/g, hitTypeFilterString);
+
+    output = output.replace(/%StanceFilter%/g, stanceFilterString);
 
     output = output.replace(/%SearchResult%/g, resultString);
 
