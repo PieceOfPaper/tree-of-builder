@@ -531,7 +531,7 @@ module.exports = function(app, tableData, scriptData){
 
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
-    output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon + '.png" />');
+    output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
