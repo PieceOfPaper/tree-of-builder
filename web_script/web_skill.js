@@ -225,6 +225,14 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    // 필터 - 시노비 분신
+    if (request.query.bunsinFilter != undefined && request.query.bunsinFilter.toLowerCase().indexOf('true') > -1){
+      for (var i = 0; i < skillTable.length; i ++){
+        if (skillTable[i].CoolDown === 'SCR_GET_SKL_COOLDOWN_BUNSIN') continue;
+        if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
+      }
+    }
+
     // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
     for (var i = 0; i < skillTable.length; i ++){

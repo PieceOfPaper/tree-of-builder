@@ -57,6 +57,7 @@
         </div>
         <br/>
         <input type="checkbox" id="simonyFilter">Simony<br>
+        <input type="checkbox" id="bunsinFilter">Bunsin<br>
         <input type="checkbox" id="nocoolFilter">No-Cool Skill<br>
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
@@ -101,6 +102,7 @@
 
         var simonyFilter = document.getElementById("simonyFilter");
         var nocoolFilter = document.getElementById("nocoolFilter");
+        var bunsinFilter = document.getElementById("bunsinFilter");
 
         onInit();
 
@@ -129,6 +131,7 @@
 
             simonyFilter.checked = getQueryVariable("simonyFilter");
             nocoolFilter.checked = getQueryVariable("nocoolFilter");
+            bunsinFilter.checked = getQueryVariable("bunsinFilter");
 
             if (!searchType.value || searchType.value === undefined || searchType.value.length <= 0) {
                 searchType.value = "Name";
@@ -229,6 +232,9 @@
             }
             if (nocoolFilter.checked){
                 queryString.push("nocoolFilter=" + nocoolFilter.checked);
+            }
+            if (bunsinFilter.checked){
+                queryString.push("bunsinFilter=" + bunsinFilter.checked);
             }
 
             var newUrl = url;
