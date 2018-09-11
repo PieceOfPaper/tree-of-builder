@@ -28,15 +28,16 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
-    var filteredTable = [];
+    var filteredItemTable = [];
+    var filteredItemEquipTable = [];
 
-    // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
     var resultArray = [];
+
+    // Item
     for (var i = 0; i < itemTable.length; i ++){
-      //if (resultArray.length >= 10) break;
       var filter = false;
-      for (var j = 0; j < filteredTable.length; j ++){
-        if (filteredTable[j] === itemTable[i].ClassName){
+      for (var j = 0; j < filteredItemTable.length; j ++){
+        if (filteredItemTable[j] === itemTable[i].ClassName){
           filter = true;
           break;
         }
@@ -49,13 +50,43 @@ module.exports = function(app, tableData, scriptData){
       resultArray.push(itemTable[i]);
     }
 
+    // Item Equip
+    for (var i = 0; i < itemEquipTable.length; i ++){
+      var filter = false;
+      for (var j = 0; j < filteredItemEquipTable.length; j ++){
+        if (filteredItemEquipTable[j] === itemEquipTable[i].ClassName){
+          filter = true;
+          break;
+        }
+      }
+      if (filter) continue;
+
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemEquipTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(itemEquipTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemEquipTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(itemEquipTable[i]);
+    }
+
+    // 최종 소팅
+    resultArray.sort(function(a,b){
+      if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+      else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+      else return 0;
+    });
+
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
+      if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
+          resultArray[i].EqpType.toLowerCase() == 'outer' && resultArray[i].UseGender.toLowerCase() == 'both'){
+        resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_f.png"/></td>';
+      } else {
+        resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
+      }
       resultString += '<td>';
-      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].Desc) + '</p>';
+      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
+      //resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].Desc) + '</p>';
       resultString += '</td>';
       resultString += '</tr>';
     }
