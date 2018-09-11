@@ -438,7 +438,11 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'return undefined;';
     captionScript += '}';
 
-    captionScript += 'function TryGetProp(data, prop){ return data[prop]; }';
+    captionScript += 'function TryGetProp(data, prop){ ';
+    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript +=  'return data[prop];'; 
+    captionScript += '}';
+
     captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
