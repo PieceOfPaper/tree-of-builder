@@ -19,6 +19,7 @@ module.exports = function(app, tableData, scriptData){
     var itemEquipTable = tableData['item_Equip'];
     var itemPremiumTable = tableData['item_premium'];
     var itemQuestTable = tableData['item_Quest'];
+    var itemGemTable = tableData['item_gem'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
@@ -34,6 +35,7 @@ module.exports = function(app, tableData, scriptData){
     var filteredItemEquipTable = [];
     var filteredItemPremiumTable = [];
     var filteredItemQuestTable = [];
+    var filteredItemGemTable = [];
 
     var resultArray = [];
 
@@ -105,6 +107,23 @@ module.exports = function(app, tableData, scriptData){
       resultArray.push(itemQuestTable[i]);
     }
 
+    // Item Gem
+    for (var i = 0; i < itemGemTable.length; i ++){
+      var filter = false;
+      for (var j = 0; j < filteredItemGemTable.length; j ++){
+        if (filteredItemGemTable[j] === itemGemTable[i].ClassName){
+          filter = true;
+          break;
+        }
+      }
+      if (filter) continue;
+
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemGemTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(itemGemTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemGemTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(itemGemTable[i]);
+    }
+
     // 최종 소팅
     resultArray.sort(function(a,b){
       if (Number(a.ClassID) > Number(b.ClassID)) return 1;
@@ -120,6 +139,8 @@ module.exports = function(app, tableData, scriptData){
       if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
           resultArray[i].EqpType.toLowerCase() == 'outer' && resultArray[i].UseGender.toLowerCase() == 'both'){
         resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_f.png"/></td>';
+      } else if(resultArray[i].EquipXpGroup != undefined && resultArray[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
+        resultString += '<td align="center"><img src="../img/icon/mongem/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
       } else {
         resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
       }
