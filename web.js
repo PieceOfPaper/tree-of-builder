@@ -57,6 +57,16 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
 });
 loadTable('stance', 'ies.ipf/stance.ies');
 loadTable('cooldown', 'ies.ipf/cooldown.ies');
+loadTable('item', 'ies.ipf/item.ies', function(){
+});
+loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
+});
+loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
+});
+loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
+});
+loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
+});
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + path);
@@ -156,6 +166,9 @@ app.use('/Ability', abilityPage);
 
 var buffPage = require('./web_script/web_buff')(app, tableData, scriptData);
 app.use('/Buff', buffPage);
+
+var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
+app.use('/Item', itemPage);
 
 // var skillPage = require('./web_script/web_builder')(app, tableData);
 // app.use('/Builder', skillPage);

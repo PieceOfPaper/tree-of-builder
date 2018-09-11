@@ -55,8 +55,10 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
         importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', false, function(){
           importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
             importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
-              console.log("IMAGE IMPORT SUCCESS");
-              copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+              importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
+                console.log("IMAGE IMPORT SUCCESS");
+                copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+              });
             });
           });
         });
