@@ -18,6 +18,7 @@ module.exports = function(app, tableData, scriptData){
     var itemTable = tableData['item'];
     var itemEquipTable = tableData['item_Equip'];
     var itemPremiumTable = tableData['item_premium'];
+    var itemQuestTable = tableData['item_Quest'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
@@ -32,6 +33,7 @@ module.exports = function(app, tableData, scriptData){
     var filteredItemTable = [];
     var filteredItemEquipTable = [];
     var filteredItemPremiumTable = [];
+    var filteredItemQuestTable = [];
 
     var resultArray = [];
 
@@ -84,6 +86,23 @@ module.exports = function(app, tableData, scriptData){
         resultArray.push(itemPremiumTable[i]);
       else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemPremiumTable[i].ClassName.indexOf(request.query.searchName) > -1))
       resultArray.push(itemPremiumTable[i]);
+    }
+
+    // Item Quest
+    for (var i = 0; i < itemQuestTable.length; i ++){
+      var filter = false;
+      for (var j = 0; j < filteredItemQuestTable.length; j ++){
+        if (filteredItemQuestTable[j] === itemQuestTable[i].ClassName){
+          filter = true;
+          break;
+        }
+      }
+      if (filter) continue;
+
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemQuestTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(itemQuestTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemQuestTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(itemQuestTable[i]);
     }
 
     // 최종 소팅
