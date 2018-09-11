@@ -17,6 +17,7 @@ module.exports = function(app, tableData, scriptData){
   route.get('/', function (request, response) {
     var itemTable = tableData['item'];
     var itemEquipTable = tableData['item_Equip'];
+    var itemPremiumTable = tableData['item_premium'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
@@ -30,6 +31,7 @@ module.exports = function(app, tableData, scriptData){
 
     var filteredItemTable = [];
     var filteredItemEquipTable = [];
+    var filteredItemPremiumTable = [];
 
     var resultArray = [];
 
@@ -67,6 +69,23 @@ module.exports = function(app, tableData, scriptData){
       resultArray.push(itemEquipTable[i]);
     }
 
+    // Item Premium
+    for (var i = 0; i < itemPremiumTable.length; i ++){
+      var filter = false;
+      for (var j = 0; j < filteredItemPremiumTable.length; j ++){
+        if (filteredItemPremiumTable[j] === itemPremiumTable[i].ClassName){
+          filter = true;
+          break;
+        }
+      }
+      if (filter) continue;
+
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemPremiumTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(itemPremiumTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemPremiumTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(itemPremiumTable[i]);
+    }
+
     // 최종 소팅
     resultArray.sort(function(a,b){
       if (Number(a.ClassID) > Number(b.ClassID)) return 1;
@@ -78,6 +97,7 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      // 공용 코스튬은 아이콘이 두개
       if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
           resultArray[i].EqpType.toLowerCase() == 'outer' && resultArray[i].UseGender.toLowerCase() == 'both'){
         resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_f.png"/></td>';
