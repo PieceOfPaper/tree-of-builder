@@ -48,19 +48,35 @@ function deleteFolderRecursive(path){
 // if (!fs.existsSync('./web/img/icon/monillust')) fs.mkdirSync('./web/img/icon/monillust');
 // if (!fs.existsSync('./web/img/icon/mongem')) fs.mkdirSync('./web/img/icon/mongem');
 
+var withUISkin = false;
+process.argv.forEach(function (val, index, array) {
+  console.log(index + ': ' + val);
+  if (val != undefined && val == 'UISkin'){
+    withUISkin = true;
+    console.log('with UISkin');
+  }
+});
+
 importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', false, function(){
   importImage('ui.ipf/baseskinset/skillicon.xml', './web/img/icon/skillicon', false, function(){
     importImage('ui.ipf/baseskinset/monillust.xml', './web/img/icon/monillust', false, function(){
       importImage('ui.ipf/baseskinset/mongem.xml', './web/img/icon/mongem', false, function(){
-        importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', false, function(){
-          importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
-            importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
-              importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
-                console.log("IMAGE IMPORT SUCCESS");
-                copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+        importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
+          if (withUISkin){
+            importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', false, function(){
+              importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
+                importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
+                  importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
+                    console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
+                    copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+                  });
+                });
               });
             });
-          });
+          } else {
+            console.log("IMAGE IMPORT SUCCESS");
+            copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+          }
         });
       });
     });
