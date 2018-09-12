@@ -25,6 +25,12 @@ module.exports = function(app, tableData, scriptData){
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.table != undefined && request.query.id != undefined){
       if (request.query.table == 'item_Equip') {
+        for (var i = 0; i < tableData[request.query.table].length; i ++){
+          if (tableData[request.query.table][i].ClassID === request.query.id){
+            itemEquipDetailPage(request.query.table, i, request, response);
+            return;
+          }
+        }
 
       // } else if (request.query.table == 'item_premium') {
 
@@ -248,6 +254,13 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
+    response.send(output);
+  }
+
+  function itemEquipDetailPage(tableName, index, request, response) {
+    var itemTable = tableData[tableName];
+
+    var output = layout_itemEquip_detail.toString();
     response.send(output);
   }
 
