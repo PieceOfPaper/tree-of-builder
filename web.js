@@ -76,6 +76,7 @@ function loadTable(name, path, callback){
     response.pipe(file).on('close', function(){
       console.log('download table [' + name + '] ' + path);
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
+        data['TableName'] = name;
         tableData[name].push(data);
       });
       if (callback != undefined){

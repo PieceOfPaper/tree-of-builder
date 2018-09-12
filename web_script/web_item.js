@@ -23,41 +23,23 @@ module.exports = function(app, tableData, scriptData){
     var itemRecipeTable = tableData['item_recipe'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
-    if (request.query.id != undefined && request.query.id != ''){
-      for (var i = 0; i < itemTable.length; i ++){
-        if (itemTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
-        }
-      }
-      for (var i = 0; i < itemEquipTable.length; i ++){
-        if (itemEquipTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
-        }
-      }
-      for (var i = 0; i < itemPremiumTable.length; i ++){
-        if (itemPremiumTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
-        }
-      }
-      for (var i = 0; i < itemQuestTable.length; i ++){
-        if (itemQuestTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
-        }
-      }
-      for (var i = 0; i < itemGemTable.length; i ++){
-        if (itemGemTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
-        }
-      }
-      for (var i = 0; i < itemRecipeTable.length; i ++){
-        if (itemRecipeTable[i].ClassID === request.query.id){
-          itemDetailPage(i, request, response);
-          return;
+    if (request.query.table != undefined && request.query.id != undefined){
+      if (request.query.table == 'item_Equip') {
+
+      // } else if (request.query.table == 'item_premium') {
+
+      // } else if (request.query.table == 'item_Quest') {
+
+      // } else if (request.query.table == 'item_gem') {
+
+      // } else if (request.query.table == 'item_recipe') {
+
+      } else {
+        for (var i = 0; i < tableData[request.query.table].length; i ++){
+          if (tableData[request.query.table][i].ClassID === request.query.id){
+            itemDetailPage(request.query.table, i, request, response);
+            return;
+          }
         }
       }
     }
@@ -183,7 +165,7 @@ module.exports = function(app, tableData, scriptData){
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
-      resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      resultString += '<td align="center"><a href="?table=' + resultArray[i].TableName + '&id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
       //resultString += '<td align="center">' + resultArray[i].ClassID + '</td>';
       // 공용 코스튬은 아이콘이 두개
       if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
@@ -223,13 +205,15 @@ module.exports = function(app, tableData, scriptData){
   var layout_itemGem_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
   var layout_itemRecipe_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
 
-  function itemDetailPage(index, request, response) {
-    var itemTable = tableData['item'];
+  function itemDetailPage(tableName, index, request, response) {
+    var itemTable = tableData[tableName];
 
     var output = layout_item_detail.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase() + '.png" />');
-    if (itemTable[index].GroupName.toLowerCase() == 'card'){
+    if (itemTable[index].TooltipImage == undefined){
+      output = output.replace(/%TooltipImage%/g, '');
+    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
       output = output.replace(/%TooltipImage%/g, '<img src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     } else {
       output = output.replace(/%TooltipImage%/g, '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
@@ -243,7 +227,11 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%GroupName%/g, itemTable[index].GroupName);
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
-    output = output.replace(/%CardGroupName%/g, itemTable[index].CardGroupName);
+    if (itemTable[index].CardGroupName == undefined){
+      output = output.replace(/%CardGroupName%/g, '');
+    } else {
+      output = output.replace(/%CardGroupName%/g, itemTable[index].CardGroupName);
+    }
 
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
@@ -252,7 +240,11 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
 
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
-    output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
+    if (itemTable[index].Desc_Sub == undefined){
+      output = output.replace(/%Desc_Sub%/g, '');
+    } else {
+      output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
+    }
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
