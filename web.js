@@ -67,6 +67,8 @@ loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){
 });
 loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
 });
+loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
+});
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   var file = fs.createWriteStream('./web/data/' + path);
