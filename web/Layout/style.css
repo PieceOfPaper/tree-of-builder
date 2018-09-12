@@ -88,6 +88,14 @@ table, td, th {
 .top-menu #home:active img{
 }
 
+.top-menu #item img{
+    content: url("../img/icon/itemicon/accessory_hat_poporion.png");
+}
+.top-menu #item:hover img{
+}
+.top-menu #item:active img{
+}
+
 .top-menu #skill img{
     content: url("../img/icon/skillicon/icon_warri_tercioformation.png");
 }
