@@ -153,7 +153,8 @@ module.exports = function(app, tableData, scriptData){
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
-      resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      //resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      resultString += '<td align="center">' + resultArray[i].ClassID + '</td>';
       // 공용 코스튬은 아이콘이 두개
       if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
           resultArray[i].EqpType.toLowerCase() == 'outer' && resultArray[i].UseGender.toLowerCase() == 'both'){
