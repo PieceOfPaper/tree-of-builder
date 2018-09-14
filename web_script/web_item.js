@@ -9,10 +9,8 @@ module.exports = function(app, tableData, scriptData){
   var layout = fs.readFileSync('./web/Layout/index-item.html');
   var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
 
-  //var search_box = fs.readFileSync('./web/Skill/search_box.html');
-  // var jobTable = tableData['job'];
-  // var skillTable = tableData['skill'];
-  // var skillTreeTable = tableData['skilltree'];
+  
+  var equipStatList = [ 'ADD_MINATK','ADD_MAXATK', 'ADD_DEF', 'CRTHR', 'CRTATK', 'CRTDR', 'ADD_HR', 'ADD_DR', 'STR', 'DEX', 'CON', 'INT', 'MNA', 'SR', 'SDR', 'ADD_MHR', 'ADD_MDEF', 'MGP', 'AddSkillMaxR', 'SkillRange', 'SkillAngle', 'Luck', 'BlockRate', 'BLK', 'BLK_BREAK', 'Revive', 'HitCount', 'BackHit', 'SkillPower', 'ASPD', 'MSPD', 'KDPow', 'MHP', 'MSP', 'MSTA', 'RHP', 'RSP', 'RSPTIME', 'RSTA', 'ADD_CLOTH', 'ADD_LEATHER', 'ADD_CHAIN', 'ADD_IRON', 'ADD_GHOST', 'ADD_SMALLSIZE', 'ADD_MIDDLESIZE', 'ADD_LARGESIZE', 'ADD_FORESTER', 'ADD_WIDLING', 'ADD_VELIAS', 'ADD_PARAMUNE', 'ADD_KLAIDA', 'ADD_FIRE', 'ADD_ICE', 'ADD_POISON', 'ADD_LIGHTNING', 'ADD_EARTH', 'ADD_SOUL', 'ADD_HOLY', 'ADD_DARK' ];
 
   route.get('/', function (request, response) {
     var itemTable = tableData['item'];
@@ -253,7 +251,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, itemTable[index].GroupName);
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
     if (itemTable[index].CardGroupName == undefined){
@@ -301,21 +299,87 @@ module.exports = function(app, tableData, scriptData){
       icon = 'No Img';
     }
 
+
+
+    var statListString = '';
+    for (var i = 0; i < equipStatList.length; i ++){
+      if (itemTable[index][equipStatList[i]] == undefined || Math.abs(itemTable[index][equipStatList[i]]) == 0) continue;
+      statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
+    }
+    // if (Math.abs(itemTable[index].ADD_MINATK) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_MINATK') + (Number(itemTable[index].ADD_MINATK) > 0 ? '▲' : '▼') + itemTable[index].ADD_MINATK + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_MAXATK) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_MAXATK') + (Number(itemTable[index].ADD_MAXATK) > 0 ? '▲' : '▼') + itemTable[index].ADD_MAXATK + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_DEF) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_DEF') + (Number(itemTable[index].ADD_DEF) > 0 ? '▲' : '▼') + itemTable[index].ADD_DEF + '<br/>';
+    // if (Math.abs(itemTable[index].CRTHR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'CRTHR') + (Number(itemTable[index].CRTHR) > 0 ? '▲' : '▼') + itemTable[index].CRTHR + '<br/>';
+    // if (Math.abs(itemTable[index].CRTATK) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'CRTATK') + (Number(itemTable[index].CRTATK) > 0 ? '▲' : '▼') + itemTable[index].CRTATK + '<br/>';
+    // if (Math.abs(itemTable[index].CRTDR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'CRTDR') + (Number(itemTable[index].CRTDR) > 0 ? '▲' : '▼') + itemTable[index].CRTDR + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_HR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_HR') + (Number(itemTable[index].ADD_HR) > 0 ? '▲' : '▼') + itemTable[index].ADD_HR + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_DR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_DR') + (Number(itemTable[index].ADD_DR) > 0 ? '▲' : '▼') + itemTable[index].ADD_DR + '<br/>';
+    // if (Math.abs(itemTable[index].STR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'STR') + (Number(itemTable[index].STR) > 0 ? '▲' : '▼') + itemTable[index].STR + '<br/>';
+    // if (Math.abs(itemTable[index].DEX) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'DEX') + (Number(itemTable[index].DEX) > 0 ? '▲' : '▼') + itemTable[index].DEX + '<br/>';
+    // if (Math.abs(itemTable[index].CON) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'CON') + (Number(itemTable[index].CON) > 0 ? '▲' : '▼') + itemTable[index].CON + '<br/>';
+    // if (Math.abs(itemTable[index].INT) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'INT') + (Number(itemTable[index].INT) > 0 ? '▲' : '▼') + itemTable[index].INT + '<br/>';
+    // if (Math.abs(itemTable[index].MNA) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MNA') + (Number(itemTable[index].MNA) > 0 ? '▲' : '▼') + itemTable[index].MNA + '<br/>';
+    // if (Math.abs(itemTable[index].SR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'SR') + (Number(itemTable[index].SR) > 0 ? '▲' : '▼') + itemTable[index].SR + '<br/>';
+    // if (Math.abs(itemTable[index].SDR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'SDR') + (Number(itemTable[index].SDR) > 0 ? '▲' : '▼') + itemTable[index].SDR + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_MHR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_MHR') + (Number(itemTable[index].ADD_MHR) > 0 ? '▲' : '▼') + itemTable[index].ADD_MHR + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_MDEF) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_MDEF') + (Number(itemTable[index].ADD_MDEF) > 0 ? '▲' : '▼') + itemTable[index].ADD_MDEF + '<br/>';
+    // if (Math.abs(itemTable[index].MGP) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MGP') + (Number(itemTable[index].MGP) > 0 ? '▲' : '▼') + itemTable[index].MGP + '<br/>';
+    // if (Math.abs(itemTable[index].AddSkillMaxR) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'AddSkillMaxR') + (Number(itemTable[index].AddSkillMaxR) > 0 ? '▲' : '▼') + itemTable[index].AddSkillMaxR + '<br/>';
+    // if (Math.abs(itemTable[index].SkillRange) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'SkillRange') + (Number(itemTable[index].SkillRange) > 0 ? '▲' : '▼') + itemTable[index].SkillRange + '<br/>';
+    // if (Math.abs(itemTable[index].SkillAngle) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'SkillAngle') + (Number(itemTable[index].SkillAngle) > 0 ? '▲' : '▼') + itemTable[index].SkillAngle + '<br/>';
+    // if (Math.abs(itemTable[index].Luck) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'Luck') + (Number(itemTable[index].Luck) > 0 ? '▲' : '▼') + itemTable[index].Luck + '<br/>';
+    // if (Math.abs(itemTable[index].BlockRate) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'BlockRate') + (Number(itemTable[index].BlockRate) > 0 ? '▲' : '▼') + itemTable[index].BlockRate + '<br/>';
+    // if (Math.abs(itemTable[index].BLK) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'BLK') + (Number(itemTable[index].BLK) > 0 ? '▲' : '▼') + itemTable[index].BLK + '<br/>';
+    // if (Math.abs(itemTable[index].BLK_BREAK) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'BLK_BREAK') + (Number(itemTable[index].BLK_BREAK) > 0 ? '▲' : '▼') + itemTable[index].BLK_BREAK + '<br/>';
+    // if (Math.abs(itemTable[index].Revive) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'Revive') + (Number(itemTable[index].Revive) > 0 ? '▲' : '▼') + itemTable[index].Revive + '<br/>';
+    // if (Math.abs(itemTable[index].HitCount) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'HitCount') + (Number(itemTable[index].HitCount) > 0 ? '▲' : '▼') + itemTable[index].HitCount + '<br/>';
+    // if (Math.abs(itemTable[index].BackHit) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'BackHit') + (Number(itemTable[index].BackHit) > 0 ? '▲' : '▼') + itemTable[index].BackHit + '<br/>';
+    // if (Math.abs(itemTable[index].SkillPower) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'SkillPower') + (Number(itemTable[index].SkillPower) > 0 ? '▲' : '▼') + itemTable[index].SkillPower + '<br/>';
+    // if (Math.abs(itemTable[index].ASPD) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ASPD') + (Number(itemTable[index].ASPD) > 0 ? '▲' : '▼') + itemTable[index].ASPD + '<br/>';
+    // if (Math.abs(itemTable[index].MSPD) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MSPD') + (Number(itemTable[index].MSPD) > 0 ? '▲' : '▼') + itemTable[index].MSPD + '<br/>';
+    // if (Math.abs(itemTable[index].KDPow) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'KDPow') + (Number(itemTable[index].KDPow) > 0 ? '▲' : '▼') + itemTable[index].KDPow + '<br/>';
+    // if (Math.abs(itemTable[index].MHP) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MHP') + (Number(itemTable[index].MHP) > 0 ? '▲' : '▼') + itemTable[index].MHP + '<br/>';
+    // if (Math.abs(itemTable[index].MSP) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MSP') + (Number(itemTable[index].MSP) > 0 ? '▲' : '▼') + itemTable[index].MSP + '<br/>';
+    // if (Math.abs(itemTable[index].MSTA) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'MSTA') + (Number(itemTable[index].MSTA) > 0 ? '▲' : '▼') + itemTable[index].MSTA + '<br/>';
+    // if (Math.abs(itemTable[index].RHP) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'RHP') + (Number(itemTable[index].RHP) > 0 ? '▲' : '▼') + itemTable[index].RHP + '<br/>';
+    // if (Math.abs(itemTable[index].RSP) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'RSP') + (Number(itemTable[index].RSP) > 0 ? '▲' : '▼') + itemTable[index].RSP + '<br/>';
+    // if (Math.abs(itemTable[index].RSPTIME) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'RSPTIME') + (Number(itemTable[index].RSPTIME) > 0 ? '▲' : '▼') + itemTable[index].RSPTIME + '<br/>';
+    // if (Math.abs(itemTable[index].RSTA) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'RSTA') + (Number(itemTable[index].RSTA) > 0 ? '▲' : '▼') + itemTable[index].RSTA + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_CLOTH) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_CLOTH') + (Number(itemTable[index].ADD_CLOTH) > 0 ? '▲' : '▼') + itemTable[index].ADD_CLOTH + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_LEATHER) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_LEATHER') + (Number(itemTable[index].ADD_LEATHER) > 0 ? '▲' : '▼') + itemTable[index].ADD_LEATHER + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_CHAIN) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_CHAIN') + (Number(itemTable[index].ADD_CHAIN) > 0 ? '▲' : '▼') + itemTable[index].ADD_CHAIN + '<br/>';
+    // if (Math.abs(itemTable[index].ADD_IRON) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'ADD_IRON') + (Number(itemTable[index].ADD_IRON) > 0 ? '▲' : '▼') + itemTable[index].ADD_IRON + '<br/>';
+    // if (Math.abs(itemTable[index].INT) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'INT') + (Number(itemTable[index].INT) > 0 ? '▲' : '▼') + itemTable[index].INT + '<br/>';
+    // if (Math.abs(itemTable[index].INT) > 0) statListString += '- ' + tos.ClassName2Lang(tableData, 'INT') + (Number(itemTable[index].INT) > 0 ? '▲' : '▼') + itemTable[index].INT + '<br/>';
+    if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
+
     var output = layout_itemEquip_detail.toString();
 
     output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Icon%/g, icon);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
+    output = output.replace(/%StatList%/g, statListString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
 
-    output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
+    output = output.replace(/%ItemType%/g, tos.ClassName2Lang(tableData, itemTable[index].ItemType));
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, itemTable[index].GroupName);
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
+
+    output = output.replace(/%ItemGrade%/g, itemTable[index].ItemGrade);
+    output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
+    output = output.replace(/%Dur%/g, itemTable[index].Dur);
+    output = output.replace(/%MaxDur%/g, itemTable[index].MaxDur);
+    output = output.replace(/%ReqToolTip%/g, itemTable[index].ReqToolTip);
+    output = output.replace(/%ClassType%/g, tos.ClassName2Lang(tableData, itemTable[index].ClassType));
+    output = output.replace(/%ClassType2%/g, tos.ClassName2Lang(tableData, itemTable[index].ClassType2));
+    output = output.replace(/%AttachType%/g, tos.ClassName2Lang(tableData, itemTable[index].AttachType));
+    output = output.replace(/%UseJob%/g, itemTable[index].UseJob);
+    output = output.replace(/%UseGender%/g, itemTable[index].UseGender);
 
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
@@ -367,7 +431,7 @@ module.exports = function(app, tableData, scriptData){
   
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, itemTable[index].GroupName);
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
   

@@ -5,6 +5,8 @@ class TosModule {
         var output = caption;
         output = output.replace(/{np}|{nl}/g, '<br/>');
         output = output.replace(/{img tooltip_speedofatk}/g, '<img src="../img/tooltip_speedofatk.png" style="height:1em; vertical-align:middle;" />');
+        output = output.replace(/{img green_up_arrow 16 16}/g, '▲');
+        output = output.replace(/{img red_down_arrow 16 16}/g, '▼');
         output = output.replace(/{#DD5500}/g, '<span style="color:#DD5500;">');
         output = output.replace(/{#7AE4FF}/g, '<span style="color:#7AE4FF;">');
         output = output.replace(/{#993399}/g, '<span style="color:#993399;">');
