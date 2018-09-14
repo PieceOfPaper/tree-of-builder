@@ -23,6 +23,7 @@ if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
 if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_client.ipf');
 if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_ability.ipf');
+if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
 
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
@@ -112,6 +113,34 @@ function loadScript(path){
   });
 }
 
+
+// ---------- 언어데이터 불러와보기
+loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
+  console.log('language table ' + tableData['language'].length);
+});
+function loadTableLanguage(name, path, callback){
+  if (tableData[name] === undefined) tableData[name] = [];
+  var file = fs.createWriteStream('./web/data/' + path);
+  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('download table [' + name + '] ' + path);
+      fs.readFile('./web/data/' + path, function(error, data){
+        var xmlData = xml(data.toString());
+        if (xmlData.root === undefined || xmlData.root.children === undefined)
+          return;
+        for (var i = 0; i < xmlData.root.children.length; i ++){
+          for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
+            if (xmlData.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
+            tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
+          }
+        }
+        if (callback != undefined){
+          callback();
+        }
+      });
+    });
+  });
+}
 
 // ---------- 페이지 세팅
 app.use(express.static('web'));

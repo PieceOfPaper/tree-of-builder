@@ -60,6 +60,12 @@ class TosModule {
         return output;
     }
 
+    static ClassName2Lang(tableData, className){
+        if (tableData['language'][className] == undefined)
+            return className;
+        return tableData['language'][className];
+    }
+
     static GetJobData(tableData, num1, num2){
         for (var i = 0; i < tableData['job'].length; i ++){
             if (tableData['job'][i].ClassName === 'Char' + num1 + '_' + num2)
