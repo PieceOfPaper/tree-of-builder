@@ -280,6 +280,7 @@ module.exports = function(app, tableData, scriptData){
 
   function itemEquipDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
+    var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
     var icon = '';
     var tooltipImg = '';
@@ -307,6 +308,63 @@ module.exports = function(app, tableData, scriptData){
       statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
+
+
+    var captionScript = '';
+    captionScript += '<script>';
+
+    captionScript += 'var itemData = {';
+    captionScript +=  'UseLv:' + itemTable[index].UseLv  + ',';
+    captionScript +=  'ItemLv:' + itemTable[index].ItemLv  + ',';
+    captionScript +=  'ItemGrade:' + itemTable[index].ItemGrade  + ',';
+    captionScript +=  'DefaultEqpSlot:"' + itemTable[index].DefaultEqpSlot  + '",';
+    captionScript +=  'DamageRange:' + itemTable[index].DamageRange  + ',';
+    captionScript +=  'ClassType:"' + itemTable[index].ClassType  + '",';
+    captionScript += '};';
+
+    captionScript += 'function SCR_GET_ITEM_GRADE_RATIO(grade, prop){';
+    if (myGrade != undefined){
+      captionScript +=  'if (prop == "BasicRatio") return ' + myGrade.BasicRatio/100 + ';';
+      captionScript +=  'if (prop == "ReinforceRatio") return ' + myGrade.ReinforceRatio/100 + ';';
+      captionScript +=  'if (prop == "ReinforceCostRatio") return ' + myGrade.ReinforceCostRatio/100 + ';';
+      captionScript +=  'if (prop == "TranscendCostRatio") return ' + myGrade.TranscendCostRatio/100 + ';';
+    }
+    captionScript +=  'return 0;';
+    captionScript += '}';
+
+    captionScript += 'function GetAbility(pc, ability){';
+    captionScript +=  'if(document.getElementById("Ability_" + ability)!=undefined){';
+    captionScript +=     'var abilitySetting = {';
+    captionScript +=      'Level:Number(document.getElementById("Ability_" + ability).value),';
+    captionScript +=    '};';
+    captionScript +=    'return abilitySetting;';
+    captionScript +=  '}';
+    captionScript +=  'return undefined;';
+    captionScript += '}';
+
+    captionScript += 'function TryGetProp(data, prop){ ';
+    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript +=  'return data[prop];'; 
+    captionScript += '}';
+
+    captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
+    captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
+    captionScript += 'function IsPVPServer(pc){ return 0; }';
+    captionScript += 'function GetServerNation(){ return 0; }';
+    captionScript += 'function GetServerGroupID(){ return 0; }';
+    captionScript += 'function SRC_KUPOLE_GROWTH_ITEM(item, num){ return 0; }';
+    captionScript += 'function CALC_PCBANG_GROWTH_ITEM_LEVEL(item){ return undefined; }';
+
+    captionScript += 'updateAtk();';
+    captionScript += 'function updateAtk(){';
+    captionScript +=  'var atkPair=' + 'GET_BASIC_' + itemTable[index].BasicTooltipProp + '(itemData);';
+    captionScript +=  'if (document.getElementById("MinAtk") != undefined) document.getElementById("MinAtk").innerHTML=atkPair.length>0?atkPair[1]:Math.floor(atkPair);';
+    captionScript +=  'if (document.getElementById("MaxAtk") != undefined) document.getElementById("MaxAtk").innerHTML=atkPair.length>0?atkPair[0]:Math.floor(atkPair);';
+    captionScript += '}';
+
+    captionScript += tos.Lua2JS(scriptData['GET_BASIC_' + itemTable[index].BasicTooltipProp]).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]');
+    captionScript += '</script>';
+
 
     var output = layout_itemEquip_detail.toString();
 
@@ -349,6 +407,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
 
+    output = output.replace(/%AddCaptionScript%/g, captionScript);
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
