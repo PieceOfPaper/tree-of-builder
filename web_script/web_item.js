@@ -243,7 +243,7 @@ module.exports = function(app, tableData, scriptData){
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
     } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
-      output = output.replace(/%TooltipImage%/g, '<img src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      output = output.replace(/%TooltipImage%/g, '<img src="../img/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     } else {
       output = output.replace(/%TooltipImage%/g, '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     }
