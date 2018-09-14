@@ -58,6 +58,7 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
 });
 loadTable('stance', 'ies.ipf/stance.ies');
 loadTable('cooldown', 'ies.ipf/cooldown.ies');
+loadTable('item_grade', 'ies.ipf/item_grade.ies');
 loadTable('item', 'ies.ipf/item.ies', function(){
 });
 loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){

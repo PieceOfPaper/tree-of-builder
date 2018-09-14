@@ -370,7 +370,7 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
 
-    output = output.replace(/%ItemGrade%/g, itemTable[index].ItemGrade);
+    output = output.replace(/%ItemGrade%/g, tos.GradeToName(tableData, itemTable[index].ItemGrade));
     output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
     output = output.replace(/%Dur%/g, itemTable[index].Dur);
     output = output.replace(/%MaxDur%/g, itemTable[index].MaxDur);

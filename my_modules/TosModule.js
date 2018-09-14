@@ -130,5 +130,12 @@ class TosModule {
         }
         return stance;
     }
+
+    static GradeToName(tableData, grade){
+        for (var i = 0; i < tableData['item_grade'].length; i ++){
+          if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i].Name;
+        }
+        return grade;
+    }
 }
 module.exports = TosModule;
