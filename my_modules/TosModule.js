@@ -30,12 +30,14 @@ class TosModule {
         var output = lua_script;
 
         output = output.replace(/ if/g, 'if(');
+        output = output.replace(/	if/g, 'if(');
         output = output.replace(/else /g, '}else{');
         output = output.replace(/else\n/g, '}else{');
         output = output.replace(/elseif/g, '}else if(');
         output = output.replace(/then/g, '){');
         output = output.replace(/end\n/g, '}\n');
         output = output.replace(/local/g, 'var');
+        output = output.replace(/class/g, ' classData');
         output = output.replace(/math/g, 'Math');
         output = output.replace(/SyncFloor/g, 'Math.round');
         output = output.replace(/--/g, '\/\/');
@@ -67,7 +69,7 @@ class TosModule {
     }
 
     static ClassName2Lang(tableData, className){
-        if (tableData['language'][className] == undefined)
+        if (className == undefined || className.length == 0 || tableData['language'] == undefined || tableData['language'][className] == undefined)
             return className;
         return tableData['language'][className];
     }
