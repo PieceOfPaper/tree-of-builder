@@ -403,7 +403,9 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
     captionScript += 'updateBasicValue();';
     captionScript += 'function updateBasicValue(){';
-    captionScript +=  'SCR_REFRESH_' + itemTable[index].ToolTipScp + '(itemData, 0, 0, 0);';
+    captionScript +=  'SCR_REFRESH_WEAPON(itemData, 0, 0, 0);';
+    captionScript +=  'SCR_REFRESH_ARMOR(itemData, 0, 0, 0);';
+    captionScript +=  'SCR_REFRESH_ACC(itemData, 0, 0, 0);';
     captionScript +=  'console.log(itemData);';
     captionScript +=  'if (basicValue != undefined){';
     captionScript +=    'var valueStr="";';
