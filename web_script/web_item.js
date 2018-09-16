@@ -329,6 +329,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'MAXATK:"' + 0  + '",';
     captionScript +=  'MINATK:"' + 0  + '",';
     captionScript +=  'MAXATK_AC:"' + 0 + '",';
+    captionScript +=  'MINATK_AC:"' + 0 + '",';
     captionScript +=  'MATK:"' + 0 + '",';
     captionScript +=  'Level:"' + 0 + '",';
     captionScript +=  'HR:"' + 0  + '",';
@@ -421,7 +422,7 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]');
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']);
-    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'item.MAXATK=GET_BASIC_ATK(item)[0];\nitem.MINATK=GET_BASIC_ATK(item)[1];');
+    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);console.log(atkPair);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
     captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ARMOR']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){');
     captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ACC']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('{"ADD_FIRE"}','["ADD_FIRE"]');
     captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_ATK_RATIO']);
