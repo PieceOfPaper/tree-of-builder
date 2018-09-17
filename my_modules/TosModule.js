@@ -29,16 +29,22 @@ class TosModule {
 
         var output = lua_script;
 
-        output = output.replace(/if/g, 'if(');
-        output = output.replace(/else/g, '}else{');
+        output = output.replace(/ if/g, 'if(');
+        output = output.replace(/	if/g, 'if(');
+        output = output.replace(/else /g, '}else{');
+        output = output.replace(/else\n/g, '}else{');
+        output = output.replace(/elseif/g, '}else if(');
         output = output.replace(/then/g, '){');
         output = output.replace(/end\n/g, '}\n');
         output = output.replace(/local/g, 'var');
+        output = output.replace(/class/g, ' classData');
         output = output.replace(/math/g, 'Math');
+        output = output.replace(/SyncFloor/g, 'Math.round');
         output = output.replace(/--/g, '\/\/');
         output = output.replace(/~=/g, '!=');
         output = output.replace(/nil/g, 'undefined');
         output = output.replace(/ and /g, '&&');
+        output = output.replace(/ or /g, '||');
         output = output.replace(/\'YES\'/g, 'true');
         output = output.replace(/\'NO\'/g, 'false');
 
@@ -63,7 +69,7 @@ class TosModule {
     }
 
     static ClassName2Lang(tableData, className){
-        if (tableData['language'][className] == undefined)
+        if (className == undefined || className.length == 0 || tableData['language'] == undefined || tableData['language'][className] == undefined)
             return className;
         return tableData['language'][className];
     }
@@ -136,6 +142,13 @@ class TosModule {
           if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i].Name;
         }
         return grade;
+    }
+
+    static GetCurrentGrade(tableData, grade){
+        for (var i = 0; i < tableData['item_grade'].length; i ++){
+          if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i];
+        }
+        return undefined;
     }
 }
 module.exports = TosModule;

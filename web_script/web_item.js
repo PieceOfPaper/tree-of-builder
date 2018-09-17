@@ -280,6 +280,7 @@ module.exports = function(app, tableData, scriptData){
 
   function itemEquipDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
+    var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
     var icon = '';
     var tooltipImg = '';
@@ -307,6 +308,132 @@ module.exports = function(app, tableData, scriptData){
       statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
+
+
+    var captionScript = '';
+    captionScript += '<script>';
+
+    captionScript += 'var itemData = {';
+    captionScript +=  'UseLv:' + itemTable[index].UseLv  + ',';
+    captionScript +=  'ItemLv:' + itemTable[index].ItemLv  + ',';
+    captionScript +=  'ItemGrade:' + itemTable[index].ItemGrade  + ',';
+    captionScript +=  'DefaultEqpSlot:"' + itemTable[index].DefaultEqpSlot  + '",';
+    captionScript +=  'DamageRange:' + itemTable[index].DamageRange  + ',';
+    captionScript +=  'ClassType:"' + itemTable[index].ClassType  + '",';
+    captionScript +=  'ClassID:"' + itemTable[index].ClassID  + '",';
+    captionScript +=  'ClassName:"' + itemTable[index].ClassName  + '",';
+    captionScript +=  'ItemStar:"' + itemTable[index].ClassType  + '",';
+    captionScript +=  'BasicTooltipProp:"' + itemTable[index].BasicTooltipProp  + '",';
+    captionScript +=  'ItemStar:"' + itemTable[index].ItemStar  + '",';
+    captionScript +=  'Material:"' + itemTable[index].Material  + '",';
+    captionScript +=  'MAXATK:"' + 0  + '",';
+    captionScript +=  'MINATK:"' + 0  + '",';
+    captionScript +=  'MAXATK_AC:"' + 0 + '",';
+    captionScript +=  'MINATK_AC:"' + 0 + '",';
+    captionScript +=  'MATK:"' + 0 + '",';
+    captionScript +=  'Level:"' + 0 + '",';
+    captionScript +=  'HR:"' + 0  + '",';
+    captionScript +=  'DR:"' + 0  + '",';
+    captionScript +=  'DEF:"' + 0  + '",';
+    captionScript +=  'MHR:"' + 0 + '",';
+    captionScript +=  'MDEF:"' + 0  + '",';
+    captionScript +=  'DefRatio:"' + 0  + '",';
+    captionScript +=  'MDefRatio:"' + 0  + '",';
+    captionScript +=  'Transcend:"' + 0  + '",';
+    captionScript +=  'Reinforce_2:"' + 0  + '",';
+    captionScript +=  'ReinforceRatio:"' + itemTable[index].ReinforceRatio  + '",';
+    captionScript +=  'BuffValue:"' + 0  + '",';
+    captionScript += '};';
+
+
+    captionScript += 'function SCR_GET_ITEM_GRADE_RATIO(grade, prop){';
+    if (myGrade != undefined){
+      captionScript +=  'if (prop == "BasicRatio") return ' + myGrade.BasicRatio/100 + ';';
+      captionScript +=  'if (prop == "ReinforceRatio") return ' + myGrade.ReinforceRatio/100 + ';';
+      captionScript +=  'if (prop == "ReinforceCostRatio") return ' + myGrade.ReinforceCostRatio/100 + ';';
+      captionScript +=  'if (prop == "TranscendCostRatio") return ' + myGrade.TranscendCostRatio/100 + ';';
+    }
+    captionScript +=  'return 0;';
+    captionScript += '}';
+
+    captionScript += 'function GetAbility(pc, ability){';
+    captionScript +=  'if(document.getElementById("Ability_" + ability)!=undefined){';
+    captionScript +=     'var abilitySetting = {';
+    captionScript +=      'Level:Number(document.getElementById("Ability_" + ability).value),';
+    captionScript +=    '};';
+    captionScript +=    'return abilitySetting;';
+    captionScript +=  '}';
+    captionScript +=  'return undefined;';
+    captionScript += '}';
+
+    captionScript += 'function TryGetProp(data, prop){ ';
+    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript +=  'return data[prop];'; 
+    captionScript += '}';
+
+    captionScript += 'function StringSplit(base, code){ ';
+    captionScript +=  'if (base === undefined || code === undefined) return base;'; 
+    captionScript +=  'return base.split(code);'; 
+    captionScript += '}';
+    
+    captionScript += 'function GetClassByType(tablename, value){ ';
+    captionScript +=  'if (tablename === "ItemTranscend") return { ClassName:value, AtkRatio:(value*10) };'; 
+    captionScript +=  'return undefined;'; 
+    captionScript += '}';
+
+    captionScript += 'function IsBuffApplied(pc, buff){ return false; }\n';
+    captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }\n';
+    captionScript += 'function IsPVPServer(pc){ return 0; }\n';
+    captionScript += 'function GetServerNation(){ return 0; }\n';
+    captionScript += 'function GetServerGroupID(){ return 0; }\n';
+    captionScript += 'function SRC_KUPOLE_GROWTH_ITEM(item, num){ return 0; }\n';
+    captionScript += 'function CALC_PCBANG_GROWTH_ITEM_LEVEL(item){ return undefined; }\n';
+    captionScript += 'function INIT_WEAPON_PROP(item, data){ return 0; }\n';
+    captionScript += 'function INIT_ARMOR_PROP(item, data){ return 0; }\n';
+    captionScript += 'function GET_ITEM_LEVEL(item){ return item.ItemLv; }\n';
+    captionScript += 'function APPLY_OPTION_SOCKET(item){ return 0; }\n';
+    captionScript += 'function APPLY_AWAKEN(item){ return 0; }\n';
+    captionScript += 'function APPLY_ENCHANTCHOP(item){ return 0; }\n';
+    captionScript += 'function APPLY_RANDOM_OPTION(item){ return 0; }\n';
+    captionScript += 'function APPLY_RARE_RANDOM_OPTION(item){ return 0; }\n';
+    captionScript += 'function MakeItemOptionByOptionSocket(item){ return 0; }\n';
+    captionScript += 'function GetItemOwner(item){ return undefined; }\n';
+
+
+    captionScript += 'var basicValue=document.getElementById("BasicValue");';
+    captionScript += 'updateBasicValue();';
+    captionScript += 'function updateBasicValue(){';
+    captionScript +=  'SCR_REFRESH_WEAPON(itemData, 0, 0, 0);';
+    captionScript +=  'SCR_REFRESH_ARMOR(itemData, 0, 0, 0);';
+    captionScript +=  'SCR_REFRESH_ACC(itemData, 0, 0, 0);';
+    captionScript +=  'console.log(itemData);';
+    captionScript +=  'if (basicValue != undefined){';
+    captionScript +=    'var valueStr="";';
+    captionScript +=    'if (itemData.MAXATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'PATK') + ' " + itemData.MINATK + " - " + itemData.MAXATK + "</h2>";';
+    captionScript +=    'if (itemData.MATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MATK') + ' " + itemData.MATK + "</h2>";';
+    captionScript +=    'if (itemData.DEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DEF') + ' " + itemData.DEF + "</h2>";';
+    captionScript +=    'if (itemData.MDEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MDEF') + ' " + itemData.MDEF + "</h2>";';
+    captionScript +=    'if (itemData.HR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'HR') + ' " + itemData.HR + "</h2>";';
+    captionScript +=    'if (itemData.DR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DR') + ' " + itemData.DR + "</h2>";';
+    captionScript +=    'if (itemData.DefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DefRatio') + ' " + itemData.DefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MDefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MDefRatio') + ' " + itemData.MDefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MHR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MHR') + ' " + itemData.MHR + "</h2>";';
+    captionScript +=    'basicValue.innerHTML=valueStr';
+    captionScript +=  '}';
+    captionScript += '}';
+
+    captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]');
+    captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']);
+    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);console.log(atkPair);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
+    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ARMOR']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){');
+    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ACC']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('{"ADD_FIRE"}','["ADD_FIRE"]');
+    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_ATK_RATIO']);
+    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_DEF_RATIO']);
+    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_MDEF_RATIO']);
+    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE']);
+    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']);
+    captionScript += '</script>';
+
 
     var output = layout_itemEquip_detail.toString();
 
@@ -349,6 +476,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
 
+    output = output.replace(/%AddCaptionScript%/g, captionScript);
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
