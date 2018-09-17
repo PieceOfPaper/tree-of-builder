@@ -18,6 +18,15 @@ var app = express();
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
 var serverCode = 'kr';
 
+var noDownload = false;
+
+process.argv.forEach(function (val, index, array) {
+  if (val != undefined && val == 'noDownload'){
+    noDownload = true;
+    console.log('No Downlaod');
+  }
+});
+
 
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
@@ -73,6 +82,18 @@ loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){
 });
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
+  if (noDownload && fs.existsSync('./web/data/' + path)){
+    fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
+      data['TableName'] = name;
+      tableData[name].push(data);
+    }).on('end', function(){
+      console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      if (callback != undefined){
+        callback();
+      }
+    });
+    return;
+  }
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
@@ -80,10 +101,12 @@ function loadTable(name, path, callback){
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
         data['TableName'] = name;
         tableData[name].push(data);
+      }).on('end', function(){
+        console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        if (callback != undefined){
+          callback();
+        }
       });
-      if (callback != undefined){
-        callback();
-      }
     });
   });
 }
@@ -98,6 +121,18 @@ loadScript('shared.ipf/script/ability_unlock.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];
+  if (noDownload && fs.existsSync('./web/data/' + filename)){
+    fs.readFile('./web/data/' + filename, function(err, data){
+      var luaFuncSplit = data.toString().split('function');
+      for (var i = 0; i < luaFuncSplit.length; i ++){
+        var methodName = luaFuncSplit[i].split('(')[0].trim();
+        scriptData[methodName] = 'function' + luaFuncSplit[i];
+        //console.log('[' + i + ']' + methodName);
+      }
+      console.log('import script [' + filename + ']');
+    });
+    return;
+  }
   var file = fs.createWriteStream('./web/data/' + filename);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
@@ -121,6 +156,24 @@ loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
 });
 function loadTableLanguage(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
+  if (noDownload && fs.existsSync('./web/data/' + path)){
+    fs.readFile('./web/data/' + path, function(error, data){
+      var xmlData = xml(data.toString());
+      if (xmlData.root === undefined || xmlData.root.children === undefined)
+        return;
+      for (var i = 0; i < xmlData.root.children.length; i ++){
+        for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
+          if (xmlData.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
+          tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
+        }
+      }
+      console.log('import table [' + name + '] ' + path);
+      if (callback != undefined){
+        callback();
+      }
+    });
+    return;
+  }
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
@@ -161,7 +214,7 @@ app.get('/', function (req, response) {
     var dialogTable = tableData['dialogtext'];
     var captionList = [];
     for (var i = 0; i < dialogTable.length; i++){
-      if (dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
+      if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
         captionList.push(dialogTable[i]);
       }
     }
