@@ -494,6 +494,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AttachType%/g, tos.ClassName2Lang(tableData, itemTable[index].AttachType));
     output = output.replace(/%UseJob%/g, itemTable[index].UseJob);
     output = output.replace(/%UseGender%/g, itemTable[index].UseGender);
+    output = output.replace(/%MaxSocket_COUNT%/g, itemTable[index].MaxSocket_COUNT);
+    output = output.replace(/%MaxPR%/g, itemTable[index].MaxPR);
 
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
