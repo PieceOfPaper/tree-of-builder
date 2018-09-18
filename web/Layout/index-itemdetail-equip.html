@@ -13,6 +13,18 @@
     <h1>%Name%</h1>
     <div id="BasicValue"></div>
     <div>%StatList%</div>
+    <br/>
+    <div>
+        Reinforce
+        <input type="number" id="ReinforceLevel" min="0" max="40" value = "0" onchange="onChangeReinforceLevel()">
+        <button onclick="onClickReinforceLevelUp()">▲</button><button onclick="onClickReinforceLevelDown()">▼</button>
+    </div>
+    <div>
+        Transcend
+        <input type="number" id="TranscendLevel" min="0" max="10" value = "0" onchange="onChangeTranscendLevel()">
+        <button onclick="onClickTranscendLevelUp()">▲</button><button onclick="onClickTranscendLevelDown()">▼</button>
+    </div>
+    <br/>
     <p>%Desc%</p>
     <p>%Desc_Sub%</p>
     <table>
@@ -48,9 +60,6 @@
             <td>UseLv</td>
             <td>Dur</td>
             <td>MaxDur</td>
-            <td>ClassType</td>
-            <td>ClassType2</td>
-            <td>AttachType</td>
             <td>UseJob</td>
             <td>UseGender</td>
         </tr>
@@ -58,11 +67,21 @@
             <td>%UseLv%</td>
             <td>%Dur%</td>
             <td>%MaxDur%</td>
+            <td>%UseJob%</td>
+            <td>%UseGender%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>ClassType</td>
+            <td>ClassType2</td>
+            <td>AttachType</td>
+        </tr>
+        <tr>
             <td>%ClassType%</td>
             <td>%ClassType2%</td>
             <td>%AttachType%</td>
-            <td>%UseJob%</td>
-            <td>%UseGender%</td>
         </tr>
     </table>
     <br/>
