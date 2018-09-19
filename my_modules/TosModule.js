@@ -150,5 +150,20 @@ class TosModule {
         }
         return undefined;
     }
+
+    static FindDataClassName(tableData, tableName, className){
+        if (tableData[tableName] == undefined) return undefined;
+        for (var i = 0; i < tableData[tableName].length; i ++){
+          if (tableData[tableName][i].ClassName === className) return tableData[tableName][i];
+        }
+        return undefined;
+    }
+    static FindDataClassID(tableData, tableName, classID){
+        if (tableData[tableName] == undefined) return undefined;
+        for (var i = 0; i < tableData[tableName].length; i ++){
+          if (tableData[tableName][i].ClassID === classID) return tableData[tableName][i];
+        }
+        return undefined;
+    }
 }
 module.exports = TosModule;

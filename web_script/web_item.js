@@ -517,6 +517,7 @@ module.exports = function(app, tableData, scriptData){
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
+    var recipeData = tos.FindDataClassID(tableData,'recipe',itemTable[index].ClassID);
 
     var icon = '';
     var tooltipImg = '';
@@ -534,6 +535,61 @@ module.exports = function(app, tableData, scriptData){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
     } else {
       icon = 'No Img';
+    }
+
+    var targetString = '';
+    if (recipeData != undefined){
+      var itemData = undefined;
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',recipeData.TargetItem);
+      if (itemData != undefined){
+        var materialIcon = '';
+        if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+          itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+        } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+          materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+        } else if(itemData.Icon != undefined){
+          materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+        } else if(itemData.Illust != undefined){
+          materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+        }
+        targetString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
+        targetString += ' x' + recipeData.TargetItemCnt + '<br/>';
+      }
+    }
+
+    var materialString = '';
+    if (recipeData != undefined){
+      for(var i=1;i<=5;i++){
+        if (recipeData['Item_' + i + '_1'] == undefined) continue;
+        var itemData = undefined;
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',recipeData['Item_' + i + '_1']);
+        if (itemData != undefined){
+          var materialIcon = '';
+          if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+            itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          } else if(itemData.Icon != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          } else if(itemData.Illust != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          }
+          materialString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
+          materialString += ' x' + recipeData['Item_' + i + '_1_Cnt'] + '<br/>';
+        }
+      }
     }
   
     var output = layout_itemRecipe_detail.toString();
@@ -557,6 +613,9 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
     output = output.replace(/%SellPrice%/g, itemTable[index].SellPrice);
     output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
+
+    output = output.replace(/%Target%/g, targetString);
+    output = output.replace(/%Materials%/g, materialString);
   
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){

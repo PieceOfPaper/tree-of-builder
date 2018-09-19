@@ -210,6 +210,12 @@ table, td, th {
     height: 64px;
 }
 
+.item-material-icon {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+}
+
 /* ======== Builder ======== */
 .builder-class-area {
 }
