@@ -21,11 +21,17 @@ var serverCode = 'kr';
 var noDownload = false;
 
 process.argv.forEach(function (val, index, array) {
-  if (val != undefined && val == 'noDownload'){
-    noDownload = true;
-    console.log('No Downlaod');
+  if (val != undefined){
+    if (val == 'noDownload'){
+      noDownload = true;
+      console.log('No Downlaod');
+    } else if (val == 'server-ktest'){
+      serverCode = 'ktest';
+      console.log('change server ' + serverCode);
+    }
   }
 });
+console.log('argument loaded');
 
 
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');

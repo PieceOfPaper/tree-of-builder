@@ -51,9 +51,14 @@ function deleteFolderRecursive(path){
 var withUISkin = false;
 process.argv.forEach(function (val, index, array) {
   console.log(index + ': ' + val);
-  if (val != undefined && val == 'UISkin'){
-    withUISkin = true;
-    console.log('with UISkin');
+  if (val != undefined){
+    if (val == 'UISkin'){
+      withUISkin = true;
+      console.log('with UISkin');
+    } else if (val == 'ktest'){
+      serverCode = 'ktest';
+      console.log('change server ' + serverCode);
+    } 
   }
 });
 
