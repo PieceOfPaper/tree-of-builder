@@ -27,7 +27,7 @@ var slackOff = false;
 
 slack = new Slack();
 slack.setWebhook(webhookUri);
-app.sendSlack = function sendSlack(message){
+function sendSlack(message){
   if (slackOff) return;
   slack.webhook({
     channel: '#web-' + serverCode,
