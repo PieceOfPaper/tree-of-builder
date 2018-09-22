@@ -113,7 +113,7 @@ function loadTable(name, path, callback){
       data['TableName'] = name;
       tableData[name].push(data);
     }).on('end', function(){
-      console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
       if (callback != undefined){
         callback();
       }
@@ -128,7 +128,7 @@ function loadTable(name, path, callback){
         data['TableName'] = name;
         tableData[name].push(data);
       }).on('end', function(){
-        console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
         if (callback != undefined){
           callback();
         }
@@ -158,7 +158,7 @@ function loadScript(path){
         scriptData[methodName] = 'function' + luaFuncSplit[i];
         //console.log('[' + i + ']' + methodName);
       }
-      console.log('import script [' + filename + ']');
+      //console.log('import script [' + filename + ']');
     });
     return;
   }
@@ -182,7 +182,7 @@ function loadScript(path){
 
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
-  console.log('language table ' + tableData['language'].length);
+  //console.log('language table ' + tableData['language'].length);
 });
 function loadTableLanguage(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
@@ -198,7 +198,7 @@ function loadTableLanguage(name, path, callback){
           tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
         }
       }
-      console.log('import table [' + name + '] ' + path);
+      //console.log('import table [' + name + '] ' + path);
       if (callback != undefined){
         callback();
       }
