@@ -21,7 +21,6 @@
     "express": "^4.16.3",
     "png-crop": "0.0.2",
     "pngjs": "^3.3.3",
-    "slack-node": "^0.1.8",
     "tga": "^1.0.3",
     "xml-parser": "^1.2.1"
   }
