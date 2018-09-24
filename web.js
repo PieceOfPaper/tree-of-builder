@@ -6,6 +6,8 @@ var https = require('https');
 var csv = require('csv-parser');
 var xml = require('xml-parser');
 
+var Slack = require('slack-node');
+
 var TGA = require('tga');
 var PNG = require('pngjs').PNG;
 var PNGCrop = require('png-crop');
@@ -15,16 +17,33 @@ var tos = require('./my_modules/TosModule');
 var app = express();
 
 
+var webhookUri = 'https://hooks.slack.com/services/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';
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
 var serverCode = 'kr';
 
 var noDownload = false;
+var slackOff = false;
+
+
+slack = new Slack();
+slack.setWebhook(webhookUri);
+function sendSlack(message){
+  if (slackOff) return;
+  slack.webhook({
+    channel: '#web-' + serverCode,
+    username: "webhookbot",
+    text: message,
+  }, function(err, response) { console.log(response); });
+}
 
 process.argv.forEach(function (val, index, array) {
   if (val != undefined){
     if (val == 'noDownload'){
       noDownload = true;
       console.log('No Downlaod');
+    } else if (val == 'slackOff'){
+      slackOff = true;
+      console.log('Slack Off');
     } else if (val == 'server-ktest'){
       serverCode = 'ktest';
       console.log('change server ' + serverCode);
@@ -94,7 +113,7 @@ function loadTable(name, path, callback){
       data['TableName'] = name;
       tableData[name].push(data);
     }).on('end', function(){
-      //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
       if (callback != undefined){
         callback();
       }
@@ -109,7 +128,7 @@ function loadTable(name, path, callback){
         data['TableName'] = name;
         tableData[name].push(data);
       }).on('end', function(){
-        //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
         if (callback != undefined){
           callback();
         }
@@ -132,13 +151,14 @@ function loadScript(path){
   var filename = pathSplited[pathSplited.length - 1];
   if (noDownload && fs.existsSync('./web/data/' + filename)){
     fs.readFile('./web/data/' + filename, function(err, data){
+      if (err) sendSlack(err.toString());
       var luaFuncSplit = data.toString().split('function');
       for (var i = 0; i < luaFuncSplit.length; i ++){
         var methodName = luaFuncSplit[i].split('(')[0].trim();
         scriptData[methodName] = 'function' + luaFuncSplit[i];
         //console.log('[' + i + ']' + methodName);
       }
-      //console.log('import script [' + filename + ']');
+      console.log('import script [' + filename + ']');
     });
     return;
   }
@@ -147,6 +167,7 @@ function loadScript(path){
     response.pipe(file).on('close', function(){
       console.log('download script [' + filename + ']');
       fs.readFile('./web/data/' + filename, function(err, data){
+        if (err) sendSlack(err.toString());
         var luaFuncSplit = data.toString().split('function');
         for (var i = 0; i < luaFuncSplit.length; i ++){
           var methodName = luaFuncSplit[i].split('(')[0].trim();
@@ -161,12 +182,13 @@ function loadScript(path){
 
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
-  //console.log('language table ' + tableData['language'].length);
+  console.log('language table ' + tableData['language'].length);
 });
 function loadTableLanguage(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
     fs.readFile('./web/data/' + path, function(error, data){
+      if (error) sendSlack(err.toString());
       var xmlData = xml(data.toString());
       if (xmlData.root === undefined || xmlData.root.children === undefined)
         return;
@@ -176,7 +198,7 @@ function loadTableLanguage(name, path, callback){
           tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
         }
       }
-      //console.log('import table [' + name + '] ' + path);
+      console.log('import table [' + name + '] ' + path);
       if (callback != undefined){
         callback();
       }
@@ -188,6 +210,7 @@ function loadTableLanguage(name, path, callback){
     response.pipe(file).on('close', function(){
       console.log('download table [' + name + '] ' + path);
       fs.readFile('./web/data/' + path, function(error, data){
+        if (error) sendSlack(err.toString());
         var xmlData = xml(data.toString());
         if (xmlData.root === undefined || xmlData.root.children === undefined)
           return;
@@ -213,6 +236,7 @@ var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
   fs.readdir('./web/img/Dlg_portrait', (err, files) => {
+    if (error) sendSlack(err.toString());
     if (files === undefined){
       response.send(layout.toString());
       return;
@@ -289,6 +313,7 @@ var https_port = 3000;
 
 httpServer.listen(http_port, function (){
   console.log("Http Server Open! port:" + http_port);
+  sendSlack("Http Server Open! port:" + http_port);
 });
 // httpsServer.listen(https_port, function (){
 //   console.log("Https Server Open! port:" + https_port);
