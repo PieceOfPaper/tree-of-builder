@@ -236,7 +236,7 @@ var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
   fs.readdir('./web/img/Dlg_portrait', (err, files) => {
-    if (error) sendSlack(err.toString());
+    if (err) sendSlack(err.toString());
     if (files === undefined){
       response.send(layout.toString());
       return;
