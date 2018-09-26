@@ -20,6 +20,9 @@ module.exports = function(app, tableData, scriptData){
     var itemGemTable = tableData['item_gem'];
     var itemRecipeTable = tableData['item_recipe'];
 
+    var equipClassTypeTable = tableData['item_equip_classtype'];
+    var equipDefaultTable = tableData['item_equip_default'];
+
     // 종합테이블 세팅
     var itemAllTable = [];
     for (var i = 0; i < itemTable.length; i ++) itemAllTable.push(itemTable[i]);
@@ -28,6 +31,28 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < itemQuestTable.length; i ++) itemAllTable.push(itemQuestTable[i]);
     for (var i = 0; i < itemGemTable.length; i ++) itemAllTable.push(itemGemTable[i]);
     for (var i = 0; i < itemRecipeTable.length; i ++) itemAllTable.push(itemRecipeTable[i]);
+
+    var equipClassTypeFilterTable = [];
+    for (var i = 0; i < equipClassTypeTable.length; i ++) {
+      var hasClass = false;
+      for (var j = 0; j < equipClassTypeFilterTable.length; j ++){
+        if (equipClassTypeFilterTable[j].ClassName == equipClassTypeTable[i].ClassName){
+          hasClass = true;
+          break;
+        }
+      }
+      if (!hasClass) equipClassTypeFilterTable.push(equipClassTypeTable[i]);
+    }
+    for (var i = 0; i < equipDefaultTable.length; i ++) {
+      var hasClass = false;
+      for (var j = 0; j < equipClassTypeFilterTable.length; j ++){
+        if (equipClassTypeFilterTable[j].ClassName == equipDefaultTable[i].ClassName){
+          hasClass = true;
+          break;
+        }
+      }
+      if (!hasClass) equipClassTypeFilterTable.push(equipDefaultTable[i]);
+    }
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.table != undefined && request.query.id != undefined){
@@ -64,7 +89,6 @@ module.exports = function(app, tableData, scriptData){
 
     var filteredItemTable = [];
 
-
     var resultArray = [];
 
     // Item
@@ -77,6 +101,17 @@ module.exports = function(app, tableData, scriptData){
         }
       }
       if (filter) continue;
+
+      // 필터 - Equip ClassType
+      if (request.query.equipClassTypeFilter != undefined && request.query.equipClassTypeFilter != ''){
+        if (itemAllTable[i].ClassType == undefined || itemAllTable[i].ClassType != request.query.equipClassTypeFilter) continue;
+      }
+
+      // 필터 - Equip UseLv
+      if (request.query.useLvMinFilter != undefined && request.query.useLvMinFilter != '' &&
+        request.query.useLvMaxFilter != undefined && request.query.useLvMaxFilter != ''){
+        if (itemAllTable[i].UseLv == undefined || Number(itemAllTable[i].UseLv) < Number(request.query.useLvMinFilter) || Number(itemAllTable[i].UseLv) > Number(request.query.useLvMaxFilter)) continue;
+      }
 
       if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemAllTable[i].Name.indexOf(request.query.searchName) > -1)){
         if (request.query.table == undefined || (request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase()))
@@ -94,6 +129,12 @@ module.exports = function(app, tableData, scriptData){
     //   else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
     //   else return 0;
     // });
+
+    var equipClassTypeFilterString = '';
+    equipClassTypeFilterString += '<option value="">ClassType</option>';
+    for (var i = 0; i < equipClassTypeFilterTable.length; i ++){
+      equipClassTypeFilterString += '<option value="' + equipClassTypeFilterTable[i].ClassName + '">' + tos.ClassName2Lang(tableData, equipClassTypeFilterTable[i].ClassName) + '</option>';
+    }
 
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
@@ -123,6 +164,8 @@ module.exports = function(app, tableData, scriptData){
 
     var output = layout.toString();
     output = output.replace(/style.css/g, '../Layout/style.css');
+
+    output = output.replace(/%EquipClassTypeFilter%/g, equipClassTypeFilterString);
 
     output = output.replace(/%SearchResult%/g, resultString);
 

@@ -27,6 +27,10 @@
         </div>
         <!--장비-->
         <div id="item_Equip" class="tab-content">
+            <div>UseLv<input type="number" id="useLvMinFilter" min="0" value = "0">~<input type="number" id="useLvMaxFilter" min="1" value = "500"></div>
+            <select id="equipClassTypeFilter">
+                %EquipClassTypeFilter%
+            </select>
         </div>
         <!--공통-->
         <div>
@@ -46,6 +50,10 @@
 
         var tableFilter = "None";
 
+        var useLvMinFilter = document.getElementById("useLvMinFilter");
+        var useLvMaxFilter = document.getElementById("useLvMaxFilter");
+        var equipClassTypeFilter = document.getElementById("equipClassTypeFilter");
+
         onInit();
         updateTabButton();
 
@@ -54,7 +62,11 @@
             searchName.value = getQueryVariable("searchName");
             tableFilter = getQueryVariable("table");
             if (tableFilter == "") tableFilter = "None";
-            console.log(tableFilter);
+            if (tableFilter == "item_Equip"){
+                useLvMinFilter.value = getQueryVariable("useLvMinFilter");
+                useLvMaxFilter.value = getQueryVariable("useLvMaxFilter");
+                equipClassTypeFilter.value = getQueryVariable("equipClassTypeFilter");
+            }
 
             if (!searchType.value || searchType.value === undefined || searchType.value === "") {
                 searchType.value = "Name";
@@ -110,6 +122,17 @@
             }
             if (tableFilter != undefined && tableFilter != "None"){
                 queryString.push("table=" + tableFilter);
+            }
+            if (tableFilter == "item_Equip"){
+                if (useLvMinFilter.value != undefined && useLvMinFilter.value.length > 0){
+                    queryString.push("useLvMinFilter=" + useLvMinFilter.value);
+                }
+                if (useLvMaxFilter.value != undefined && useLvMaxFilter.value.length > 0){
+                    queryString.push("useLvMaxFilter=" + useLvMaxFilter.value);
+                }
+                if (equipClassTypeFilter.value != undefined && equipClassTypeFilter.value.length > 0){
+                    queryString.push("equipClassTypeFilter=" + equipClassTypeFilter.value);
+                }
             }
 
             var newUrl = url;
