@@ -104,6 +104,15 @@ module.exports = function(app, tableData){
             output +=       '<div class="class">';
             output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
             var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
+            var skillLvSum = 0;
+            for (var k = 0; k < skillArray.length; k ++){
+                if (skillArray[k][0] == jobNum2){
+                    for (var l = 2; l < skillArray[k].length; l +=2){
+                        skillLvSum += skillArray[k][l + 1];
+                    }
+                }
+            }
+            output +=       '<p>(' + skillLvSum + '/' + (classCount[i] * 15) + ')</p>';
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
                     skilltreeTable[j].UnlockGrade <= classCount[i]){

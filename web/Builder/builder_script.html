@@ -85,6 +85,17 @@
     }
 
     function addSkillLevel(classNum2, grade, skillIndex, skillMax, value){
+        var sumLevel = 0;
+        for (var i = 0; i < skillArray.length; i ++){
+            if (skillArray[i][0] === classNum2){
+                for (var j = 2; j < skillArray[i].length; j +=2){
+                    sumLevel += skillArray[i][j + 1];
+                }
+            }
+        }
+        if ((sumLevel + value) > getGrade(classNum2) * 15){
+            return;
+        }
         for (var i = 0; i < skillArray.length; i ++){
             if (skillArray[i][0] === classNum2 && skillArray[i][1] === grade){
                 for (var j = 2; j < skillArray[i].length; j +=2){
@@ -101,8 +112,9 @@
                     }
                 }
                 skillArray[i].push(skillIndex);
-                if (value > 0) skillArray[i].push(value);
-                else skillArray[i].push(skillMax);
+                if (value > 0 && (sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i].push(value);
+                else if (value < 0 && (sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
+                else skillArray[i].push(0);
                 updatePage();
                 return;
             }
@@ -111,10 +123,20 @@
         skill.push(classNum2);
         skill.push(grade);
         skill.push(skillIndex);
-        skill.push(1);
+        if (value > 0 && (sumLevel + value) <= getGrade(classNum2) * 15) skill.push(value);
+        else if (value < 0 && (sumLevel + skillMax) <= getGrade(classNum2) * 15) skill.push(skillMax);
+        else skill.push(0);
         skillArray.push(skill);
         updatePage();
         return;
+    }
+
+    function getGrade(classNum2){
+        var grade = 0;
+        for (var i = 1; i < classArray.length; i ++){
+            if (classArray[i] == classNum2) grade ++;
+        }
+        return grade;
     }
 
     function AsciiToNumber(char){
