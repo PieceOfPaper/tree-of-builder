@@ -2,15 +2,18 @@ module.exports = function(app, tableData){
     var express = require('express');
     var fs = require('fs');
     var url = require('url');
+
+    var tos = require('../my_modules/TosModule');
     
     var route = express.Router();
   
     var builder_script = fs.readFileSync('./web/Builder/builder_script.html');
-    var jobTable = tableData['job'];
-    var skillTable = tableData['skill'];
-    var skilltreeTable = tableData['skilltree'];
   
     route.get('/', function (request, response) {
+        var jobTable = tableData['job'];
+        var skillTable = tableData['skill'];
+        var skilltreeTable = tableData['skilltree'];
+
         var classArray = [];
         var skillArray = [];
         var classCount = [];
@@ -45,18 +48,18 @@ module.exports = function(app, tableData){
         var output = '<html>';
         output +=   '<head>';
         output +=     '<title>Builder Page</title>';
-        output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+        output +=     '<link rel="stylesheet" type="text/css" href="../Layout/style.css">';
         output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
         output +=   '</head>';
         output +=   '<body>';
-        output += fs.readFileSync('./web/TopMenu/topMenu.html');
+        output += fs.readFileSync('./web/Layout/topMenu.html');
         output +=       '<div class="builder-class-area">';
         output +=           '<div class="builder-class-selected">';
         if (request.query.class === undefined || request.query.class === ''){
             //선택된 클래스가 없음.
         } else {
            for (var i = 1; i < classArray.length; i ++){
-                var jobData = GetJobData(classArray[0], classArray[i]);
+                var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
                 output +=       '<img src="../img/icon/classicon/' + jobData.Icon + '.png" />';
@@ -68,7 +71,7 @@ module.exports = function(app, tableData){
         output +=           '<div class="builder-class-select">';
         if (request.query.class === undefined || request.query.class === ''){
             for (var i = 1; i <= 4; i ++){
-                var jobData = GetJobData(i, 1);
+                var jobData = tos.GetJobData(tableData, i, 1);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + i + ',1)">';
                 output +=       '<img src="../img/icon/classicon/' + jobData.Icon + '.png" />';
@@ -139,13 +142,6 @@ module.exports = function(app, tableData){
         response.send(output);
     });
 
-    function GetJobData(num1, num2){
-        for (var i = 0; i < jobTable.length; i ++){
-            if (jobTable[i].ClassName === 'Char' + num1 + '_' + num2)
-                return jobTable[i];
-        }
-        return undefined;
-    }
 
     function GetJobNumber1(className) {
         var replaced = className.replace('Char', '');

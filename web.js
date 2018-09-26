@@ -291,8 +291,8 @@ app.use('/Buff', buffPage);
 var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
 app.use('/Item', itemPage);
 
-// var skillPage = require('./web_script/web_builder')(app, tableData);
-// app.use('/Builder', skillPage);
+var builderPage = require('./web_script/web_builder')(app, tableData);
+app.use('/Builder', builderPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);
