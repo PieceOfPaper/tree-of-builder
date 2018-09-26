@@ -64,20 +64,6 @@ module.exports = function(app, tableData, scriptData){
 
     var filteredItemTable = [];
 
-    // 필터 - ValueType
-    if (request.query.tableFilter != undefined && request.query.tableFilter != ''){
-      if (request.query.tableFilter === 'None'){
-        for (var i = 0; i < skillTable.length; i ++){
-          if (skillTable[i].ValueType.length === 0) continue;
-          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
-        }
-      } else {
-        for (var i = 0; i < skillTable.length; i ++){
-          if (skillTable[i].ValueType === request.query.valueTypeFilter) continue;
-          if (!filteredTable.includes(skillTable[i].ClassName)) filteredTable.push(skillTable[i].ClassName);
-        }
-      }
-    }
 
     var resultArray = [];
 
@@ -93,11 +79,11 @@ module.exports = function(app, tableData, scriptData){
       if (filter) continue;
 
       if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemAllTable[i].Name.indexOf(request.query.searchName) > -1)){
-        if (request.query.table != undefined && request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase())
+        if (request.query.table == undefined || (request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase()))
           resultArray.push(itemAllTable[i]);
       }
       else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemAllTable[i].ClassName.indexOf(request.query.searchName) > -1)){
-        if (request.query.table != undefined && request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase())
+        if (request.query.table == undefined || (request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase()))
           resultArray.push(itemAllTable[i]);
       }
     }

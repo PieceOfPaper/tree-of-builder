@@ -16,30 +16,26 @@
         <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
     </div>
     <div class="filler-area">
+        <div>
+            <button id="None" class="tab-button" onclick="onChangeTabButton('None')">All</button>
+            <button id="item" class="tab-button" onclick="onChangeTabButton('item')">Item</button>
+            <button id="item_Equip" class="tab-button" onclick="onChangeTabButton('item_Equip')">Equip</button>
+            <button id="item_premium" class="tab-button" onclick="onChangeTabButton('item_premium')">Premium</button>
+            <button id="item_Quest" class="tab-button" onclick="onChangeTabButton('item_Quest')">Quest</button>
+            <button id="item_gem" class="tab-button" onclick="onChangeTabButton('item_gem')">Gem</button>
+            <button id="item_recipe" class="tab-button" onclick="onChangeTabButton('item_recipe')">Recipe</button>
+        </div>
+        <!--장비-->
+        <div id="item_Equip" class="tab-content">
+        </div>
+        <!--공통-->
+        <div>
+        </div>
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
     <br/>
     <table class="search-result-table" style="width:100%">
-    %SearchResult%
-    <!--
-        <tr>
-            <td align="center"><a href="">1234</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser1.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td align="center"><a href="">4321</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser2.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-    -->
-
+        %SearchResult%
     </table>
 
     <script>
@@ -48,11 +44,17 @@
         var searchType = document.getElementById("searchType");
         var searchName = document.getElementById("searchName");
 
+        var tableFilter = "None";
+
         onInit();
+        updateTabButton();
 
         function onInit() {
             searchType.value = getQueryVariable("searchType");
             searchName.value = getQueryVariable("searchName");
+            tableFilter = getQueryVariable("table");
+            if (tableFilter == "") tableFilter = "None";
+            console.log(tableFilter);
 
             if (!searchType.value || searchType.value === undefined || searchType.value === "") {
                 searchType.value = "Name";
@@ -62,6 +64,28 @@
         function searchName_enterCheck() {
             if (event.keyCode == 13) {
                 search();
+            }
+        }
+
+        function onChangeTabButton(id) {
+            tableFilter = id;
+            updateTabButton();
+        }
+
+        function updateTabButton() {
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for(var i = 0; i < tabButtons.length; i ++){
+                if (tabButtons[i].id == tableFilter && !tabButtons[i].classList.contains("active"))
+                    tabButtons[i].classList.add("active");
+                else if (tabButtons[i].id != tableFilter && tabButtons[i].classList.contains("active"))
+                    tabButtons[i].classList.remove("active");
+            }
+            var tabContents = document.getElementsByClassName("tab-content");
+            for(var i = 0; i < tabContents.length; i ++){
+                if (tabContents[i].id == tableFilter && !tabContents[i].classList.contains("active"))
+                    tabContents[i].classList.add("active");
+                else if (tabContents[i].id != tableFilter && tabContents[i].classList.contains("active"))
+                    tabContents[i].classList.remove("active");
             }
         }
 
@@ -83,6 +107,9 @@
             }
             if (searchName.value != undefined && searchName.value.length > 0){
                 queryString.push("searchName=" + searchName.value);
+            }
+            if (tableFilter != undefined && tableFilter != "None"){
+                queryString.push("table=" + tableFilter);
             }
 
             var newUrl = url;

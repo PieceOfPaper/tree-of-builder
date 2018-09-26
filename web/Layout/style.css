@@ -201,6 +201,19 @@ table, td, th {
     height: 64px;
 }
 
+.tab-button {
+    
+}
+.tab-button.active {
+    color: red;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
 /* ======== Detail ======== */
 .add-ability-area {
 
