@@ -15,6 +15,16 @@ module.exports = function(app, tableData){
         var skilltreeTable = tableData['skilltree'];
         var skillAttributeTable = tableData['skill_attribute'];
 
+        jobTable.sort(function(a,b){
+            if (Number(a.Rank) > Number(b.Rank)) return 1;
+            else if (Number(a.Rank) < Number(b.Rank)) return -1;
+            else {
+                if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+                else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+                else return 0;
+            };
+        });
+
         var classArray = [];
         var skillArray = [];
         var classCount = [];
