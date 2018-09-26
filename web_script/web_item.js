@@ -135,6 +135,19 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < equipClassTypeFilterTable.length; i ++){
       equipClassTypeFilterString += '<option value="' + equipClassTypeFilterTable[i].ClassName + '">' + tos.ClassName2Lang(tableData, equipClassTypeFilterTable[i].ClassName) + '</option>';
     }
+    equipClassTypeFilterString += '<option value="' + 'Armband' + '">' + tos.ClassName2Lang(tableData, 'Armband') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Cannon' + '">' + tos.ClassName2Lang(tableData, 'Cannon') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Dagger' + '">' + tos.ClassName2Lang(tableData, 'Dagger') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Hair' + '">' + tos.ClassName2Lang(tableData, 'Hair') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Helmet' + '">' + tos.ClassName2Lang(tableData, 'Helmet') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Lens' + '">' + tos.ClassName2Lang(tableData, 'Lens') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Neck' + '">' + tos.ClassName2Lang(tableData, 'Neck') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Ring' + '">' + tos.ClassName2Lang(tableData, 'Ring') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Outer' + '">' + tos.ClassName2Lang(tableData, 'Outer') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Hat' + '">' + tos.ClassName2Lang(tableData, 'Hat') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'Artefact' + '">' + tos.ClassName2Lang(tableData, 'Artefact') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'SpecialCostume' + '">' + tos.ClassName2Lang(tableData, 'SpecialCostume') + '</option>';
+    equipClassTypeFilterString += '<option value="' + 'EffectCostume' + '">' + tos.ClassName2Lang(tableData, 'EffectCostume') + '</option>';
 
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
