@@ -20,6 +20,15 @@ module.exports = function(app, tableData, scriptData){
     var itemGemTable = tableData['item_gem'];
     var itemRecipeTable = tableData['item_recipe'];
 
+    // 종합테이블 세팅
+    var itemAllTable = [];
+    for (var i = 0; i < itemTable.length; i ++) itemAllTable.push(itemTable[i]);
+    for (var i = 0; i < itemEquipTable.length; i ++) itemAllTable.push(itemEquipTable[i]);
+    for (var i = 0; i < itemPremiumTable.length; i ++) itemAllTable.push(itemPremiumTable[i]);
+    for (var i = 0; i < itemQuestTable.length; i ++) itemAllTable.push(itemQuestTable[i]);
+    for (var i = 0; i < itemGemTable.length; i ++) itemAllTable.push(itemGemTable[i]);
+    for (var i = 0; i < itemRecipeTable.length; i ++) itemAllTable.push(itemRecipeTable[i]);
+
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.table != undefined && request.query.id != undefined){
       if (request.query.table == 'item_Equip') {
@@ -54,122 +63,32 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var filteredItemTable = [];
-    var filteredItemEquipTable = [];
-    var filteredItemPremiumTable = [];
-    var filteredItemQuestTable = [];
-    var filteredItemGemTable = [];
-    var filteredItemRecipeTable = [];
 
     var resultArray = [];
 
     // Item
-    for (var i = 0; i < itemTable.length; i ++){
+    for (var i = 0; i < itemAllTable.length; i ++){
       var filter = false;
       for (var j = 0; j < filteredItemTable.length; j ++){
-        if (filteredItemTable[j] === itemTable[i].ClassName){
+        if (filteredItemTable[j] === itemAllTable[i].ClassName){
           filter = true;
           break;
         }
       }
       if (filter) continue;
 
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemTable[i]);
-    }
-
-    // Item Equip
-    for (var i = 0; i < itemEquipTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemEquipTable.length; j ++){
-        if (filteredItemEquipTable[j] === itemEquipTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemEquipTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemEquipTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemEquipTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemEquipTable[i]);
-    }
-
-    // Item Premium
-    for (var i = 0; i < itemPremiumTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemPremiumTable.length; j ++){
-        if (filteredItemPremiumTable[j] === itemPremiumTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemPremiumTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemPremiumTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemPremiumTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemPremiumTable[i]);
-    }
-
-    // Item Quest
-    for (var i = 0; i < itemQuestTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemQuestTable.length; j ++){
-        if (filteredItemQuestTable[j] === itemQuestTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemQuestTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemQuestTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemQuestTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemQuestTable[i]);
-    }
-
-    // Item Gem
-    for (var i = 0; i < itemGemTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemGemTable.length; j ++){
-        if (filteredItemGemTable[j] === itemGemTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemGemTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemGemTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemGemTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemGemTable[i]);
-    }
-
-    // Item Recipe
-    for (var i = 0; i < itemRecipeTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemRecipeTable.length; j ++){
-        if (filteredItemRecipeTable[j] === itemRecipeTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemRecipeTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(itemRecipeTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemRecipeTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(itemRecipeTable[i]);
+      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemAllTable[i].Name.indexOf(request.query.searchName) > -1))
+        resultArray.push(itemAllTable[i]);
+      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemAllTable[i].ClassName.indexOf(request.query.searchName) > -1))
+      resultArray.push(itemAllTable[i]);
     }
 
     // 최종 소팅
-    resultArray.sort(function(a,b){
-      if (Number(a.ClassID) > Number(b.ClassID)) return 1;
-      else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
-      else return 0;
-    });
+    // resultArray.sort(function(a,b){
+    //   if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+    //   else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+    //   else return 0;
+    // });
 
     var resultString = '';
     for (var i = 0; i < resultArray.length; i ++){
