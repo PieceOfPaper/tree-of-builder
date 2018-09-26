@@ -13,6 +13,7 @@ module.exports = function(app, tableData){
         var jobTable = tableData['job'];
         var skillTable = tableData['skill'];
         var skilltreeTable = tableData['skilltree'];
+        var skillAttributeTable = tableData['skill_attribute'];
 
         var classArray = [];
         var skillArray = [];
@@ -67,6 +68,7 @@ module.exports = function(app, tableData){
            } 
         }
         output +=           '</div>';
+        output +=           '<h3>' + (classArray.length - 1) + ' Rank</h3>';
         output +=           '<hr>';
         output +=           '<div class="builder-class-select">';
         if (request.query.class === undefined || request.query.class === ''){
@@ -126,7 +128,7 @@ module.exports = function(app, tableData){
                     if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ')">';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
-                    output +=       '<p>' + skillTable[skillTableIndex].Name + '<br/> (' + skillLv + '/' + skillLvMax + ')</p>';
+                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a><br/> (' + skillLv + '/' + skillLvMax + ')</p>';
                     output +=   '</div>';
                     skillIndex ++;
                 }
