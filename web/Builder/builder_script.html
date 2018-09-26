@@ -29,7 +29,7 @@
         }
         if (classArray[0] === num1){
             classArray.push(num2);
-            updatePage();
+            updatePage(true);
         }
     }
 
@@ -81,7 +81,7 @@
             }
         }
         classArray.splice(index, classArray.length - index);
-        updatePage();
+        updatePage(true);
     }
 
     function addSkillLevel(classNum2, grade, skillIndex, skillMax, value){
@@ -93,9 +93,9 @@
                 }
             }
         }
-        if ((sumLevel + value) > getGrade(classNum2) * 15){
-            return;
-        }
+        // if ((sumLevel + value) > getGrade(classNum2) * 15){
+        //     return;
+        // }
         for (var i = 0; i < skillArray.length; i ++){
             if (skillArray[i][0] === classNum2 && skillArray[i][1] === grade){
                 for (var j = 2; j < skillArray[i].length; j +=2){
@@ -103,19 +103,25 @@
                         if ((skillArray[i][j + 1] + value) > skillMax){
                             skillArray[i][j + 1] = 0;
                         } else if ((skillArray[i][j + 1] + value) < 0) {
-                            skillArray[i][j + 1] = skillMax;
+                            if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i][j + 1] = skillMax;
+                            else skillArray[i][j + 1] = (getGrade(classNum2) * 15) - sumLevel;
                         } else {
-                            skillArray[i][j + 1] += value;
+                            if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i][j + 1] += value;
+                            else  skillArray[i][j + 1] = 0;
                         }
-                        updatePage();
+                        updatePage(false);
                         return;
                     }
                 }
                 skillArray[i].push(skillIndex);
-                if (value > 0 && (sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i].push(value);
-                else if (value < 0 && (sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
-                else skillArray[i].push(0);
-                updatePage();
+                if (value > 0){
+                    if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i].push(value);
+                    else skillArray[i].push(0);
+                } else if (value < 0){
+                    if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
+                    else skillArray[i].push((getGrade(classNum2) * 15) - sumLevel);
+                }  else skillArray[i].push(0);
+                updatePage(false);
                 return;
             }
         }
@@ -123,11 +129,15 @@
         skill.push(classNum2);
         skill.push(grade);
         skill.push(skillIndex);
-        if (value > 0 && (sumLevel + value) <= getGrade(classNum2) * 15) skill.push(value);
-        else if (value < 0 && (sumLevel + skillMax) <= getGrade(classNum2) * 15) skill.push(skillMax);
-        else skill.push(0);
+        if (value > 0){
+            if ((sumLevel + value) <= getGrade(classNum2) * 15) skill.push(value);
+            else sskill.push(0);
+        } else if (value < 0){
+            if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skill.push(skillMax);
+            else skill.push((getGrade(classNum2) * 15) - sumLevel);
+        }  else skill.push(0);
         skillArray.push(skill);
-        updatePage();
+        updatePage(false);
         return;
     }
 
@@ -171,7 +181,45 @@
         return("");
     }
 
-    function updatePage(){
+    function updateLayout(){
+        var skillLvSumContents = document.getElementsByClassName("skillLvSum");
+        if (skillLvSumContents != undefined){
+            for (var i = 0; i < skillLvSumContents.length; i ++){
+                var sumLevel = 0;
+                for (var j = 0; j < skillArray.length; j ++){
+                    if (skillArray[j][0] == Number(skillLvSumContents[i].id)){
+                        for (var k = 2; k < skillArray[j].length; k +=2){
+                            sumLevel += skillArray[j][k + 1];
+                        }
+                    }
+                }
+                skillLvSumContents[i].innerHTML = sumLevel.toString();
+            }
+        }
+        var skillLvContents = document.getElementsByClassName("skillLv");
+        if (skillLvContents != undefined){
+            for (var i = 0; i < skillLvContents.length; i ++){
+                var splited = skillLvContents[i].id.split(",");
+                var classNum2 = Number(splited[0]);
+                var skillIndex = Number(splited[1]);
+                var found = false;
+                for (var k = 0; k < skillArray.length; k ++){
+                    if (skillArray[k][0] === classNum2){
+                        for (var j = 2; j < skillArray[k].length; j +=2){
+                            if (skillArray[k][j] === skillIndex){
+                                skillLvContents[i].innerHTML = skillArray[k][j + 1].toString();
+                                found = true;
+                                break;;
+                            }
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+        }
+    }
+
+    function updatePage(refresh){
         var classStr = "";
         for (var i = 0; i < classArray.length; i ++){
             classStr += NumberToAscii(classArray[i]);
@@ -196,7 +244,15 @@
                 queryStr += "&";
                 queryStr += "skill=" + skillStr;
             }
-            window.location.href = url + queryStr;
+            if (refresh) {
+                window.location.href = url + queryStr;
+            } else {
+                if (history.pushState) {
+                    var newurl = url + queryStr;
+                    window.history.pushState({path:newurl},'',newurl);
+                }
+                updateLayout();
+            }
         }
     }
 

@@ -112,7 +112,7 @@ module.exports = function(app, tableData){
                     }
                 }
             }
-            output +=       '<p>(' + skillLvSum + '/' + (classCount[i] * 15) + ')</p>';
+            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 15) + ')</p>';
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
                     skilltreeTable[j].UnlockGrade <= classCount[i]){
@@ -140,7 +140,7 @@ module.exports = function(app, tableData){
                     output +=       '<br>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',1)">+</button>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',-1)">-</button>';
-                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a><br/> (' + skillLv + '/' + skillLvMax + ')</p>';
+                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a><br/> (<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
                     output +=   '</div>';
                     skillIndex ++;
                 }
