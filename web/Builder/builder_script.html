@@ -84,22 +84,25 @@
         updatePage();
     }
 
-    function addSkillLevel(classNum2, grade, skillIndex, skillMax){
+    function addSkillLevel(classNum2, grade, skillIndex, skillMax, value){
         for (var i = 0; i < skillArray.length; i ++){
             if (skillArray[i][0] === classNum2 && skillArray[i][1] === grade){
                 for (var j = 2; j < skillArray[i].length; j +=2){
                     if (skillArray[i][j] === skillIndex){
-                        if ((skillArray[i][j + 1] + 1) > skillMax){
+                        if ((skillArray[i][j + 1] + value) > skillMax){
                             skillArray[i][j + 1] = 0;
+                        } else if ((skillArray[i][j + 1] + value) < 0) {
+                            skillArray[i][j + 1] = skillMax;
                         } else {
-                            skillArray[i][j + 1] += 1;
+                            skillArray[i][j + 1] += value;
                         }
                         updatePage();
                         return;
                     }
                 }
                 skillArray[i].push(skillIndex);
-                skillArray[i].push(1);
+                if (value > 0) skillArray[i].push(value);
+                else skillArray[i].push(skillMax);
                 updatePage();
                 return;
             }

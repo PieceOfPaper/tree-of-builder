@@ -126,8 +126,11 @@ module.exports = function(app, tableData){
                     }
                     var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
                     if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
-                    output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ')">';
+                    output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
+                    output +=       '<br>';
+                    output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',1)">+</button>';
+                    output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',-1)">-</button>';
                     output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a><br/> (' + skillLv + '/' + skillLvMax + ')</p>';
                     output +=   '</div>';
                     skillIndex ++;
