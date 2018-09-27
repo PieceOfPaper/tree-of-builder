@@ -81,6 +81,7 @@
             }
         }
         classArray.splice(index, classArray.length - index);
+        if (classArray.length == 1) classArray.splice(0, 1);
         updatePage(true);
     }
 
@@ -236,7 +237,7 @@
         }
 
         var queryStr = "?";
-        if (classStr.length > 0 || skillStr.length > 0){
+        //if (classStr.length > 0 || skillStr.length > 0){
             if (classStr.length > 0){
                 queryStr += "class=" + classStr;
             }
@@ -253,7 +254,7 @@
                 }
                 updateLayout();
             }
-        }
+        //}
     }
 
     $(window).scroll(function() {
