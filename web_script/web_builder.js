@@ -73,7 +73,7 @@ module.exports = function(app, tableData){
                 var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobData.Icon + '.png" />';
+                output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
                 output +=   '</btn>';
            } 
         }
@@ -86,7 +86,7 @@ module.exports = function(app, tableData){
                 var jobData = tos.GetJobData(tableData, i, 1);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + i + ',1)">';
-                output +=       '<img src="../img/icon/classicon/' + jobData.Icon + '.png" />';
+                output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
                 output +=   '</btn>';
             }
         } else {
@@ -99,7 +99,7 @@ module.exports = function(app, tableData){
             }
             for (var i = 0; i < jobList.length; i ++){
                 output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobList[i].Icon + '.png" />';
+                output +=       '<img src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
                 output +=   '</btn>';
             }
         }
@@ -146,7 +146,7 @@ module.exports = function(app, tableData){
                     var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
                     if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon  + '.png"/>';
+                    output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
                     output +=       '<br>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',1)">+</button>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',-1)">-</button>';
