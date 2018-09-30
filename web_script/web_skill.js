@@ -181,6 +181,7 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    // 필터 - Stance
     if (request.query.stanceFilter != undefined && request.query.stanceFilter.length > 0){
       var filteredStanceList = request.query.stanceFilter.split(';');
       for (var i = 0; i < skillTable.length; i ++){
@@ -188,13 +189,14 @@ module.exports = function(app, tableData, scriptData){
         if (skillTable[i].ReqStance != undefined && skillTable[i].ReqStance.length > 0){
           var skillStanceList = skillTable[i].ReqStance.split(';');
           for (var j = 0; j < skillStanceList.length; j ++){
+            isFiltered = false;
             for (var k = 0; k < filteredStanceList.length; k ++){
               if (skillStanceList[j].toLowerCase() === filteredStanceList[k].toLowerCase()){
                 isFiltered = true;
                 break;
               }
             }
-            if (isFiltered) break;
+            if (isFiltered == false) break;
           }
         }
         if (isFiltered == false) continue;
@@ -501,7 +503,7 @@ module.exports = function(app, tableData, scriptData){
       captionScript +=  'Ability_' + skillAbility[i].ClassName + '++;';
       captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' > document.getElementById("Ability_' + skillAbility[i].ClassName + '").max) Ability_' + skillAbility[i].ClassName + ' = document.getElementById("Ability_' + skillAbility[i].ClassName + '").max;';
       captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
-      captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
+      //captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
       captionScript +=  'updateLuaScripts();';
       captionScript += '}';
 
@@ -509,7 +511,7 @@ module.exports = function(app, tableData, scriptData){
       captionScript +=  'Ability_' + skillAbility[i].ClassName + '--;';
       captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' < document.getElementById("Ability_' + skillAbility[i].ClassName + '").min) Ability_' + skillAbility[i].ClassName + '= document.getElementById("Ability_' + skillAbility[i].ClassName + '").min;';
       captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
-      captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
+      //captionScript +=  'console.log(Ability_' + skillAbility[i].ClassName + ');';
       captionScript +=  'updateLuaScripts();';
       captionScript += '}';
     }
