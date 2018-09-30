@@ -233,7 +233,7 @@ table, td, th {
 .builder-class-area {
 }
 .builder-class-area img{
-    width:64px;
+    /*width:64px;*/
     height:64px;
 }
 
@@ -243,6 +243,14 @@ table, td, th {
 .builder-class-select {
 }
 
+#viewDetailBtn {
+    float: right;
+    font-size: 1em;
+    font-family: IMCM_Book;
+}
+#viewDetailBtn.acive {
+    color: red;
+}
 .builder-skill-area {
     padding: 10px;
 }
@@ -252,20 +260,34 @@ table, td, th {
 .builder-skill-area .class .skill {
     display: inline-block;
     white-space: nowrap;
-    width: 150px;
+    vertical-align: top;
+    width: fit-content;
+    width: calc(100vw * 0.5 - 2 * 20px);
+    text-align: left;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+.builder-skill-area .class .skill .skill-desc {
+    text-align: left;
+    white-space:normal;
+    word-break:normal;
+    display: none;
+}
+.builder-skill-area .class .skill .skill-desc.active {
+    display: block;
 }
 @media only screen and (max-device-width : 640px) {
     .builder-skill-area .class .skill {
-        width: 50%;
+        width: calc(100vw - 2 * 10px);
     }
 }
 @media only screen and (max-device-width: 768px) {
     .builder-skill-area .class .skill {
-        width: 50%;
+        width: calc(100vw - 2 * 10px);
     }
 }
 .builder-skill-area .class .skill img {
-    width:64px;
+    /*width:64px;*/
     height:64px;
 }
 .builder-skill-area .class .skill p {

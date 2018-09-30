@@ -266,4 +266,23 @@
             $(window).scrollTop(sessionStorage.scrollTop);
         }
     });
+
+    function onClickViewDetail() {
+        var button = document.getElementById("viewDetailBtn");
+        var detailsDesc = document.getElementsByClassName("skill-desc");
+        if (button != undefined && detailsDesc != undefined){
+            if (button.classList.contains("active")){
+                for (var i = 0; i < detailsDesc.length; i ++){
+                    detailsDesc[i].classList.remove("active");
+                }
+                button.classList.remove("active");
+            } else {
+                for (var i = 0; i < detailsDesc.length; i ++){
+                    detailsDesc[i].classList.add("active");
+                }
+                button.classList.add("active");
+            }
+        }
+    }
+
 </script>

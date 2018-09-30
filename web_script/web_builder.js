@@ -97,6 +97,7 @@ module.exports = function(app, tableData){
         output +=           '</div>';
         output +=       '</div>';
         output +=       '<hr>';
+        output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
         output +=       '<div class="builder-skill-area">';
         var skillIndex = 0;
         for (var i = 0; i < classCount.length; i ++){
@@ -141,7 +142,11 @@ module.exports = function(app, tableData){
                     output +=       '<br>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',1)">+</button>';
                     output +=       '<button onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',-1)">-</button>';
-                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a><br/> (<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
+                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
+                    output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
+                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
+                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
+                    output +=       '</div>';
                     output +=   '</div>';
                     skillIndex ++;
                 }
