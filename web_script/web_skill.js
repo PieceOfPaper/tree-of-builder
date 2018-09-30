@@ -398,7 +398,7 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < skillAbility.length; i ++){
       abilityString += '<tr>';
       if (skillAbilityJob[i] === undefined){
-        abilityString += '<td></td>';
+        abilityString += '<td>Unused</td>';
       } else {
         abilityString += '<td align="center">';
         abilityString +=  '<input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()">';
@@ -407,7 +407,12 @@ module.exports = function(app, tableData, scriptData){
       }
       abilityString += '<td align="center"><img src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
       abilityString += '<td>';
-      abilityString +=   '<p>' + skillAbility[i].Name + '<br/>' + skillAbility[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(skillAbility[i].Desc) + '</p>';
+      abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
+      if (skillAbilityJob[i] !== undefined){
+        abilityString +=   '<p>' + skillAbilityJob[i].UnlockDesc + '</p>';
+      }
+      //abilityString +=   '<br/>';
+      abilityString +=   '<p>' + tos.parseCaption(skillAbility[i].Desc) + '</p>';
       abilityString += '</td>';
       abilityString += '</tr>';
     }
@@ -449,12 +454,12 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += 'var currentSkill = {';
     captionScript +=  'Level: Number(1),';
-    captionScript +=  'SklFactor:' + Number(skillTable[index].SklFactor) + ',';
-    captionScript +=  'SklFactorByLevel:' + Number(skillTable[index].SklFactorByLevel) + ',';
-    captionScript +=  'SklSR:' + Number(skillTable[index].SklSR) + ',';
+    captionScript +=  'SklFactor:' + skillTable[index].SklFactor + ',';
+    captionScript +=  'SklFactorByLevel:' + skillTable[index].SklFactorByLevel + ',';
+    captionScript +=  'SklSR:' + skillTable[index].SklSR + ',';
     captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
     captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
-    captionScript +=  'SpendItemBaseCount:"' + skillTable[index].SpendItemBaseCount + '",';
+    captionScript +=  'SpendItemBaseCount:' + skillTable[index].SpendItemBaseCount + ',';
     captionScript += '};';
 
     captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
