@@ -68,6 +68,19 @@ loadTable('job', 'ies.ipf/job.ies', function(){
       if (tableData['job'][i].EngName === 'Warrior') continue;
       loadTable('ability_job', 'ies_ability.ipf/ability_' + tableData['job'][i].EngName + '.ies');
     }
+    tableData['job'].sort(function(a,b){
+        if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
+        else if (tos.GetJobNumber1(a.ClassName) < tos.GetJobNumber1(b.ClassName)) return -1;
+        else {
+            if (Number(a.Rank) > Number(b.Rank)) return 1;
+            else if (Number(a.Rank) < Number(b.Rank)) return -1;
+            else {
+                if (Number(a.ClassID) > Number(b.ClassID)) return 1;
+                else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
+                else return 0;
+            }
+        }
+    });
   });
 });
 loadTable('skill', 'ies.ipf/skill.ies');
