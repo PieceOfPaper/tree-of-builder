@@ -258,9 +258,23 @@ module.exports = function(app, tableData, scriptData){
     for (var i = 0; i < resultArray.length; i ++){
       resultString += '<tr>';
       resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
+      var resultJob = [];
+      for (var j = 0; j < skillTreeTable.length; j ++){
+        if (skillTreeTable[j].SkillName == resultArray[i].ClassName) {
+          resultJob.push(tos.Skilltree2Job(tableData, skillTreeTable[j].ClassName));
+        }
+      }
+      resultString += '<td align="center">';
+      if (resultJob != undefined && resultJob.length > 0) {
+        for (var j = 0; j < resultJob.length; j ++){
+          resultString += '<img src="../img/icon/classicon/' + resultJob[j].Icon.toLowerCase() + '.png" />';
+        }
+      } 
+      resultString += '</td>';
       resultString += '<td align="center"><img src="../img/icon/skillicon/icon_' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
       resultString += '<td>';
-      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
+      //resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
+      resultString +=   '<p>' + resultArray[i].Name + '</p>';
       resultString += '</td>';
       resultString += '</tr>';
     }

@@ -165,5 +165,9 @@ class TosModule {
         }
         return undefined;
     }
+
+    static Skilltree2Job(tableData, className){
+        return this.FindDataClassName(tableData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
+    }
 }
 module.exports = TosModule;
