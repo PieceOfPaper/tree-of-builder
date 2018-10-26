@@ -8,9 +8,22 @@ var TGA = require('tga');
 var PNG = require('pngjs').PNG;
 var PNGCrop = require('png-crop');
 
+var Slack = require('slack-node');
 
+var webhookUri = 'https://hooks.slack.com/services/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';
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
 var serverCode = 'kr';
+
+slack = new Slack();
+slack.setWebhook(webhookUri);
+function sendSlack(message){
+  if (slackOff) return;
+  slack.webhook({
+    channel: '#web-' + serverCode,
+    username: "webhookbot",
+    text: message,
+  }, function(err, response) { console.log(response); });
+}
 
 // ---------- 이미지 삭제
 deleteFolderRecursive('./web/img/raw');
@@ -73,6 +86,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
                 importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
                   importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
                     console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
+                    sendSlack("Image Import SUCCESS (with UI Skin)");
                     copyImage('./web/img/bufficon', './web/img/icon/skillicon');
                   });
                 });
@@ -80,6 +94,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
             });
           } else {
             console.log("IMAGE IMPORT SUCCESS");
+            sendSlack("Image Import SUCCESS");
             copyImage('./web/img/bufficon', './web/img/icon/skillicon');
           }
         });
