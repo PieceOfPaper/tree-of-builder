@@ -230,7 +230,7 @@ function generateLuaScript(array, index, callback){
       luaString = data.toString();
       console.log('import script [' + filename + ']');
       generateLuaScript(array, index + 1, function(result){
-        callback(luaString + result);
+        callback(luaString + '\n' + result);
       });
     });
   } else {
@@ -248,7 +248,7 @@ function generateLuaScript(array, index, callback){
           }
           luaString = data.toString();
           generateLuaScript(array, index + 1, function(result){
-            callback(luaString + result);
+            callback(luaString + '\n' + result);
           });
         });
       });
