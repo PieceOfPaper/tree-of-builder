@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+    <script src="../js/requestMethod.js"></script>
+<script>
+    var filter = [];
+    filter["Rank"] = "[3,5]";
+    requestGetData("job", filter, function(array){
+        console.log(array);
+    });
+</script>
+
+</body>
+</html>
