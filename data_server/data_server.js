@@ -7,6 +7,9 @@ module.exports = function(app, tableData){
 
     var jobServer = require('./data_job')(app, tableData);
     app.use('/data/job', jobServer);
+
+    var skillServer = require('./data_skill')(app, tableData);
+    app.use('/data/skill', skillServer);
   
     return route;
   }

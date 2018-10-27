@@ -27,7 +27,6 @@ class DataServerModule {
                             var min = Number(splited[0]);
                             var max = Number(splited[1]);
                             for (var i = 0; i < tableData.length; i ++){
-                                console.log(Number(tableData[i][param]));
                                 if (Number(tableData[i][param]) < min || Number(tableData[i][param]) > max){
                                     if (!filteredArray.includes(tableData[i])) filteredArray.push(tableData[i]);
                                 }
