@@ -13,6 +13,7 @@ var Slack = require('slack-node');
 var webhookUri = 'https://hooks.slack.com/services/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';
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
 var serverCode = 'kr';
+var slackOff = false;
 
 slack = new Slack();
 slack.setWebhook(webhookUri);
@@ -71,10 +72,15 @@ process.argv.forEach(function (val, index, array) {
     } else if (val == 'ktest'){
       serverCode = 'ktest';
       console.log('change server ' + serverCode);
-    } 
+    } else if (val == 'slackOff'){
+      slackOff = true;
+      console.log('Slack Off');
+    }
   }
 });
+console.log('argument loaded');
 
+//sendSlack("import start");
 importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', false, function(){
   importImage('ui.ipf/baseskinset/skillicon.xml', './web/img/icon/skillicon', false, function(){
     importImage('ui.ipf/baseskinset/monillust.xml', './web/img/icon/monillust', false, function(){
