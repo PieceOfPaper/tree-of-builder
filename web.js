@@ -155,43 +155,105 @@ function loadTable(name, path, callback){
 
 // ---------- 스크립트 데이터 불러오기
 var scriptData = [];
-loadScript('shared.ipf/script/calc_property_skill.lua');
-loadScript('shared.ipf/script/ability.lua');
-loadScript('shared.ipf/script/ability_price.lua');
-loadScript('shared.ipf/script/ability_unlock.lua');
-loadScript('shared.ipf/script/item_calculate.lua');
-loadScript('shared.ipf/script/item_transcend_shared.lua')
-function loadScript(path){
-  var pathSplited = path.split('/');
+var scriptArray = [];
+scriptArray.push('shared.ipf/script/calc_property_skill.lua');
+scriptArray.push('shared.ipf/script/ability.lua');
+scriptArray.push('shared.ipf/script/ability_price.lua');
+scriptArray.push('shared.ipf/script/ability_unlock.lua');
+scriptArray.push('shared.ipf/script/item_calculate.lua');
+scriptArray.push('shared.ipf/script/item_transcend_shared.lua');
+//for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
+generateLuaScript(scriptArray, 0, function(result){
+  // 기존 데이터 저장
+  var luaFuncSplit = result.split('function');
+  for (var i = 0; i < luaFuncSplit.length; i ++){
+    var methodName = luaFuncSplit[i].split('(')[0].trim();
+    scriptData[methodName] = 'function' + luaFuncSplit[i];
+  }
+  // 파일로 저장
+  fs.writeFile('./web/js/generated_lua.lua', result, function(err) {
+      if(err) return console.log(err);
+      console.log('Success Generate Lua Scripts');
+  }); 
+});
+// function loadScript(path){
+//   var pathSplited = path.split('/');
+//   var filename = pathSplited[pathSplited.length - 1];
+//   if (noDownload && fs.existsSync('./web/data/' + filename)){
+//     fs.readFile('./web/data/' + filename, function(err, data){
+//       if (err) sendSlack(err.toString());
+//       var luaFuncSplit = data.toString().split('function');
+//       for (var i = 0; i < luaFuncSplit.length; i ++){
+//         var methodName = luaFuncSplit[i].split('(')[0].trim();
+//         scriptData[methodName] = 'function' + luaFuncSplit[i];
+//         //console.log('[' + i + ']' + methodName);
+//       }
+//       console.log('import script [' + filename + ']');
+//     });
+//     return;
+//   }
+//   var file = fs.createWriteStream('./web/data/' + filename);
+//   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
+//     response.pipe(file).on('close', function(){
+//       console.log('download script [' + filename + ']');
+//       fs.readFile('./web/data/' + filename, function(err, data){
+//         if (err) sendSlack(err.toString());
+//         var luaFuncSplit = data.toString().split('function');
+//         for (var i = 0; i < luaFuncSplit.length; i ++){
+//           var methodName = luaFuncSplit[i].split('(')[0].trim();
+//           scriptData[methodName] = 'function' + luaFuncSplit[i];
+//           //console.log('[' + i + ']' + methodName);
+//         }
+//       });
+//     });
+//   });
+// }
+function generateLuaScript(array, index, callback){
+  if (index >= array.length) {
+    callback('');
+    return;
+  }
+
+  var luaString = '';
+
+  var pathSplited = array[index].split('/');
   var filename = pathSplited[pathSplited.length - 1];
   if (noDownload && fs.existsSync('./web/data/' + filename)){
     fs.readFile('./web/data/' + filename, function(err, data){
-      if (err) sendSlack(err.toString());
-      var luaFuncSplit = data.toString().split('function');
-      for (var i = 0; i < luaFuncSplit.length; i ++){
-        var methodName = luaFuncSplit[i].split('(')[0].trim();
-        scriptData[methodName] = 'function' + luaFuncSplit[i];
-        //console.log('[' + i + ']' + methodName);
+      if (err) {
+        sendSlack(err.toString());
+        generateLuaScript(array, index + 1, function(result){
+          callback(result);
+        });
+        return;
       }
+      luaString = data.toString();
       console.log('import script [' + filename + ']');
-    });
-    return;
-  }
-  var file = fs.createWriteStream('./web/data/' + filename);
-  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
-    response.pipe(file).on('close', function(){
-      console.log('download script [' + filename + ']');
-      fs.readFile('./web/data/' + filename, function(err, data){
-        if (err) sendSlack(err.toString());
-        var luaFuncSplit = data.toString().split('function');
-        for (var i = 0; i < luaFuncSplit.length; i ++){
-          var methodName = luaFuncSplit[i].split('(')[0].trim();
-          scriptData[methodName] = 'function' + luaFuncSplit[i];
-          //console.log('[' + i + ']' + methodName);
-        }
+      generateLuaScript(array, index + 1, function(result){
+        callback(luaString + result);
       });
     });
-  });
+  } else {
+    var file = fs.createWriteStream('./web/data/' + filename);
+    var request = https.get(dataServerPath + serverCode + '/' + array[index], function(response) {
+      response.pipe(file).on('close', function(){
+        console.log('download script [' + filename + ']');
+        fs.readFile('./web/data/' + filename, function(err, data){
+          if (err) {
+            sendSlack(err.toString());
+            generateLuaScript(array, index + 1, function(result){
+              callback(result);
+            });
+            return;
+          }
+          luaString = data.toString();
+          generateLuaScript(array, index + 1, function(result){
+            callback(luaString + result);
+          });
+        });
+      });
+    });
+  }
 }
 
 
