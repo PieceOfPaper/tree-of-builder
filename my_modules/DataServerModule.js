@@ -11,7 +11,7 @@ class DataServerModule {
                         for (var i = 0; i < tableData.length; i ++){
                             var isHas = false;
                             for (var j = 0; j < splited.length; j ++){
-                                if (tableData[i][param] == splited[j]){
+                                if (this.SameContains(tableData[i][param],splited[j])){
                                     isHas = true;
                                     break;
                                 }
@@ -35,7 +35,7 @@ class DataServerModule {
                     } else { 
                         // default
                         for (var i = 0; i < tableData.length; i ++){
-                            if (tableData[i][param] != queryString[param]){
+                            if (this.SameContains(tableData[i][param],queryString[param])==false){
                                 if (!filteredArray.includes(tableData[i])) filteredArray.push(tableData[i]);
                             }
                         }
@@ -61,6 +61,15 @@ class DataServerModule {
         }
 
         return output;
+    }
+
+    static SameContains(a, b){
+        if (b[0] == '@'){
+            if (a.indexOf(b.replace('@', '')) >= 0) return true;
+            else return false;
+        }
+        if (a == b) return true;
+        else return false;
     }
 
 }
