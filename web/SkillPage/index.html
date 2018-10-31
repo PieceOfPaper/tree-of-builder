@@ -1,0 +1,112 @@
+<html>
+
+<head>
+    <title>Skill Page</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <div class="search-area">
+        <select id="searchType">
+            <option value="Name">Name</option>
+            <option value="ClassName">ClassName</option>
+        </select>
+        <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
+    </div>
+    <div class="filler-area">
+        <select id="jobFilter">
+            <option value="">Job</option>
+        </select>
+        <select id="classTypeFilter">
+        </select>
+        <select id="valueTypeFilter">
+        </select>
+        <select id="attributeFilter">
+        </select>
+        <select id="attackTypeFilter">
+        </select>
+        <select id="hitTypeFilter">
+        </select>
+        <select id="companionFilter">
+            <option value="">Companion</option>
+            <option value="None">Stand Only</option>
+            <option value="YES">Companion Only</option>
+            <option value="BOTH">Both</option>
+            <option value="None;BOTH">Stand Both</option>
+            <option value="YES;BOTH">Companion Both</option>
+        </select>
+        <br/>
+        <br/>
+        <div id="stanceFilter" class="checkboxList">
+            <button class="checkboxList-head" onclick='toggle_checkboxList("stanceFilter")'>
+                Select Stance<span>▼</span>
+            </button>
+            <div class="checkboxList-body" style="display:none;">
+            </div>
+            <div class="checkboxList-foot" style="display:none;">
+                <button onclick='onclick_all_checkboxList("stanceFilter")'>All</button><button onclick='onclick_none_checkboxList("stanceFilter")'>None</button>
+            </div>
+        </div>
+        <br/>
+        <input type="checkbox" id="simonyFilter">Simony<br>
+        <input type="checkbox" id="bunsinFilter">Bunsin<br>
+        <input type="checkbox" id="nocoolFilter">No-Cool Skill<br>
+    </div>
+    <button id="searchBtn" onclick="search()">Search</button>
+    <br/>
+    <table class="search-result-table" style="width:100%">
+
+    <!--
+        <tr>
+            <td align="center"><a href="">1234</a></td>
+            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser1.png" /></td>
+            <td>
+                <p>Name<br/>ClaeeName
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td align="center"><a href="">4321</a></td>
+            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser2.png" /></td>
+            <td>
+                <p>Name<br/>ClaeeName
+                </p>
+            </td>
+        </tr>
+    -->
+
+    </table>
+
+    <script>
+        requestGetData("job", undefined, function(arr){
+            arr.sort(function (a, b) {
+                var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
+                var class_b = Number(b.ClassName.replace("Char", "").split("_")[0]);
+                if (class_a != class_b){
+                    if(class_a > class_b) return 1;
+                    else return -1;
+                }
+
+                if (a.Rank == b.Rank) return 0;
+                else if(Number(a.Rank) > Number(b.Rank)) return 1;
+                else return -1;
+            });
+            //console.log(arr);
+            var filter = document.getElementById("jobFilter");
+            for(var i=0;i<arr.length;i++){
+                var option=document.createElement("option");
+                option.id=arr[i].ClassName;
+                option.innerText=arr[i].Name;
+                filter.appendChild(option);
+            }
+        });
+    </script>
+
+</body>
+
+</html>
