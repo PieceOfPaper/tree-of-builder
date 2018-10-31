@@ -218,8 +218,8 @@ function generateLuaScript(array, index, callback){
 
   var pathSplited = array[index].split('/');
   var filename = pathSplited[pathSplited.length - 1];
-  if (noDownload && fs.existsSync('./web/data/' + filename)){
-    fs.readFile('./web/data/' + filename, function(err, data){
+  if (noDownload && fs.existsSync('./web/lua/' + filename)){
+    fs.readFile('./web/lua/' + filename, function(err, data){
       if (err) {
         sendSlack(err.toString());
         generateLuaScript(array, index + 1, function(result){
@@ -234,11 +234,11 @@ function generateLuaScript(array, index, callback){
       });
     });
   } else {
-    var file = fs.createWriteStream('./web/data/' + filename);
+    var file = fs.createWriteStream('./web/lua/' + filename);
     var request = https.get(dataServerPath + serverCode + '/' + array[index], function(response) {
       response.pipe(file).on('close', function(){
         console.log('download script [' + filename + ']');
-        fs.readFile('./web/data/' + filename, function(err, data){
+        fs.readFile('./web/lua/' + filename, function(err, data){
           if (err) {
             sendSlack(err.toString());
             generateLuaScript(array, index + 1, function(result){
