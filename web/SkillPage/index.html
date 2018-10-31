@@ -99,6 +99,12 @@
             //console.log(arr);
             var filter = document.getElementById("jobFilter");
             for(var i=0;i<arr.length;i++){
+                if (Number(arr[i].Rank) == 1){
+                    var lineOption=document.createElement("option");
+                    lineOption.id="@"+arr[i].ClassName.split("_")[0];
+                    lineOption.innerText="="+arr[i].Name+" Line=";
+                    filter.appendChild(lineOption);
+                }
                 var option=document.createElement("option");
                 option.id=arr[i].ClassName;
                 option.innerText=arr[i].Name;
