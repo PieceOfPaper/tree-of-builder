@@ -11,17 +11,20 @@ module.exports = function(app, tableData){
         res.send(JSON.stringify(output));
     });
 
-    var classTypeList = [];
-    route.get('/classType', function (req, res) {
-        if (classTypeList <= 0){
+    var typeList = [];
+    route.get('/type/*', function (req, res) {
+        var splited = req.url.split("/");
+        var typeKey = splited[splited.length - 1];
+        if (typeList[typeKey] == undefined){
+            typeList[typeKey] = [];
             for (var i=0;i<tableData['skill'].length;i++){
-                if (classTypeList.includes(tableData['skill'][i].ClassType) == false){
-                    classTypeList.push(tableData['skill'][i].ClassType);
+                if (typeList[typeKey].includes(tableData['skill'][i][typeKey]) == false){
+                    typeList[typeKey].push(tableData['skill'][i][typeKey]);
                 }
             }
         }
         res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(classTypeList));
+        res.send(JSON.stringify(typeList[typeKey]));
     });
 
     return route;

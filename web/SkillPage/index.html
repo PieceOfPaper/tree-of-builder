@@ -26,12 +26,16 @@
             <option value="Default">Class Type</option>
         </select>
         <select id="valueTypeFilter">
+            <option value="Default">Value Type</option>
         </select>
         <select id="attributeFilter">
+            <option value="Default">Attribute Type</option>
         </select>
         <select id="attackTypeFilter">
+            <option value="Default">Attack Type</option>
         </select>
         <select id="hitTypeFilter">
+            <option value="Default">Hit Type</option>
         </select>
         <select id="companionFilter">
             <option value="Default">Companion</option>
@@ -122,7 +126,7 @@
             if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         });
         
-        requestGetData("skill/classType", undefined, function(arr){
+        requestGetData("skill/type/ClassType", undefined, function(arr){
             var filter = document.getElementById("classTypeFilter");
             for(var i=0;i<arr.length;i++){
                 var option=document.createElement("option");
