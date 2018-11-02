@@ -186,6 +186,10 @@
                 resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/skillicon/icon_'+arr[i].Icon+'.png" />';
                 resultNodes[i].childNodes[2].innerHTML = arr[i].Name+'<br/>'+arr[i].EngName;
             }
+            for(var i=arr.length;i<resultNodes.length;i++){
+                table.removeChild(resultNodes[i]);
+            }
+            resultNodes.length = arr.length;
         }
     </script>
 
