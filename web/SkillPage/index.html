@@ -83,6 +83,14 @@
     </table>
 
     <script>
+        var url = window.location.href.split('?')[0];
+        var filterSetting = urlToFilter(window.location.href);
+
+        //document.getElementById("jobFilter").value=filterSetting["jobFilter"];
+        if (window.location.href.indexOf("?") >= 0){
+            searchQuery();
+        }
+
         requestGetData("job", undefined, function(arr){
             arr.sort(function (a, b) {
                 var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
@@ -101,44 +109,63 @@
             for(var i=0;i<arr.length;i++){
                 if (Number(arr[i].Rank) == 1){
                     var lineOption=document.createElement("option");
-                    lineOption.value="@"+arr[i].ClassName.split("_")[0];
+                    lineOption.value="@"+arr[i].ClassName.split("_")[0]+"_";;
                     lineOption.innerText="="+arr[i].Name+" Line=";
                     filter.appendChild(lineOption);
                 }
                 var option=document.createElement("option");
-                option.value="@"+arr[i].ClassName;
+                option.value="@"+arr[i].ClassName+"_";
                 option.innerText=arr[i].Name;
                 filter.appendChild(option);
             }
+            if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         });
 
-
         function search(){
-            var filter = [];
-            if (document.getElementById("jobFilter").value != ""){
+            updateQueryString();
+            searchQuery();
+        }
+
+        function searchQuery(){
+            var filter = convertFilter();
+            if (filterSetting["jobFilter"] != ""){
                 var skilltreeFilter = [];
-                //console.log(document.getElementById("jobFilter").value);
-                skilltreeFilter["ClassName"] = document.getElementById("jobFilter").value+"_";
+                skilltreeFilter["ClassName"] = filterSetting["jobFilter"];
                 requestGetData("skilltree", skilltreeFilter, function(skilltree){
-                    //console.log(skilltree);
                     var skillNames = "";
                     for (var i=0;i<skilltree.length;i++){
                         if (skillNames.length > 0) skillNames += ";";
                         skillNames += skilltree[i].SkillName;
                     }
                     filter["ClassName"] = skillNames;
-                    //console.log(skillNames);
                     requestGetData("skill", filter, function(arr){
-                        console.log(arr);
+                        //console.log(arr);
                         showResult(arr);
                     });
                 });
                 return;
             }
             requestGetData("skill", filter, function(arr){
-                console.log(arr);
+                //console.log(arr);
                 showResult(arr);
             });
+        }
+
+        //Element -> Setting
+        function updateQueryString(){
+            filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
+            if (history.pushState) {
+                var newurl = url + filterToQueryStr(filterSetting);
+                window.history.pushState({path:newurl},'',newurl);
+            }
+        }
+
+        //Setting -> filter
+        function convertFilter(){
+            var filter = [];
+            //job은 따로 동작하므로 생략
+
+            return filter;
         }
 
         var resultNodes = [];
