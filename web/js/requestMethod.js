@@ -22,6 +22,7 @@ function filterToQueryStr(filter){
     if (filter != undefined){
         var index = 0;
         for (var param in filter) {
+            if (filter[param]==undefined) continue;
             if (index == 0) queryString += "?";
             else queryString += "&";
             queryString += param + "=" + filter[param];

@@ -33,11 +33,11 @@
         <select id="hitTypeFilter">
         </select>
         <select id="companionFilter">
-            <option value="">Companion</option>
-            <option value="None">Stand Only</option>
+            <option value="Default">Companion</option>
+            <option value="">Stand Only</option>
             <option value="YES">Companion Only</option>
             <option value="BOTH">Both</option>
-            <option value="None;BOTH">Stand Both</option>
+            <option value="@BOTH">Stand Both</option>
             <option value="YES;BOTH">Companion Both</option>
         </select>
         <br/>
@@ -154,6 +154,8 @@
         //Element -> Setting
         function updateQueryString(){
             filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
+            if (document.getElementById("companionFilter").value != "Default") filterSetting["EnableCompanion"]=document.getElementById("companionFilter").value;
+            else filterSetting["EnableCompanion"]=undefined;
             if (history.pushState) {
                 var newurl = url + filterToQueryStr(filterSetting);
                 window.history.pushState({path:newurl},'',newurl);
@@ -164,6 +166,8 @@
         function convertFilter(){
             var filter = [];
             //job은 따로 동작하므로 생략
+            if (filterSetting["EnableCompanion"] != undefined && filterSetting["EnableCompanion"] != "Default")
+                filter["EnableCompanion"]=filterSetting["EnableCompanion"];
 
             return filter;
         }
