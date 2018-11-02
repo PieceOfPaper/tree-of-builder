@@ -59,7 +59,7 @@
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
     <br/>
-    <table class="search-result-table" style="width:100%">
+    <table id="searchResult" class="search-result-table" style="width:100%">
 
     <!--
         <tr>
@@ -101,16 +101,65 @@
             for(var i=0;i<arr.length;i++){
                 if (Number(arr[i].Rank) == 1){
                     var lineOption=document.createElement("option");
-                    lineOption.id="@"+arr[i].ClassName.split("_")[0];
+                    lineOption.value="@"+arr[i].ClassName.split("_")[0];
                     lineOption.innerText="="+arr[i].Name+" Line=";
                     filter.appendChild(lineOption);
                 }
                 var option=document.createElement("option");
-                option.id=arr[i].ClassName;
+                option.value="@"+arr[i].ClassName;
                 option.innerText=arr[i].Name;
                 filter.appendChild(option);
             }
         });
+
+
+        function search(){
+            var filter = [];
+            if (document.getElementById("jobFilter").value != ""){
+                var skilltreeFilter = [];
+                //console.log(document.getElementById("jobFilter").value);
+                skilltreeFilter["ClassName"] = document.getElementById("jobFilter").value+"_";
+                requestGetData("skilltree", skilltreeFilter, function(skilltree){
+                    //console.log(skilltree);
+                    var skillNames = "";
+                    for (var i=0;i<skilltree.length;i++){
+                        if (skillNames.length > 0) skillNames += ";";
+                        skillNames += skilltree[i].SkillName;
+                    }
+                    filter["ClassName"] = skillNames;
+                    //console.log(skillNames);
+                    requestGetData("skill", filter, function(arr){
+                        console.log(arr);
+                        showResult(arr);
+                    });
+                });
+                return;
+            }
+            requestGetData("skill", filter, function(arr){
+                console.log(arr);
+                showResult(arr);
+            });
+        }
+
+        var resultNodes = [];
+        function showResult(arr){
+            var table=document.getElementById("searchResult");
+            for(var i=0;i<arr.length;i++){
+                if (resultNodes.length <= i){
+                    var row = document.createElement("tr");
+                    resultNodes.push(row);
+                    table.appendChild(row);
+                    for (var j=0;j<3;j++){
+                        var col = document.createElement("td");
+                        row.appendChild(col);
+                    }
+                }
+                //console.log(i + " " + resultNodes.length + " " + table.childNodes[i].childNodes.length);
+                resultNodes[i].childNodes[0].innerHTML = '<a href=../Skill?id='+arr[i].ClassID+'>'+arr[i].ClassID+'</a>';
+                resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/skillicon/icon_'+arr[i].Icon+'.png" />';
+                resultNodes[i].childNodes[2].innerHTML = arr[i].Name+'<br/>'+arr[i].EngName;
+            }
+        }
     </script>
 
 </body>
