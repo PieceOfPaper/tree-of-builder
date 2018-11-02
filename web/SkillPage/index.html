@@ -23,6 +23,7 @@
             <option value="">Job</option>
         </select>
         <select id="classTypeFilter">
+            <option value="Default">Class Type</option>
         </select>
         <select id="valueTypeFilter">
         </select>
@@ -120,6 +121,17 @@
             }
             if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         });
+        
+        requestGetData("skill/classType", undefined, function(arr){
+            var filter = document.getElementById("classTypeFilter");
+            for(var i=0;i<arr.length;i++){
+                var option=document.createElement("option");
+                option.value=arr[i];
+                option.innerText=arr[i];
+                filter.appendChild(option);
+            }
+            if (filterSetting["classTypeFilter"]!=undefined) document.getElementById("classTypeFilter").value=filterSetting["classTypeFilter"];
+        });
 
         function search(){
             updateQueryString();
@@ -154,8 +166,10 @@
         //Element -> Setting
         function updateQueryString(){
             filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
-            if (document.getElementById("companionFilter").value != "Default") filterSetting["EnableCompanion"]=document.getElementById("companionFilter").value;
-            else filterSetting["EnableCompanion"]=undefined;
+            if (document.getElementById("companionFilter").value != "Default") filterSetting["companionFilter"]=document.getElementById("companionFilter").value;
+            else filterSetting["companionFilter"]=undefined;
+            if (document.getElementById("classTypeFilter").value != "Default") filterSetting["classTypeFilter"]=document.getElementById("classTypeFilter").value;
+            else filterSetting["classTypeFilter"]=undefined;
             if (history.pushState) {
                 var newurl = url + filterToQueryStr(filterSetting);
                 window.history.pushState({path:newurl},'',newurl);
@@ -165,9 +179,14 @@
         //Setting -> filter
         function convertFilter(){
             var filter = [];
+            //Job
             //job은 따로 동작하므로 생략
-            if (filterSetting["EnableCompanion"] != undefined && filterSetting["EnableCompanion"] != "Default")
-                filter["EnableCompanion"]=filterSetting["EnableCompanion"];
+            //ClassType
+            if (filterSetting["classTypeFilter"] != undefined && filterSetting["classTypeFilter"] != "Default")
+                filter["ClassType"]=filterSetting["classTypeFilter"];
+            //Companion
+            if (filterSetting["companionFilter"] != undefined && filterSetting["companionFilter"] != "Default")
+                filter["EnableCompanion"]=filterSetting["companionFilter"];
 
             return filter;
         }
