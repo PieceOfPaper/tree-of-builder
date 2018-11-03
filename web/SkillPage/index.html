@@ -170,10 +170,8 @@
         //Element -> Setting
         function updateQueryString(){
             filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
-            if (document.getElementById("companionFilter").value != "Default") filterSetting["companionFilter"]=document.getElementById("companionFilter").value;
-            else filterSetting["companionFilter"]=undefined;
-            if (document.getElementById("classTypeFilter").value != "Default") filterSetting["classTypeFilter"]=document.getElementById("classTypeFilter").value;
-            else filterSetting["classTypeFilter"]=undefined;
+            setFilterSetting("companionFilter");
+            setFilterSetting("classTypeFilter");
             if (history.pushState) {
                 var newurl = url + filterToQueryStr(filterSetting);
                 window.history.pushState({path:newurl},'',newurl);
@@ -193,6 +191,11 @@
                 filter["EnableCompanion"]=filterSetting["companionFilter"];
 
             return filter;
+        }
+
+        function setFilterSetting(filterName){
+            if (document.getElementById(filterName).value != "Default") filterSetting[filterName]=document.getElementById(filterName).value;
+            else filterSetting[filterName]=undefined;
         }
 
         var resultNodes = [];
