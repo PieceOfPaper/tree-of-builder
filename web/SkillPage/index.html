@@ -126,16 +126,24 @@
             if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         });
         
-        requestGetData("skill/type/ClassType", undefined, function(arr){
-            var filter = document.getElementById("classTypeFilter");
-            for(var i=0;i<arr.length;i++){
-                var option=document.createElement("option");
-                option.value=arr[i];
-                option.innerText=arr[i];
-                filter.appendChild(option);
-            }
-            if (filterSetting["classTypeFilter"]!=undefined) document.getElementById("classTypeFilter").value=filterSetting["classTypeFilter"];
-        });
+        updateSelectFilter("classTypeFilter","skill/type/ClassType");
+        updateSelectFilter("valueTypeFilter","skill/type/ValueType");
+        updateSelectFilter("attributeFilter","skill/type/Attribute");
+        updateSelectFilter("attackTypeFilter","skill/type/AttackType");
+        updateSelectFilter("hitTypeFilter","skill/type/HitType");
+
+        function updateSelectFilter(filterName, dataPath){
+            requestGetData(dataPath, undefined, function(arr){
+                var filter = document.getElementById(filterName);
+                for(var i=0;i<arr.length;i++){
+                    var option=document.createElement("option");
+                    option.value=arr[i];
+                    option.innerText=arr[i];
+                    filter.appendChild(option);
+                }
+                if (filterSetting[filterName]!=undefined) document.getElementById(filterName).value=filterSetting[filterName];
+            });
+        }
 
         function search(){
             updateQueryString();
@@ -170,8 +178,15 @@
         //Element -> Setting
         function updateQueryString(){
             filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
-            setFilterSetting("companionFilter");
             setFilterSetting("classTypeFilter");
+            setFilterSetting("valueTypeFilter");
+            setFilterSetting("attributeFilter");
+            setFilterSetting("attackTypeFilter");
+            setFilterSetting("hitTypeFilter");
+            setFilterSetting("companionFilter");
+            filterSetting["simonyFilter"]=document.getElementById("simonyFilter").value;
+            filterSetting["bunsinFilter"]=document.getElementById("bunsinFilter").value;
+            filterSetting["nocoolFilter"]=document.getElementById("nocoolFilter").value;
             if (history.pushState) {
                 var newurl = url + filterToQueryStr(filterSetting);
                 window.history.pushState({path:newurl},'',newurl);
@@ -186,9 +201,24 @@
             //ClassType
             if (filterSetting["classTypeFilter"] != undefined && filterSetting["classTypeFilter"] != "Default")
                 filter["ClassType"]=filterSetting["classTypeFilter"];
+            //ClassType
+            if (filterSetting["valueTypeFilter"] != undefined && filterSetting["valueTypeFilter"] != "Default")
+                filter["ValueType"]=filterSetting["valueTypeFilter"];
+            //ClassType
+            if (filterSetting["attributeFilter"] != undefined && filterSetting["attributeFilter"] != "Default")
+                filter["Attribute"]=filterSetting["attributeFilter"];
+            //ClassType
+            if (filterSetting["attackTypeFilter"] != undefined && filterSetting["attackTypeFilter"] != "Default")
+                filter["AttackType"]=filterSetting["attackTypeFilter"];
+            //ClassType
+            if (filterSetting["hitTypeFilter"] != undefined && filterSetting["hitTypeFilter"] != "Default")
+                filter["HitType"]=filterSetting["hitTypeFilter"];
             //Companion
             if (filterSetting["companionFilter"] != undefined && filterSetting["companionFilter"] != "Default")
                 filter["EnableCompanion"]=filterSetting["companionFilter"];
+            //Simony
+            // if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"].toLowerCase() == "true")
+            //     filter["EnableCompanion"]=filterSetting["companionFilter"];
 
             return filter;
         }
