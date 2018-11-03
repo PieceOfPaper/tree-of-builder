@@ -2,7 +2,7 @@
 var topMenuButtons = [];
 topMenuButtons['home'] = ".";
 topMenuButtons['item'] = "Item";
-topMenuButtons['skill'] = "Skill";
+topMenuButtons['skill'] = "SkillPage";
 topMenuButtons['ability'] = "Ability";
 topMenuButtons['buff'] = "Buff";
 topMenuButtons['builder'] = "Builder";
