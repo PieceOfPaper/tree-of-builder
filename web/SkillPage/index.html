@@ -92,6 +92,10 @@
         var filterSetting = urlToFilter(window.location.href);
 
         //document.getElementById("jobFilter").value=filterSetting["jobFilter"];
+        if(filterSetting["simonyFilter"] != undefined) document.getElementById("simonyFilter").checked=filterSetting["simonyFilter"];
+        if(filterSetting["bunsinFilter"] != undefined) document.getElementById("bunsinFilter").checked=filterSetting["bunsinFilter"];
+        if(filterSetting["nocoolFilter"] != undefined) document.getElementById("nocoolFilter").checked=filterSetting["nocoolFilter"];
+
         if (window.location.href.indexOf("?") >= 0){
             searchQuery();
         }
@@ -177,16 +181,16 @@
 
         //Element -> Setting
         function updateQueryString(){
-            filterSetting["jobFilter"]=document.getElementById("jobFilter").value;
+            setFilterSetting("jobFilter");
             setFilterSetting("classTypeFilter");
             setFilterSetting("valueTypeFilter");
             setFilterSetting("attributeFilter");
             setFilterSetting("attackTypeFilter");
             setFilterSetting("hitTypeFilter");
             setFilterSetting("companionFilter");
-            filterSetting["simonyFilter"]=document.getElementById("simonyFilter").value;
-            filterSetting["bunsinFilter"]=document.getElementById("bunsinFilter").value;
-            filterSetting["nocoolFilter"]=document.getElementById("nocoolFilter").value;
+            setFilterSetting_checkBox("simonyFilter");
+            setFilterSetting_checkBox("bunsinFilter");
+            setFilterSetting_checkBox("nocoolFilter");
             if (history.pushState) {
                 var newurl = url + filterToQueryStr(filterSetting);
                 window.history.pushState({path:newurl},'',newurl);
@@ -217,13 +221,13 @@
             if (filterSetting["companionFilter"] != undefined && filterSetting["companionFilter"] != "Default")
                 filter["EnableCompanion"]=filterSetting["companionFilter"];
             //Simony
-            // if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"].toLowerCase() == "true")
-            //     filter["EnableCompanion"]=filterSetting["companionFilter"];
+            if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"])
+                filter["CanMakeSimony"]="YES";
             //Bunsin
-            if (filterSetting["bunsinFilter"] != undefined && filterSetting["bunsinFilter"].toLowerCase() == "true")
+            if (filterSetting["bunsinFilter"] != undefined && filterSetting["bunsinFilter"])
                 filter["CoolDown"]="@BUNSIN";
             //No-Cool
-            if (filterSetting["nocoolFilter"] != undefined && filterSetting["nocoolFilter"].toLowerCase() == "true")
+            if (filterSetting["nocoolFilter"] != undefined && filterSetting["nocoolFilter"])
                 filter["BasicCoolDown"]=0;
 
             return filter;
@@ -231,6 +235,11 @@
 
         function setFilterSetting(filterName){
             if (document.getElementById(filterName).value != "Default") filterSetting[filterName]=document.getElementById(filterName).value;
+            else filterSetting[filterName]=undefined;
+        }
+
+        function setFilterSetting_checkBox(filterName){
+            if (document.getElementById(filterName).checked) filterSetting[filterName]=document.getElementById(filterName).checked;
             else filterSetting[filterName]=undefined;
         }
 
