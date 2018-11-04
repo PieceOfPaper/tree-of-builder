@@ -1,0 +1,120 @@
+<html>
+
+<head>
+    <title class="keppChangeValue" id="Name">%Name%</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <img id="Icon" />
+    <h1 class="keppChangeValue" id="Name">%Name%</h1>
+    <p class="keppChangeValue" id="EngName">%EngName%</p>
+    <table>
+        <tr>
+            <td>ClassID</td>
+            <td>ClassName</td>
+            <td>Job</td>
+            <td>Rank</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="ClassID">%ClassID%</td>
+            <td class="keppChangeValue" id="ClassName">%ClassName%</td>
+            <td class="keppChangeValue" id="JobName">%JobName%</td>
+            <td class="keppChangeValue" id="Rank">%Rank%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>ClassType</td>
+            <td>ValueType</td>
+            <td>Attribute</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="ClassType">%ClassType%</td>
+            <td class="keppChangeValue" id="ValueType">%ValueType%</td>
+            <td class="keppChangeValue" id="Attribute">%Attribute%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>AttackType</td>
+            <td>HitType</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="AttackType">%AttackType%</td>
+            <td class="keppChangeValue" id="HitType">%HitType%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>EnableCompanion</td>
+            <td>ReqStance</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="EnableCompanion">%EnableCompanion%</td>
+            <td class="keppChangeValue" id="ReqStance">%ReqStance%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>SkillFactor</td>
+            <td>BasicSP</td>
+            <td>CD</td>
+            <td>OH</td>
+        </tr>
+        <tr>
+            <td><span class="keppChangeValue" id="SklFactor">%SklFactor%</span>% (+<span class="keppChangeValue" id="SklFactorByLevel">%SklFactorByLevel%</span>%)</td>
+            <td><span class="keppChangeValue" id="BasicSP">%BasicSP%</span>% (+<span class="keppChangeValue" id="LvUpSpendSp">%LvUpSpendSp%</span>%)</td>
+            <td class="keppChangeValue" id="BasicCoolDown">%BasicCoolDown%</td>
+            <td class="keppChangeValue" id="OverHeat">%OverHeat%</td>
+        </tr>
+    </table>
+
+    <br/>
+    
+    <input type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()">
+    <div><button onclick="onClickLevelUp()">▲</button><button onclick="onClickLevelDown()">▼</button></div>
+
+    <p class="keppChangeValue" id="Caption">%Caption%</p>
+    <p class="keppChangeValue" id="Caption2">%Caption2%</p>
+
+    <div class="add-ability-area">
+    </div>
+
+    <script>
+        var filterSetting = urlToFilter(window.location.href);
+        var baseSkill;
+        if (filterSetting["id"] != undefined){
+            var filter = [];
+            filter["ClassID"] = filterSetting["id"];
+            requestGetData("skill", filter, function(arr){
+                console.log(arr);
+                var valueElements = document.getElementsByClassName("keppChangeValue");
+                for (var i=0;i<valueElements.length;i++){
+
+                    if (arr[0][valueElements[i].id]==undefined){
+                        valueElements[i].innerText="";
+                    }
+                    else if (valueElements[i].id.indexOf(";")){
+                        valueElements[i].innerText=arr[0][valueElements[i].id].replace(/;/g," ");
+                    } else {
+                        valueElements[i].innerText=arr[0][valueElements[i].id];
+                    }
+                }
+                if (arr[0].Icon==undefined || arr[0].Icon.length==0) document.getElementById("Icon").src = "";
+                else document.getElementById("Icon").src = "../img/icon/skillicon/icon_"+arr[0].Icon.toLowerCase()+".png";
+            });
+        }
+    </script>
+</body>
+
+</html>
