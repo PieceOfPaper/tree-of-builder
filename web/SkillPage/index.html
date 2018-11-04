@@ -2,6 +2,7 @@
 
 <head>
     <title>Skill Page</title>
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 
@@ -15,6 +16,7 @@
         <select id="searchType">
             <option value="Name">Name</option>
             <option value="ClassName">ClassName</option>
+            <option value="EngName">EngName</option>
         </select>
         <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
     </div>
@@ -89,8 +91,15 @@
 
     <script>
         var url = window.location.href.split('?')[0];
-        var filterSetting = urlToFilter(window.location.href);
-
+        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
+        
+        if(filterSetting["Name"] != undefined){
+            document.getElementById("searchType").value = "Name";
+            document.getElementById("searchName").value = filterSetting["Name"];
+        } else if (filterSetting["ClassName"] != undefined){
+            document.getElementById("searchType").value = "ClassName";
+            document.getElementById("searchName").value = filterSetting["ClassName"];
+        }
         //document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         if(filterSetting["simonyFilter"] != undefined) document.getElementById("simonyFilter").checked=filterSetting["simonyFilter"];
         if(filterSetting["bunsinFilter"] != undefined) document.getElementById("bunsinFilter").checked=filterSetting["bunsinFilter"];
@@ -214,6 +223,19 @@
 
         //Element -> Setting
         function updateQueryString(){
+            if (document.getElementById("searchType").value == "Name"){
+                filterSetting["Name"] = document.getElementById("searchName").value;
+                filterSetting["ClassName"] = undefined;
+                filterSetting["EngName"] = undefined;
+            } else if(document.getElementById("searchType").value == "ClassName"){
+                filterSetting["Name"] = undefined;
+                filterSetting["ClassName"] = document.getElementById("searchName").value;
+                filterSetting["EngName"] = undefined;
+            } else if(document.getElementById("searchType").value == "EngName"){
+                filterSetting["Name"] = undefined;
+                filterSetting["ClassName"] = undefined;
+                filterSetting["EngName"] = document.getElementById("searchName").value;
+            }
             setFilterSetting("jobFilter");
             setFilterSetting("classTypeFilter");
             setFilterSetting("valueTypeFilter");
@@ -256,6 +278,9 @@
         //Setting -> filter
         function convertFilter(){
             var filter = [];
+            if (filterSetting["Name"] != undefined) filter["Name"]="@"+filterSetting["Name"];
+            if (filterSetting["ClassName"] != undefined) filter["ClassName"]="@"+filterSetting["ClassName"];
+            if (filterSetting["EngName"] != undefined) filter["EngName"]="@"+filterSetting["EngName"];
             //Job
             //job은 따로 동작하므로 생략
             //ClassType
@@ -354,6 +379,12 @@
             var checkboxList = document.getElementById(id).children[1].children;
             for (var i = 0; i < checkboxList.length; i ++){
                 checkboxList[i].checked = false;
+            }
+        }
+
+        function searchName_enterCheck() {
+            if (event.keyCode == 13) {
+                search();
             }
         }
     </script>
