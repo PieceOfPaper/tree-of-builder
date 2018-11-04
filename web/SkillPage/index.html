@@ -130,7 +130,7 @@
             if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
         });
         requestGetData("stance", undefined, function(arr){
-            console.log(arr);
+            //console.log(arr);
             var filter = document.getElementById("stanceFilter");
             var body;
             for (var i=0;i<filter.childNodes.length;i++){
