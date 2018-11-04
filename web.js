@@ -15,6 +15,9 @@ var PNGCrop = require('png-crop');
 
 var tos = require('./my_modules/TosModule');
 
+var nodelua = require('node-lua');
+var lua = new nodelua.LuaState();
+
 var app = express();
 
 
@@ -176,6 +179,9 @@ generateLuaScript(scriptArray, 0, function(result){
       if(err) return console.log(err);
       console.log('Success Generate Lua Scripts');
   }); 
+
+
+  lua.DoString(result);
 });
 // function loadScript(path){
 //   var pathSplited = path.split('/');
@@ -358,9 +364,21 @@ app.get('/', function (req, response) {
 
 app.post('/Lua', function (req, res) {
   var method = req.body.method;
-  var descrpition = req.body.description;
+  
+  var argStr = '';
+  for(var i = 1; ;i ++){
+    if (req.body['arg' + i] == undefined) break;
+    if (i > 1) argStr += ',';
+    argStr += req.body['arg' + i];
+  }
 
-  res.send(title+','+descrpition);
+  lua.SetGlobal('builderResult');
+  lua.DoString('builderResult=' + method + '(' + argStr + ')');
+  lua.GetGlobal('builderResult');
+  
+  var result = lua.ToValue(-1);
+  
+  res.send(result);
 });
 
 var dataServer = require('./data_server/data_server')(app, tableData);
