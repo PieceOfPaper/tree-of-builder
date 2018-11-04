@@ -5,6 +5,7 @@ var https = require('https');
 
 var csv = require('csv-parser');
 var xml = require('xml-parser');
+var bodyParser = require('body-parser')
 
 var Slack = require('slack-node');
 
@@ -307,6 +308,7 @@ function loadTableLanguage(name, path, callback){
 
 // ---------- 페이지 세팅
 app.use(express.static('web'));
+app.use(bodyParser.urlencoded({extended: false}));
 
 var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
@@ -352,6 +354,13 @@ app.get('/', function (req, response) {
   
     response.send(output);
   })
+});
+
+app.post('/Lua', function (req, res) {
+  var method = req.body.method;
+  var descrpition = req.body.description;
+
+  res.send(title+','+descrpition);
 });
 
 var dataServer = require('./data_server/data_server')(app, tableData);
