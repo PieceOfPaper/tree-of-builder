@@ -4,16 +4,18 @@ class DataServerModule {
         var filteredArray = [];
         if (queryString != undefined){
             for (var param in queryString) {
-                if (tableData[0][param]!=undefined){
+                //if (tableData[0][param]!=undefined){
                     if (queryString[param].indexOf(';') >= 0){
                         // list
                         var splited = queryString[param].split(';');
                         for (var i = 0; i < tableData.length; i ++){
                             var isHas = false;
-                            for (var j = 0; j < splited.length; j ++){
-                                if (tableData[i][param] == splited[j]){
-                                    isHas = true;
-                                    break;
+                            if (tableData[i][param]!=undefined){
+                                for (var j = 0; j < splited.length; j ++){
+                                    if (this.SameContains(tableData[i][param],splited[j])){
+                                        isHas = true;
+                                        break;
+                                    }
                                 }
                             }
                             if (isHas == false){
@@ -27,7 +29,7 @@ class DataServerModule {
                             var min = Number(splited[0]);
                             var max = Number(splited[1]);
                             for (var i = 0; i < tableData.length; i ++){
-                                if (Number(tableData[i][param]) < min || Number(tableData[i][param]) > max){
+                                if (tableData[i][param]==undefined || Number(tableData[i][param]) < min || Number(tableData[i][param]) > max){
                                     if (!filteredArray.includes(tableData[i])) filteredArray.push(tableData[i]);
                                 }
                             }
@@ -35,13 +37,13 @@ class DataServerModule {
                     } else { 
                         // default
                         for (var i = 0; i < tableData.length; i ++){
-                            if (tableData[i][param] != queryString[param]){
+                            if (tableData[i][param]==undefined || this.SameContains(tableData[i][param],queryString[param])==false){
                                 if (!filteredArray.includes(tableData[i])) filteredArray.push(tableData[i]);
                             }
                         }
                     }
                 }
-             }
+            // }
         }
 
 
@@ -61,6 +63,23 @@ class DataServerModule {
         }
 
         return output;
+    }
+
+    static SameContains(a, b){
+        if (a.indexOf(';')>=0){
+            var splited=a.split(';');
+            for(var i=0;i<splited.length;i++){
+                if(this.SameContains(splited[i],b))
+                    return true;
+            }
+            return false;
+        }
+        if (b[0] == '@'){
+            if (a.indexOf(b.replace('@', '')) >= 0) return true;
+            else return false;
+        }
+        if (a == b) return true;
+        else return false;
     }
 
 }

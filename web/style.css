@@ -1,0 +1,318 @@
+@font-face {
+    font-family: IMCM_Origin;
+    src: url('../font/imcm_original.ttf');
+}
+@font-face {
+    font-family: IMCM_Book;
+    src: url('../font/imcm_book.ttf');
+}
+
+
+/* ======== Default ======== */
+head {
+    height: 0;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    padding: 10px;
+    margin: 0;
+    padding-top: 75px;
+    font-family: IMCM_Origin;
+    background-image: url("../img/minimap_imgs/jilgam.png");
+    /*font-size: 2.5vw;*/
+    max-width: 100%;
+    overflow-x: hidden;
+}
+@media only screen and (max-device-width : 640px) {
+    /* Styles */
+    body {
+        font-size: 20px;
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    /* Styles */
+    body {
+        font-size: 20px;
+    }
+}
+
+table {
+    border-collapse: collapse;
+    max-width: calc(100vw - 20px);
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
+.top-menu {
+    padding: 0;
+    margin: 0;
+    width: calc(100vw - 20px);
+    position: fixed;
+    top: 0;
+    height: 50px;
+    /*background-color: bisque;*/
+    overflow: auto;
+    white-space: nowrap;
+}
+.top-menu button {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border: 0;
+    background-color: rgba(0,0,0,0);
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+.top-menu a {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    border: 0;
+    background-color: rgba(0,0,0,0);
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+.top-menu button img {
+    width: 40px;
+}
+.top-menu button:hover img{
+    transform:scale(1.1);
+}
+.top-menu button:active img{
+    transform:scale(0.9);
+}
+.top-menu a img {
+    margin-top: 5px;
+    width: 40px;
+}
+.top-menu a:hover img{
+    transform:scale(1.1);
+}
+.top-menu a:active img{
+    transform:scale(0.9);
+}
+
+.top-menu #home img{
+    content: url("../img/minimap_icons/questinfo_return.png");
+}
+.top-menu #home:hover img{
+}
+.top-menu #home:active img{
+}
+
+.top-menu #item img{
+    content: url("../img/icon/itemicon/accessory_hat_poporion.png");
+}
+.top-menu #item:hover img{
+}
+.top-menu #item:active img{
+}
+
+.top-menu #skill img{
+    content: url("../img/icon/skillicon/icon_warri_tercioformation.png");
+}
+.top-menu #skill:hover img{
+}
+.top-menu #skill:active img{
+}
+
+.top-menu #ability img{
+    content: url("../img/icon/skillicon/ability_warrior_centurion2.png");
+}
+.top-menu #ability:hover img{
+}
+.top-menu #ability:active img{
+}
+
+.top-menu #buff img{
+    content: url("../img/bufficon/icon_attack_blessing_up.png");
+}
+.top-menu #buff:hover img{
+}
+.top-menu #buff:active img{
+}
+
+.top-menu #builder img{
+    content: url("../img/hud_status_icon/skillpower_icon.png");
+}
+.top-menu #builder:hover img{
+}
+.top-menu #builder:active img{
+}
+
+
+/* ======== Main ======== */
+.main-illust {
+    /*width: 100%;*/
+    /*max-width: 100vh;*/
+    max-width: 95vw;
+}
+
+
+/* ======== Search ======== */
+.search-area {
+    padding: 5px;
+    width: 100%;
+}
+.search-area select{
+    font-size: 1em;
+}
+.search-area input{
+    font-size: 1em;
+}
+
+.filler-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.filler-area select{
+    font-size: 1em;
+}
+
+
+.checkboxList {
+    padding: 0;
+    width: fit-content;
+}
+.checkboxList-head {
+    margin: 0;
+    font-size: 1em;
+    width: 100%;
+}
+.checkboxList-head.open {
+}
+.checkboxList-head span{
+}
+.checkboxList-head.close span{
+}
+.checkboxList-head.open span{
+    color: red;
+}
+.checkboxList-body {
+    margin: 0;
+    width: 100%;
+    border: 1px solid black;
+}
+
+#searchBtn {
+    float: right;
+    font-size: 1.5em;
+    font-family: IMCM_Book;
+}
+
+.search-result-table {
+    padding: 5px;
+    width:100%;
+}
+.search-result-table table {
+
+}
+.search-result-table img {
+    width: 64px;
+    height: 64px;
+}
+
+.tab-button {
+    
+}
+.tab-button.active {
+    color: red;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* ======== Detail ======== */
+.add-ability-area {
+
+}
+.add-ability-area img {
+    width: 64px;
+    height: 64px;
+}
+
+.item-material-icon {
+    width: 32px;
+    height: 32px;
+    vertical-align: middle;
+}
+
+/* ======== Builder ======== */
+.builder-class-area {
+}
+.builder-class-area img{
+    /*width:64px;*/
+    height:64px;
+}
+
+.builder-class-selected {
+}
+
+.builder-class-select {
+}
+
+#viewDetailBtn {
+    float: right;
+    font-size: 1em;
+    font-family: IMCM_Book;
+}
+#viewDetailBtn.acive {
+    color: red;
+}
+.builder-skill-area {
+    padding: 10px;
+}
+.builder-skill-area .class {
+    width: 100%;
+}
+.builder-skill-area .class .skill {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+    width: fit-content;
+    width: calc(100vw * 0.5 - 2 * 20px);
+    text-align: left;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+.builder-skill-area .class .skill .skill-desc {
+    text-align: left;
+    white-space:normal;
+    word-break:normal;
+    display: none;
+}
+.builder-skill-area .class .skill .skill-desc.active {
+    display: block;
+}
+@media only screen and (max-device-width : 640px) {
+    .builder-skill-area .class .skill {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    .builder-skill-area .class .skill {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+.builder-skill-area .class .skill img {
+    /*width:64px;*/
+    height:64px;
+}
+.builder-skill-area .class .skill p {
+    padding: 0;
+    margin: 0;
+}

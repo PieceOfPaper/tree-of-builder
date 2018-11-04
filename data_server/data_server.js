@@ -10,6 +10,12 @@ module.exports = function(app, tableData){
 
     var skillServer = require('./data_skill')(app, tableData);
     app.use('/data/skill', skillServer);
+
+    var skilltreeServer = require('./data_skilltree')(app, tableData);
+    app.use('/data/skilltree', skilltreeServer);
+
+    var stanceServer = require('./data_stance')(app, tableData);
+    app.use('/data/stance', stanceServer);
   
     return route;
   }
