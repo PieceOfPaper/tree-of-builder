@@ -83,11 +83,23 @@ loadTable('job', 'ies.ipf/job.ies', function(){
     });
   });
 });
-loadTable('skill', 'ies.ipf/skill.ies');
+loadTable('skill', 'ies.ipf/skill.ies', function(){
+  loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies', function(){
+    for(var i=0;i<tableData['skill_Simony'].length;i++){
+      for(var j=0;j<tableData['skill'].length;j++){
+        if(tableData['skill'][j].ClassID==tableData['skill_Simony'][i].ClassID){
+          tableData['skill'][j]['CanMakeSimony'] = tableData['skill_Simony'][i].CanMake;
+          break;
+        }
+      }
+    }
+    console.log('merge skill+simony');
+  });
+});
 loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
-loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
+//loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
 loadTable('buff', 'ies.ipf/buff.ies', function(){
   loadTable('buff', 'ies.ipf/buff_contents.ies', function(){
     loadTable('buff', 'ies.ipf/buff_hardskill.ies', function(){
