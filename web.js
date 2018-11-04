@@ -327,6 +327,7 @@ function loadTableLanguage(name, path, callback){
 // ---------- 페이지 세팅
 app.use(express.static('web'));
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
@@ -376,6 +377,13 @@ app.get('/', function (req, response) {
 
 app.post('/Lua', function (req, res) {
   var method = req.body.method;
+  //console.log(req.body);
+
+  if (method == undefined){
+    res.setHeader('Content-Type', 'application/json');
+    res.send(undefined);
+    return;
+  }
   
   var argStr = '';
   for(var i = 1; ;i ++){
@@ -390,6 +398,7 @@ app.post('/Lua', function (req, res) {
   
   var result = lua.ToValue(-1);
   
+  res.setHeader('Content-Type', 'application/json');
   res.send(result);
 });
 

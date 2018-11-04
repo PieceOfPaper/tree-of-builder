@@ -17,6 +17,30 @@ function requestGetData(tableName, filter, callback){
     xmlhttp.send();
 }
 
+function requestPostScript(method, callback, arg1, arg2, arg3, arg4, arg5){
+    var xmlhttp = new XMLHttpRequest();
+    var url = "../Lua";
+
+    var data = {};
+    data["method"] = method;
+    if (arg1 != undefined) data['arg1'] = arg1;
+    if (arg2 != undefined) data['arg2'] = arg2;
+    if (arg3 != undefined) data['arg3'] = arg3;
+    if (arg4 != undefined) data['arg4'] = arg4;
+    if (arg5 != undefined) data['arg5'] = arg5;
+
+    xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            callback(this.responseText);
+        }
+    };
+
+    xmlhttp.open('POST', url, true);
+    xmlhttp.setRequestHeader('Content-type', 'application/json');
+    //console.log(JSON.stringify(data));
+    xmlhttp.send(JSON.stringify(data));
+}
+
 function filterToQueryStr(filter){
     var queryString = "";
     if (filter != undefined){
