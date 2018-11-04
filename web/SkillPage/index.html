@@ -219,6 +219,12 @@
             //Simony
             // if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"].toLowerCase() == "true")
             //     filter["EnableCompanion"]=filterSetting["companionFilter"];
+            //Bunsin
+            if (filterSetting["bunsinFilter"] != undefined && filterSetting["bunsinFilter"].toLowerCase() == "true")
+                filter["CoolDown"]="@BUNSIN";
+            //No-Cool
+            if (filterSetting["nocoolFilter"] != undefined && filterSetting["nocoolFilter"].toLowerCase() == "true")
+                filter["BasicCoolDown"]=0;
 
             return filter;
         }
