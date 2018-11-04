@@ -13,6 +13,9 @@ module.exports = function(app, tableData){
 
     var skilltreeServer = require('./data_skilltree')(app, tableData);
     app.use('/data/skilltree', skilltreeServer);
+
+    var stanceServer = require('./data_stance')(app, tableData);
+    app.use('/data/stance', stanceServer);
   
     return route;
   }

@@ -66,6 +66,14 @@ class DataServerModule {
     }
 
     static SameContains(a, b){
+        if (a.indexOf(';')>=0){
+            var splited=a.split(';');
+            for(var i=0;i<splited.length;i++){
+                if(this.SameContains(splited[i],b))
+                    return true;
+            }
+            return false;
+        }
         if (b[0] == '@'){
             if (a.indexOf(b.replace('@', '')) >= 0) return true;
             else return false;
