@@ -317,7 +317,8 @@
                 }
                 //console.log(i + " " + resultNodes.length + " " + table.childNodes[i].childNodes.length);
                 resultNodes[i].childNodes[0].innerHTML = '<a href=../Skill?id='+arr[i].ClassID+'>'+arr[i].ClassID+'</a>';
-                resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/skillicon/icon_'+arr[i].Icon+'.png" />';
+                if (arr[i].Icon==undefined || arr[i].Icon.length>0) resultNodes[i].childNodes[1].innerHTML = '';
+                else resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/skillicon/icon_'+arr[i].Icon.toLowerCase()+'.png" />';
                 resultNodes[i].childNodes[2].innerHTML = arr[i].Name+'<br/>'+arr[i].EngName;
             }
             for(var i=arr.length;i<resultNodes.length;i++){
