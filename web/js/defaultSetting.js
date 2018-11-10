@@ -21,3 +21,22 @@ function onInitTopMenu(isHome){
         }
     }
 }
+
+var loadingUI = undefined;
+
+function createLoadingUI(){
+    if (loadingUI!=undefined) return;
+    loadingUI = document.createElement('div');
+    loadingUI.classList.add('req-loading');
+    document.body.appendChild(loadingUI);
+
+    var indicator = document.createElement('div');
+    indicator.classList.add('indicator');
+    loadingUI.appendChild(indicator);
+}
+
+function destroyLoadingUI(){
+    if (loadingUI==undefined) return;
+    document.body.removeChild(loadingUI);
+    loadingUI=undefined;
+}

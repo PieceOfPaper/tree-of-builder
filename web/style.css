@@ -150,6 +150,34 @@ table, td, th {
 .top-menu #builder:active img{
 }
 
+.req-loading {
+    position: absolute;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+.req-loading .indicator {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 112.857142857142857px;
+    height: 80px;
+    left: calc((100% - 112.857142857142857px)/2);
+    top: calc((100% - 80px)/2);
+    background: url('img/barrack/loading_bube.png') left center;
+    z-index: 1001;
+    animation: req-loading-indicator .8s steps(7) infinite;
+}
+
+@keyframes req-loading-indicator {
+    100% { background-position: -775px; }
+}
+
 
 /* ======== Main ======== */
 .main-illust {

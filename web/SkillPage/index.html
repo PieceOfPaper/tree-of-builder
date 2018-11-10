@@ -197,6 +197,7 @@
         }
 
         function searchQuery(){
+            createLoadingUI();
             var filter = convertFilter();
             if (filterSetting["jobFilter"] != ""){
                 var skilltreeFilter = [];
@@ -329,6 +330,7 @@
 
         var resultNodes = [];
         function showResult(arr){
+            destroyLoadingUI();
             var table=document.getElementById("searchResult");
             for(var i=0;i<arr.length;i++){
                 if (resultNodes.length <= i){
