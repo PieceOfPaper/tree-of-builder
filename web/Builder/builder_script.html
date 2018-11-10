@@ -4,6 +4,16 @@
     var classArray = [];
     var skillArray = [];
 
+var playerSetting = {
+    Level:Number(1),
+    SR:Number(3),
+    STR:Number(0),
+    CON:Number(0),
+    INT:Number(0),
+    SPR:Number(0),
+    DEX:Number(0),
+};
+
     onInit();
     function onInit(){
         var query_class = getQueryVariable("class");
@@ -110,6 +120,7 @@
                             if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i][j + 1] += value;
                             else  skillArray[i][j + 1] = 0;
                         }
+                        updateSkilData();
                         updatePage(false);
                         return;
                     }
@@ -122,6 +133,7 @@
                     if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
                     else skillArray[i].push((getGrade(classNum2) * 15) - sumLevel);
                 }  else skillArray[i].push(0);
+                updateSkilData();
                 updatePage(false);
                 return;
             }
@@ -138,6 +150,7 @@
             else skill.push((getGrade(classNum2) * 15) - sumLevel);
         }  else skill.push(0);
         skillArray.push(skill);
+        updateSkilData();
         updatePage(false);
         return;
     }
@@ -216,6 +229,15 @@
                     }
                     if (found) break;
                 }
+            }
+        }
+    }
+
+    function updateSkilData(){
+        for (var i = 0; i < skillArray.length; i ++){
+            for (var j = 2; j < skillArray[i].length; j +=2){
+                if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]==undefined) continue;
+                skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
             }
         }
     }

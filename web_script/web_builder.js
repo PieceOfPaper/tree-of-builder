@@ -99,6 +99,7 @@ module.exports = function(app, tableData){
         output +=       '<hr>';
         output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
         output +=       '<div class="builder-skill-area">';
+        output +=       '<script>var skillData=[];</script>';
         var skillIndex = 0;
         for (var i = 0; i < classCount.length; i ++){
             if (classCount[i] <= 0)
@@ -147,6 +148,10 @@ module.exports = function(app, tableData){
                     output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
                     output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
                     output +=       '</div>';
+                    output +=       '<script>';
+                    output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]=' + JSON.stringify(skillTable[skillTableIndex]) + ';';
+                    output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["Level"]=Number('+skillLv+');';
+                    output +=       '</script>';
                     output +=   '</div>';
                     skillIndex ++;
                 }
@@ -155,6 +160,40 @@ module.exports = function(app, tableData){
             skillIndex = 0;
         }
         output +=       '</div>';
+        output +=   '<script>';
+
+        output += 'function GetSkillOwner(skill){ return playerSetting; }';
+
+        output +=       'function GetAbility(pc, ability){';
+        output +=           'if(document.getElementById("Ability_" + ability)!=undefined){';
+        output +=               'return { Level:Number(document.getElementById("Ability_" + ability).value) }; }';
+        output +=           'return undefined; }';
+
+        output +=       'function TryGetProp(data, prop){ ';
+        output +=           'if (data[prop] === undefined) return 0;'; 
+        output +=           'return data[prop];'; 
+        output +=       '}';
+
+        output +=       'function IsBuffApplied(pc, buff){ return false; }';
+        output +=       'function IGetSumOfEquipItem(pc, equip){ return 0; }';
+        output +=       'function IsPVPServer(pc){ return 0; }';
+
+        var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
+        var luaMethodList = [];
+        for (var i=0;i<skillArray.length;i++){
+            for (var j=0;j<skillArray[i].length;j++){
+                for (var k=0;k<usedScrName.length;k++){
+                    if (skillArray[i][j][usedScrName[k]]==undefined) continue;
+                    if (skillArray[i][j][usedScrName[k]]=='') continue;
+                    if (!luaMethodList.includes(skillArray[i][j][usedScrName[k]]))
+                        luaMethodList.push(skillArray[i][j][usedScrName[k]]);
+                }
+            }
+        }
+        for (var i=0;i<luaMethodList.length;i++){ output += tos.Lua2JS(scriptData[luaMethodList[i]]); }
+
+        output +=   '</script>';
+
         output += builder_script.toString();
         output +=   '</body>';
         output += '</html>';
