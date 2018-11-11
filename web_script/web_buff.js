@@ -33,7 +33,7 @@ module.exports = function(app, tableData, scriptData){
         }
       } else {
         for (var i = 0; i < buffTable.length; i ++){
-          if (buffTable[i].Lv === request.query.lvFilter) continue;
+          if (buffTable[i].Lv === Number(request.query.lvFilter)) continue;
           if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
         }
       }
