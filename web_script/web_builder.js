@@ -76,13 +76,19 @@ module.exports = function(app, tableData, scriptData){
         output +=           '<hr>';
         output +=           '<div class="builder-class-select">';
         if (request.query.class === undefined || request.query.class === ''){
-            for (var i = 1; i <= 4; i ++){
-                var jobData = tos.GetJobData(tableData, i, 1);
-                if (jobData === undefined) continue;
-                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + i + ',1)">';
-                output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+            for (var i = 0; i < jobTable.length; i ++){
+                if (jobTable[i].Rank > 1) continue;
+                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
+                output +=       '<img src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
                 output +=   '</btn>';
             }
+            // for (var i = 1; i <= 4; i ++){
+            //     var jobData = tos.GetJobData(tableData, i, 1);
+            //     if (jobData === undefined) continue;
+            //     output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + i + ',1)">';
+            //     output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+            //     output +=   '</btn>';
+            // }
         } else {
             var jobList = [];
             for (var i = 0; i < jobTable.length; i ++){
