@@ -15,7 +15,7 @@ module.exports = function(app, tableData, scriptData){
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < buffTable.length; i ++){
-        if (buffTable[i].ClassID === request.query.id){
+        if (buffTable[i].ClassID === Number(request.query.id)){
           buffDetailPage(i, request, response);
           return;
         }

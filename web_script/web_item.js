@@ -58,7 +58,7 @@ module.exports = function(app, tableData, scriptData){
     if (request.query.table != undefined && request.query.id != undefined){
       if (request.query.table == 'item_Equip') {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === request.query.id){
+          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemEquipDetailPage(request.query.table, i, request, response);
             return;
           }
@@ -72,14 +72,14 @@ module.exports = function(app, tableData, scriptData){
 
       } else if (request.query.table == 'item_recipe') {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === request.query.id){
+          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemRecipeDetailPage(request.query.table, i, request, response);
             return;
           }
         }
       } else {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === request.query.id){
+          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemDetailPage(request.query.table, i, request, response);
             return;
           }
