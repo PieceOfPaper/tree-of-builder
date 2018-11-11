@@ -120,7 +120,7 @@ var playerSetting = {
                             if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i][j + 1] += value;
                             else  skillArray[i][j + 1] = 0;
                         }
-                        updateSkilData();
+                        updateSkillData();
                         updatePage(false);
                         return;
                     }
@@ -133,7 +133,7 @@ var playerSetting = {
                     if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
                     else skillArray[i].push((getGrade(classNum2) * 15) - sumLevel);
                 }  else skillArray[i].push(0);
-                updateSkilData();
+                updateSkillData();
                 updatePage(false);
                 return;
             }
@@ -150,7 +150,7 @@ var playerSetting = {
             else skill.push((getGrade(classNum2) * 15) - sumLevel);
         }  else skill.push(0);
         skillArray.push(skill);
-        updateSkilData();
+        updateSkillData();
         updatePage(false);
         return;
     }
@@ -233,7 +233,7 @@ var playerSetting = {
         }
     }
 
-    function updateSkilData(){
+    function updateSkillData(){
         for (var i = 0; i < skillArray.length; i ++){
             for (var j = 2; j < skillArray[i].length; j +=2){
                 if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]==undefined) continue;
