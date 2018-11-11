@@ -30,6 +30,8 @@ var playerSetting = {
             }
             skillArray.push(skill);
         }
+        
+        updateSkillData();
     }
 
     function onClickClass(num1, num2){
@@ -120,7 +122,7 @@ var playerSetting = {
                             if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i][j + 1] += value;
                             else  skillArray[i][j + 1] = 0;
                         }
-                        updateSkillData();
+                        updateSkillData(classNum2, skillIndex);
                         updatePage(false);
                         return;
                     }
@@ -133,7 +135,7 @@ var playerSetting = {
                     if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
                     else skillArray[i].push((getGrade(classNum2) * 15) - sumLevel);
                 }  else skillArray[i].push(0);
-                updateSkillData();
+                updateSkillData(classNum2, skillIndex);
                 updatePage(false);
                 return;
             }
@@ -150,7 +152,7 @@ var playerSetting = {
             else skill.push((getGrade(classNum2) * 15) - sumLevel);
         }  else skill.push(0);
         skillArray.push(skill);
-        updateSkillData();
+        updateSkillData(classNum2, skillIndex);
         updatePage(false);
         return;
     }
@@ -233,11 +235,45 @@ var playerSetting = {
         }
     }
 
-    function updateSkillData(){
+    function updateSkillData(num2, skillIndex){
         for (var i = 0; i < skillArray.length; i ++){
+            if (num2 != undefined && skillArray[i][0] != num2) continue;
             for (var j = 2; j < skillArray[i].length; j +=2){
-                if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]==undefined) continue;
-                skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
+                if (skillIndex == undefined || skillArray[i][j] == skillIndex){
+                    if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]!=undefined){
+                        skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
+                        var skill = skillData[skillArray[i][0]+"_"+skillArray[i][j]];0
+                        
+                        var calcData = [];
+                        calcData["SkillFactor"]=methods[skill.SkillFactor]==undefined?undefined:methods[skill.SkillFactor](skill);
+                        calcData["SkillSR"]=methods[skill.SkillSR]==undefined?undefined:methods[skill.SkillSR](skill);
+                        calcData["CaptionTime"]=methods[skill.CaptionTime]==undefined?undefined:methods[skill.CaptionTime](skill);
+                        calcData["CaptionRatio"]=methods[skill.CaptionRatio]==undefined?undefined:methods[skill.CaptionRatio](skill);
+                        calcData["CaptionRatio2"]=methods[skill.CaptionRatio2]==undefined?undefined:methods[skill.CaptionRatio2](skill);
+                        calcData["CaptionRatio3"]=methods[skill.CaptionRatio3]==undefined?undefined:methods[skill.CaptionRatio3](skill);
+                        calcData["SpendItemCount"]=methods[skill.SpendItemCount]==undefined?undefined:methods[skill.SpendItemCount](skill);
+
+                        var descList = document.getElementsByClassName("skill-desc");
+                        var skillParent;
+                        for (var k=0;k<descList.length;k++) {
+                            if(descList[k].id==skill.ClassID) {
+                                skillParent=descList[k];
+                                break;
+                            }
+                        }
+                        
+                        for (var k=0;k<skillParent.children.length;k++){
+                            if (skillParent.children[k] == undefined || skillParent.children[k].children == undefined) continue;
+                            for (var l=0;l<skillParent.children[k].children.length;l++){
+                                if (skillParent.children[k].children[l] == undefined) continue;
+                                if (skillParent.children[k].children[l].id == undefined) continue;
+                                if (calcData[skillParent.children[k].children[l].id] == undefined) continue;
+                                skillParent.children[k].children[l].innerHTML=calcData[skillParent.children[k].children[l].id];
+                            }
+                        }
+                    }
+                    if (skillIndex != undefined) return;
+                }
             }
         }
     }

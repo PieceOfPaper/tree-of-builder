@@ -138,6 +138,14 @@ function loadTable(name, path, callback){
   if (noDownload && fs.existsSync('./web/data/' + path)){
     fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
       data['TableName'] = name;
+      for(var param in data){
+        if (data[param] == undefined) continue;
+        if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
+          continue;
+        } else if (Number(data[param]).toString() != "NaN" && Number(data[param]).toString().length == data[param].length){
+          data[param] = Number(data[param]);
+        }
+      }
       tableData[name].push(data);
     }).on('end', function(){
       console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
@@ -153,6 +161,14 @@ function loadTable(name, path, callback){
       console.log('download table [' + name + '] ' + path);
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
         data['TableName'] = name;
+        for(var param in data){
+          if (data[param] == undefined) continue;
+          if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
+            continue;
+          } else if (Number(data[param]).toString() != "NaN" && Number(data[param]).toString().length == data[param].length){
+            data[param] = Number(data[param]);
+          }
+        }
         tableData[name].push(data);
       }).on('end', function(){
         console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
@@ -319,7 +335,7 @@ app.use('/Buff', buffPage);
 var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
 app.use('/Item', itemPage);
 
-var builderPage = require('./web_script/web_builder')(app, tableData);
+var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);

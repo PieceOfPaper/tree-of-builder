@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     var url = require('url');
@@ -15,6 +15,9 @@ module.exports = function(app, tableData){
         var skilltreeTable = tableData['skilltree'];
         var skillAttributeTable = tableData['skill_attribute'];
 
+        var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
+
+        var luaMethodList = [];
 
         var classArray = [];
         var skillArray = [];
@@ -153,6 +156,15 @@ module.exports = function(app, tableData){
                     output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["Level"]=Number('+skillLv+');';
                     output +=       '</script>';
                     output +=   '</div>';
+
+
+                    for (var k=0;k<usedScrName.length;k++){
+                        if (skillTable[skillTableIndex][usedScrName[k]]==undefined) continue;
+                        if (skillTable[skillTableIndex][usedScrName[k]]=='') continue;
+                        if (luaMethodList.includes(skillTable[skillTableIndex][usedScrName[k]])) continue;
+                        luaMethodList.push(skillTable[skillTableIndex][usedScrName[k]]);
+                    }
+
                     skillIndex ++;
                 }
             }
@@ -178,19 +190,12 @@ module.exports = function(app, tableData){
         output +=       'function IGetSumOfEquipItem(pc, equip){ return 0; }';
         output +=       'function IsPVPServer(pc){ return 0; }';
 
-        var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
-        var luaMethodList = [];
-        for (var i=0;i<skillArray.length;i++){
-            for (var j=0;j<skillArray[i].length;j++){
-                for (var k=0;k<usedScrName.length;k++){
-                    if (skillArray[i][j][usedScrName[k]]==undefined) continue;
-                    if (skillArray[i][j][usedScrName[k]]=='') continue;
-                    if (!luaMethodList.includes(skillArray[i][j][usedScrName[k]]))
-                        luaMethodList.push(skillArray[i][j][usedScrName[k]]);
-                }
-            }
+        output +=   'var methods=[];';
+        for (var i=0;i<luaMethodList.length;i++){ 
+            if (scriptData[luaMethodList[i]] == undefined) continue;
+            output += tos.Lua2JS(scriptData[luaMethodList[i]]);
+            output += 'methods["'+luaMethodList[i]+'"]='+luaMethodList[i]+';';
         }
-        for (var i=0;i<luaMethodList.length;i++){ output += tos.Lua2JS(scriptData[luaMethodList[i]]); }
 
         output +=   '</script>';
 
