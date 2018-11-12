@@ -3,16 +3,17 @@
     var url = window.location.href.split('?')[0];
     var classArray = [];
     var skillArray = [];
+    var abilityArray = [];
 
-var playerSetting = {
-    Level:Number(1),
-    SR:Number(3),
-    STR:Number(0),
-    CON:Number(0),
-    INT:Number(0),
-    SPR:Number(0),
-    DEX:Number(0),
-};
+    var playerSetting = {
+        Level:Number(1),
+        SR:Number(3),
+        STR:Number(0),
+        CON:Number(0),
+        INT:Number(0),
+        SPR:Number(0),
+        DEX:Number(0),
+    };
 
     onInit();
     function onInit(){
@@ -29,6 +30,14 @@ var playerSetting = {
                 skill.push(AsciiToNumber(splited_query_skill[i][j]));
             }
             skillArray.push(skill);
+        }
+
+        var query_ability = getQueryVariable("ability");
+        var splited_query_ability = query_ability.split(".");
+        for (var i = 0; i < splited_query_skill.length; i ++){
+            var ability = [];
+            for (var j = 0; j < splited_query_skill[i].length; j ++){
+            }
         }
         
         updateSkillData();
@@ -341,6 +350,12 @@ var playerSetting = {
                 button.classList.add("active");
             }
         }
+    }
+
+    function GetJobGradeByName(pc, charName){
+        var splited = charName.split("_");
+        if (splited.length < 2) return 0;
+        return getGrade(Number(splited[1]));
     }
 
 </script>

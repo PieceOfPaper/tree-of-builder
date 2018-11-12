@@ -14,6 +14,8 @@ module.exports = function(app, tableData, scriptData){
         var skillTable = tableData['skill'];
         var skilltreeTable = tableData['skilltree'];
         var skillAttributeTable = tableData['skill_attribute'];
+        var abilityTable = tableData['ability'];
+        var abilityJobTable = tableData['ability_job'];
 
         var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
 
@@ -175,6 +177,32 @@ module.exports = function(app, tableData, scriptData){
                 }
             }
             output +=       '</div>';
+            output +=       '<div>';
+            for (var j = 0; j < abilityTable.length; j ++){
+                if (abilityTable[j].Job == jobTable[i].ClassName){
+                    var abil_job = undefined;
+                    for (var k = 0; k < abilityJobTable.length; k ++){
+                        if (abilityTable[j].ClassName == abilityJobTable[k].ClassName){
+                            abil_job = abilityJobTable[k];
+                            break;
+                        }
+                    }
+                    if (abil_job == undefined) continue;
+                    //output +=       ''+abilityTable[j].Name+', ';
+                    // output +=   '<div align="center" class="skill" id="' + abilityTable[j].ClassID + '" >';
+                    // output +=       '<img src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png"/>';
+                    // output +=       '<br>';
+                    // output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + skillIndex+ ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    // output +=       '<button class="lv-add-button minus" onclick="addAbillLevel(' + jobNum2 + ',' + skillIndex+ ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
+                    // output +=       '<p><a href="../Skill/?id=' + abilityTable[j].ClassID  + '">' + abilityTable[j].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
+                    // output +=       '<div align="center" class="skill-desc" id="' + abilityTable[j].ClassID + '" >';
+                    // output +=           '<p>' + tos.parseCaption(abilityTable[j].Caption) + '</p>';
+                    // output +=           '<p>' + tos.parseCaption(abilityTable[j].Caption2) + '</p>';
+                    // output +=       '</div>';
+                    // output +=   '</div>';
+                }
+            }
+            output +=       '</div>';
             skillIndex = 0;
         }
         output +=       '</div>';
@@ -190,6 +218,13 @@ module.exports = function(app, tableData, scriptData){
         output +=       'function TryGetProp(data, prop){ ';
         output +=           'if (data[prop] === undefined) return 0;'; 
         output +=           'return data[prop];'; 
+        output +=       '}';
+
+        output +=       'function GetSkill(pc, className){';
+        output +=           'for(var param in skillData){';
+        output +=               'if(skillData[param].ClassName==className) return skillData[param];';
+        output +=           '}';
+        output +=           'return undefined;';
         output +=       '}';
 
         output +=       'function IsBuffApplied(pc, buff){ return false; }';
