@@ -124,10 +124,9 @@ module.exports = function(app, tableData, scriptData){
                     }
                 }
             }
-            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 15) + ')</p>';
+            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 45) + ')</p>';
             for (var j = 0; j < skilltreeTable.length; j ++){
-                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
-                    skilltreeTable[j].UnlockGrade <= classCount[i]){
+                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
                     var skillTableIndex;
                     for (var k = 0; k < skillTable.length; k ++){
                         if (skilltreeTable[j].SkillName === skillTable[k].ClassName){
@@ -145,8 +144,9 @@ module.exports = function(app, tableData, scriptData){
                             }
                         }
                     }
-                    var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
-                    if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
+                    // var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
+                    // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
+                    var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
                     output +=       '<br>';
@@ -197,6 +197,7 @@ module.exports = function(app, tableData, scriptData){
         output +=       'function IsPVPServer(pc){ return 0; }';
 
         output +=   'var methods=[];';
+        luaMethodList.push('SCR_REINFORCEABILITY_TOOLTIP');
         for (var i=0;i<luaMethodList.length;i++){ 
             if (scriptData[luaMethodList[i]] == undefined) continue;
             output += tos.Lua2JS(scriptData[luaMethodList[i]]);
