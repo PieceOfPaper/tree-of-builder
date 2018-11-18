@@ -454,13 +454,19 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=     'var abilitySetting = {';
     captionScript +=      'Level:Number(document.getElementById("Ability_" + ability).value),';
     captionScript +=    '};';
+    //captionScript +=    'console.log("GetAbility:"+abilitySetting);'; 
     captionScript +=    'return abilitySetting;';
     captionScript +=  '}';
     captionScript +=  'return undefined;';
     captionScript += '}';
 
-    captionScript += 'function TryGetProp(data, prop){ ';
-    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript += 'function TryGetProp(data, prop, defValue){ ';
+    captionScript +=  'if (data[prop] === undefined) {';
+    //captionScript +=    'console.log("TryGetProb:null");';
+    //captionScript +=    'console.log(data);';
+    captionScript +=    'if (defValue != undefined) return defValue;'; 
+    captionScript +=    'return 0; }';
+    //captionScript +=  'console.log("TryGetProb:"+data[prop]);';
     captionScript +=  'return data[prop];'; 
     captionScript += '}';
 
@@ -476,6 +482,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
     captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
     captionScript +=  'SpendItemBaseCount:' + skillTable[index].SpendItemBaseCount + ',';
+    captionScript +=  'ReinforceAbility:"' + skillTable[index].ReinforceAbility + '",';
     captionScript += '};';
 
     captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';

@@ -190,10 +190,12 @@ module.exports = function(app, tableData, scriptData){
         output +=               'return { Level:Number(document.getElementById("Ability_" + ability).value) }; }';
         output +=           'return undefined; }';
 
-        output +=       'function TryGetProp(data, prop){ ';
-        output +=           'if (data[prop] === undefined) return 0;'; 
-        output +=           'return data[prop];'; 
-        output +=       '}';
+        output += 'function TryGetProp(data, prop, defValue){ ';
+        output +=  'if (data[prop] === undefined) {';
+        output +=    'if (defValue != undefined) return defValue;'; 
+        output +=    'return 0; }';
+        output +=  'return data[prop];'; 
+        output += '}';
 
         output +=       'function IsBuffApplied(pc, buff){ return false; }';
         output +=       'function IGetSumOfEquipItem(pc, equip){ return 0; }';
