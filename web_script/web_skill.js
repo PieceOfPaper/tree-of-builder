@@ -554,12 +554,13 @@ module.exports = function(app, tableData, scriptData){
 
     var overHeat = 1;
     if (skillTable[index].OverHeatGroup != undefined && skillTable[index].OverHeatGroup.length > 0 && skillTable[index].SklUseOverHeat > 0){
-      for (var i = 0; i < cooldownTable.length; i ++){
-        if (cooldownTable[i].ClassName === skillTable[index].OverHeatGroup){
-          overHeat = cooldownTable[i].MaxOverTime / skillTable[index].SklUseOverHeat;
-          break;
-        }
-      }
+      // for (var i = 0; i < cooldownTable.length; i ++){
+      //   if (cooldownTable[i].ClassName === skillTable[index].OverHeatGroup){
+      //     overHeat = cooldownTable[i].MaxOverTime / skillTable[index].SklUseOverHeat;
+      //     break;
+      //   }
+      // }
+      overHeat = skillTable[index].SklUseOverHeat;
     }
 
     var rawScript = '';
