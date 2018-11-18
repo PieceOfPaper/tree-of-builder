@@ -116,10 +116,10 @@ var playerSetting = {
                         if ((skillArray[i][j + 1] + value) > skillMax){
                             skillArray[i][j + 1] = 0;
                         } else if ((skillArray[i][j + 1] + value) < 0) {
-                            if ((sumLevel + skillMax) <= getGrade(classNum2) * 45) skillArray[i][j + 1] = skillMax;
-                            else skillArray[i][j + 1] = (getGrade(classNum2) * 45) - sumLevel;
+                            if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skillArray[i][j + 1] = skillMax;
+                            else skillArray[i][j + 1] = (getSkillPointMax(classNum2)) - sumLevel;
                         } else {
-                            if ((sumLevel + value) <= getGrade(classNum2) * 45) skillArray[i][j + 1] += value;
+                            if ((sumLevel + value) <= getSkillPointMax(classNum2)) skillArray[i][j + 1] += value;
                             else  skillArray[i][j + 1] = 0;
                         }
                         updateSkillData(classNum2, skillIndex);
@@ -129,11 +129,11 @@ var playerSetting = {
                 }
                 skillArray[i].push(skillIndex);
                 if (value > 0){
-                    if ((sumLevel + value) <= getGrade(classNum2) * 45) skillArray[i].push(value);
+                    if ((sumLevel + value) <= getSkillPointMax(classNum2)) skillArray[i].push(value);
                     else skillArray[i].push(0);
                 } else if (value < 0){
-                    if ((sumLevel + skillMax) <= getGrade(classNum2) * 45) skillArray[i].push(skillMax);
-                    else skillArray[i].push((getGrade(classNum2) * 45) - sumLevel);
+                    if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skillArray[i].push(skillMax);
+                    else skillArray[i].push((getSkillPointMax(classNum2)) - sumLevel);
                 }  else skillArray[i].push(0);
                 updateSkillData(classNum2, skillIndex);
                 updatePage(false);
@@ -145,11 +145,11 @@ var playerSetting = {
         skill.push(grade);
         skill.push(skillIndex);
         if (value > 0){
-            if ((sumLevel + value) <= getGrade(classNum2) * 45) skill.push(value);
+            if ((sumLevel + value) <= getSkillPointMax(classNum2)) skill.push(value);
             else skill.push(0);
         } else if (value < 0){
-            if ((sumLevel + skillMax) <= getGrade(classNum2) * 45) skill.push(skillMax);
-            else skill.push((getGrade(classNum2) * 45) - sumLevel);
+            if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skill.push(skillMax);
+            else skill.push((getSkillPointMax(classNum2)) - sumLevel);
         }  else skill.push(0);
         skillArray.push(skill);
         updateSkillData(classNum2, skillIndex);
@@ -163,6 +163,15 @@ var playerSetting = {
             if (classArray[i] == classNum2) grade ++;
         }
         return grade;
+    }
+
+    function getSkillPointMax(classNum2){
+        if (classNum2 == undefined)
+            return 0;
+        else if (classNum2 == 1)
+            return 15;
+        else
+            return 15*3;
     }
 
     function AsciiToNumber(char){

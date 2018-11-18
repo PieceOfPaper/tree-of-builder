@@ -114,7 +114,7 @@ module.exports = function(app, tableData, scriptData){
             if (classCount[i] <= 0)
                 continue;
             output +=       '<div class="class">';
-            output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
+            //output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
             var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
@@ -124,7 +124,9 @@ module.exports = function(app, tableData, scriptData){
                     }
                 }
             }
-            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 45) + ')</p>';
+            //output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 45) + ')</p>';
+            var skillPointMax = jobNum2 == 1 ? 15 : 45;
+            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + skillPointMax + ')</p>';
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
                     var skillTableIndex;
