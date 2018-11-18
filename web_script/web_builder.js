@@ -115,6 +115,7 @@ module.exports = function(app, tableData, scriptData){
                 continue;
             output +=       '<div class="class">';
             //output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
+            output +=       '<h3>' + jobTable[i].Name + '</h3>';
             var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
