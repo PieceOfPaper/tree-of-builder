@@ -540,6 +540,7 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    captionScript += tos.Lua2JS(scriptData['SCR_REINFORCEABILITY_TOOLTIP']);
     captionScript += '</script>';
 
     var stanceString = '';
