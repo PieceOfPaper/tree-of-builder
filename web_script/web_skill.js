@@ -562,9 +562,18 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
+    var rawScript = '';
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0 && scriptData[skillTable[index].SkillFactor] != undefined) rawScript += '<tr><td>SkillFactor</td><td class="script">' + scriptData[skillTable[index].SkillFactor] + '</td></tr>';
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0 && scriptData[skillTable[index].SkillSR] != undefined) rawScript += '<tr><td>SkillSR</td><td class="script">' + scriptData[skillTable[index].SkillSR] + '</td></tr>';
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0 && scriptData[skillTable[index].CaptionTime] != undefined) rawScript += '<tr><td>CaptionTime</td><td class="script">' + scriptData[skillTable[index].CaptionTime] + '</td></tr>';
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0 && scriptData[skillTable[index].CaptionRatio] != undefined) rawScript += '<tr><td>CaptionRatio</td><td class="script">' + scriptData[skillTable[index].CaptionRatio] + '</td></tr>';
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0 && scriptData[skillTable[index].CaptionRatio2] != undefined) rawScript += '<tr><td>CaptionRatio2</td><td class="script">' + scriptData[skillTable[index].CaptionRatio2] + '</td></tr>';
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0 && scriptData[skillTable[index].CaptionRatio3] != undefined) rawScript += '<tr><td>CaptionRatio3</td><td class="script">' + scriptData[skillTable[index].CaptionRatio3] + '</td></tr>';
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && scriptData[skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td><td class="script">' + scriptData[skillTable[index].SpendItemCount] + '</td></tr>';
+
 
     var output = layout_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    //output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
@@ -593,6 +602,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AddAbility%/g, abilityString);
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
+
+    output = output.replace(/%RawScripts%/g, rawScript);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
