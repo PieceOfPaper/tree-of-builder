@@ -188,7 +188,8 @@ loadScript('shared.ipf/script/ability.lua');
 loadScript('shared.ipf/script/ability_price.lua');
 loadScript('shared.ipf/script/ability_unlock.lua');
 loadScript('shared.ipf/script/item_calculate.lua');
-loadScript('shared.ipf/script/item_transcend_shared.lua')
+loadScript('shared.ipf/script/item_transcend_shared.lua');
+loadScript('shared.ipf/script/calc_pvp_item.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];

@@ -48,6 +48,12 @@ class TosModule {
         output = output.replace(/ or /g, '||');
         output = output.replace(/\'YES\'/g, 'true');
         output = output.replace(/\'NO\'/g, 'false');
+        output = output.replace(/\.\./g, '+');
+
+        if (output.lastIndexOf('end') == output.length - 3){
+            output = output.substring(0, output.length - 3);
+            output += '}';
+        }
 
         var splited = output.split('\n');
         output = '';

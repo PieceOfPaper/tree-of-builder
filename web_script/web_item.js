@@ -293,6 +293,9 @@ module.exports = function(app, tableData, scriptData){
     var captionScript = '';
     captionScript += '<script>';
 
+    captionScript += 'var _G = [];';
+    captionScript += '_G["GetItemOwner"]=undefined;';
+
     captionScript += 'var itemData = {';
     captionScript +=  'UseLv:' + itemTable[index].UseLv  + ',';
     captionScript +=  'ItemLv:' + itemTable[index].ItemLv  + ',';
@@ -305,7 +308,8 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'ItemStar:"' + itemTable[index].ClassType  + '",';
     captionScript +=  'BasicTooltipProp:"' + itemTable[index].BasicTooltipProp  + '",';
     captionScript +=  'ItemStar:' + itemTable[index].ItemStar  + ',';
-    captionScript +=  'Material:"' + itemTable[index].Material  + '",';
+    if (itemTable[index].Material != undefined && itemTable[index].Material.length > 0)
+      captionScript +=  'Material:"' + itemTable[index].Material  + '",';
     captionScript +=  'MAXATK:' + 0  + ',';
     captionScript +=  'MINATK:' + 0  + ',';
     captionScript +=  'MAXATK_AC:' + 0 + ',';
@@ -347,7 +351,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     captionScript += 'function TryGetProp(data, prop){ ';
-    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript +=  'if (data[prop] === undefined) return undefined;'; 
     captionScript +=  'return data[prop];'; 
     captionScript += '}';
 
@@ -358,6 +362,20 @@ module.exports = function(app, tableData, scriptData){
     
     captionScript += 'function GetClassByType(tablename, value){ ';
     captionScript +=  'if (tablename === "ItemTranscend") return { ClassName:value, AtkRatio:Number(value)*10, DefRatio:Number(value)*10, MdefRatio:Number(value)*10 };'; 
+    captionScript +=  'return undefined;'; 
+    captionScript += '}';
+    
+    captionScript += 'function GetClassList(tablename){ ';
+    captionScript +=  'if (tablename === "item_grade") return ' + JSON.stringify(tableData['item_grade']) + ';'; 
+    captionScript +=  'return undefined;'; 
+    captionScript += '}';
+    
+    captionScript += 'function GetClassByNameFromList(baseClass, className){ ';
+    captionScript +=  'if (baseClass != undefined) {';
+    captionScript +=    'for(var i=0;i<baseClass.length;i++){';
+    captionScript +=      'if (baseClass[i].ClassName == className){ return baseClass[i]; }';
+    captionScript +=    '}';
+    captionScript +=  '}'; 
     captionScript +=  'return undefined;'; 
     captionScript += '}';
 
@@ -444,6 +462,8 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_MDEF_RATIO']);
     captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE']);
     captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']);
+    captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
+    captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
     captionScript += '</script>';
 
 
