@@ -142,7 +142,7 @@ function loadTable(name, path, callback){
         if (data[param] == undefined) continue;
         if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
           continue;
-        } else if (Number(data[param]).toString() != "NaN" && Number(data[param]).toString().length == data[param].length){
+        } else if (Number(data[param]).toString() != "NaN" && (Number(data[param]).toString().length == data[param].length || data[param].indexOf('\.') > 0)){
           data[param] = Number(data[param]);
         }
       }
@@ -165,7 +165,7 @@ function loadTable(name, path, callback){
           if (data[param] == undefined) continue;
           if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
             continue;
-          } else if (Number(data[param]).toString() != "NaN" && Number(data[param]).toString().length == data[param].length){
+          } else if (Number(data[param]).toString() != "NaN" && (Number(data[param]).toString().length == data[param].length  || data[param].indexOf('\.') > 0)){
             data[param] = Number(data[param]);
           }
         }
