@@ -37,6 +37,8 @@ class TosModule {
         output = output.replace(/elseif/g, '}else if(');
         output = output.replace(/then/g, '){');
         output = output.replace(/end\n/g, '}\n');
+        output = output.replace(/end \n/g, '}\n');
+        output = output.replace(/  end  /g, '}');
         output = output.replace(/local/g, 'var');
         output = output.replace(/class/g, ' classData');
         output = output.replace(/math/g, 'Math');
