@@ -116,7 +116,8 @@ module.exports = function(app, tableData, scriptData){
             if (classCount[i] <= 0)
                 continue;
             output +=       '<div class="class">';
-            output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
+            //output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
+            output +=       '<h3>' + jobTable[i].Name + '</h3>';
             var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
@@ -126,10 +127,11 @@ module.exports = function(app, tableData, scriptData){
                     }
                 }
             }
-            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 15) + ')</p>';
+            //output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 45) + ')</p>';
+            var skillPointMax = jobNum2 == 1 ? 15 : 45;
+            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + skillPointMax + ')</p>';
             for (var j = 0; j < skilltreeTable.length; j ++){
-                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1 &&
-                    skilltreeTable[j].UnlockGrade <= classCount[i]){
+                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
                     var skillTableIndex;
                     for (var k = 0; k < skillTable.length; k ++){
                         if (skilltreeTable[j].SkillName === skillTable[k].ClassName){
@@ -147,13 +149,14 @@ module.exports = function(app, tableData, scriptData){
                             }
                         }
                     }
-                    var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
-                    if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
+                    // var skillLvMax = (classCount[i] - skilltreeTable[j].UnlockGrade + 1) * skilltreeTable[j].LevelPerGrade;
+                    // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
+                    var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
                     output +=       '<br>';
-                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
-                    output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + skilltreeTable[j].UnlockGrade + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
                     output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
                     output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
@@ -215,10 +218,12 @@ module.exports = function(app, tableData, scriptData){
         output +=               'return { Level:Number(document.getElementById("Ability_" + ability).value) }; }';
         output +=           'return undefined; }';
 
-        output +=       'function TryGetProp(data, prop){ ';
-        output +=           'if (data[prop] === undefined) return 0;'; 
-        output +=           'return data[prop];'; 
-        output +=       '}';
+        output += 'function TryGetProp(data, prop, defValue){ ';
+        output +=  'if (data[prop] === undefined) {';
+        output +=    'if (defValue != undefined) return defValue;'; 
+        output +=    'return 0; }';
+        output +=  'return data[prop];'; 
+        output += '}';
 
         output +=       'function GetSkill(pc, className){';
         output +=           'for(var param in skillData){';
@@ -232,6 +237,7 @@ module.exports = function(app, tableData, scriptData){
         output +=       'function IsPVPServer(pc){ return 0; }';
 
         output +=   'var methods=[];';
+        luaMethodList.push('SCR_REINFORCEABILITY_TOOLTIP');
         for (var i=0;i<luaMethodList.length;i++){ 
             if (scriptData[luaMethodList[i]] == undefined) continue;
             output += tos.Lua2JS(scriptData[luaMethodList[i]]);
