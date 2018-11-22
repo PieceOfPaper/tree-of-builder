@@ -439,6 +439,7 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += 'function GetSkillOwner(skill){'
     captionScript += 'var playerSetting = {';
+    captionScript +=  'Lv:Number(1),';
     captionScript +=  'Level:Number(1),';
     captionScript +=  'SR:Number(3),';
     captionScript +=  'STR:Number(0),';
@@ -508,13 +509,16 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     captionScript += 'function updateLuaScripts(){';
-    captionScript +=  'if (document.getElementById("SkillFactor") != undefined) document.getElementById("SkillFactor").innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SkillSR") != undefined) document.getElementById("SkillSR").innerHTML=' + skillTable[index].SkillSR + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionTime") != undefined) document.getElementById("CaptionTime").innerHTML=' + skillTable[index].CaptionTime + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio") != undefined) document.getElementById("CaptionRatio").innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio2") != undefined) document.getElementById("CaptionRatio2").innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio3") != undefined) document.getElementById("CaptionRatio3").innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SpendItemCount") != undefined) document.getElementById("SpendItemCount").innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
+    captionScript +=  'var spans=document.getElementsByTagName("span");';
+    captionScript +=  'if (spans != undefined) { for (var i=0; i <spans.length; i ++) {';
+    captionScript +=    'if (spans[i].id == "SkillFactor") spans[i].innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "SkillSR") spans[i].innerHTML=' + skillTable[index].SkillSR + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionTime") spans[i].innerHTML=' + skillTable[index].CaptionTime + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio") spans[i].innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio2") spans[i].innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio3") spans[i].innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "SpendItemCount") spans[i].innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
+    captionScript +=  '} } ';
     captionScript += '}';
 
     for (var i = 0; i < skillAbility.length; i ++){
@@ -537,13 +541,13 @@ module.exports = function(app, tableData, scriptData){
       captionScript += '}';
     }
 
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
 
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
