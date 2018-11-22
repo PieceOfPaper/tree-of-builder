@@ -34,13 +34,23 @@
 
         var query_ability = getQueryVariable("ability");
         var splited_query_ability = query_ability.split(".");
-        for (var i = 0; i < splited_query_skill.length; i ++){
+        for (var i = 0; i < splited_query_ability.length; i ++){
+            if (splited_query_ability[i].length == 0) continue;
             var ability = [];
-            for (var j = 0; j < splited_query_skill[i].length; j ++){
+            ability.push(AsciiToNumber(splited_query_ability[i][0]));
+            for (var j = 1; j < splited_query_ability[i].length; j += 3){
+                ability.push(AsciiToNumber(splited_query_ability[i][j]));
+                var ten = AsciiToNumber(splited_query_ability[i][j + 1]) * getNumberAsciiMax();
+                var one = AsciiToNumber(splited_query_ability[i][j + 2]);
+                ability.push(ten + one);
             }
+            abilityArray.push(ability);
         }
         
         updateSkillData();
+        updateAbilityData();
+
+        updateLayout();
     }
 
     function onClickClass(num1, num2){
@@ -166,6 +176,50 @@
         return;
     }
 
+    function addAbilLevel(classNum2, abilIndex, abilMax, value){
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (abilityArray[i][0] === classNum2){
+                for (var j = 1; j < abilityArray[i].length; j +=2){
+                    if (abilityArray[i][j] === abilIndex){
+                        if ((abilityArray[i][j + 1] + value) > abilMax){
+                            abilityArray[i][j + 1] = 0;
+                        } else if ((abilityArray[i][j + 1] + value) < 0) {
+                            abilityArray[i][j + 1] = abilMax
+                        } else {
+                            abilityArray[i][j + 1] += value;
+                        }
+                        updateAbilityData(classNum2, abilIndex);
+                        updateSkillData();
+                        updatePage(false);
+                        return;
+                    }
+                }
+                abilityArray[i].push(abilIndex);
+                if (value > 0){
+                    abilityArray[i].push(0);
+                } else if (value < 0){
+                    abilityArray[i].push(abilMax);
+                }  else abilityArray[i].push(0);
+                updateAbilityData(classNum2, abilIndex);
+                updateSkillData();
+                updatePage(false);
+                return;
+            }
+        }
+        var ability = [];
+        ability.push(classNum2);
+        ability.push(abilIndex);
+        if (value > 0){
+            ability.push(0);
+        } else if (value < 0){
+            ability.push(abilMax);
+        }  else ability.push(0);
+        abilityArray.push(ability);
+        updateAbilityData(classNum2, abilIndex);
+        updateSkillData();
+        updatePage(false);
+    }
+
     function getGrade(classNum2){
         var grade = 0;
         for (var i = 1; i < classArray.length; i ++){
@@ -186,11 +240,11 @@
     function AsciiToNumber(char){
         var ascii = char.charCodeAt(0);
         if (ascii >= 48 && ascii <= 57){
-            return ascii - 48;
+            return Number(ascii - 48);
         } else if (ascii >= 97 && ascii <= 122){
-            return ascii - 97 + 10;
+            return Number(ascii - 97 + 10);
         } else if (ascii >= 65 && ascii <= 90){
-            return ascii - 65 + 26;
+            return Number(ascii - 65 + 36);
         }
         return -1;
     }
@@ -200,9 +254,13 @@
             return String.fromCharCode(48 + num);
         } else if (num >= 10 && num <= 35){
             return String.fromCharCode(97 + num - 10);
-        } else if (num >= 36 && num <= 51){
-            return String.fromCharCode(65 + num - 26);
+        } else if (num >= 36 && num <= 61){
+            return String.fromCharCode(65 + num - 36);
         }
+    }
+
+    function getNumberAsciiMax() {
+        return 61;
     }
 
     function getQueryVariable(variable){
@@ -242,6 +300,27 @@
                         for (var j = 2; j < skillArray[k].length; j +=2){
                             if (skillArray[k][j] === skillIndex){
                                 skillLvContents[i].innerHTML = skillArray[k][j + 1].toString();
+                                found = true;
+                                break;;
+                            }
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+        }
+        var abilLvContents = document.getElementsByClassName("abilityLv");
+        if (abilLvContents != undefined){
+            for (var i = 0; i < abilLvContents.length; i ++){
+                var splited = abilLvContents[i].id.split(",");
+                var classNum2 = Number(splited[0]);
+                var abilIndex = Number(splited[1]);
+                var found = false;
+                for (var k = 0; k < abilityArray.length; k ++){
+                    if (abilityArray[k][0] === classNum2){
+                        for (var j = 1; j < abilityArray[k].length; j +=2){
+                            if (abilityArray[k][j] === abilIndex){
+                                abilLvContents[i].innerHTML = abilityArray[k][j + 1].toString();
                                 found = true;
                                 break;;
                             }
@@ -296,6 +375,29 @@
         }
     }
 
+    function updateAbilityData(num2, abilIndex){
+        var inputList = document.getElementsByClassName("AbilityData");
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (num2 != undefined && abilityArray[i][0] != num2) continue;
+            for (var j = 1; j < abilityArray[i].length; j +=2){
+                if (abilIndex == undefined || abilityArray[i][j] == abilIndex){
+                    if (abilityData[abilIndex]!=undefined){
+                        abilityData[abilIndex]["Level"]=abilityArray[i][j+1];
+
+                        if (inputList != undefined && inputList.length > 0){
+                            for (k = 0; k < inputList.length; k ++){
+                                if (inputList[k].id == ("Ability_" + abilityData[abilIndex].ClassName)){
+                                    inputList[k].value = abilityArray[i][j+1];
+                                }
+                            }
+                        }
+                    }
+                    if (abilityArray != undefined) return;
+                }
+            }
+        }
+    }
+
     function updatePage(refresh){
         var classStr = "";
         for (var i = 0; i < classArray.length; i ++){
@@ -312,6 +414,22 @@
             }
         }
 
+        var abilStr = "";
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (abilityArray[i].length > 0){
+                abilStr += NumberToAscii(abilityArray[i][0]);
+                for (var j = 1; j < abilityArray[i].length; j += 2){
+                    abilStr += NumberToAscii(abilityArray[i][j]);
+
+                    var ten = abilityArray[i][j + 1] / getNumberAsciiMax();
+                    var one = abilityArray[i][j + 1] % getNumberAsciiMax();
+                    abilStr += NumberToAscii(ten);
+                    abilStr += NumberToAscii(one);
+                }
+                if ((i + 1) < abilityArray.length) abilStr += ".";
+            }
+        }
+
         var queryStr = "?";
         //if (classStr.length > 0 || skillStr.length > 0){
             if (classStr.length > 0){
@@ -320,6 +438,10 @@
             if (skillStr.length > 0){
                 queryStr += "&";
                 queryStr += "skill=" + skillStr;
+            }
+            if (abilStr.length > 0){
+                queryStr += "&";
+                queryStr += "ability=" + abilStr;
             }
             if (refresh) {
                 window.location.href = url + queryStr;
@@ -346,15 +468,30 @@
     function onClickViewDetail() {
         var button = document.getElementById("viewDetailBtn");
         var detailsDesc = document.getElementsByClassName("skill-desc");
-        if (button != undefined && detailsDesc != undefined){
+        var detailsAbilDesc = document.getElementsByClassName("ability-desc");
+        if (button != undefined){
             if (button.classList.contains("active")){
-                for (var i = 0; i < detailsDesc.length; i ++){
-                    detailsDesc[i].classList.remove("active");
+                if (detailsDesc != undefined) {
+                    for (var i = 0; i < detailsDesc.length; i ++){
+                        detailsDesc[i].classList.remove("active");
+                    }
+                }
+                if (detailsAbilDesc != undefined) {
+                    for (var i = 0; i < detailsAbilDesc.length; i ++){
+                        detailsAbilDesc[i].classList.remove("active");
+                    }
                 }
                 button.classList.remove("active");
             } else {
-                for (var i = 0; i < detailsDesc.length; i ++){
-                    detailsDesc[i].classList.add("active");
+                if (detailsDesc != undefined) {
+                    for (var i = 0; i < detailsDesc.length; i ++){
+                        detailsDesc[i].classList.add("active");
+                    }
+                }
+                if (detailsAbilDesc != undefined) {
+                    for (var i = 0; i < detailsAbilDesc.length; i ++){
+                        detailsAbilDesc[i].classList.add("active");
+                    }
                 }
                 button.classList.add("active");
             }
