@@ -315,6 +315,7 @@ table, td, th {
 .builder-skill-area .class {
     width: 100%;
 }
+
 .builder-skill-area .class .skill {
     display: inline-block;
     white-space: nowrap;
@@ -381,3 +382,71 @@ table, td, th {
     padding: 0;
     margin: 0;
 }
+
+.builder-skill-area .class .ability {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+    width: fit-content;
+    width: calc(100vw * 0.5 - 2 * 20px);
+    text-align: left;
+    padding: 2px;
+    margin-bottom: 5px;
+}
+.builder-skill-area .class .ability .lv-add-button {
+    margin: 2px;
+    padding: 0px;
+    background-color: rgba(0,0,0,0);
+    border: 0;
+}
+.builder-skill-area .class .ability .lv-add-button img {
+    width: calc(18px * 1.6666);
+    height: calc(19px * 1.6666);
+}
+.builder-skill-area .class .ability .lv-add-button.plus img {
+    content: url("../img/button/btn_plus.png");
+}
+.builder-skill-area .class .ability .lv-add-button.plus:hover img {
+    content: url("../img/button/btn_plus_cursoron.png");
+}
+.builder-skill-area .class .ability .lv-add-button.plus:active img {
+    content: url("../img/button/btn_plus_clicked.png");
+}
+.builder-skill-area .class .ability .lv-add-button.minus img {
+    content: url("../img/button/btn_minus.png");
+}
+.builder-skill-area .class .ability .lv-add-button.minus:hover img {
+    content: url("../img/button/btn_minus_cursoron.png");
+}
+.builder-skill-area .class .ability .lv-add-button.minus:active img {
+    content: url("../img/button/btn_minus_clicked.png");
+}
+
+.builder-skill-area .class .ability .ability-desc {
+    text-align: left;
+    white-space:normal;
+    word-break:normal;
+    display: none;
+}
+.builder-skill-area .class .ability .ability-desc.active {
+    display: block;
+}
+@media only screen and (max-device-width : 640px) {
+    .builder-skill-area .class .ability {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    .builder-skill-area .class .ability {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+.builder-skill-area .class .ability img {
+    /*width:64px;*/
+    height:64px;
+}
+.builder-skill-area .class .ability p {
+    padding: 0;
+    margin: 0;
+}
+
