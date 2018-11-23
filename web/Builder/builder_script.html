@@ -338,15 +338,15 @@
                 if (abilityArray[i].length == 0) continue;
                 pntSum[abilityArray[i][0]] = 0;
                 for (var j = 1; j < abilityArray[i].length; j +=2){
-                    if (abilityData[abilityArray[i][j]]!=undefined && abilityJobData[abilityArray[i][j]]!=undefined && abilityData[abilityArray[i][j]].Level > 0){
-                        for (var k = 1; k <= abilityData[abilityArray[i][j]].Level; k ++){
-                            var pnt = methods[abilityJobData[abilityArray[i][j]].ScrCalcPrice](undefined,abilityData[abilityArray[i][j]].ClassName,k,abilityJobData[abilityArray[i][j]].MaxLevel);
+                    if (abilityData[abilityArray[i][0]+','+abilityArray[i][j]]!=undefined && abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]]!=undefined && abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level > 0){
+                        for (var k = 1; k <= abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level; k ++){
+                            var pnt = methods[abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]].ScrCalcPrice](undefined,abilityData[abilityArray[i][0]+','+abilityArray[i][j]].ClassName,k,abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]].MaxLevel);
                             if (pnt != undefined && pnt.toString() != "NaN"){
                                 pntSum[abilityArray[i][0]] += pnt;
                                 pntTotalSum += pnt;
                             }
                         }
-                        //console.log(abilityData[abilityArray[i][j]].Name + " Lv:" + abilityData[abilityArray[i][j]].Level + " Pnt:" + pntSum[abilityArray[i][0]]);
+                        //console.log(abilityArray[i][0] + " " + abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Name + " Lv:" + abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level + " Pnt:" + pntSum[abilityArray[i][0]]);
                     }
                 }
             }
@@ -412,12 +412,12 @@
             if (num2 != undefined && abilityArray[i][0] != num2) continue;
             for (var j = 1; j < abilityArray[i].length; j +=2){
                 if (abilIndex == undefined || abilityArray[i][j] == abilIndex){
-                    if (abilityData[abilIndex]!=undefined){
-                        abilityData[abilIndex]["Level"]=abilityArray[i][j+1];
+                    if (abilityData[num2+','+abilIndex]!=undefined){
+                        abilityData[num2+','+abilIndex]["Level"]=abilityArray[i][j+1];
 
                         if (inputList != undefined && inputList.length > 0){
                             for (k = 0; k < inputList.length; k ++){
-                                if (inputList[k].id == ("Ability_" + abilityData[abilIndex].ClassName)){
+                                if (inputList[k].id == ("Ability_" + abilityData[num2+','+abilIndex].ClassName)){
                                     inputList[k].value = abilityArray[i][j+1];
                                 }
                             }

@@ -234,9 +234,9 @@ module.exports = function(app, tableData, scriptData){
                     output +=       '</div>';
                     output +=       '<input type="hidden" id="Ability_' + abilityTable[j].ClassName + '" class="AbilityData" min="0" max="' + abil_job.MaxLevel + '" value="0" >';
                     output +=       '<script>';
-                    output +=           'abilityData["'+abilIndex+'"]=' + JSON.stringify(abilityTable[j]) + ';';
-                    output +=           'abilityJobData["'+abilIndex+'"]=' + JSON.stringify(abil_job) + ';';
-                    output +=           'abilityData["'+abilIndex+'"]["Level"]=Number('+abilLv+');';
+                    output +=           'abilityData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abilityTable[j]) + ';';
+                    output +=           'abilityJobData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abil_job) + ';';
+                    output +=           'abilityData["'+jobNum2+','+abilIndex+'"]["Level"]=Number('+abilLv+');';
                     output +=       '</script>';
                     output +=   '</div>';
 
