@@ -355,9 +355,9 @@
                     if (pntSum[Number(abilityPntSum[i].id)] == undefined)
                         abilityPntSum[i].innerHTML = 0;
                     else
-                        abilityPntSum[i].innerHTML = pntSum[Number(abilityPntSum[i].id)];
+                        abilityPntSum[i].innerHTML = numberWithCommas(pntSum[Number(abilityPntSum[i].id)]);
                 } else {
-                    abilityPntSum[i].innerHTML = pntTotalSum;
+                    abilityPntSum[i].innerHTML = numberWithCommas(pntTotalSum);
                 }
             }
         }
@@ -533,6 +533,10 @@
         var splited = charName.split("_");
         if (splited.length < 2) return 0;
         return getGrade(Number(splited[1]));
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
 </script>
