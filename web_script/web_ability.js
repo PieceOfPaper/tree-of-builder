@@ -222,8 +222,9 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     if (abilityJob != undefined){
-      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price');
+      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
     }
+    captionScript += tos.Lua2JS(scriptData['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
     
     captionScript += '</script>';
 

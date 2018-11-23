@@ -196,10 +196,10 @@
                 }
                 abilityArray[i].push(abilIndex);
                 if (value > 0){
-                    abilityArray[i].push(0);
+                    abilityArray[i].push(value);
                 } else if (value < 0){
                     abilityArray[i].push(abilMax);
-                }  else abilityArray[i].push(0);
+                }  else abilityArray[i].push(value);
                 updateAbilityData(classNum2, abilIndex);
                 updateSkillData();
                 updatePage(false);
@@ -210,10 +210,10 @@
         ability.push(classNum2);
         ability.push(abilIndex);
         if (value > 0){
-            ability.push(0);
+            ability.push(value);
         } else if (value < 0){
             ability.push(abilMax);
-        }  else ability.push(0);
+        }  else ability.push(value);
         abilityArray.push(ability);
         updateAbilityData(classNum2, abilIndex);
         updateSkillData();
@@ -327,6 +327,37 @@
                         }
                     }
                     if (found) break;
+                }
+            }
+        }
+        var abilityPntSum = document.getElementsByClassName("abilityPntSum");
+        if (abilityPntSum != undefined){
+            var pntSum = [];
+            var pntTotalSum = 0;
+            for (var i = 0; i < abilityArray.length; i ++){
+                if (abilityArray[i].length == 0) continue;
+                pntSum[abilityArray[i][0]] = 0;
+                for (var j = 1; j < abilityArray[i].length; j +=2){
+                    if (abilityData[abilityArray[i][j]]!=undefined && abilityJobData[abilityArray[i][j]]!=undefined && abilityData[abilityArray[i][j]].Level > 0){
+                        for (var k = 1; k <= abilityData[abilityArray[i][j]].Level; k ++){
+                            var pnt = methods[abilityJobData[abilityArray[i][j]].ScrCalcPrice](undefined,abilityData[abilityArray[i][j]].ClassName,k,abilityJobData[abilityArray[i][j]].MaxLevel);
+                            if (pnt != undefined && pnt.toString() != "NaN"){
+                                pntSum[abilityArray[i][0]] += pnt;
+                                pntTotalSum += pnt;
+                            }
+                        }
+                        //console.log(abilityData[abilityArray[i][j]].Name + " Lv:" + abilityData[abilityArray[i][j]].Level + " Pnt:" + pntSum[abilityArray[i][0]]);
+                    }
+                }
+            }
+            for (var i = 0; i < abilityPntSum.length; i ++){
+                if (abilityPntSum[i].id != undefined && abilityPntSum[i].id.length > 0){
+                    if (pntSum[Number(abilityPntSum[i].id)] == undefined)
+                        abilityPntSum[i].innerHTML = 0;
+                    else
+                        abilityPntSum[i].innerHTML = pntSum[Number(abilityPntSum[i].id)];
+                } else {
+                    abilityPntSum[i].innerHTML = pntTotalSum;
                 }
             }
         }

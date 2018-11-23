@@ -146,7 +146,8 @@ module.exports = function(app, tableData, scriptData){
             }
             //output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + (classCount[i] * 45) + ')</p>';
             var skillPointMax = jobNum2 == 1 ? 15 : 45;
-            output +=       '<p>(<span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + skillPointMax + ')</p>';
+            output +=       '<p>Skill Point: <span id="' + jobNum2 + '" class="skillLvSum">' + skillLvSum + '</span>/' + skillPointMax + '</p>';
+            output +=       '<p>Ability Point: <span id="' + jobNum2 + '" class="abilityPntSum"></span></p>';
             // ------ Skill
             for (var j = 0; j < skilltreeTable.length; j ++){
                 if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
@@ -236,6 +237,11 @@ module.exports = function(app, tableData, scriptData){
                     output +=           'abilityData["'+abilIndex+'"]["Level"]=Number('+abilLv+');';
                     output +=       '</script>';
                     output +=   '</div>';
+
+                    if (luaMethodList.includes(abil_job.ScrCalcPrice) == false) {
+                        luaMethodList.push(abil_job.ScrCalcPrice);
+                    }
+
                     abilIndex ++;
                 }
             }
@@ -274,9 +280,14 @@ module.exports = function(app, tableData, scriptData){
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR');
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP');
         luaMethodList.push('SCR_REINFORCEABILITY_TOOLTIP');
+        luaMethodList.push('ABIL_COMMON_PRICE');
         for (var i=0;i<luaMethodList.length;i++){ 
             if (scriptData[luaMethodList[i]] == undefined) continue;
-            output += tos.Lua2JS(scriptData[luaMethodList[i]]);
+            if (luaMethodList[i] == 'ABIL_REINFORCE_PRICE' || luaMethodList[i] == 'ABIL_COMMON_PRICE'){
+                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
+            } else {
+                output += tos.Lua2JS(scriptData[luaMethodList[i]]);
+            }
             output += 'methods["'+luaMethodList[i]+'"]='+luaMethodList[i]+';';
         }
 
