@@ -74,9 +74,11 @@ module.exports = function(app, tableData, scriptData){
         output +=     '<title>Builder Page</title>';
         output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
         output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
+        output +=     '<script src="../js/defaultSetting.js"></script>';
         output +=   '</head>';
         output +=   '<body>';
-        output += fs.readFileSync('./web/Layout/topMenu.html');
+        //output += fs.readFileSync('./web/Layout/topMenu.html');
+        output +=       '<div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>';
         output +=       '<div class="builder-class-area">';
         output +=           '<div class="builder-class-selected">';
         if (request.query.class === undefined || request.query.class === ''){

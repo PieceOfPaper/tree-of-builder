@@ -176,13 +176,13 @@ module.exports = function(app, tableData, scriptData){
 
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
 
     output = output.replace(/%EquipClassTypeFilter%/g, equipClassTypeFilterString);
 
     output = output.replace(/%SearchResult%/g, resultString);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   });
@@ -216,7 +216,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var output = layout_item_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
@@ -253,7 +253,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }
@@ -476,7 +476,7 @@ module.exports = function(app, tableData, scriptData){
 
     var output = layout_itemEquip_detail.toString();
 
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%StatList%/g, statListString);
@@ -518,7 +518,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }
@@ -601,7 +601,7 @@ module.exports = function(app, tableData, scriptData){
   
     var output = layout_itemRecipe_detail.toString();
   
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     
@@ -631,7 +631,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
   
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
     response.send(output);
   }

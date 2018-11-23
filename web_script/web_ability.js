@@ -108,13 +108,13 @@ module.exports = function(app, tableData, scriptData){
 
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
 
     output = output.replace(/%JobFilter%/g, jobFilterString);
 
     output = output.replace(/%SearchResult%/g, resultString);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
     //console.log(request.query.searchType + " " + request.query.searchName);
@@ -268,7 +268,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var output = layout_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
     output = output.replace(/%Name%/g, abilityTable[index].Name);
     output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);
@@ -292,7 +292,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }
