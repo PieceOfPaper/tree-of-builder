@@ -186,6 +186,20 @@ table, td, th {
     max-width: 95vw;
 }
 
+footer {
+    text-align: left;
+}
+
+footer p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+footer img{
+    margin-right: 1em;
+    vertical-align: middle;
+    height: 1.5em;
+}
 
 /* ======== Search ======== */
 .search-area {
