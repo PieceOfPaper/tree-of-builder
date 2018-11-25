@@ -15,7 +15,7 @@ module.exports = function(app, tableData, scriptData){
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < buffTable.length; i ++){
-        if (buffTable[i].ClassID === request.query.id){
+        if (buffTable[i].ClassID === Number(request.query.id)){
           buffDetailPage(i, request, response);
           return;
         }
@@ -33,7 +33,7 @@ module.exports = function(app, tableData, scriptData){
         }
       } else {
         for (var i = 0; i < buffTable.length; i ++){
-          if (buffTable[i].Lv === request.query.lvFilter) continue;
+          if (buffTable[i].Lv === Number(request.query.lvFilter)) continue;
           if (!filteredTable.includes(buffTable[i].ClassName)) filteredTable.push(buffTable[i].ClassName);
         }
       }
@@ -128,11 +128,11 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
 
     output = output.replace(/%SearchResult%/g, resultString);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   });
@@ -150,7 +150,7 @@ module.exports = function(app, tableData, scriptData){
     if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
 
     var output = layout_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
@@ -171,7 +171,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }

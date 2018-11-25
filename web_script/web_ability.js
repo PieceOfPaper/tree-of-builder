@@ -24,7 +24,7 @@ module.exports = function(app, tableData, scriptData){
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < abilityTable.length; i ++){
-        if (abilityTable[i].ClassID === request.query.id){
+        if (abilityTable[i].ClassID === Number(request.query.id)){
           abilityDetailPage(i, request, response);
           return;
         }
@@ -108,13 +108,13 @@ module.exports = function(app, tableData, scriptData){
 
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
 
     output = output.replace(/%JobFilter%/g, jobFilterString);
 
     output = output.replace(/%SearchResult%/g, resultString);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
     //console.log(request.query.searchType + " " + request.query.searchName);
@@ -222,8 +222,9 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     if (abilityJob != undefined){
-      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price');
+      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
     }
+    captionScript += tos.Lua2JS(scriptData['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
     
     captionScript += '</script>';
 
@@ -267,7 +268,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var output = layout_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
     output = output.replace(/%Name%/g, abilityTable[index].Name);
     output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);
@@ -291,7 +292,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }

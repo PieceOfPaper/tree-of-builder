@@ -3,6 +3,17 @@
     var url = window.location.href.split('?')[0];
     var classArray = [];
     var skillArray = [];
+    var abilityArray = [];
+
+    var playerSetting = {
+        Level:Number(1),
+        SR:Number(3),
+        STR:Number(0),
+        CON:Number(0),
+        INT:Number(0),
+        SPR:Number(0),
+        DEX:Number(0),
+    };
 
     onInit();
     function onInit(){
@@ -20,6 +31,26 @@
             }
             skillArray.push(skill);
         }
+
+        var query_ability = getQueryVariable("ability");
+        var splited_query_ability = query_ability.split(".");
+        for (var i = 0; i < splited_query_ability.length; i ++){
+            if (splited_query_ability[i].length == 0) continue;
+            var ability = [];
+            ability.push(AsciiToNumber(splited_query_ability[i][0]));
+            for (var j = 1; j < splited_query_ability[i].length; j += 3){
+                ability.push(AsciiToNumber(splited_query_ability[i][j]));
+                var ten = AsciiToNumber(splited_query_ability[i][j + 1]) * getNumberAsciiMax();
+                var one = AsciiToNumber(splited_query_ability[i][j + 2]);
+                ability.push(ten + one);
+            }
+            abilityArray.push(ability);
+        }
+        
+        updateSkillData();
+        updateAbilityData();
+
+        updateLayout();
     }
 
     function onClickClass(num1, num2){
@@ -104,24 +135,26 @@
                         if ((skillArray[i][j + 1] + value) > skillMax){
                             skillArray[i][j + 1] = 0;
                         } else if ((skillArray[i][j + 1] + value) < 0) {
-                            if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i][j + 1] = skillMax;
-                            else skillArray[i][j + 1] = (getGrade(classNum2) * 15) - sumLevel;
+                            if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skillArray[i][j + 1] = skillMax;
+                            else skillArray[i][j + 1] = (getSkillPointMax(classNum2)) - sumLevel;
                         } else {
-                            if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i][j + 1] += value;
+                            if ((sumLevel + value) <= getSkillPointMax(classNum2)) skillArray[i][j + 1] += value;
                             else  skillArray[i][j + 1] = 0;
                         }
+                        updateSkillData(classNum2, skillIndex);
                         updatePage(false);
                         return;
                     }
                 }
                 skillArray[i].push(skillIndex);
                 if (value > 0){
-                    if ((sumLevel + value) <= getGrade(classNum2) * 15) skillArray[i].push(value);
+                    if ((sumLevel + value) <= getSkillPointMax(classNum2)) skillArray[i].push(value);
                     else skillArray[i].push(0);
                 } else if (value < 0){
-                    if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skillArray[i].push(skillMax);
-                    else skillArray[i].push((getGrade(classNum2) * 15) - sumLevel);
+                    if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skillArray[i].push(skillMax);
+                    else skillArray[i].push((getSkillPointMax(classNum2)) - sumLevel);
                 }  else skillArray[i].push(0);
+                updateSkillData(classNum2, skillIndex);
                 updatePage(false);
                 return;
             }
@@ -131,15 +164,60 @@
         skill.push(grade);
         skill.push(skillIndex);
         if (value > 0){
-            if ((sumLevel + value) <= getGrade(classNum2) * 15) skill.push(value);
-            else sskill.push(0);
+            if ((sumLevel + value) <= getSkillPointMax(classNum2)) skill.push(value);
+            else skill.push(0);
         } else if (value < 0){
-            if ((sumLevel + skillMax) <= getGrade(classNum2) * 15) skill.push(skillMax);
-            else skill.push((getGrade(classNum2) * 15) - sumLevel);
+            if ((sumLevel + skillMax) <= getSkillPointMax(classNum2)) skill.push(skillMax);
+            else skill.push((getSkillPointMax(classNum2)) - sumLevel);
         }  else skill.push(0);
         skillArray.push(skill);
+        updateSkillData(classNum2, skillIndex);
         updatePage(false);
         return;
+    }
+
+    function addAbilLevel(classNum2, abilIndex, abilMax, value){
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (abilityArray[i][0] === classNum2){
+                for (var j = 1; j < abilityArray[i].length; j +=2){
+                    if (abilityArray[i][j] === abilIndex){
+                        if ((abilityArray[i][j + 1] + value) > abilMax){
+                            abilityArray[i][j + 1] = 0;
+                        } else if ((abilityArray[i][j + 1] + value) < 0) {
+                            abilityArray[i][j + 1] = abilMax
+                        } else {
+                            abilityArray[i][j + 1] += value;
+                        }
+                        updateAbilityData(classNum2, abilIndex);
+                        updateSkillData();
+                        updatePage(false);
+                        return;
+                    }
+                }
+                abilityArray[i].push(abilIndex);
+                if (value > 0){
+                    abilityArray[i].push(value);
+                } else if (value < 0){
+                    abilityArray[i].push(abilMax);
+                }  else abilityArray[i].push(value);
+                updateAbilityData(classNum2, abilIndex);
+                updateSkillData();
+                updatePage(false);
+                return;
+            }
+        }
+        var ability = [];
+        ability.push(classNum2);
+        ability.push(abilIndex);
+        if (value > 0){
+            ability.push(value);
+        } else if (value < 0){
+            ability.push(abilMax);
+        }  else ability.push(value);
+        abilityArray.push(ability);
+        updateAbilityData(classNum2, abilIndex);
+        updateSkillData();
+        updatePage(false);
     }
 
     function getGrade(classNum2){
@@ -150,14 +228,23 @@
         return grade;
     }
 
+    function getSkillPointMax(classNum2){
+        if (classNum2 == undefined)
+            return 0;
+        else if (classNum2 == 1)
+            return 15;
+        else
+            return 15*3;
+    }
+
     function AsciiToNumber(char){
         var ascii = char.charCodeAt(0);
         if (ascii >= 48 && ascii <= 57){
-            return ascii - 48;
+            return Number(ascii - 48);
         } else if (ascii >= 97 && ascii <= 122){
-            return ascii - 97 + 10;
+            return Number(ascii - 97 + 10);
         } else if (ascii >= 65 && ascii <= 90){
-            return ascii - 65 + 26;
+            return Number(ascii - 65 + 36);
         }
         return -1;
     }
@@ -167,9 +254,13 @@
             return String.fromCharCode(48 + num);
         } else if (num >= 10 && num <= 35){
             return String.fromCharCode(97 + num - 10);
-        } else if (num >= 36 && num <= 51){
-            return String.fromCharCode(65 + num - 26);
+        } else if (num >= 36 && num <= 61){
+            return String.fromCharCode(65 + num - 36);
         }
+    }
+
+    function getNumberAsciiMax() {
+        return 61;
     }
 
     function getQueryVariable(variable){
@@ -218,6 +309,124 @@
                 }
             }
         }
+        var abilLvContents = document.getElementsByClassName("abilityLv");
+        if (abilLvContents != undefined){
+            for (var i = 0; i < abilLvContents.length; i ++){
+                var splited = abilLvContents[i].id.split(",");
+                var classNum2 = Number(splited[0]);
+                var abilIndex = Number(splited[1]);
+                var found = false;
+                for (var k = 0; k < abilityArray.length; k ++){
+                    if (abilityArray[k][0] === classNum2){
+                        for (var j = 1; j < abilityArray[k].length; j +=2){
+                            if (abilityArray[k][j] === abilIndex){
+                                abilLvContents[i].innerHTML = abilityArray[k][j + 1].toString();
+                                found = true;
+                                break;;
+                            }
+                        }
+                    }
+                    if (found) break;
+                }
+            }
+        }
+        var abilityPntSum = document.getElementsByClassName("abilityPntSum");
+        if (abilityPntSum != undefined){
+            var pntSum = [];
+            var pntTotalSum = 0;
+            for (var i = 0; i < abilityArray.length; i ++){
+                if (abilityArray[i].length == 0) continue;
+                pntSum[abilityArray[i][0]] = 0;
+                for (var j = 1; j < abilityArray[i].length; j +=2){
+                    if (abilityData[abilityArray[i][0]+','+abilityArray[i][j]]!=undefined && abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]]!=undefined && abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level > 0){
+                        for (var k = 1; k <= abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level; k ++){
+                            var pnt = methods[abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]].ScrCalcPrice](undefined,abilityData[abilityArray[i][0]+','+abilityArray[i][j]].ClassName,k,abilityJobData[abilityArray[i][0]+','+abilityArray[i][j]].MaxLevel);
+                            if (pnt != undefined && pnt.toString() != "NaN"){
+                                pntSum[abilityArray[i][0]] += pnt;
+                                pntTotalSum += pnt;
+                            }
+                        }
+                        //console.log(abilityArray[i][0] + " " + abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Name + " Lv:" + abilityData[abilityArray[i][0]+','+abilityArray[i][j]].Level + " Pnt:" + pntSum[abilityArray[i][0]]);
+                    }
+                }
+            }
+            for (var i = 0; i < abilityPntSum.length; i ++){
+                if (abilityPntSum[i].id != undefined && abilityPntSum[i].id.length > 0){
+                    if (pntSum[Number(abilityPntSum[i].id)] == undefined)
+                        abilityPntSum[i].innerHTML = 0;
+                    else
+                        abilityPntSum[i].innerHTML = numberWithCommas(pntSum[Number(abilityPntSum[i].id)]);
+                } else {
+                    abilityPntSum[i].innerHTML = numberWithCommas(pntTotalSum);
+                }
+            }
+        }
+    }
+
+    function updateSkillData(num2, skillIndex){
+        for (var i = 0; i < skillArray.length; i ++){
+            if (num2 != undefined && skillArray[i][0] != num2) continue;
+            for (var j = 2; j < skillArray[i].length; j +=2){
+                if (skillIndex == undefined || skillArray[i][j] == skillIndex){
+                    if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]!=undefined){
+                        skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
+                        var skill = skillData[skillArray[i][0]+"_"+skillArray[i][j]];0
+                        
+                        var calcData = [];
+                        calcData["SkillFactor"]=methods[skill.SkillFactor]==undefined?undefined:methods[skill.SkillFactor](skill);
+                        calcData["SkillSR"]=methods[skill.SkillSR]==undefined?undefined:methods[skill.SkillSR](skill);
+                        calcData["CaptionTime"]=methods[skill.CaptionTime]==undefined?undefined:methods[skill.CaptionTime](skill);
+                        calcData["CaptionRatio"]=methods[skill.CaptionRatio]==undefined?undefined:methods[skill.CaptionRatio](skill);
+                        calcData["CaptionRatio2"]=methods[skill.CaptionRatio2]==undefined?undefined:methods[skill.CaptionRatio2](skill);
+                        calcData["CaptionRatio3"]=methods[skill.CaptionRatio3]==undefined?undefined:methods[skill.CaptionRatio3](skill);
+                        calcData["SpendItemCount"]=methods[skill.SpendItemCount]==undefined?undefined:methods[skill.SpendItemCount](skill);
+
+                        var descList = document.getElementsByClassName("skill-desc");
+                        var skillParent;
+                        for (var k=0;k<descList.length;k++) {
+                            if(descList[k].id==skill.ClassID) {
+                                skillParent=descList[k];
+                                break;
+                            }
+                        }
+                        
+                        for (var k=0;k<skillParent.children.length;k++){
+                            if (skillParent.children[k] == undefined || skillParent.children[k].children == undefined) continue;
+                            for (var l=0;l<skillParent.children[k].children.length;l++){
+                                if (skillParent.children[k].children[l] == undefined) continue;
+                                if (skillParent.children[k].children[l].id == undefined) continue;
+                                if (calcData[skillParent.children[k].children[l].id] == undefined) continue;
+                                skillParent.children[k].children[l].innerHTML=calcData[skillParent.children[k].children[l].id];
+                            }
+                        }
+                    }
+                    if (skillIndex != undefined) return;
+                }
+            }
+        }
+    }
+
+    function updateAbilityData(num2, abilIndex){
+        var inputList = document.getElementsByClassName("AbilityData");
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (num2 != undefined && abilityArray[i][0] != num2) continue;
+            for (var j = 1; j < abilityArray[i].length; j +=2){
+                if (abilIndex == undefined || abilityArray[i][j] == abilIndex){
+                    if (abilityData[num2+','+abilIndex]!=undefined){
+                        abilityData[num2+','+abilIndex]["Level"]=abilityArray[i][j+1];
+
+                        if (inputList != undefined && inputList.length > 0){
+                            for (k = 0; k < inputList.length; k ++){
+                                if (inputList[k].id == ("Ability_" + abilityData[num2+','+abilIndex].ClassName)){
+                                    inputList[k].value = abilityArray[i][j+1];
+                                }
+                            }
+                        }
+                    }
+                    if (abilityArray != undefined) return;
+                }
+            }
+        }
     }
 
     function updatePage(refresh){
@@ -236,6 +445,22 @@
             }
         }
 
+        var abilStr = "";
+        for (var i = 0; i < abilityArray.length; i ++){
+            if (abilityArray[i].length > 0){
+                abilStr += NumberToAscii(abilityArray[i][0]);
+                for (var j = 1; j < abilityArray[i].length; j += 2){
+                    abilStr += NumberToAscii(abilityArray[i][j]);
+
+                    var ten = abilityArray[i][j + 1] / getNumberAsciiMax();
+                    var one = abilityArray[i][j + 1] % getNumberAsciiMax();
+                    abilStr += NumberToAscii(ten);
+                    abilStr += NumberToAscii(one);
+                }
+                if ((i + 1) < abilityArray.length) abilStr += ".";
+            }
+        }
+
         var queryStr = "?";
         //if (classStr.length > 0 || skillStr.length > 0){
             if (classStr.length > 0){
@@ -244,6 +469,10 @@
             if (skillStr.length > 0){
                 queryStr += "&";
                 queryStr += "skill=" + skillStr;
+            }
+            if (abilStr.length > 0){
+                queryStr += "&";
+                queryStr += "ability=" + abilStr;
             }
             if (refresh) {
                 window.location.href = url + queryStr;
@@ -270,19 +499,44 @@
     function onClickViewDetail() {
         var button = document.getElementById("viewDetailBtn");
         var detailsDesc = document.getElementsByClassName("skill-desc");
-        if (button != undefined && detailsDesc != undefined){
+        var detailsAbilDesc = document.getElementsByClassName("ability-desc");
+        if (button != undefined){
             if (button.classList.contains("active")){
-                for (var i = 0; i < detailsDesc.length; i ++){
-                    detailsDesc[i].classList.remove("active");
+                if (detailsDesc != undefined) {
+                    for (var i = 0; i < detailsDesc.length; i ++){
+                        detailsDesc[i].classList.remove("active");
+                    }
+                }
+                if (detailsAbilDesc != undefined) {
+                    for (var i = 0; i < detailsAbilDesc.length; i ++){
+                        detailsAbilDesc[i].classList.remove("active");
+                    }
                 }
                 button.classList.remove("active");
             } else {
-                for (var i = 0; i < detailsDesc.length; i ++){
-                    detailsDesc[i].classList.add("active");
+                if (detailsDesc != undefined) {
+                    for (var i = 0; i < detailsDesc.length; i ++){
+                        detailsDesc[i].classList.add("active");
+                    }
+                }
+                if (detailsAbilDesc != undefined) {
+                    for (var i = 0; i < detailsAbilDesc.length; i ++){
+                        detailsAbilDesc[i].classList.add("active");
+                    }
                 }
                 button.classList.add("active");
             }
         }
+    }
+
+    function GetJobGradeByName(pc, charName){
+        var splited = charName.split("_");
+        if (splited.length < 2) return 0;
+        return getGrade(Number(splited[1]));
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
 </script>

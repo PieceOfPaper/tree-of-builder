@@ -10,6 +10,7 @@ class TosModule {
         output = output.replace(/{#DD5500}/g, '<span style="color:#DD5500;">');
         output = output.replace(/{#7AE4FF}/g, '<span style="color:#7AE4FF;">');
         output = output.replace(/{#993399}/g, '<span style="color:#993399;">');
+        output = output.replace(/{#339999}/g, '<span style="color:#339999;">');
         output = output.replace(/{ol}/g, '<span style="font-weight:bold;">');
         output = output.replace(/{\/}/g, '</span>');
 
@@ -36,6 +37,8 @@ class TosModule {
         output = output.replace(/elseif/g, '}else if(');
         output = output.replace(/then/g, '){');
         output = output.replace(/end\n/g, '}\n');
+        output = output.replace(/end \n/g, '}\n');
+        output = output.replace(/  end  /g, '}');
         output = output.replace(/local/g, 'var');
         output = output.replace(/class/g, ' classData');
         output = output.replace(/math/g, 'Math');
@@ -47,6 +50,12 @@ class TosModule {
         output = output.replace(/ or /g, '||');
         output = output.replace(/\'YES\'/g, 'true');
         output = output.replace(/\'NO\'/g, 'false');
+        output = output.replace(/\.\./g, '+');
+
+        if (output.lastIndexOf('end') == output.length - 3){
+            output = output.substring(0, output.length - 3);
+            output += '}';
+        }
 
         var splited = output.split('\n');
         output = '';

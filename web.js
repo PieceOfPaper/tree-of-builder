@@ -137,11 +137,22 @@ loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){
 loadTable('recipe', 'ies.ipf/recipe.ies');
 loadTable('item_equip_classtype', 'ies.ipf/item_equip_classtype.ies');
 loadTable('item_equip_default', 'ies.ipf/item_equip_default.ies');
+loadTable('setitem', 'ies.ipf/setitem.ies');
+loadTable('legend_recipe', 'ies.ipf/legend_recipe.ies');
+loadTable('legend_setitem', 'ies.ipf/legend_setitem.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
     fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
       data['TableName'] = name;
+      for(var param in data){
+        if (data[param] == undefined) continue;
+        if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
+          continue;
+        } else if (Number(data[param]).toString() != "NaN" && (Number(data[param]).toString().length == data[param].length || data[param].indexOf('\.') > 0)){
+          data[param] = Number(data[param]);
+        }
+      }
       tableData[name].push(data);
     }).on('end', function(){
       console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
@@ -157,6 +168,14 @@ function loadTable(name, path, callback){
       console.log('download table [' + name + '] ' + path);
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
         data['TableName'] = name;
+        for(var param in data){
+          if (data[param] == undefined) continue;
+          if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
+            continue;
+          } else if (Number(data[param]).toString() != "NaN" && (Number(data[param]).toString().length == data[param].length  || data[param].indexOf('\.') > 0)){
+            data[param] = Number(data[param]);
+          }
+        }
         tableData[name].push(data);
       }).on('end', function(){
         console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
@@ -178,6 +197,7 @@ scriptArray.push('shared.ipf/script/ability_price.lua');
 scriptArray.push('shared.ipf/script/ability_unlock.lua');
 scriptArray.push('shared.ipf/script/item_calculate.lua');
 scriptArray.push('shared.ipf/script/item_transcend_shared.lua');
+scriptArray.push('shared.ipf/script/calc_pvp_item.lua');
 //for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
 generateLuaScript(scriptArray, 0, function(result){
   // 기존 데이터 저장
@@ -364,7 +384,7 @@ app.get('/', function (req, response) {
     // }
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
     output = output.replace(/%IllustMention%/g, illustNpcText);
@@ -417,7 +437,7 @@ app.use('/Buff', buffPage);
 var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
 app.use('/Item', itemPage);
 
-var builderPage = require('./web_script/web_builder')(app, tableData);
+var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);

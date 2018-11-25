@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <body>
-
+    <link rel="stylesheet" type="text/css" href="../style.css">
     <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
 <script>
     var filter = [];
     filter["Rank"] = "[3,5]";
+    createLoadingUI();
     requestGetData("job", filter, function(array){
         console.log(array);
+        destroyLoadingUI();
     });
 </script>
 

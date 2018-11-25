@@ -25,7 +25,7 @@ module.exports = function(app, tableData, scriptData){
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < skillTable.length; i ++){
-        if (skillTable[i].ClassID === request.query.id){
+        if (skillTable[i].ClassID === Number(request.query.id)){
           skillDetailPage(i, request, response);
           return;
         }
@@ -354,7 +354,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var output = layout.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    output = output.replace(/style.css/g, '../style.css');
 
     output = output.replace(/%JobFilter%/g, jobFilterString);
     output = output.replace(/%ClassTypeFilter%/g, classTypeFilterString);
@@ -367,7 +367,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%SearchResult%/g, resultString);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
     //console.log(request.query.searchType + " " + request.query.searchName);
@@ -439,6 +439,7 @@ module.exports = function(app, tableData, scriptData){
 
     captionScript += 'function GetSkillOwner(skill){'
     captionScript += 'var playerSetting = {';
+    captionScript +=  'Lv:Number(1),';
     captionScript +=  'Level:Number(1),';
     captionScript +=  'SR:Number(3),';
     captionScript +=  'STR:Number(0),';
@@ -454,13 +455,19 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=     'var abilitySetting = {';
     captionScript +=      'Level:Number(document.getElementById("Ability_" + ability).value),';
     captionScript +=    '};';
+    //captionScript +=    'console.log("GetAbility:"+abilitySetting);'; 
     captionScript +=    'return abilitySetting;';
     captionScript +=  '}';
     captionScript +=  'return undefined;';
     captionScript += '}';
 
-    captionScript += 'function TryGetProp(data, prop){ ';
-    captionScript +=  'if (data[prop] === undefined) return 0;'; 
+    captionScript += 'function TryGetProp(data, prop, defValue){ ';
+    captionScript +=  'if (data[prop] === undefined) {';
+    //captionScript +=    'console.log("TryGetProb:null");';
+    //captionScript +=    'console.log(data);';
+    captionScript +=    'if (defValue != undefined) return defValue;'; 
+    captionScript +=    'return 0; }';
+    //captionScript +=  'console.log("TryGetProb:"+data[prop]);';
     captionScript +=  'return data[prop];'; 
     captionScript += '}';
 
@@ -476,6 +483,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
     captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
     captionScript +=  'SpendItemBaseCount:' + skillTable[index].SpendItemBaseCount + ',';
+    captionScript +=  'ReinforceAbility:"' + skillTable[index].ReinforceAbility + '",';
     captionScript += '};';
 
     captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
@@ -501,13 +509,16 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     captionScript += 'function updateLuaScripts(){';
-    captionScript +=  'if (document.getElementById("SkillFactor") != undefined) document.getElementById("SkillFactor").innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SkillSR") != undefined) document.getElementById("SkillSR").innerHTML=' + skillTable[index].SkillSR + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionTime") != undefined) document.getElementById("CaptionTime").innerHTML=' + skillTable[index].CaptionTime + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio") != undefined) document.getElementById("CaptionRatio").innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio2") != undefined) document.getElementById("CaptionRatio2").innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("CaptionRatio3") != undefined) document.getElementById("CaptionRatio3").innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
-    captionScript +=  'if (document.getElementById("SpendItemCount") != undefined) document.getElementById("SpendItemCount").innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
+    captionScript +=  'var spans=document.getElementsByTagName("span");';
+    captionScript +=  'if (spans != undefined) { for (var i=0; i <spans.length; i ++) {';
+    captionScript +=    'if (spans[i].id == "SkillFactor") spans[i].innerHTML=' + skillTable[index].SkillFactor + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "SkillSR") spans[i].innerHTML=' + skillTable[index].SkillSR + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionTime") spans[i].innerHTML=' + skillTable[index].CaptionTime + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio") spans[i].innerHTML=' + skillTable[index].CaptionRatio + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio2") spans[i].innerHTML=' + skillTable[index].CaptionRatio2 + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "CaptionRatio3") spans[i].innerHTML=' + skillTable[index].CaptionRatio3 + '(currentSkill);';
+    captionScript +=    'if (spans[i].id == "SpendItemCount") spans[i].innerHTML=' + skillTable[index].SpendItemCount + '(currentSkill);';
+    captionScript +=  '} } ';
     captionScript += '}';
 
     for (var i = 0; i < skillAbility.length; i ++){
@@ -530,16 +541,17 @@ module.exports = function(app, tableData, scriptData){
       captionScript += '}';
     }
 
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
-    captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
 
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
     captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    captionScript += tos.Lua2JS(scriptData['SCR_REINFORCEABILITY_TOOLTIP']);
     captionScript += '</script>';
 
     var stanceString = '';
@@ -553,17 +565,27 @@ module.exports = function(app, tableData, scriptData){
 
     var overHeat = 1;
     if (skillTable[index].OverHeatGroup != undefined && skillTable[index].OverHeatGroup.length > 0 && skillTable[index].SklUseOverHeat > 0){
-      for (var i = 0; i < cooldownTable.length; i ++){
-        if (cooldownTable[i].ClassName === skillTable[index].OverHeatGroup){
-          overHeat = cooldownTable[i].MaxOverTime / skillTable[index].SklUseOverHeat;
-          break;
-        }
-      }
+      // for (var i = 0; i < cooldownTable.length; i ++){
+      //   if (cooldownTable[i].ClassName === skillTable[index].OverHeatGroup){
+      //     overHeat = cooldownTable[i].MaxOverTime / skillTable[index].SklUseOverHeat;
+      //     break;
+      //   }
+      // }
+      overHeat = skillTable[index].SklUseOverHeat;
     }
+
+    var rawScript = '';
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0 && scriptData[skillTable[index].SkillFactor] != undefined) rawScript += '<tr><td>SkillFactor</td><td class="script">' + scriptData[skillTable[index].SkillFactor] + '</td></tr>';
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0 && scriptData[skillTable[index].SkillSR] != undefined) rawScript += '<tr><td>SkillSR</td><td class="script">' + scriptData[skillTable[index].SkillSR] + '</td></tr>';
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0 && scriptData[skillTable[index].CaptionTime] != undefined) rawScript += '<tr><td>CaptionTime</td><td class="script">' + scriptData[skillTable[index].CaptionTime] + '</td></tr>';
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0 && scriptData[skillTable[index].CaptionRatio] != undefined) rawScript += '<tr><td>CaptionRatio</td><td class="script">' + scriptData[skillTable[index].CaptionRatio] + '</td></tr>';
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0 && scriptData[skillTable[index].CaptionRatio2] != undefined) rawScript += '<tr><td>CaptionRatio2</td><td class="script">' + scriptData[skillTable[index].CaptionRatio2] + '</td></tr>';
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0 && scriptData[skillTable[index].CaptionRatio3] != undefined) rawScript += '<tr><td>CaptionRatio3</td><td class="script">' + scriptData[skillTable[index].CaptionRatio3] + '</td></tr>';
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && scriptData[skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td><td class="script">' + scriptData[skillTable[index].SpendItemCount] + '</td></tr>';
 
 
     var output = layout_detail.toString();
-    output = output.replace(/style.css/g, '../Layout/style.css');
+    //output = output.replace(/style.css/g, '../Layout/style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
@@ -586,6 +608,16 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%BasicCoolDown%/g, Number(skillTable[index].BasicCoolDown)/1000 + 's');
     output = output.replace(/%OverHeat%/g, overHeat);
 
+    output = output.replace(/%DefaultHitDelay%/g, Number(skillTable[index].DefaultHitDelay)/1000 + 's');
+    output = output.replace(/%ShootTime%/g, Number(skillTable[index].ShootTime)/1000 + 's');
+    output = output.replace(/%CancelTime%/g, Number(skillTable[index].CancelTime)/1000 + 's');
+    output = output.replace(/%DelayTime%/g, Number(skillTable[index].DelayTime)/1000 + 's');
+    output = output.replace(/%DeadHitDelay%/g, Number(skillTable[index].DeadHitDelay)/1000 + 's');
+    output = output.replace(/%HitTime%/g, Number(skillTable[index].HitTime)/1000 + 's');
+    output = output.replace(/%AniTime%/g, Number(skillTable[index].AniTime)/1000 + 's');
+
+    output = output.replace(/%Keyword%/g, skillTable[index].Keyword==undefined?'':skillTable[index].Keyword.replace(/;/g,', '));
+
     output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
     output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
 
@@ -593,7 +625,9 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
-    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+    output = output.replace(/%RawScripts%/g, rawScript);
+
+    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
   }
