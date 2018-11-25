@@ -133,6 +133,7 @@ loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){
 loadTable('recipe', 'ies.ipf/recipe.ies');
 loadTable('item_equip_classtype', 'ies.ipf/item_equip_classtype.ies');
 loadTable('item_equip_default', 'ies.ipf/item_equip_default.ies');
+loadTable('setitem', 'ies.ipf/setitem.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
