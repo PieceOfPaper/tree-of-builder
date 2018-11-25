@@ -608,6 +608,16 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%BasicCoolDown%/g, Number(skillTable[index].BasicCoolDown)/1000 + 's');
     output = output.replace(/%OverHeat%/g, overHeat);
 
+    output = output.replace(/%DefaultHitDelay%/g, Number(skillTable[index].DefaultHitDelay)/1000 + 's');
+    output = output.replace(/%ShootTime%/g, Number(skillTable[index].ShootTime)/1000 + 's');
+    output = output.replace(/%CancelTime%/g, Number(skillTable[index].CancelTime)/1000 + 's');
+    output = output.replace(/%DelayTime%/g, Number(skillTable[index].DelayTime)/1000 + 's');
+    output = output.replace(/%DeadHitDelay%/g, Number(skillTable[index].DeadHitDelay)/1000 + 's');
+    output = output.replace(/%HitTime%/g, Number(skillTable[index].HitTime)/1000 + 's');
+    output = output.replace(/%AniTime%/g, Number(skillTable[index].AniTime)/1000 + 's');
+
+    output = output.replace(/%Keyword%/g, skillTable[index].Keyword==undefined?'':skillTable[index].Keyword.replace(/;/g,', '));
+
     output = output.replace(/%Caption%/g, tos.parseCaption(skillTable[index].Caption));
     output = output.replace(/%Caption2%/g, tos.parseCaption(skillTable[index].Caption2));
 
