@@ -263,16 +263,24 @@ module.exports = function(app, tableData, scriptData){
     var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
 
+    //set data
     var setItemTable = tableData['setitem'];
-    var setData;
+    var setList = [];
     for (var i = 0; i < setItemTable.length; i ++){
       for (var j = 1; j <= 7; j ++){
         if (setItemTable[i]['ItemName_' + j] == itemTable[index].ClassName){
-          setData = setItemTable[i];
+          setList.push(setItemTable[i]);
           break;
         }
       }
-      if (setData != undefined) break;
+    }
+
+    //legend set data
+    var legendSetList = [];
+    for(var i = 0; i < tableData['legend_setitem'].length; i ++){
+      if (tableData['legend_setitem'][i].LegendGroup == itemTable[index].LegendGroup){
+        legendSetList.push(tableData['legend_setitem'][i]);
+      }
     }
 
     var icon = '';
@@ -304,24 +312,28 @@ module.exports = function(app, tableData, scriptData){
 
 
     var setDataString = '';
-    if (setData != undefined){
+    setDataString += '<div>';
+    if (setList.length > 0) {
+      setDataString += '<h2>Set</h2>';
+    }
+    for (var setIndex = 0; setIndex < setList.length; setIndex ++){
       setDataString += '<div>';
-      setDataString += '<h3>' + setData.Name + '</h3>';
+      setDataString += '<h3>' + setList[setIndex].Name + '</h3>';
       //desc
       for(var i=1;i<=7;i++){
-        if (setData['EffectDesc_' + i] == undefined || setData['EffectDesc_' + i].length == 0) continue;
-        setDataString += '<p>' + tos.parseCaption(setData['EffectDesc_' + i]) + '</p>';
+        if (setList[setIndex]['EffectDesc_' + i] == undefined || setList[setIndex]['EffectDesc_' + i].length == 0) continue;
+        setDataString += '<p>' + tos.parseCaption(setList[setIndex]['EffectDesc_' + i]) + '</p>';
       }
       //material
       for(var i=1;i<=7;i++){
-        if (setData['ItemName_' + i] == undefined || setData['ItemName_' + i ].length == 0) continue;
+        if (setList[setIndex]['ItemName_' + i] == undefined || setList[setIndex]['ItemName_' + i ].length == 0) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',setData['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',setData['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',setData['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',setData['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',setData['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',setData['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',setList[setIndex]['ItemName_' + i]);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
@@ -339,7 +351,36 @@ module.exports = function(app, tableData, scriptData){
         }
       }
       setDataString += '</div>';
+      setDataString += '<hr>';
     }
+    setDataString += '</div>';
+
+    var legendSetDataString = '';
+    legendSetDataString += '<div>';
+    if (legendSetList.length > 0) {
+      legendSetDataString += '<h2>Legend Set</h2>';
+    }
+    for (var i = 0; i < legendSetList.length; i ++){
+      legendSetDataString += '<div>';
+      legendSetDataString += '<h3>' + legendSetList[i].Name + '</h3>';
+      //desc
+      for(var j=1;j<=5;j++){
+        if (legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) continue;
+        legendSetDataString += '<p>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
+      }
+      //skill
+      for(var j=1;j<=5;j++){
+        if (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0) continue;
+        var skillData = tos.FindDataClassName(tableData,'skill',legendSetList[i]['SetItemSkill_' + j]);
+        if (skillData == null) continue;
+        var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
+        legendSetDataString += '<a href="../Skill/?id=' + skillData.ClassID + '">' + materialIcon  + ' ' + skillData.Name + '</a>';
+        legendSetDataString += '<br/>';
+      }
+      legendSetDataString += '</div>';
+      legendSetDataString += '<hr>';
+    }
+    legendSetDataString += '</div>';
 
     var captionScript = '';
     captionScript += '<script>';
@@ -569,6 +610,7 @@ module.exports = function(app, tableData, scriptData){
     }
 
     output = output.replace(/%SetData%/g, setDataString);
+    output = output.replace(/%LegendSetData%/g, legendSetDataString);
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
