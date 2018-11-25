@@ -431,7 +431,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
     captionScript += 'updateBasicValue();';
     captionScript += 'function updateBasicValue(){';
-    if (itemTable[index].GroupName == "Weapon") {
+    if (itemTable[index].GroupName == "Weapon" || itemTable[index].GroupName == "SubWeapon") {
       captionScript +=  'SCR_REFRESH_WEAPON(itemData, 0, 0, 0);';
     }
     else if (itemTable[index].GroupName == "Armor") {
