@@ -419,6 +419,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'Reinforce_2:' + 0  + ',';
     captionScript +=  'ReinforceRatio:' + itemTable[index].ReinforceRatio  + ',';
     captionScript +=  'BuffValue:' + 0  + ',';
+    captionScript +=  'StringArg:"' + itemTable[index].StringArg + '",';
     captionScript += '};';
 
 
