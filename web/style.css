@@ -53,16 +53,18 @@ table, td, th {
     width: calc(100vw - 20px);
     position: fixed;
     top: 0;
-    height: 50px;
+    height: 70px;
     /*background-color: bisque;*/
     overflow: auto;
     white-space: nowrap;
+    overflow: -moz-scrollbars-horizontal; 
+    overflow-x: scroll;
 }
 .top-menu button {
     margin: 0;
     padding: 0;
     width: 50px;
-    height: 50px;
+    height: 70px;
     border: 0;
     background-color: rgba(0,0,0,0);
     vertical-align: middle;
@@ -74,7 +76,7 @@ table, td, th {
     margin: 0;
     padding: 0;
     width: 50px;
-    height: 50px;
+    height: 70px;
     border: 0;
     background-color: rgba(0,0,0,0);
     vertical-align: middle;
@@ -94,6 +96,10 @@ table, td, th {
 .top-menu a img {
     margin-top: 5px;
     width: 40px;
+}
+.top-menu a p {
+    margin: 0;
+    font-size: 0.75em;
 }
 .top-menu a:hover img{
     transform:scale(1.1);

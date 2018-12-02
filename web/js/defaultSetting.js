@@ -34,11 +34,15 @@ function onInitTopMenu(isHome){
         for(var param in topMenuButtons){
             var nodeButton = document.createElement("a");
             var nodeButtonImg = document.createElement("img");
+            var nodeButtonText = document.createElement("p");
             nodeButton.id=param;
             if (isHome) nodeButton.href=topMenuButtons[param].Path;
             else nodeButton.href="../"+topMenuButtons[param].Path;
             nodeButtonImg.src=topMenuButtons[param].Img;
-            topMenuElements[i].appendChild(nodeButton).appendChild(nodeButtonImg);
+            nodeButtonText.innerText=param.toUpperCase();
+            nodeButton.appendChild(nodeButtonImg);
+            nodeButton.appendChild(nodeButtonText);
+            topMenuElements[i].appendChild(nodeButton);
         }
     }
 }
