@@ -24,23 +24,23 @@ module.exports = function(app, tableData, scriptData){
 
         var classArray = [];
         var skillArray = [];
-        var classCount = [];
+        //var classCount = [];
         var abilityArray = [];
         if (request.query.class != undefined && request.query.class.length > 0){
-            for (var i = 0; i < jobTable.length; i ++){
-                classCount.push(0);
-            }
+            // for (var i = 0; i < jobTable.length; i ++){
+            //     classCount.push(0);
+            // }
             for (var i = 0; i < request.query.class.length; i ++){
                 classArray.push(AsciiToNumber(request.query.class[i]));
-                if (i > 0){
-                    for (var j = 0; j < jobTable.length; j ++){
-                        if (GetJobNumber1(jobTable[j].ClassName) === classArray[0] &&
-                            GetJobNumber2(jobTable[j].ClassName) === classArray[i]){
-                            classCount[j] ++;
-                            break;
-                        }
-                    }
-                }
+                // if (i > 0){
+                //     for (var j = 0; j < jobTable.length; j ++){
+                //         if (GetJobNumber1(jobTable[j].ClassName) === classArray[0] &&
+                //             GetJobNumber2(jobTable[j].ClassName) === classArray[i]){
+                //             classCount[j] ++;
+                //             break;
+                //         }
+                //     }
+                // }
             }
         }
         if (request.query.skill != undefined && request.query.skill.length > 0){
@@ -121,7 +121,7 @@ module.exports = function(app, tableData, scriptData){
             for (var i = 0; i < jobTable.length; i ++){
                 if (GetJobNumber1(jobTable[i].ClassName) != classArray[0]) continue;
                 if (jobTable[i].Rank > request.query.class.length) continue;
-                if (jobTable[i].MaxCircle <= classCount[i]) continue;
+                //if (jobTable[i].MaxCircle <= classCount[i]) continue;
                 jobList.push(jobTable[i]);
             }
             for (var i = 0; i < jobList.length; i ++){
@@ -138,13 +138,14 @@ module.exports = function(app, tableData, scriptData){
         output +=       '<div class="builder-skill-area">';
         output +=       '<script>var skillData=[]; var abilityData=[];  var abilityJobData=[];</script>';
         var skillIndex = 0;
-        for (var i = 0; i < classCount.length; i ++){
-            if (classCount[i] <= 0)
-                continue;
+        for (var i = 1; i < classArray.length; i ++){
+            // if (classCount[i] <= 0)
+            //     continue;
+            var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
             output +=       '<div class="class">';
-            //output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
-            output +=       '<h3>' + jobTable[i].Name + '</h3>';
-            var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
+            //output +=       '<h3>' + jobData.Name + ' ' + classCount[i] + ' Circle</h3>';
+            output +=       '<h3>' + jobData.Name + '</h3>';
+            var jobNum2 = GetJobNumber2(jobData.ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
                 if (skillArray[k][0] == jobNum2){
@@ -159,7 +160,7 @@ module.exports = function(app, tableData, scriptData){
             output +=       '<p>Ability Point: <span id="' + jobNum2 + '" class="abilityPntSum"></span></p>';
             // ------ Skill
             for (var j = 0; j < skilltreeTable.length; j ++){
-                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
+                if (skilltreeTable[j].ClassName.indexOf(jobData.ClassName + '_') > -1){
                     var skillTableIndex;
                     for (var k = 0; k < skillTable.length; k ++){
                         if (skilltreeTable[j].SkillName === skillTable[k].ClassName){
