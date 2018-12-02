@@ -211,7 +211,7 @@ module.exports = function(app, tableData, scriptData){
             // ------ Ability
             var abilIndex = 0;
             for (var j = 0; j < abilityTable.length; j ++){
-                if (abilityTable[j].Job == jobTable[i].ClassName){
+                if (abilityTable[j].Job == jobData.ClassName){
                     var abil_job = undefined;
                     for (var k = 0; k < abilityJobTable.length; k ++){
                         if (abilityTable[j].ClassName == abilityJobTable[k].ClassName){
