@@ -18,6 +18,7 @@ module.exports = function(app, tableData, scriptData){
         var abilityJobTable = tableData['ability_job'];
 
         var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
+        var CLASS_MAX = 4;
 
         var luaMethodList = [];
 
@@ -85,12 +86,14 @@ module.exports = function(app, tableData, scriptData){
         output +=           '<div class="builder-class-selected">';
         if (request.query.class === undefined || request.query.class === ''){
             //선택된 클래스가 없음.
+            output +=   '<h1 style="width:calc(100vw-20px); text-align:center;">Select Class</h1>';
         } else {
            for (var i = 1; i < classArray.length; i ++){
                 var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
                 output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
         }
@@ -101,9 +104,10 @@ module.exports = function(app, tableData, scriptData){
         if (request.query.class === undefined || request.query.class === ''){
             for (var i = 0; i < jobTable.length; i ++){
                 if (jobTable[i].Rank > 1) continue;
-                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
+                output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
                 output +=       '<img src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
-                output +=   '</btn>';
+                output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
+                output +=   '</div>';
             }
             // for (var i = 1; i <= 4; i ++){
             //     var jobData = tos.GetJobData(tableData, i, 1);
@@ -112,7 +116,7 @@ module.exports = function(app, tableData, scriptData){
             //     output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
             //     output +=   '</btn>';
             // }
-        } else {
+        } else if (classArray.length <= CLASS_MAX) {
             var jobList = [];
             for (var i = 0; i < jobTable.length; i ++){
                 if (GetJobNumber1(jobTable[i].ClassName) != classArray[0]) continue;
@@ -121,9 +125,10 @@ module.exports = function(app, tableData, scriptData){
                 jobList.push(jobTable[i]);
             }
             for (var i = 0; i < jobList.length; i ++){
-                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
+                output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
                 output +=       '<img src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
-                output +=   '</btn>';
+                output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
+                output +=   '</div>';
             }
         }
         output +=           '</div>';

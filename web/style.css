@@ -319,6 +319,26 @@ footer img{
 }
 
 .builder-class-select {
+    white-space: pre-wrap;
+}
+
+.builder-class-btn {
+    width:64px;
+    display: inline-block;
+}
+.builder-class-btn img{
+    width:64px;
+    height:64px;
+}
+.builder-class-btn .class-name {
+    margin: 0;
+    padding: 0;
+    width: 64px;
+    font-size: 0.75em;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
 }
 
 #viewDetailBtn {
