@@ -58,7 +58,7 @@ table, td, th {
     overflow: auto;
     white-space: nowrap;
     overflow: -moz-scrollbars-horizontal; 
-    overflow-x: scroll;
+    overflow-x: auto;
     overflow-y: hidden;
 }
 .top-menu button {
