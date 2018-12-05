@@ -122,6 +122,15 @@ module.exports = function(app, tableData, scriptData){
                 if (GetJobNumber1(jobTable[i].ClassName) != classArray[0]) continue;
                 if (jobTable[i].Rank > request.query.class.length) continue;
                 //if (jobTable[i].MaxCircle <= classCount[i]) continue;
+                var isHas = false;
+                for (var j = 1; j < classArray.length; j ++){
+                    var jobData = tos.GetJobData(tableData, classArray[0], classArray[j]);
+                    if (jobData != undefined && jobData.ClassID == jobTable[i].ClassID){
+                        isHas = true;
+                        break;
+                    }
+                }
+                if (isHas) continue;
                 jobList.push(jobTable[i]);
             }
             for (var i = 0; i < jobList.length; i ++){
