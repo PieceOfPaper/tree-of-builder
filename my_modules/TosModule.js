@@ -45,7 +45,10 @@ class TosModule {
         output = output.replace(/SyncFloor/g, 'Math.round');
         output = output.replace(/--/g, '\/\/');
         output = output.replace(/~=/g, '!=');
-        output = output.replace(/nil/g, 'undefined');
+        //output = output.replace(/nil/g, 'undefined');
+        output = output.replace(/ nil/g, ' undefined');
+        output = output.replace(/nil /g, 'undefined ');
+        output = output.replace(/nil\n/g, 'undefined\n');
         output = output.replace(/ and /g, '&&');
         output = output.replace(/ or /g, '||');
         output = output.replace(/\'YES\'/g, 'true');
