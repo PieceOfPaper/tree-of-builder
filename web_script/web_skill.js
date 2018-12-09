@@ -526,6 +526,7 @@ module.exports = function(app, tableData, scriptData){
       captionScript += 'var Ability_' + skillAbility[i].ClassName + '=Number(0);';
 
       captionScript += 'function onClickLevelUpAbility_' + skillAbility[i].ClassName + '(){';
+      captionScript +=  'Ability_' + skillAbility[i].ClassName + ' = document.getElementById("Ability_' + skillAbility[i].ClassName + '").value;';
       captionScript +=  'Ability_' + skillAbility[i].ClassName + '++;';
       captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' > document.getElementById("Ability_' + skillAbility[i].ClassName + '").max) Ability_' + skillAbility[i].ClassName + ' = document.getElementById("Ability_' + skillAbility[i].ClassName + '").max;';
       captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
@@ -534,6 +535,7 @@ module.exports = function(app, tableData, scriptData){
       captionScript += '}';
 
       captionScript += 'function onClickLevelDownAbility_' + skillAbility[i].ClassName + '(){';
+      captionScript +=  'Ability_' + skillAbility[i].ClassName + ' = document.getElementById("Ability_' + skillAbility[i].ClassName + '").value;';
       captionScript +=  'Ability_' + skillAbility[i].ClassName + '--;';
       captionScript +=  'if (Ability_' + skillAbility[i].ClassName + ' < document.getElementById("Ability_' + skillAbility[i].ClassName + '").min) Ability_' + skillAbility[i].ClassName + '= document.getElementById("Ability_' + skillAbility[i].ClassName + '").min;';
       captionScript +=  'document.getElementById("Ability_' + skillAbility[i].ClassName + '").value = Ability_' + skillAbility[i].ClassName + ';';
