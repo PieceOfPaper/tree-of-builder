@@ -416,12 +416,12 @@ module.exports = function(app, tableData, scriptData){
       if (skillAbilityJob[i] === undefined){
         abilityString += '<td>Unused</td>';
       } else {
-        abilityString += '<td align="center">';
-        abilityString +=  '<input type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()">';
-        abilityString +=  '<div><button onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()">▲</button><button onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()">▼</button></div>';
+        abilityString += '<td align="center" style="width:calc(18px * 1.6666 * 2 + 10px);">';
+        abilityString +=  '<input class="lv-add-input" type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()"><br>';
+        abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center"><img src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
+      abilityString += '<td align="center"><img class="ability-icon" src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){

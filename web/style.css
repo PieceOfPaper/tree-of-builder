@@ -185,11 +185,17 @@ table, td, th {
     100% { background-position: -775px; }
 }
 
+.lv-add-input {
+    font-size: 1.1em;
+    height: 1.1em;
+}
+
 .lv-add-button {
     margin: 2px;
     padding: 0px;
     background-color: rgba(0,0,0,0);
     border: 0;
+    vertical-align: center;
 }
 .lv-add-button img {
     width: calc(18px * 1.6666);
@@ -318,7 +324,7 @@ footer img{
 .add-ability-area {
 
 }
-.add-ability-area img {
+.add-ability-area .ability-icon {
     width: 64px;
     height: 64px;
 }

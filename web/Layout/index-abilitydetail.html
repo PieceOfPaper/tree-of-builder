@@ -72,13 +72,14 @@
     
     <div>
         Prev
-        <input type="number" id="AbilityLevelPrev" min="0" max="1" value = "0" onchange="onChangeAbilityLevel()">
-        <button onclick="onClickLevelUpPrev()">▲</button><button onclick="onClickLevelDownPrev()">▼</button>
+        <input class="lv-add-input" type="number" id="AbilityLevelPrev" min="0" max="1" value = "0" onchange="onChangeAbilityLevel()"><br>
+        <button class="lv-add-button plus" onclick="onClickLevelUpPrev()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownPrev()"><img src="../img/button/btn_minus.png" /></button>
     </div>
+    <br>
     <div>
         Next
-        <input type="number" id="AbilityLevelNext" min="0" max="1" value = "1" onchange="onChangeAbilityLevel()">
-        <button onclick="onClickLevelUpNext()">▲</button><button onclick="onClickLevelDownNext()">▼</button>
+        <input class="lv-add-input" type="number" id="AbilityLevelNext" min="0" max="1" value = "1" onchange="onChangeAbilityLevel()"><br>
+        <button class="lv-add-button plus" onclick="onClickLevelUpNext()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownNext()"><img src="../img/button/btn_minus.png" /></button>
     </div>
     <p>Point:<span id="PricePoint">0</span></p>
     

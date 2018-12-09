@@ -24,13 +24,14 @@
     <br/>
     <div>
         Reinforce
-        <input type="number" id="ReinforceLevel" min="0" max="40" value = "0" onchange="onChangeReinforceLevel()">
-        <button onclick="onClickReinforceLevelUp()">▲</button><button onclick="onClickReinforceLevelDown()">▼</button>
+        <input class="lv-add-input" type="number" id="ReinforceLevel" min="0" max="40" value = "0" onchange="onChangeReinforceLevel()"><br>
+        <button class="lv-add-button plus" onclick="onClickReinforceLevelUp()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickReinforceLevelDown()"><img src="../img/button/btn_minus.png" /></button>
     </div>
+    <br>
     <div>
         Transcend
-        <input type="number" id="TranscendLevel" min="0" max="10" value = "0" onchange="onChangeTranscendLevel()">
-        <button onclick="onClickTranscendLevelUp()">▲</button><button onclick="onClickTranscendLevelDown()">▼</button>
+        <input class="lv-add-input" type="number" id="TranscendLevel" min="0" max="10" value = "0" onchange="onChangeTranscendLevel()"><br>
+        <button class="lv-add-button plus" onclick="onClickTranscendLevelUp()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickTranscendLevelDown()"><img src="../img/button/btn_minus.png" /></button>
     </div>
     <br/>
     <p>%Desc%</p>
