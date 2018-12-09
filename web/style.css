@@ -185,6 +185,35 @@ table, td, th {
     100% { background-position: -775px; }
 }
 
+.lv-add-button {
+    margin: 2px;
+    padding: 0px;
+    background-color: rgba(0,0,0,0);
+    border: 0;
+}
+.lv-add-button img {
+    width: calc(18px * 1.6666);
+    height: calc(19px * 1.6666);
+}
+.lv-add-button.plus img {
+    content: url("../img/button/btn_plus.png");
+}
+.lv-add-button.plus:hover img {
+    content: url("../img/button/btn_plus_cursoron.png");
+}
+.lv-add-button.plus:active img {
+    content: url("../img/button/btn_plus_clicked.png");
+}
+.lv-add-button.minus img {
+    content: url("../img/button/btn_minus.png");
+}
+.lv-add-button.minus:hover img {
+    content: url("../img/button/btn_minus_cursoron.png");
+}
+.lv-add-button.minus:active img {
+    content: url("../img/button/btn_minus_clicked.png");
+}
+
 
 /* ======== Main ======== */
 .main-illust {
@@ -327,7 +356,7 @@ footer img{
     width:64px;
     display: inline-block;
 }
-.builder-class-btn img{
+.builder-class-btn .class-icon{
     width:64px;
     height:64px;
 }
@@ -367,34 +396,6 @@ footer img{
     padding: 2px;
     margin-bottom: 5px;
 }
-.builder-skill-area .class .skill .lv-add-button {
-    margin: 2px;
-    padding: 0px;
-    background-color: rgba(0,0,0,0);
-    border: 0;
-}
-.builder-skill-area .class .skill .lv-add-button img {
-    width: calc(18px * 1.6666);
-    height: calc(19px * 1.6666);
-}
-.builder-skill-area .class .skill .lv-add-button.plus img {
-    content: url("../img/button/btn_plus.png");
-}
-.builder-skill-area .class .skill .lv-add-button.plus:hover img {
-    content: url("../img/button/btn_plus_cursoron.png");
-}
-.builder-skill-area .class .skill .lv-add-button.plus:active img {
-    content: url("../img/button/btn_plus_clicked.png");
-}
-.builder-skill-area .class .skill .lv-add-button.minus img {
-    content: url("../img/button/btn_minus.png");
-}
-.builder-skill-area .class .skill .lv-add-button.minus:hover img {
-    content: url("../img/button/btn_minus_cursoron.png");
-}
-.builder-skill-area .class .skill .lv-add-button.minus:active img {
-    content: url("../img/button/btn_minus_clicked.png");
-}
 
 .builder-skill-area .class .skill .skill-desc {
     text-align: left;
@@ -417,6 +418,10 @@ footer img{
 }
 .builder-skill-area .class .skill img {
     /*width:64px;*/
+    /*height:64px;*/
+}
+.builder-skill-area .class .skill .skill-icon {
+    width:64px;
     height:64px;
 }
 .builder-skill-area .class .skill p {
@@ -433,34 +438,6 @@ footer img{
     text-align: left;
     padding: 2px;
     margin-bottom: 5px;
-}
-.builder-skill-area .class .ability .lv-add-button {
-    margin: 2px;
-    padding: 0px;
-    background-color: rgba(0,0,0,0);
-    border: 0;
-}
-.builder-skill-area .class .ability .lv-add-button img {
-    width: calc(18px * 1.6666);
-    height: calc(19px * 1.6666);
-}
-.builder-skill-area .class .ability .lv-add-button.plus img {
-    content: url("../img/button/btn_plus.png");
-}
-.builder-skill-area .class .ability .lv-add-button.plus:hover img {
-    content: url("../img/button/btn_plus_cursoron.png");
-}
-.builder-skill-area .class .ability .lv-add-button.plus:active img {
-    content: url("../img/button/btn_plus_clicked.png");
-}
-.builder-skill-area .class .ability .lv-add-button.minus img {
-    content: url("../img/button/btn_minus.png");
-}
-.builder-skill-area .class .ability .lv-add-button.minus:hover img {
-    content: url("../img/button/btn_minus_cursoron.png");
-}
-.builder-skill-area .class .ability .lv-add-button.minus:active img {
-    content: url("../img/button/btn_minus_clicked.png");
 }
 
 .builder-skill-area .class .ability .ability-desc {
@@ -484,6 +461,10 @@ footer img{
 }
 .builder-skill-area .class .ability img {
     /*width:64px;*/
+    /*height:64px;*/
+}
+.builder-skill-area .class .ability .ability-icon {
+    width:64px;
     height:64px;
 }
 .builder-skill-area .class .ability p {

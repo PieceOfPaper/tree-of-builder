@@ -92,7 +92,7 @@ module.exports = function(app, tableData, scriptData){
                 var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
                 output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
@@ -105,7 +105,7 @@ module.exports = function(app, tableData, scriptData){
             for (var i = 0; i < jobTable.length; i ++){
                 if (jobTable[i].Rank > 1) continue;
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
-                output +=       '<img src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
+                output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
                 output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -135,7 +135,7 @@ module.exports = function(app, tableData, scriptData){
             }
             for (var i = 0; i < jobList.length; i ++){
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
+                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
                 output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -191,7 +191,7 @@ module.exports = function(app, tableData, scriptData){
                     // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
                     output +=       '<br>';
                     output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
@@ -240,7 +240,7 @@ module.exports = function(app, tableData, scriptData){
                         }
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
-                    output +=       '<img src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png"/>';
                     output +=       '<br>';
                     output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
