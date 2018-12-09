@@ -445,7 +445,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'STR:Number(0),';
     captionScript +=  'CON:Number(0),';
     captionScript +=  'INT:Number(0),';
-    captionScript +=  'SPR:Number(0),';
+    captionScript +=  'MNA:Number(0),';
     captionScript +=  'DEX:Number(0),';
     captionScript += '};';
     captionScript += 'return playerSetting; }';
@@ -476,35 +476,37 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function IsPVPServer(pc){ return 0; }';
     captionScript += 'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
 
-    captionScript += 'var currentSkill = {';
-    captionScript +=  'Level: Number(1),';
-    captionScript +=  'SklFactor:' + skillTable[index].SklFactor + ',';
-    captionScript +=  'SklFactorByLevel:' + skillTable[index].SklFactorByLevel + ',';
-    captionScript +=  'SklSR:' + skillTable[index].SklSR + ',';
-    captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
-    captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
-    captionScript +=  'SpendItemBaseCount:' + skillTable[index].SpendItemBaseCount + ',';
-    captionScript +=  'ReinforceAbility:"' + skillTable[index].ReinforceAbility + '",';
-    captionScript += '};';
+    // captionScript += 'var currentSkill = {';
+    // captionScript +=  'Level: Number(1),';
+    // captionScript +=  'SklFactor:' + skillTable[index].SklFactor + ',';
+    // captionScript +=  'SklFactorByLevel:' + skillTable[index].SklFactorByLevel + ',';
+    // captionScript +=  'SklSR:' + skillTable[index].SklSR + ',';
+    // captionScript +=  'AttackType:"' + skillTable[index].AttackType + '",';
+    // captionScript +=  'Attribute:"' + skillTable[index].Attribute + '",';
+    // captionScript +=  'SpendItemBaseCount:' + skillTable[index].SpendItemBaseCount + ',';
+    // captionScript +=  'ReinforceAbility:"' + skillTable[index].ReinforceAbility + '",';
+    // captionScript += '};';
+    captionScript += 'var currentSkill=' + JSON.stringify(skillTable[index]) + ';';
+    captionScript += 'currentSkill["Level"]=Number(1);';
 
     captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
     captionScript += 'onChangeSkillLevel();';
 
     captionScript += 'function onChangeSkillLevel(){';
-    captionScript +=  'currentSkill.Level = document.getElementById("SkillLevel").value;';
+    captionScript +=  'currentSkill.Level = Number(document.getElementById("SkillLevel").value);';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function onClickLevelUp(){';
     captionScript +=  'currentSkill.Level ++;';
-    captionScript +=  'if (currentSkill.Level > document.getElementById("SkillLevel").max) currentSkill.Level = document.getElementById("SkillLevel").max;';
+    captionScript +=  'if (currentSkill.Level > document.getElementById("SkillLevel").max) currentSkill.Level = Number(document.getElementById("SkillLevel").max);';
     captionScript +=  'document.getElementById("SkillLevel").value = currentSkill.Level;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
 
     captionScript += 'function onClickLevelDown(){';
     captionScript +=  'currentSkill.Level --;';
-    captionScript +=  'if (currentSkill.Level < document.getElementById("SkillLevel").min) currentSkill.Level = document.getElementById("SkillLevel").min;';
+    captionScript +=  'if (currentSkill.Level < document.getElementById("SkillLevel").min) currentSkill.Level = Number(document.getElementById("SkillLevel").min);';
     captionScript +=  'document.getElementById("SkillLevel").value = currentSkill.Level;';
     captionScript +=  'updateLuaScripts();';
     captionScript += '}';
