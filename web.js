@@ -154,6 +154,9 @@ loadTable('monster', 'ies.ipf/monster.ies', function(){
     });
   });
 });
+loadTable('statbase_monster', 'ies.ipf/statbase_monster.ies');
+loadTable('statbase_monster_race', 'ies.ipf/statbase_monster_race.ies');
+loadTable('statbase_monster_type', 'ies.ipf/statbase_monster_type.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -211,6 +214,7 @@ loadScript('shared.ipf/script/ability_unlock.lua');
 loadScript('shared.ipf/script/item_calculate.lua');
 loadScript('shared.ipf/script/item_transcend_shared.lua');
 loadScript('shared.ipf/script/calc_pvp_item.lua');
+loadScript('shared.ipf/script/calc_property_monster.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];

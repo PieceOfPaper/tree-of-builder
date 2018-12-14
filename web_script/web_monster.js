@@ -26,6 +26,64 @@ module.exports = function(app, tableData, scriptData){
     var layout_detail = fs.readFileSync('./web/MonsterPage/detail.html');
     function monsterDetailPage(index, request, response) {
         var monsterTable = tableData['monster'];
+        
+        var statScript = '';
+        statScript += '<script>';
+        statScript += 'var rawData=' + JSON.stringify(monsterTable[index]) + ';';
+        statScript += 'rawData["Lv"]=rawData["Level"];'
+        statScript += 'var statDataTable=[];'
+        statScript += 'statDataTable["Stat_Monster"]=' + JSON.stringify(tableData['statbase_monster']) + ';';
+        statScript += 'statDataTable["Stat_Monster_Race"]=' + JSON.stringify(tableData['statbase_monster_race']) + ';';
+        statScript += 'statDataTable["Stat_Monster_Type"]=' + JSON.stringify(tableData['statbase_monster_type']) + ';';
+        statScript += 'statDataTable["item_grade"]=' + JSON.stringify(tableData['item_grade']) + ';';
+
+        statScript += 'function TryGetProp(data, prop, defValue){';
+        statScript +=  'if (data[prop] === undefined) {';
+        statScript +=    'if (defValue != undefined) return defValue;'; 
+        statScript +=    'return 0; }';
+        statScript +=  'return data[prop];'; 
+        statScript += '}';
+
+        statScript += 'function GetExProp(data, prob){ ';
+        statScript +=  'return data[prob];'; 
+        statScript += '}';
+        
+        statScript += 'function GetClass(table, className){';
+        statScript +=   'for(var i=0;i<statDataTable[table].length;i++){';
+        statScript +=       'if (statDataTable[table][i].ClassName == className) return statDataTable[table][i];';
+        statScript +=   '}';
+        statScript +=   'return undefined;'; 
+        statScript += '}';
+
+        statScript += 'function GetClassByType(table, id){';
+        statScript +=   'return statDataTable[table][id-1];'; 
+        statScript += '}';
+
+        statScript += 'function SCR_MON_ITEM_ARMOR_DEF_CALC(pc){ return 0; }';
+        statScript += 'function SCR_MON_ITEM_ARMOR_MDEF_CALC(pc){ return 0; }';
+
+        statScript += 'document.getElementById("stat_STR").innerText=SCR_Get_MON_STR(rawData);';
+        statScript += 'document.getElementById("stat_CON").innerText=SCR_Get_MON_CON(rawData);';
+        statScript += 'document.getElementById("stat_INT").innerText=SCR_Get_MON_INT(rawData);';
+        statScript += 'document.getElementById("stat_DEX").innerText=SCR_Get_MON_DEX(rawData);';
+        statScript += 'document.getElementById("stat_MNA").innerText=SCR_Get_MON_MNA(rawData);';
+        statScript += 'document.getElementById("stat_EXP").innerText=SCR_GET_MON_EXP(rawData);';
+        statScript += 'document.getElementById("stat_JOBEXP").innerText=SCR_GET_MON_JOBEXP(rawData);';
+        statScript += 'document.getElementById("stat_DEF").innerText=SCR_Get_MON_DEF(rawData);';
+        statScript += 'document.getElementById("stat_MDEF").innerText=SCR_Get_MON_MDEF(rawData);';
+
+        statScript += tos.Lua2JS(scriptData['GET_MON_STAT']).replace('var statRateList = { \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' };', 'var statRateList = [ \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' ];').replace('for i = 1, #statRateList do', 'for(i in statRateList){');
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_STR']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_CON']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_INT']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_MNA']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_DEX']);
+        statScript += tos.Lua2JS(scriptData['SCR_GET_MON_EXP']);
+        statScript += tos.Lua2JS(scriptData['SCR_GET_MON_JOBEXP']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_DEF']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_MDEF']);
+        statScript += tos.Lua2JS(scriptData['SCR_RACE_TYPE_RATE']);
+        statScript += '</script>';
 
         var output = layout_detail.toString();
         output = output.replace(/%Icon%/g, '<img src="../img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png" />');
@@ -41,6 +99,9 @@ module.exports = function(app, tableData, scriptData){
         output = output.replace(/%MoveType%/g, monsterTable[index].MoveType);
         output = output.replace(/%Size%/g, monsterTable[index].Size);
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
+
+
+        output = output.replace(/%StatScript%/g, statScript);
 
         response.send(output);
     }
