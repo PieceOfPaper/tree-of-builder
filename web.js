@@ -136,6 +136,24 @@ loadTable('item_equip_default', 'ies.ipf/item_equip_default.ies');
 loadTable('setitem', 'ies.ipf/setitem.ies');
 loadTable('legend_recipe', 'ies.ipf/legend_recipe.ies');
 loadTable('legend_setitem', 'ies.ipf/legend_setitem.ies');
+loadTable('monster', 'ies.ipf/monster.ies', function(){
+  loadTable('monster', 'ies.ipf/monster_event.ies', function(){
+    loadTable('monster', 'ies.ipf/monster_guild.ies', function(){
+      loadTable('monster', 'ies.ipf/monster_item.ies', function(){
+        loadTable('monster', 'ies.ipf/monster_item_summon.ies', function(){
+          loadTable('monster', 'ies.ipf/monster_mgame.ies', function(){
+            loadTable('monster', 'ies.ipf/monster_npc.ies', function(){
+              loadTable('monster', 'ies.ipf/monster_pet.ies', function(){
+                loadTable('monster', 'ies.ipf/monster_sends.ies', function(){
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -338,6 +356,9 @@ app.use('/Buff', buffPage);
 
 var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
 app.use('/Item', itemPage);
+
+var monsterPage = require('./web_script/web_monster')(app, tableData, scriptData);
+app.use('/Monster', monsterPage);
 
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
