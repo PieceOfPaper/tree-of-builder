@@ -66,16 +66,18 @@ class DataServerModule {
     }
 
     static SameContains(a, b){
-        if (a.indexOf(';')>=0){
-            var splited=a.split(';');
+        var strA = a == undefined ? '' : a.toString();
+        var strB = b == undefined ? '' : b.toString();
+        if (strA.indexOf(';')>=0){
+            var splited=strA.split(';');
             for(var i=0;i<splited.length;i++){
                 if(this.SameContains(splited[i],b))
                     return true;
             }
             return false;
         }
-        if (b[0] == '@'){
-            if (a.indexOf(b.replace('@', '')) >= 0) return true;
+        if (strB[0] == '@'){
+            if (strA.indexOf(b.replace('@', '')) >= 0) return true;
             else return false;
         }
         if (a == b) return true;
