@@ -322,7 +322,7 @@ module.exports = function(app, tableData, scriptData){
       //desc
       for(var i=1;i<=7;i++){
         if (setList[setIndex]['EffectDesc_' + i] == undefined || setList[setIndex]['EffectDesc_' + i].length == 0) continue;
-        setDataString += '<p>' + tos.parseCaption(setList[setIndex]['EffectDesc_' + i]) + '</p>';
+        setDataString += '<p><b>' + i + ' Set.</b><br>' + tos.parseCaption(setList[setIndex]['EffectDesc_' + i]) + '</p>';
       }
       //material
       for(var i=1;i<=7;i++){
@@ -366,7 +366,7 @@ module.exports = function(app, tableData, scriptData){
       //desc
       for(var j=1;j<=5;j++){
         if (legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) continue;
-        legendSetDataString += '<p>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
+        legendSetDataString += '<p><b>' + j + ' Set.</b><br>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
       }
       //skill
       for(var j=1;j<=5;j++){
