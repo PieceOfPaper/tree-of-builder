@@ -245,6 +245,7 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
     output = output.replace(/%SellPrice%/g, itemTable[index].SellPrice);
     output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
 
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){
@@ -612,6 +613,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%SetData%/g, setDataString);
     output = output.replace(/%LegendSetData%/g, legendSetDataString);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
@@ -668,7 +670,7 @@ module.exports = function(app, tableData, scriptData){
 
     var materialString = '';
     if (recipeData != undefined){
-      for(var i=1;i<=5;i++){
+      for(var i=2;i<=5;i++){
         if (recipeData['Item_' + i + '_1'] == undefined) continue;
         var itemData = undefined;
         if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData['Item_' + i + '_1']);
@@ -719,6 +721,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%Target%/g, targetString);
     output = output.replace(/%Materials%/g, materialString);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
   
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){
@@ -730,6 +733,53 @@ module.exports = function(app, tableData, scriptData){
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
     response.send(output);
+  }
+
+  function getCanRecipeString(tableName, index){
+    var itemTable = tableData[tableName];
+    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
+
+    var itemList = [];
+    for (param in tableData['recipe']){
+      if (tableData['recipe'][param].TargetItem == itemTable[index].ClassName){
+        itemList.push(tableData['recipe'][param].ClassName);
+        continue;
+      }
+      for(var i=2;i<=5;i++){
+        if (tableData['recipe'][param]['Item_' + i + '_1'] == undefined) continue;
+        if (tableData['recipe'][param]['Item_' + i + '_1'] == itemTable[index].ClassName){
+          itemList.push(tableData['recipe'][param].ClassName);
+          break;
+        }
+      }
+    }
+
+    if (itemList.length > 0){
+      var resultString = '';
+      resultString += '<h3>Recipes</h3>';
+      for(var i=0;i<=itemList.length;i++){
+        if (itemList[i] == undefined) continue;
+        var itemData = undefined;
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',itemList[i]);
+        if (itemData != undefined){
+          var materialIcon = '';
+          if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+            itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          } else if(itemData.Icon != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          } else if(itemData.Illust != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          }
+          resultString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a><br/>';
+        }
+      }
+      return resultString;
+    } else {
+      return '';
+    }
   }
 
   return route;
