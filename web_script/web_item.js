@@ -620,7 +620,7 @@ module.exports = function(app, tableData, scriptData){
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
-    var recipeData = tos.FindDataClassID(tableData,'recipe',itemTable[index].ClassID);
+    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
 
     var icon = '';
     var tooltipImg = '';
