@@ -143,7 +143,7 @@ module.exports = function(app, tableData, scriptData){
         output +=           '</div>';
         output +=       '</div>';
         output +=       '<hr>';
-        output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
+        //output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
         output +=       '<div class="builder-skill-area">';
         output +=       '<script>var skillData=[]; var abilityData=[];  var abilityJobData=[];</script>';
         var skillIndex = 0;
@@ -191,18 +191,20 @@ module.exports = function(app, tableData, scriptData){
                     // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
                     output +=       '<br>';
-                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<p>Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
-                    output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
-                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
-                    output +=       '</div>';
+                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    //output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
+                    // output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
+                    // output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
+                    // output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
+                    // output +=       '</div>';
                     output +=       '<script>';
                     output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]=' + JSON.stringify(skillTable[skillTableIndex]) + ';';
                     output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["Level"]=Number('+skillLv+');';
+                    output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["FullCaption"]="' + tos.parseCaption(skillTable[skillTableIndex].Caption).replace(/\"/g, '\'') + '<br/>' + tos.parseCaption(skillTable[skillTableIndex].Caption2).replace(/\"/g, '\'') + '";';
                     output +=       '</script>';
                     output +=   '</div>';
 
@@ -217,6 +219,7 @@ module.exports = function(app, tableData, scriptData){
                     skillIndex ++;
                 }
             }
+            output +=   '<br/>';
             // ------ Ability
             var abilIndex = 0;
             for (var j = 0; j < abilityTable.length; j ++){
@@ -240,15 +243,15 @@ module.exports = function(app, tableData, scriptData){
                         }
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
-                    output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
                     output +=       '<br>';
-                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<p><a href="../Ability/?id=' + abilityTable[j].ClassID  + '">' + abilityTable[j].Name + '</a>(<span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span>/' + abil_job.MaxLevel + ')</p>';
-                    output +=       '<div align="center" class="ability-desc" id="' + abilityTable[j].ClassID + '" >';
-                    output +=           '<p>' + abil_job.UnlockDesc + '</p>';
-                    output +=           '<p>' + tos.parseCaption(abilityTable[j].Desc) + '</p>';
-                    output +=       '</div>';
+                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    // output +=       '<div align="center" class="ability-desc" id="' + abilityTable[j].ClassID + '" >';
+                    // output +=           '<p>' + abil_job.UnlockDesc + '</p>';
+                    // output +=           '<p>' + tos.parseCaption(abilityTable[j].Desc) + '</p>';
+                    // output +=       '</div>';
                     output +=       '<input type="hidden" id="Ability_' + abilityTable[j].ClassName + '" class="AbilityData" min="0" max="' + abil_job.MaxLevel + '" value="0" >';
                     output +=       '<script>';
                     output +=           'abilityData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abilityTable[j]) + ';';
@@ -268,6 +271,16 @@ module.exports = function(app, tableData, scriptData){
             skillIndex = 0;
         }
         output +=       '</div>';
+
+        //dummy
+        output +=       '<div style="height:50vh;"></div>';
+
+        //Desc Area
+        output +=   '<div class="builder-desc-area">';
+        output +=   '<h3 id="desc-name"></h3>';
+        output +=   '<p id="desc-desc"></p>';
+        output +=   '</div>';
+
         output +=   '<script>';
 
         output += 'function GetSkillOwner(skill){ return playerSetting; }';

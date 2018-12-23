@@ -198,8 +198,8 @@ table, td, th {
     vertical-align: center;
 }
 .lv-add-button img {
-    width: calc(18px * 1.6666);
-    height: calc(19px * 1.6666);
+    width: calc(18px * 1.5);
+    height: calc(19px * 1.5);
 }
 .lv-add-button.plus img {
     content: url("../img/button/btn_plus.png");
@@ -397,10 +397,13 @@ footer img{
     white-space: nowrap;
     vertical-align: top;
     width: fit-content;
-    width: calc(100vw * 0.5 - 2 * 20px);
+    /*width: calc(100vw * 0.5 - 2 * 20px);*/
     text-align: left;
-    padding: 2px;
-    margin-bottom: 5px;
+    padding: 5px;
+    margin: 2px;
+
+    border-radius: 10px;
+    background-color: antiquewhite;
 }
 
 .builder-skill-area .class .skill .skill-desc {
@@ -440,10 +443,13 @@ footer img{
     white-space: nowrap;
     vertical-align: top;
     width: fit-content;
-    width: calc(100vw * 0.5 - 2 * 20px);
+    /*width: calc(100vw * 0.5 - 2 * 20px);*/
     text-align: left;
-    padding: 2px;
-    margin-bottom: 5px;
+    padding: 5px;
+    margin: 2px;
+
+    border-radius: 10px;
+    background-color: antiquewhite;
 }
 
 .builder-skill-area .class .ability .ability-desc {
@@ -476,5 +482,20 @@ footer img{
 .builder-skill-area .class .ability p {
     padding: 0;
     margin: 0;
+}
+
+.builder-desc-area {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    width: 100%;
+    height: fit-content;
+    border-radius: 10px 10px 0 0;
+    background-color: whitesmoke;
+}
+.builder-desc-area #desc-name {
+}
+.builder-desc-area #desc-desc {
 }
 
