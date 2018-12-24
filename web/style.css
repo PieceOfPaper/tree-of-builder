@@ -27,15 +27,15 @@ body {
 }
 @media only screen and (max-device-width : 640px) {
     /* Styles */
-    body {
+    /* body {
         font-size: 20px;
-    }
+    } */
 }
 @media only screen and (max-device-width: 768px) {
     /* Styles */
-    body {
+    /* body {
         font-size: 20px;
-    }
+    } */
 }
 
 table {
@@ -415,7 +415,7 @@ footer img{
 .builder-skill-area .class .skill .skill-desc.active {
     display: block;
 }
-@media only screen and (max-device-width : 640px) {
+/* @media only screen and (max-device-width : 640px) {
     .builder-skill-area .class .skill {
         width: calc(100vw - 2 * 10px);
     }
@@ -424,7 +424,7 @@ footer img{
     .builder-skill-area .class .skill {
         width: calc(100vw - 2 * 10px);
     }
-}
+} */
 .builder-skill-area .class .skill img {
     /*width:64px;*/
     /*height:64px;*/
@@ -461,7 +461,7 @@ footer img{
 .builder-skill-area .class .ability .ability-desc.active {
     display: block;
 }
-@media only screen and (max-device-width : 640px) {
+/* @media only screen and (max-device-width : 640px) {
     .builder-skill-area .class .ability {
         width: calc(100vw - 2 * 10px);
     }
@@ -470,7 +470,7 @@ footer img{
     .builder-skill-area .class .ability {
         width: calc(100vw - 2 * 10px);
     }
-}
+} */
 .builder-skill-area .class .ability img {
     /*width:64px;*/
     /*height:64px;*/
