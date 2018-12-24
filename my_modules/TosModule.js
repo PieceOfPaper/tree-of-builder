@@ -11,6 +11,7 @@ class TosModule {
         output = output.replace(/{#7AE4FF}/g, '<span style="color:#7AE4FF;">');
         output = output.replace(/{#993399}/g, '<span style="color:#993399;">');
         output = output.replace(/{#339999}/g, '<span style="color:#339999;">');
+        output = output.replace(/{#00113F}/g, '<span style="color:#00113F;">');
         output = output.replace(/{ol}/g, '<span style="font-weight:bold;">');
         output = output.replace(/{\/}/g, '</span>');
 
