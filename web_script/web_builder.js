@@ -193,7 +193,7 @@ module.exports = function(app, tableData, scriptData){
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
                     output +=       '<br>';
-                    output +=       '<p>Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
+                    output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
                     output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
                     //output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
