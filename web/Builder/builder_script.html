@@ -368,9 +368,15 @@
     var currentDesc_Type="None";
 
     function onClickSkillIcon(num2, skillIndex){
+        if (currentDesc_Type=="Skill" && currentDesc_Num2==num2 && currentDesc_Index==skillIndex){
+            onClickCloseDesc();
+            return;
+        }
         currentDesc_Num2 = num2;
         currentDesc_Index = skillIndex;
         currentDesc_Type = "Skill";
+
+        document.getElementsByClassName("builder-desc-area")[0].style.visibility="visible";
 
         var skill = skillData[num2+"_"+skillIndex];
 
@@ -381,14 +387,26 @@
     }
 
     function onClickAbilityIcon(num2, abilIndex){
+        if (currentDesc_Type=="Ability" && currentDesc_Num2==num2 && currentDesc_Index==abilIndex){
+            onClickCloseDesc();
+            return;
+        }
         currentDesc_Num2 = num2;
         currentDesc_Index = abilIndex;
         currentDesc_Type = "Ability";
+
+        document.getElementsByClassName("builder-desc-area")[0].style.visibility="visible";
 
         var abil = abilityData[num2+","+abilIndex];
 
         document.getElementById("desc-name").innerHTML="<a href='../Ability/?id=" + abil.ClassID  + "'>" + abil.Name + "</a>";
         document.getElementById("desc-desc").innerHTML=abil.FullCaption;
+    }
+
+    onClickCloseDesc();
+    function onClickCloseDesc(){
+        currentDesc_Type="None";
+        document.getElementsByClassName("builder-desc-area")[0].style.visibility="hidden";
     }
 
     function updateSkillData(num2, skillIndex){
