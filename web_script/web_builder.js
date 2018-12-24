@@ -257,6 +257,7 @@ module.exports = function(app, tableData, scriptData){
                     output +=           'abilityData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abilityTable[j]) + ';';
                     output +=           'abilityJobData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abil_job) + ';';
                     output +=           'abilityData["'+jobNum2+','+abilIndex+'"]["Level"]=Number('+abilLv+');';
+                    output +=           'abilityData["'+jobNum2+','+abilIndex+'"]["FullCaption"]="' + abil_job.UnlockDesc + '<br/>' + tos.parseCaption(abilityTable[j].Desc).replace(/\"/g, '\'') + '";';
                     output +=       '</script>';
                     output +=   '</div>';
 

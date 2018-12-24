@@ -373,7 +373,6 @@
         currentDesc_Type = "Skill";
 
         var skill = skillData[num2+"_"+skillIndex];
-        console.log(num2 + " " + skillIndex + " " + skill);
 
         document.getElementById("desc-name").innerHTML="<a href='../Skill/?id=" + skill.ClassID  + "'>" + skill.Name + "</a>";
         document.getElementById("desc-desc").innerHTML=skill.FullCaption;
@@ -385,6 +384,11 @@
         currentDesc_Num2 = num2;
         currentDesc_Index = abilIndex;
         currentDesc_Type = "Ability";
+
+        var abil = abilityData[num2+","+abilIndex];
+
+        document.getElementById("desc-name").innerHTML="<a href='../Ability/?id=" + abil.ClassID  + "'>" + abil.Name + "</a>";
+        document.getElementById("desc-desc").innerHTML=abil.FullCaption;
     }
 
     function updateSkillData(num2, skillIndex){
