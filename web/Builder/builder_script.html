@@ -392,13 +392,17 @@
     }
 
     function updateSkillData(num2, skillIndex){
-        if (currentDesc_Type!="Skill" || currentDesc_Num2!=num2 || currentDesc_Index!=skillIndex){
+        // if (currentDesc_Type!="Skill" || currentDesc_Num2!=num2 || currentDesc_Index!=skillIndex){
+        //     return;
+        // }
+        if (currentDesc_Type!="Skill"){
             return;
         }
         for (var i = 0; i < skillArray.length; i ++){
             if (num2 != undefined && skillArray[i][0] != num2) continue;
             for (var j = 2; j < skillArray[i].length; j +=2){
                 if (skillIndex == undefined || skillArray[i][j] == skillIndex){
+                    if (currentDesc_Num2!=skillArray[i][0] || currentDesc_Index != skillArray[i][j]) continue;
                     if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]!=undefined){
                         skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
                         var skill = skillData[skillArray[i][0]+"_"+skillArray[i][j]];
