@@ -363,14 +363,49 @@
         }
     }
 
+    var currentDesc_Num2;
+    var currentDesc_Index;
+    var currentDesc_Type="None";
+
+    function onClickSkillIcon(num2, skillIndex){
+        currentDesc_Num2 = num2;
+        currentDesc_Index = skillIndex;
+        currentDesc_Type = "Skill";
+
+        var skill = skillData[num2+"_"+skillIndex];
+
+        document.getElementById("desc-name").innerHTML="<a href='../Skill/?id=" + skill.ClassID  + "'>" + skill.Name + "</a>";
+        document.getElementById("desc-desc").innerHTML=skill.FullCaption;
+
+        updateSkillData(num2, skillIndex);
+    }
+
+    function onClickAbilityIcon(num2, abilIndex){
+        currentDesc_Num2 = num2;
+        currentDesc_Index = abilIndex;
+        currentDesc_Type = "Ability";
+
+        var abil = abilityData[num2+","+abilIndex];
+
+        document.getElementById("desc-name").innerHTML="<a href='../Ability/?id=" + abil.ClassID  + "'>" + abil.Name + "</a>";
+        document.getElementById("desc-desc").innerHTML=abil.FullCaption;
+    }
+
     function updateSkillData(num2, skillIndex){
+        // if (currentDesc_Type!="Skill" || currentDesc_Num2!=num2 || currentDesc_Index!=skillIndex){
+        //     return;
+        // }
+        if (currentDesc_Type!="Skill"){
+            return;
+        }
         for (var i = 0; i < skillArray.length; i ++){
             if (num2 != undefined && skillArray[i][0] != num2) continue;
             for (var j = 2; j < skillArray[i].length; j +=2){
                 if (skillIndex == undefined || skillArray[i][j] == skillIndex){
+                    if (currentDesc_Num2!=skillArray[i][0] || currentDesc_Index != skillArray[i][j]) continue;
                     if (skillData[skillArray[i][0]+"_"+skillArray[i][j]]!=undefined){
                         skillData[skillArray[i][0]+"_"+skillArray[i][j]]["Level"]=skillArray[i][j+1];
-                        var skill = skillData[skillArray[i][0]+"_"+skillArray[i][j]];0
+                        var skill = skillData[skillArray[i][0]+"_"+skillArray[i][j]];
                         
                         var calcData = [];
                         calcData["SkillFactor"]=methods[skill.SkillFactor]==undefined?undefined:methods[skill.SkillFactor](skill);
@@ -381,22 +416,29 @@
                         calcData["CaptionRatio3"]=methods[skill.CaptionRatio3]==undefined?undefined:methods[skill.CaptionRatio3](skill);
                         calcData["SpendItemCount"]=methods[skill.SpendItemCount]==undefined?undefined:methods[skill.SpendItemCount](skill);
 
-                        var descList = document.getElementsByClassName("skill-desc");
-                        var skillParent;
-                        for (var k=0;k<descList.length;k++) {
-                            if(descList[k].id==skill.ClassID) {
-                                skillParent=descList[k];
-                                break;
-                            }
-                        }
+                        // var descList = document.getElementsByClassName("skill-desc");
+                        // var skillParent;
+                        // for (var k=0;k<descList.length;k++) {
+                        //     if(descList[k].id==skill.ClassID) {
+                        //         skillParent=descList[k];
+                        //         break;
+                        //     }
+                        // }
                         
-                        for (var k=0;k<skillParent.children.length;k++){
-                            if (skillParent.children[k] == undefined || skillParent.children[k].children == undefined) continue;
-                            for (var l=0;l<skillParent.children[k].children.length;l++){
-                                if (skillParent.children[k].children[l] == undefined) continue;
-                                if (skillParent.children[k].children[l].id == undefined) continue;
-                                if (calcData[skillParent.children[k].children[l].id] == undefined) continue;
-                                skillParent.children[k].children[l].innerHTML=calcData[skillParent.children[k].children[l].id];
+                        // for (var k=0;k<skillParent.children.length;k++){
+                        //     if (skillParent.children[k] == undefined || skillParent.children[k].children == undefined) continue;
+                        //     for (var l=0;l<skillParent.children[k].children.length;l++){
+                        //         if (skillParent.children[k].children[l] == undefined) continue;
+                        //         if (skillParent.children[k].children[l].id == undefined) continue;
+                        //         if (calcData[skillParent.children[k].children[l].id] == undefined) continue;
+                        //         skillParent.children[k].children[l].innerHTML=calcData[skillParent.children[k].children[l].id];
+                        //     }
+                        // }
+
+                        var descElement = document.getElementById("desc-desc");
+                        if (descElement != undefined){
+                            for (var l=0;l<descElement.children.length;l++){
+                                descElement.children[l].innerHTML=calcData[descElement.children[l].id];
                             }
                         }
                     }
@@ -496,38 +538,38 @@
         }
     });
 
-    function onClickViewDetail() {
-        var button = document.getElementById("viewDetailBtn");
-        var detailsDesc = document.getElementsByClassName("skill-desc");
-        var detailsAbilDesc = document.getElementsByClassName("ability-desc");
-        if (button != undefined){
-            if (button.classList.contains("active")){
-                if (detailsDesc != undefined) {
-                    for (var i = 0; i < detailsDesc.length; i ++){
-                        detailsDesc[i].classList.remove("active");
-                    }
-                }
-                if (detailsAbilDesc != undefined) {
-                    for (var i = 0; i < detailsAbilDesc.length; i ++){
-                        detailsAbilDesc[i].classList.remove("active");
-                    }
-                }
-                button.classList.remove("active");
-            } else {
-                if (detailsDesc != undefined) {
-                    for (var i = 0; i < detailsDesc.length; i ++){
-                        detailsDesc[i].classList.add("active");
-                    }
-                }
-                if (detailsAbilDesc != undefined) {
-                    for (var i = 0; i < detailsAbilDesc.length; i ++){
-                        detailsAbilDesc[i].classList.add("active");
-                    }
-                }
-                button.classList.add("active");
-            }
-        }
-    }
+    // function onClickViewDetail() {
+    //     var button = document.getElementById("viewDetailBtn");
+    //     var detailsDesc = document.getElementsByClassName("skill-desc");
+    //     var detailsAbilDesc = document.getElementsByClassName("ability-desc");
+    //     if (button != undefined){
+    //         if (button.classList.contains("active")){
+    //             if (detailsDesc != undefined) {
+    //                 for (var i = 0; i < detailsDesc.length; i ++){
+    //                     detailsDesc[i].classList.remove("active");
+    //                 }
+    //             }
+    //             if (detailsAbilDesc != undefined) {
+    //                 for (var i = 0; i < detailsAbilDesc.length; i ++){
+    //                     detailsAbilDesc[i].classList.remove("active");
+    //                 }
+    //             }
+    //             button.classList.remove("active");
+    //         } else {
+    //             if (detailsDesc != undefined) {
+    //                 for (var i = 0; i < detailsDesc.length; i ++){
+    //                     detailsDesc[i].classList.add("active");
+    //                 }
+    //             }
+    //             if (detailsAbilDesc != undefined) {
+    //                 for (var i = 0; i < detailsAbilDesc.length; i ++){
+    //                     detailsAbilDesc[i].classList.add("active");
+    //                 }
+    //             }
+    //             button.classList.add("active");
+    //         }
+    //     }
+    // }
 
     function GetJobGradeByName(pc, charName){
         var splited = charName.split("_");
