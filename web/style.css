@@ -449,7 +449,7 @@ footer img{
     margin: 2px;
 
     border-radius: 10px;
-    background-color: antiquewhite;
+    background-color: wheat;
 }
 
 .builder-skill-area .class .ability .ability-desc {
@@ -489,7 +489,7 @@ footer img{
     left: 0;
     bottom: 0;
     padding: 5px;
-    width: 100%;
+    width: calc(100% - 10px);
     height: fit-content;
     border-radius: 10px 10px 0 0;
     background-color: whitesmoke;
