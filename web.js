@@ -157,6 +157,12 @@ loadTable('monster', 'ies.ipf/monster.ies', function(){
 loadTable('statbase_monster', 'ies.ipf/statbase_monster.ies');
 loadTable('statbase_monster_race', 'ies.ipf/statbase_monster_race.ies');
 loadTable('statbase_monster_type', 'ies.ipf/statbase_monster_type.ies');
+loadTable('questprogresscheck', 'ies.ipf/questprogresscheck.ies', function(){
+  loadTable('questprogresscheck', 'ies.ipf/questprogresscheck_auto.ies', function(){
+  
+  });
+});
+loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
