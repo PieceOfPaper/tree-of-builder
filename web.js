@@ -370,6 +370,9 @@ app.use('/Item', itemPage);
 var monsterPage = require('./web_script/web_monster')(app, tableData, scriptData);
 app.use('/Monster', monsterPage);
 
+var questPage = require('./web_script/web_quest')(app, tableData, scriptData);
+app.use('/Quest', questPage);
+
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
 
