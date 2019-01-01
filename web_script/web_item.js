@@ -215,6 +215,14 @@ module.exports = function(app, tableData, scriptData){
       icon = 'No Img';
     }
 
+    var dialogString = undefined;
+    if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
+      var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
+      if (dialogData != undefined) {
+        dialogString = tos.parseCaption(dialogData.Text);
+      }
+    }
+
     var output = layout_item_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
@@ -252,6 +260,12 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, '');
     } else {
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
+    }
+
+    if (dialogString == undefined){
+      output = output.replace(/%DialogString%/g, '');
+    } else {
+      output = output.replace(/%DialogString%/g, dialogString);
     }
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
