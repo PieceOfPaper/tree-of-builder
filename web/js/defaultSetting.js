@@ -31,6 +31,11 @@ topMenuButtons['monster']["Path"] = "MonsterPage";
 topMenuButtons['monster']["Img"] = "../img/icon/monillust/mon_popolion_blue.png";
 topMenuButtons['monster']["Name"] = "OBJ";
 
+topMenuButtons['quest'] = [];
+topMenuButtons['quest']["Path"] = "QuestPage";
+topMenuButtons['quest']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
+topMenuButtons['quest']["Name"] = "QUEST";
+
 topMenuButtons['builder'] = [];
 topMenuButtons['builder']["Path"] = "Builder";
 topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";

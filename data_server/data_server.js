@@ -19,6 +19,9 @@ module.exports = function(app, tableData){
 
     var stanceServer = require('./data_monster')(app, tableData);
     app.use('/data/monster', stanceServer);
+
+    var stanceServer = require('./data_quest')(app, tableData);
+    app.use('/data/quest', stanceServer);
   
     return route;
   }
