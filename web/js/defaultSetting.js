@@ -11,6 +11,11 @@ topMenuButtons['item']["Path"] = "Item";
 topMenuButtons['item']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
 topMenuButtons['item']["Name"] = "ITEM";
 
+topMenuButtons['class'] = [];
+topMenuButtons['class']["Path"] = "ClassPage";
+topMenuButtons['class']["Img"] = "../img/icon/classicon/c_warrior_centurion.png";
+topMenuButtons['class']["Name"] = "CLASS";
+
 topMenuButtons['skill'] = [];
 topMenuButtons['skill']["Path"] = "SkillPage";
 topMenuButtons['skill']["Img"] = "../img/icon/skillicon/icon_warri_tercioformation.png";
