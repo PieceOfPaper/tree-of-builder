@@ -320,6 +320,14 @@ footer img{
     display: block;
 }
 
+.class-area {
+
+}
+.class-area img{
+    width:64px;
+    height:64px;
+}
+
 /* ======== Detail ======== */
 .add-ability-area {
 
