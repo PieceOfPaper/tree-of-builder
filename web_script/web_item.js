@@ -229,7 +229,7 @@ module.exports = function(app, tableData, scriptData){
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
     } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
-      output = output.replace(/%TooltipImage%/g, '<img src="../img/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      output = output.replace(/%TooltipImage%/g, '<img src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     } else {
       output = output.replace(/%TooltipImage%/g, '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     }
@@ -266,6 +266,20 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%DialogString%/g, '');
     } else {
       output = output.replace(/%DialogString%/g, dialogString);
+    }
+
+    console.log(itemTable[index].SpineTooltipImage);
+    if (itemTable[index].SpineTooltipImage == undefined || itemTable[index].SpineTooltipImage.length == 0){
+      output = output.replace(/%SpineString%/g, '');
+    } else {
+      var spineString = '<canvas id="spine_canvas"></canvas><script>';
+      spineString += 'spine_json="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.json";';
+      spineString += 'spine_atlas="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.atlas";';
+      spineString += 'spine_png="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.png";';
+      spineString += 'spine_skelName="' + itemTable[index].SpineTooltipImage + '";';
+      spineString += 'spine_animName="animation";';
+      spineString += '</script>';
+      output = output.replace(/%SpineString%/g, spineString);
     }
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());

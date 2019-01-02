@@ -343,6 +343,13 @@ footer img{
     vertical-align: middle;
 }
 
+.item-card-spine {
+    width: calc(100vw - 20px);
+    height: calc(((100vw - 20px) / 330) * 400);
+    /*max-width: 330px;*/
+    /*max-height: 400px;*/
+}
+
 .script-details {
 }
 .script-details .script{
