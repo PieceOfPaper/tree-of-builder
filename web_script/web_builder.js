@@ -151,9 +151,10 @@ module.exports = function(app, tableData, scriptData){
             // if (classCount[i] <= 0)
             //     continue;
             var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
+            if (jobData == null || jobData.hasOwnProperty('Name') == false) continue;
             output +=       '<div class="class">';
             //output +=       '<h3>' + jobData.Name + ' ' + classCount[i] + ' Circle</h3>';
-            output +=       '<h3>' + jobData.Name + '</h3>';
+            output +=       '<h3>' + jobData['Name'] + '</h3>';
             var jobNum2 = GetJobNumber2(jobData.ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
