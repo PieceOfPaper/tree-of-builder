@@ -6,40 +6,45 @@ topMenuButtons['home']["Path"] = ".";
 topMenuButtons['home']["Img"] = "../img/minimap_icons/questinfo_return.png";
 topMenuButtons['home']["Name"] = "HOME";
 
+topMenuButtons['database'] = [];
+topMenuButtons['database']["Path"] = undefined;
+topMenuButtons['database']["Img"] = "";
+topMenuButtons['database']["Name"] = "DATABASE";
+
 topMenuButtons['item'] = [];
 topMenuButtons['item']["Path"] = "Item";
 topMenuButtons['item']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
-topMenuButtons['item']["Name"] = "ITEM";
+topMenuButtons['item']["Name"] = "Item";
 
 topMenuButtons['class'] = [];
 topMenuButtons['class']["Path"] = "ClassPage";
 topMenuButtons['class']["Img"] = "../img/icon/classicon/c_warrior_centurion.png";
-topMenuButtons['class']["Name"] = "CLASS";
+topMenuButtons['class']["Name"] = "Class";
 
 topMenuButtons['skill'] = [];
 topMenuButtons['skill']["Path"] = "SkillPage";
 topMenuButtons['skill']["Img"] = "../img/icon/skillicon/icon_warri_tercioformation.png";
-topMenuButtons['skill']["Name"] = "SKILL";
+topMenuButtons['skill']["Name"] = "Skill";
 
 topMenuButtons['ability'] = [];
 topMenuButtons['ability']["Path"] = "Ability";
 topMenuButtons['ability']["Img"] = "../img/icon/skillicon/ability_warrior_centurion2.png";
-topMenuButtons['ability']["Name"] = "ABIL";
+topMenuButtons['ability']["Name"] = "Ability";
 
 topMenuButtons['buff'] = [];
 topMenuButtons['buff']["Path"] = "Buff";
 topMenuButtons['buff']["Img"] = "../img/bufficon/icon_attack_blessing_up.png";
-topMenuButtons['buff']["Name"] = "BUFF";
+topMenuButtons['buff']["Name"] = "Buff";
 
 topMenuButtons['monster'] = [];
 topMenuButtons['monster']["Path"] = "MonsterPage";
 topMenuButtons['monster']["Img"] = "../img/icon/monillust/mon_popolion_blue.png";
-topMenuButtons['monster']["Name"] = "OBJ";
+topMenuButtons['monster']["Name"] = "Monster";
 
 topMenuButtons['quest'] = [];
 topMenuButtons['quest']["Path"] = "QuestPage";
 topMenuButtons['quest']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
-topMenuButtons['quest']["Name"] = "QUEST";
+topMenuButtons['quest']["Name"] = "Quest";
 
 topMenuButtons['builder'] = [];
 topMenuButtons['builder']["Path"] = "Builder";
@@ -50,21 +55,34 @@ topMenuButtons['builder']["Name"] = "BUILD";
 
 
 function onInitTopMenu(isHome){
-    var topMenuElements = document.getElementsByClassName("top-menu");
-    for (var i=0;i<topMenuElements.length;i++){
-        for(var param in topMenuButtons){
-            var nodeButton = document.createElement("a");
+    var topMenuElement = document.getElementsByClassName("top-menu")[0];
+
+    var leftMenu = document.createElement("div");
+    leftMenu.id = "left-menu";
+    document.body.appendChild(leftMenu);
+
+    for(var param in topMenuButtons){
+        var nodeDiv = document.createElement("div");
+        var nodeButton = document.createElement("a");
+        nodeDiv.append(nodeButton);
+        if (topMenuButtons[param].Path != undefined){
+            nodeDiv.classList.add("node-item");
+            //img
             var nodeButtonImg = document.createElement("img");
-            var nodeButtonText = document.createElement("p");
-            nodeButton.id=param;
+            nodeButtonImg.src=topMenuButtons[param].Img;
+            nodeButton.appendChild(nodeButtonImg);
+            //path
             if (isHome) nodeButton.href=topMenuButtons[param].Path;
             else nodeButton.href="../"+topMenuButtons[param].Path;
-            nodeButtonImg.src=topMenuButtons[param].Img;
-            nodeButtonText.innerText=topMenuButtons[param].Name;
-            nodeButton.appendChild(nodeButtonImg);
-            nodeButton.appendChild(nodeButtonText);
-            topMenuElements[i].appendChild(nodeButton);
+        } else {
+            nodeDiv.classList.add("node-category");
         }
+        //text
+        var nodeButtonText = document.createElement("p");
+        nodeButton.id=param;
+        nodeButtonText.innerText=topMenuButtons[param].Name;
+        nodeButton.appendChild(nodeButtonText);
+        leftMenu.appendChild(nodeDiv);
     }
 }
 
