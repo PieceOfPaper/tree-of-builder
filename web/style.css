@@ -121,6 +121,8 @@ table, td, th {
     overflow-y: scroll;
     background-color: wheat;
     z-index: 1000;
+    -webkit-transition:left 0.25s, -webkit-transform 0.25s;
+    transition:left 0.25s, transform 0.25s;
 }
 #left-menu.opened {
     left: 0;
@@ -133,6 +135,8 @@ table, td, th {
     left: 10px;
     width: 40px;
     height: 40px;
+    -webkit-transition:left 0.25s, -webkit-transform 0.25s;
+    transition:left 0.25s, transform 0.25s;
 }
 #left-menu-open-button.opened {
     left: 210px;
