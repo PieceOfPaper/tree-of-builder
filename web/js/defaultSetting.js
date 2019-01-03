@@ -89,6 +89,33 @@ function onInitTopMenu(isHome){
         nodeButton.appendChild(nodeButtonText);
         leftMenu.appendChild(nodeDiv);
     }
+
+    var leftMenuButton = document.createElement("div");
+    var leftMenuButtonA = document.createElement("a");
+    var leftMenuButtonImg = document.createElement("img");
+    leftMenuButtonA.onclick=onclick_leftMenuOpen;
+    //leftMenuButton.classList.add("open-button");
+    leftMenuButton.id = "left-menu-open-button";
+    leftMenuButtonImg.src="../img/book/nextbtn.png";
+    leftMenuButtonA.appendChild(leftMenuButtonImg);
+    leftMenuButton.appendChild(leftMenuButtonA);
+    //leftMenu.appendChild(leftMenuButton);
+    document.body.appendChild(leftMenuButton);
+}
+
+function onclick_leftMenuOpen(){
+    var leftMenu = document.getElementById("left-menu");
+    if (leftMenu.classList.contains("opened")){
+        leftMenu.classList.remove("opened");
+    } else {
+        leftMenu.classList.add("opened");
+    }
+    var leftMenuButton = document.getElementById("left-menu-open-button");
+    if (leftMenuButton.classList.contains("opened")){
+        leftMenuButton.classList.remove("opened");
+    } else {
+        leftMenuButton.classList.add("opened");
+    }
 }
 
 var loadingUI = undefined;
