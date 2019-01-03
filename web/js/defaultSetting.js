@@ -6,10 +6,10 @@ topMenuButtons['home']["Path"] = ".";
 topMenuButtons['home']["Img"] = "../img/minimap_icons/questinfo_return.png";
 topMenuButtons['home']["Name"] = "HOME";
 
-topMenuButtons['database'] = [];
-topMenuButtons['database']["Path"] = undefined;
-topMenuButtons['database']["Img"] = "";
-topMenuButtons['database']["Name"] = "DATABASE";
+topMenuButtons['category_database'] = [];
+topMenuButtons['category_database']["Path"] = undefined;
+topMenuButtons['category_database']["Img"] = "";
+topMenuButtons['category_database']["Name"] = "DATABASE";
 
 topMenuButtons['item'] = [];
 topMenuButtons['item']["Path"] = "Item";
@@ -46,10 +46,15 @@ topMenuButtons['quest']["Path"] = "QuestPage";
 topMenuButtons['quest']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
 topMenuButtons['quest']["Name"] = "Quest";
 
+topMenuButtons['category_tool'] = [];
+topMenuButtons['category_tool']["Path"] = undefined;
+topMenuButtons['category_tool']["Img"] = "";
+topMenuButtons['category_tool']["Name"] = "TOOL";
+
 topMenuButtons['builder'] = [];
 topMenuButtons['builder']["Path"] = "Builder";
 topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
-topMenuButtons['builder']["Name"] = "BUILD";
+topMenuButtons['builder']["Name"] = "Builder";
 
 
 
