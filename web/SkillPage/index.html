@@ -58,14 +58,14 @@
         </select>
         <br/>
         <br/>
-        <div id="filter_Stance" class="checkboxList selectFilter settedFilter customFilter">
-            <button class="checkboxList-head" onclick='toggle_checkboxList("filter_Stance")'>
+        <div id="filter_ReqStance" class="checkboxList selectFilter settedFilter customFilter">
+            <button class="checkboxList-head" onclick='toggle_checkboxList("filter_ReqStance")'>
                 Select Stance<span>▼</span>
             </button>
             <div class="checkboxList-body" style="display:none;">
             </div>
             <div class="checkboxList-foot" style="display:none;">
-                <button onclick='onclick_all_checkboxList("filter_Stance")'>All</button><button onclick='onclick_none_checkboxList("stanceFilter")'>None</button>
+                <button onclick='onclick_all_checkboxList("filter_ReqStance")'>All</button><button onclick='onclick_none_checkboxList("filter_ReqStance")'>None</button>
             </div>
         </div>
         <br/>
@@ -106,12 +106,13 @@
         var url = window.location.href.split('?')[0];
 
         baseTable="skill";
-        checkboxFilterSetting["CanMakeSimony"]="YES";
+        checkboxFilterSetting["filter_CanMakeSimony"]="YES";
+        customFilterSettingMethods.push(setCustome_stance);
         searchModule_init();
         
         requestGetData("stance", undefined, function(arr){
             //console.log(arr);
-            var filter = document.getElementById("filter_Stance");
+            var filter = document.getElementById("filter_ReqStance");
             var body;
             for (var i=0;i<filter.childNodes.length;i++){
                 if (filter.childNodes[i].className=="checkboxList-body"){
@@ -126,8 +127,8 @@
                 }
                 body.innerHTML=htmlstr;
             }
-            if (filterSetting["filter_Stance"]!=undefined){
-                var splited=filterSetting["filter_Stance"].split(';');
+            if (filterSetting["filter_ReqStance"]!=undefined){
+                var splited=filterSetting["filter_ReqStance"].split(';');
                 var stanceFilterElements=document.getElementsByClassName("stanceFilterElement");
                 for (var i=0;i<stanceFilterElements.length;i++) stanceFilterElements[i].checked=false;
                 for (var i=0;i<splited.length;i++){
@@ -139,9 +140,24 @@
                         }
                     }
                 }
-                toggle_checkboxList("filter_Stance");
+                toggle_checkboxList("filter_ReqStance");
             }
         });
+
+        function setCustome_stance(filterSetting){
+            var stanceFilters = document.getElementsByClassName("stanceFilterElement");
+            var useFilter = false;
+            var filterstr = '';
+            for (param in stanceFilters){
+                if (stanceFilters[param] == undefined || stanceFilters[param].tagName == undefined) continue;
+                if (stanceFilters[param].checked == false) useFilter = true;
+                if (stanceFilters[param].checked){
+                    filterstr += ';'+stanceFilters[param].id.split('_')[1];
+                }
+            }
+            if (useFilter) filterSetting["filter_ReqStance"]=filterstr;
+            else filterSetting["filter_ReqStance"]=undefined;
+        }
 
         function toggle_checkboxList(id){
             var checkboxList = document.getElementById(id);

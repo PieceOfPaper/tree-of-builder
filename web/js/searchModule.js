@@ -106,7 +106,7 @@ function searchModule_updateFilterSetting(){
         if (checkboxFilters[param].checked == false) {
             filterSetting[checkboxFilters[param].id]=undefined;
         } else {
-            filterSetting[checkboxFilters[param].id]=checkboxFilters[param].checked;
+            filterSetting[checkboxFilters[param].id]=checkboxFilterSetting[checkboxFilters[param].id];
         }
     }
 
