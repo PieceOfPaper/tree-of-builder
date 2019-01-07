@@ -95,8 +95,18 @@ loadTable('skill', 'ies.ipf/skill.ies', function(){
     }
     console.log('merge skill+simony');
   });
+  loadTable('skilltree', 'ies.ipf/skilltree.ies', function(){
+    for(var i=0;i<tableData['skilltree'].length;i++){
+      for(var j=0;j<tableData['skill'].length;j++){
+        if(tableData['skill'][j].ClassName==tableData['skilltree'][i].SkillName){
+          tableData['skill'][j]['SkillTree'] = tableData['skilltree'][i].ClassName;
+          break;
+        }
+      }
+    }
+    console.log('merge skill+skilltree');
+  });
 });
-loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
 //loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');

@@ -30,7 +30,7 @@
     </div>
     <div class="filler-area">
         <p>Filter</p>
-        <select id="filter_Job" class="selectFilter">
+        <select id="filter_SkillTree" class="selectFilter settedFilter">
             <option value="Default">Job</option>
         </select>
         <select id="filter_ClassType" class="selectFilter">
@@ -109,6 +109,36 @@
         checkboxFilterSetting["filter_CanMakeSimony"]="YES";
         customFilterSettingMethods.push(setCustome_stance);
         searchModule_init();
+
+        requestGetData("job", undefined, function(arr){
+            arr.sort(function (a, b) {
+                var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
+                var class_b = Number(b.ClassName.replace("Char", "").split("_")[0]);
+                if (class_a != class_b){
+                    if(class_a > class_b) return 1;
+                    else return -1;
+                }
+
+                if (a.Rank == b.Rank) return 0;
+                else if(Number(a.Rank) > Number(b.Rank)) return 1;
+                else return -1;
+            });
+            //console.log(arr);
+            var filter = document.getElementById("filter_SkillTree");
+            for(var i=0;i<arr.length;i++){
+                if (Number(arr[i].Rank) == 1){
+                    var lineOption=document.createElement("option");
+                    lineOption.value="@"+arr[i].ClassName.split("_")[0]+"_";;
+                    lineOption.innerText="="+arr[i].Name+" Line=";
+                    filter.appendChild(lineOption);
+                }
+                var option=document.createElement("option");
+                option.value="@"+arr[i].ClassName+"_";
+                option.innerText=arr[i].Name;
+                filter.appendChild(option);
+            }
+            if (filterSetting["filter_SkillTree"]!=undefined) document.getElementById("filter_SkillTree").value=filterSetting["filter_SkillTree"];
+        });
         
         requestGetData("stance", undefined, function(arr){
             //console.log(arr);
