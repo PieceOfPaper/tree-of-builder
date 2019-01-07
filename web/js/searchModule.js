@@ -184,6 +184,9 @@ function searchModule_showResult(arr){
                                 case "skill":
                                 tdstr += '<img src="../img/icon/skillicon/icon_'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
+                                case "ability":
+                                tdstr += '<img src="../img/icon/skillicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                break;
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
@@ -228,6 +231,9 @@ function searchModule_showResult(arr){
                 switch(arr[i].TableName){
                     case "skill":
                     tdstr = '<a href=../Skill?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    break;
+                    case "ability":
+                    tdstr = '<a href=../Ability?id='+arr[i].ClassID+'>'+tdstr+'</a>';
                     break;
                     case "item":
                     case "item_Equip":

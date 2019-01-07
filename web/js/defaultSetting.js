@@ -27,7 +27,7 @@ topMenuButtons['skill']["Img"] = "../img/icon/skillicon/icon_warri_tercioformati
 topMenuButtons['skill']["Name"] = "Skill";
 
 topMenuButtons['ability'] = [];
-topMenuButtons['ability']["Path"] = "Ability";
+topMenuButtons['ability']["Path"] = "AbilityPage";
 topMenuButtons['ability']["Img"] = "../img/icon/skillicon/ability_warrior_centurion2.png";
 topMenuButtons['ability']["Name"] = "Ability";
 
