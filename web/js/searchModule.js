@@ -22,38 +22,46 @@ function searchModule_init(){
     searchModule_inited = true;
 
     //search event set
-    document.getElementById("searchBtn").onclick=searchModule_onclick_search;
-    document.getElementById("searchName").onkeydown=searchModule_onkeydown_search;
+    if (document.getElementById("searchBtn")!=undefined) document.getElementById("searchBtn").onclick=searchModule_onclick_search;
+    if (document.getElementById("searchName")!=undefined) document.getElementById("searchName").onkeydown=searchModule_onkeydown_search;
 
     //serch type set
-    for (param in document.getElementById("searchType").children){
-        var typename = document.getElementById("searchType").children[param].innerHTML;
-        searchTypes.push(typename);
+    if (document.getElementById("searchType")!=undefined){
+        for (param in document.getElementById("searchType").children){
+            var typename = document.getElementById("searchType").children[param].innerHTML;
+            searchTypes.push(typename);
+        }
     }
-    if (filterSetting["SearchType"] == undefined){
-        document.getElementById("searchType").value=document.getElementById("searchType").children[0].innerHTML;
-    } else {
-        document.getElementById("searchType").value=filterSetting["SearchType"];
+    if (document.getElementById("searchType")!=undefined){
+        if (filterSetting["SearchType"] == undefined){
+            document.getElementById("searchType").value=document.getElementById("searchType").children[0].innerHTML;
+        } else {
+            document.getElementById("searchType").value=filterSetting["SearchType"];
+        }
     }
-    if (filterSetting["SearchName"] == undefined){
-        document.getElementById("searchName").value="";
-    } else {
-        document.getElementById("searchName").value=filterSetting["SearchName"];
+    if (document.getElementById("searchName")!=undefined){
+        if (filterSetting["SearchName"] == undefined){
+            document.getElementById("searchName").value="";
+        } else {
+            document.getElementById("searchName").value=filterSetting["SearchName"];
+        }
     }
 
     //search result set
-    for (param in document.getElementById("searchResult").children[0].children[1].children){
-        var element = document.getElementById("searchResult").children[0].children[1].children[param];
-        if (element == undefined || element.tagName == undefined) continue;
-        var dataSet = [];
-        if (element.classList.contains("result-link")) dataSet["link"]=true;
-        else dataSet["link"]=false;
-        if (element.classList.contains("result-img")) dataSet["img"]=true;
-        else dataSet["img"]=false;
-        dataSet["datalist"] = element.innerHTML.split(";");
-        resultCols.push(dataSet);
+    if (document.getElementById("searchResult")!=undefined){
+        for (param in document.getElementById("searchResult").children[0].children[1].children){
+            var element = document.getElementById("searchResult").children[0].children[1].children[param];
+            if (element == undefined || element.tagName == undefined) continue;
+            var dataSet = [];
+            if (element.classList.contains("result-link")) dataSet["link"]=true;
+            else dataSet["link"]=false;
+            if (element.classList.contains("result-img")) dataSet["img"]=true;
+            else dataSet["img"]=false;
+            dataSet["datalist"] = element.innerHTML.split(";");
+            resultCols.push(dataSet);
+        }
+        document.getElementById("searchResult").children[0].removeChild(document.getElementById("searchResult").children[0].children[1]);
     }
-    document.getElementById("searchResult").children[0].removeChild(document.getElementById("searchResult").children[0].children[1]);
 
     //set select filter
     var selectFilters = document.getElementsByClassName("selectFilter");
@@ -85,8 +93,8 @@ function searchModule_updateFilterSetting(){
     if (baseTable == undefined) return;
     if (searchModule_inited == false) return;
 
-    filterSetting["SearchType"]=document.getElementById("searchType").value;
-    filterSetting["SearchName"]=document.getElementById("searchName").value;
+    if (document.getElementById("searchType")!=undefined) filterSetting["SearchType"]=document.getElementById("searchType").value;
+    if (document.getElementById("searchName")!=undefined) filterSetting["SearchName"]=document.getElementById("searchName").value;
 
     var selectFilters = document.getElementsByClassName("selectFilter");
     for (param in selectFilters){
@@ -128,7 +136,8 @@ function searchModule_search(){
     var filter = [];
 
     //set input filter
-    filter[filterSetting["SearchType"]] = "@"+filterSetting["SearchName"];
+    if (filterSetting["SearchType"] != undefined && filterSetting["SearchName"] != undefined)
+        filter[filterSetting["SearchType"]] = "@"+filterSetting["SearchName"];
 
     //set select filter
     for (param in filterSetting){
@@ -152,6 +161,7 @@ var resultNodes = [];
 function searchModule_showResult(arr){
     if (arr == undefined) return;
     destroyLoadingUI();
+    if (document.getElementById("searchResult") == undefined) return;
     var table=document.getElementById("searchResult").children[0];
     for(var i=0;i<arr.length;i++){
         if (resultNodes.length <= i){
@@ -166,13 +176,23 @@ function searchModule_showResult(arr){
         for (var j=0;j<resultCols.length;j++){
             var tdstr = "";
             if (resultCols[j]["img"]){
-                if (resultCols[j]["datalist"] != undefined && 
-                    resultCols[j]["datalist"].length>0 && 
-                    arr[i][resultCols[j]["datalist"][0]]!=undefined){
-                    switch(arr[i].TableName){
-                        case "skill":
-                        tdstr += '<img src="../img/icon/skillicon/icon_'+arr[i][resultCols[j]["datalist"][0]].toLowerCase()+'.png" />';
-                        break;
+                if (resultCols[j]["datalist"] != undefined){
+                    for (var k=0;k<resultCols[j]["datalist"].length;k++){
+                        if (k > 0) tdstr += "<br/>";
+                        if (k == 0){
+                            switch(arr[i].TableName){
+                                case "skill":
+                                tdstr += '<img src="../img/icon/skillicon/icon_'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                break;
+                                case "job":
+                                tdstr += '<img src="../img/icon/classicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                break;
+                            }
+                            continue;
+                        }
+                        if (arr[i][resultCols[j]["datalist"][k]] != undefined){
+                            tdstr += arr[i][resultCols[j]["datalist"][k]];
+                        }
                     }
                 }
             } else {
@@ -186,7 +206,11 @@ function searchModule_showResult(arr){
                 }
             }
             if (resultCols[j]["link"]){
-                tdstr = '<a href=../Skill?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                switch(arr[i].TableName){
+                    case "skill":
+                    tdstr = '<a href=../Skill?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    break;
+                }
             }
             resultNodes[i].childNodes[j].innerHTML = tdstr;
         }

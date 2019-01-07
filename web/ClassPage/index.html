@@ -15,12 +15,13 @@
 
     <script src="../js/requestMethod.js"></script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
 </head>
 
 <body>
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
     <div class="class-area"></div>
-    <input id="jobFilter" type="hidden"></input>
+    <input id="filter_ClassName" type="hidden" class="selectFilter settedFilter"></input>
     <!--
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <ins class="adsbygoogle"
@@ -34,46 +35,31 @@
     </script>
     -->
     <table id="searchResult" class="search-result-table" style="width:100%">
-        <tr>
-            <td></td>
-            <td>STR</td>
-            <td>DEX</td>
-            <td>CON</td>
-            <td>INT</td>
-            <td>MNA</td>
-            <td>Skill</td>
-        </tr>
-
-    <!--
-        <tr>
-            <td align="center"><a href="">1234</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser1.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td align="center"><a href="">4321</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser2.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-    -->
-
+        <tbody>
+            <tr>
+                <td></td>
+                <td>STR</td>
+                <td>DEX</td>
+                <td>CON</td>
+                <td>INT</td>
+                <td>MNA</td>
+            </tr>
+            <tr>
+                <td class="result-img">Icon;Name</td>
+                <td>STR</td>
+                <td>DEX</td>
+                <td>CON</td>
+                <td>INT</td>
+                <td>MNA</td>
+            </tr>
+        </tbody>
     </table>
 
     <script>
-        var url = window.location.href.split('?')[0];
-        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
-        
-        if (window.location.href.indexOf("?") >= 0){
-            searchQuery();
-        }
+        baseTable="job";
+        searchModule_init();
 
-        if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
+        if (filterSetting["filter_ClassName"]!=undefined) document.getElementById("filter_ClassName").value=filterSetting["filter_ClassName"];
         requestGetData("job", undefined, function(arr){
             arr.sort(function (a, b) {
                 var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
@@ -93,182 +79,13 @@
                 if (Number(arr[i].Rank) == 1){
                     var classButton=document.createElement("a");
                     var classImg=document.createElement("img");
-                    classButton.href=url+"?jobFilter=@"+arr[i].ClassName.split("_")[0];
+                    classButton.href=url+"?filter_ClassName=@"+arr[i].ClassName.split("_")[0];
                     classImg.src="../img/icon/classicon/"+arr[i].Icon.toLowerCase()+".png";
                     classButton.appendChild(classImg);
                     filter.appendChild(classButton);
                 }
             }
         });
-
-        function updateSelectFilter(filterName, dataPath){
-            requestGetData(dataPath, undefined, function(arr){
-                var filter = document.getElementById(filterName);
-                for(var i=0;i<arr.length;i++){
-                    var option=document.createElement("option");
-                    option.value=arr[i];
-                    option.innerText=arr[i];
-                    filter.appendChild(option);
-                }
-                if (filterSetting[filterName]!=undefined) document.getElementById(filterName).value=filterSetting[filterName];
-            });
-        }
-
-        function search(){
-            document.getElementById("searchName").blur();
-            updateQueryString();
-            searchQuery();
-        }
-
-        function searchQuery(){
-            createLoadingUI();
-            var filter = convertFilter();
-            requestGetData("job", filter, function(arr){
-                //console.log(arr);
-                showResult(arr);
-            });
-        }
-
-        //Element -> Setting
-        function updateQueryString(){
-            setFilterSetting("jobFilter");
-            // setFilterSetting("classTypeFilter");
-            // setFilterSetting("valueTypeFilter");
-            // setFilterSetting("attributeFilter");
-            // setFilterSetting("attackTypeFilter");
-            // setFilterSetting("hitTypeFilter");
-            // setFilterSetting("companionFilter");
-            // setFilterSetting_checkBox("simonyFilter");
-            // setFilterSetting_checkBox("bunsinFilter");
-            // setFilterSetting_checkBox("nocoolFilter");
-            if (history.pushState) {
-                var newurl = url + filterToQueryStr(filterSetting);
-                window.history.pushState({path:newurl},'',newurl);
-            }
-        }
-
-        //Setting -> filter
-        function convertFilter(){
-            var filter = [];
-            // if (filterSetting["Name"] != undefined) filter["Name"]="@"+filterSetting["Name"];
-            // if (filterSetting["ClassName"] != undefined) filter["ClassName"]="@"+filterSetting["ClassName"];
-            // if (filterSetting["EngName"] != undefined) filter["EngName"]="@"+filterSetting["EngName"];
-            // //Job
-            // //job은 따로 동작하므로 생략
-            // //ClassType
-            // if (filterSetting["classTypeFilter"] != undefined && filterSetting["classTypeFilter"] != "Default")
-            //     filter["ClassType"]=filterSetting["classTypeFilter"];
-            // //ClassType
-            // if (filterSetting["valueTypeFilter"] != undefined && filterSetting["valueTypeFilter"] != "Default")
-            //     filter["ValueType"]=filterSetting["valueTypeFilter"];
-            // //ClassType
-            // if (filterSetting["attributeFilter"] != undefined && filterSetting["attributeFilter"] != "Default")
-            //     filter["Attribute"]=filterSetting["attributeFilter"];
-            // //ClassType
-            // if (filterSetting["attackTypeFilter"] != undefined && filterSetting["attackTypeFilter"] != "Default")
-            //     filter["AttackType"]=filterSetting["attackTypeFilter"];
-            // //ClassType
-            // if (filterSetting["hitTypeFilter"] != undefined && filterSetting["hitTypeFilter"] != "Default")
-            //     filter["HitType"]=filterSetting["hitTypeFilter"];
-            // //Companion
-            // if (filterSetting["companionFilter"] != undefined && filterSetting["companionFilter"] != "Default")
-            //     filter["EnableCompanion"]=filterSetting["companionFilter"];
-            // //Simony
-            // if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"])
-            //     filter["CanMakeSimony"]="YES";
-            // //Bunsin
-            // if (filterSetting["bunsinFilter"] != undefined && filterSetting["bunsinFilter"])
-            //     filter["CoolDown"]="@BUNSIN";
-            // //No-Cool
-            // if (filterSetting["nocoolFilter"] != undefined && filterSetting["nocoolFilter"])
-            //     filter["BasicCoolDown"]=0;
-            // //Stance
-            // if (filterSetting["stanceFilter"] != undefined)
-            //     filter["ReqStance"]=filterSetting["stanceFilter"];
-
-            if (filterSetting["jobFilter"] != undefined)
-                filter["ClassName"]=filterSetting["jobFilter"];
-            return filter;
-        }
-
-        function setFilterSetting(filterName){
-            if (document.getElementById(filterName).value != "Default") filterSetting[filterName]=document.getElementById(filterName).value;
-            else filterSetting[filterName]=undefined;
-        }
-
-        function setFilterSetting_checkBox(filterName){
-            if (document.getElementById(filterName).checked) filterSetting[filterName]=document.getElementById(filterName).checked;
-            else filterSetting[filterName]=undefined;
-        }
-
-        var resultNodes = [];
-        function showResult(arr){
-            destroyLoadingUI();
-            var table=document.getElementById("searchResult");
-            for(var i=0;i<arr.length;i++){
-                if (resultNodes.length <= i){
-                    var row = document.createElement("tr");
-                    resultNodes.push(row);
-                    table.appendChild(row);
-                    for (var j=0;j<7;j++){
-                        var col = document.createElement("td");
-                        row.appendChild(col);
-                    }
-                }
-                var tdindex = 0;
-                //console.log(i + " " + resultNodes.length + " " + table.childNodes[i].childNodes.length);
-                //resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].ClassID+'<br/>'+arr[i].ClassName;
-                if (arr[i].Icon==undefined || arr[i].Icon.length==0) resultNodes[i].childNodes[1].innerHTML = '';
-                else resultNodes[i].childNodes[tdindex++].innerHTML = '<img src="../img/icon/classicon/'+arr[i].Icon.toLowerCase()+'.png" /><br/>'+arr[i].Initial;
-                //resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].Name+'<br/>'+arr[i].EngName;
-                resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].STR;
-                resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].DEX;
-                resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].CON;
-                resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].INT;
-                resultNodes[i].childNodes[tdindex++].innerHTML = arr[i].MNA;
-                resultNodes[i].childNodes[tdindex++].innerHTML = "<a href='../SkillPage?jobFilter=@"+arr[i].ClassName+"'>SKILL</a><br/><a href='../Ability?searchType=Name&jobFilter="+arr[i].ClassName+"'>ABIL</a>";
-            }
-            for(var i=arr.length;i<resultNodes.length;i++){
-                table.removeChild(resultNodes[i]);
-            }
-            resultNodes.length = arr.length;
-        }
-        function toggle_checkboxList(id){
-            var checkboxList = document.getElementById(id);
-            var checkboxList_head = checkboxList.children[0];
-            var checkboxList_body = checkboxList.children[1];
-            var checkboxList_foot = checkboxList.children[2];
-
-            if (checkboxList_body.style.display === "none"){
-                checkboxList_head.classList.remove("close");
-                checkboxList_head.classList.add("open");
-                checkboxList_body.style.display = "block";
-                checkboxList_foot.style.display = "block";
-            } else {
-                checkboxList_head.classList.remove("open");
-                checkboxList_head.classList.add("close");
-                checkboxList_body.style.display = "none";
-                checkboxList_foot.style.display = "none";
-            }
-        }
-        function onclick_all_checkboxList(id){
-            var checkboxList = document.getElementById(id).children[1].children;
-            for (var i = 0; i < checkboxList.length; i ++){
-                checkboxList[i].checked = true;
-            }
-        }
-        function onclick_none_checkboxList(id){
-            var checkboxList = document.getElementById(id).children[1].children;
-            for (var i = 0; i < checkboxList.length; i ++){
-                checkboxList[i].checked = false;
-            }
-        }
-
-        function searchName_enterCheck() {
-            if (event.keyCode == 13) {
-                search();
-            }
-        }
     </script>
 
 </body>
