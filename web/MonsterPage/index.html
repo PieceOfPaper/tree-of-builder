@@ -28,6 +28,26 @@
         <input type="text" id="searchName">
     </div>
     <div class="filler-area">
+        <p>Filter</p>
+        <select id="filter_Attribute" class="selectFilter">
+            <option value="Default">Attribute</option>
+        </select>
+        <select id="filter_RaceType" class="selectFilter">
+            <option value="Default">Race Type</option>
+        </select>
+        <select id="filter_ArmorMaterial" class="selectFilter">
+            <option value="Default">Armor Material</option>
+        </select>
+        <select id="filter_MoveType" class="selectFilter">
+            <option value="Default">Move Type</option>
+        </select>
+        <select id="filter_Size" class="selectFilter">
+            <option value="Default">Size</option>
+        </select>
+        <select id="filter_MonRank" class="selectFilter">
+            <option value="Default">Mon Rank</option>
+        </select>
+        <div>Level<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "999999"></div>
     </div>
     <button id="searchBtn">Search</button>
     <br/>
@@ -48,7 +68,21 @@
 
     <script>
         baseTable="monster";
+        customFilterSettingMethods.push(setCustom_level);
         searchModule_init();
+
+        if (filterSetting["filter_Level"] != undefined){
+            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_Level"].split(',')[0].replace('[',''));
+            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_Level"].split(',')[1].replace(']',''));
+        }
+
+        function setCustom_level(filterSetting){
+            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=999999){
+                filterSetting["filter_Level"] = undefined;
+                return;
+            }
+            filterSetting["filter_Level"] = '['+document.getElementById("levelMinFilter").value+','+document.getElementById("levelMaxFilter").value+']';
+        }
     </script>
 
 </body>
