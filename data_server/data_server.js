@@ -23,6 +23,9 @@ module.exports = function(app, tableData){
     var stanceServer = require('./data_stance')(app, tableData);
     app.use('/data/stance', stanceServer);
 
+    var stanceServer = require('./data_buff')(app, tableData);
+    app.use('/data/buff', stanceServer);
+
     var stanceServer = require('./data_monster')(app, tableData);
     app.use('/data/monster', stanceServer);
 

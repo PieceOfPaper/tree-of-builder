@@ -187,6 +187,11 @@ function searchModule_showResult(arr){
                                 case "ability":
                                 tdstr += '<img src="../img/icon/skillicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
+                                case "buff":
+                                var iconName = arr[i][resultCols[j]["datalist"][k]].toLowerCase();
+                                if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
+                                tdstr += '<img src="../img/icon/skillicon/'+iconName+'.png" />';
+                                break;
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
@@ -242,6 +247,9 @@ function searchModule_showResult(arr){
                     case "item_premium":
                     case "item_recipe":
                     tdstr = '<a href="../Item?table='+arr[i].TableName+'&id='+arr[i].ClassID+'">'+tdstr+'</a>';
+                    break;
+                    case "buff":
+                    tdstr = '<a href=../Buff?id='+arr[i].ClassID+'>'+tdstr+'</a>';
                     break;
                 }
             }

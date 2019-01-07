@@ -32,7 +32,7 @@ topMenuButtons['ability']["Img"] = "../img/icon/skillicon/ability_warrior_centur
 topMenuButtons['ability']["Name"] = "Ability";
 
 topMenuButtons['buff'] = [];
-topMenuButtons['buff']["Path"] = "Buff";
+topMenuButtons['buff']["Path"] = "BuffPage";
 topMenuButtons['buff']["Img"] = "../img/bufficon/icon_attack_blessing_up.png";
 topMenuButtons['buff']["Name"] = "Buff";
 
