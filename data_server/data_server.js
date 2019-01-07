@@ -5,6 +5,9 @@ module.exports = function(app, tableData){
     route.get('/', function (req, res) {
     });
 
+    var itemServer = require('./data_item')(app, tableData);
+    app.use('/data/item', itemServer);
+
     var jobServer = require('./data_job')(app, tableData);
     app.use('/data/job', jobServer);
 

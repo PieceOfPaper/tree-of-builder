@@ -12,7 +12,7 @@ topMenuButtons['category_database']["Img"] = "";
 topMenuButtons['category_database']["Name"] = "DATABASE";
 
 topMenuButtons['item'] = [];
-topMenuButtons['item']["Path"] = "Item";
+topMenuButtons['item']["Path"] = "ItemPage";
 topMenuButtons['item']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
 topMenuButtons['item']["Name"] = "Item";
 

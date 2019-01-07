@@ -129,16 +129,21 @@ loadTable('stance', 'ies.ipf/stance.ies');
 loadTable('cooldown', 'ies.ipf/cooldown.ies');
 loadTable('item_grade', 'ies.ipf/item_grade.ies');
 loadTable('item', 'ies.ipf/item.ies', function(){
-});
-loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
-});
-loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
-});
-loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
-});
-loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
-});
-loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
+  loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
+    for (param in tableData['item_Equip']) tableData['item'].push(tableData['item_Equip'][param]);
+    loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
+      for (param in tableData['item_Quest']) tableData['item'].push(tableData['item_Quest'][param]);
+      loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
+        for (param in tableData['item_gem']) tableData['item'].push(tableData['item_gem'][param]);
+        loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
+          for (param in tableData['item_premium']) tableData['item'].push(tableData['item_premium'][param]);
+          loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
+            for (param in tableData['item_recipe']) tableData['item'].push(tableData['item_recipe'][param]);
+          });
+        });
+      });
+    });
+  });
 });
 loadTable('recipe', 'ies.ipf/recipe.ies');
 loadTable('item_equip_classtype', 'ies.ipf/item_equip_classtype.ies');

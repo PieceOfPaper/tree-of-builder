@@ -152,7 +152,7 @@ function searchModule_search(){
     createLoadingUI();
     console.log(filter);
     requestGetData(baseTable, filter, function(arr){
-        //console.log(arr);
+        console.log(arr);
         searchModule_showResult(arr);
     });
 }
@@ -187,6 +187,25 @@ function searchModule_showResult(arr){
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
+                                case "item":
+                                case "item_Equip":
+                                case "item_Quest":
+                                case "item_gem":
+                                case "item_premium":
+                                case "item_recipe":
+                                if (arr[i].EqpType != undefined && arr[i].UseGender != undefined && 
+                                    arr[i].EqpType.toLowerCase() == 'outer' && arr[i].UseGender.toLowerCase() == 'both'){
+                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '_f.png"/>';
+                                } else if(arr[i].EquipXpGroup != undefined && arr[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
+                                    tdstr += '<img src="../img/icon/mongem/' + arr[i].Icon.toLowerCase()  + '.png"/>';
+                                } else if(arr[i].Icon != undefined){
+                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '.png"/>';
+                                } else if(arr[i].Illust != undefined){
+                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Illust.toLowerCase()  + '.png"/>';
+                                } else {
+                                    tdstr += '';
+                                }
+                                break;
                             }
                             continue;
                         }
@@ -209,6 +228,14 @@ function searchModule_showResult(arr){
                 switch(arr[i].TableName){
                     case "skill":
                     tdstr = '<a href=../Skill?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    break;
+                    case "item":
+                    case "item_Equip":
+                    case "item_Quest":
+                    case "item_gem":
+                    case "item_premium":
+                    case "item_recipe":
+                    tdstr = '<a href="../Item?table='+arr[i].TableName+'&id='+arr[i].ClassID+'">'+tdstr+'</a>';
                     break;
                 }
             }
