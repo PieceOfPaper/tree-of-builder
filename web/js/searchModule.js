@@ -214,6 +214,9 @@ function searchModule_showResult(arr){
                                     tdstr += '';
                                 }
                                 break;
+                                case "monster":
+                                tdstr += '<img src="../img/icon/monillust/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                break;
                             }
                             continue;
                         }
@@ -250,6 +253,12 @@ function searchModule_showResult(arr){
                     break;
                     case "buff":
                     tdstr = '<a href=../Buff?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    break;
+                    case "monster":
+                    tdstr = '<a href=../Monster?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    break;
+                    case "questprogresscheck":
+                    tdstr = '<a href=../Quest?id='+arr[i].ClassID+'>'+tdstr+'</a>';
                     break;
                 }
             }

@@ -15,6 +15,7 @@
 
     <script src="../js/requestMethod.js"></script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
 </head>
 
 <body>
@@ -24,162 +25,30 @@
             <option value="Name">Name</option>
             <option value="ClassName">ClassName</option>
         </select>
-        <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
+        <input type="text" id="searchName">
     </div>
     <div class="filler-area">
     </div>
-    <button id="searchBtn" onclick="search()">Search</button>
+    <button id="searchBtn">Search</button>
     <br/>
     <table id="searchResult" class="search-result-table" style="width:100%">
+        <tbody>
+            <tr>
+                <td>ClassID</td>
+                <td>Icon</td>
+                <td>Name</td>
+            </tr>
+            <tr>
+                <td class="result-link">ClassID</td>
+                <td class="result-img">Icon</td>
+                <td>Name</td>
+            </tr>
+        </tbody>
     </table>
 
     <script>
-        var url = window.location.href.split('?')[0];
-        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
-        
-        if(filterSetting["Name"] != undefined){
-            document.getElementById("searchType").value = "Name";
-            document.getElementById("searchName").value = filterSetting["Name"];
-        } else if (filterSetting["ClassName"] != undefined){
-            document.getElementById("searchType").value = "ClassName";
-            document.getElementById("searchName").value = filterSetting["ClassName"];
-        }
-
-        if (window.location.href.indexOf("?") >= 0){
-            searchQuery();
-        }
-
-        function updateSelectFilter(filterName, dataPath){
-            requestGetData(dataPath, undefined, function(arr){
-                var filter = document.getElementById(filterName);
-                for(var i=0;i<arr.length;i++){
-                    var option=document.createElement("option");
-                    option.value=arr[i];
-                    option.innerText=arr[i];
-                    filter.appendChild(option);
-                }
-                if (filterSetting[filterName]!=undefined) document.getElementById(filterName).value=filterSetting[filterName];
-            });
-        }
-
-        function search(){
-            document.getElementById("searchName").blur();
-            updateQueryString();
-            searchQuery();
-        }
-
-        function searchQuery(){
-            createLoadingUI();
-            var filter = convertFilter();
-            requestGetData("monster", filter, function(arr){
-                console.log(arr);
-                showResult(arr);
-            });
-        }
-
-        //Element -> Setting
-        function updateQueryString(){
-            if (document.getElementById("searchType").value == "Name"){
-                filterSetting["Name"] = document.getElementById("searchName").value;
-                filterSetting["ClassName"] = undefined;
-            } else if(document.getElementById("searchType").value == "ClassName"){
-                filterSetting["Name"] = undefined;
-                filterSetting["ClassName"] = document.getElementById("searchName").value;
-            }
-            var requireStanceFilter=false;
-            var stanceFilterElements=document.getElementsByClassName("stanceFilterElement");
-            for (var i=0;i<stanceFilterElements.length;i++){
-                if (stanceFilterElements[i].checked==false){
-                    requireStanceFilter = true;
-                    break;
-                }
-            }
-            if (history.pushState) {
-                var newurl = url + filterToQueryStr(filterSetting);
-                window.history.pushState({path:newurl},'',newurl);
-            }
-        }
-
-        //Setting -> filter
-        function convertFilter(){
-            var filter = [];
-            if (filterSetting["Name"] != undefined) filter["Name"]="@"+filterSetting["Name"];
-            if (filterSetting["ClassName"] != undefined) filter["ClassName"]="@"+filterSetting["ClassName"];
-
-            return filter;
-        }
-
-        function setFilterSetting(filterName){
-            if (document.getElementById(filterName).value != "Default") filterSetting[filterName]=document.getElementById(filterName).value;
-            else filterSetting[filterName]=undefined;
-        }
-
-        function setFilterSetting_checkBox(filterName){
-            if (document.getElementById(filterName).checked) filterSetting[filterName]=document.getElementById(filterName).checked;
-            else filterSetting[filterName]=undefined;
-        }
-
-        var resultNodes = [];
-        function showResult(arr){
-            destroyLoadingUI();
-            var table=document.getElementById("searchResult");
-            for(var i=0;i<arr.length;i++){
-                if (resultNodes.length <= i){
-                    var row = document.createElement("tr");
-                    resultNodes.push(row);
-                    table.appendChild(row);
-                    for (var j=0;j<3;j++){
-                        var col = document.createElement("td");
-                        row.appendChild(col);
-                    }
-                }
-                //console.log(i + " " + resultNodes.length + " " + table.childNodes[i].childNodes.length);
-                resultNodes[i].childNodes[0].innerHTML = '<a href=../Monster?id='+arr[i].ClassID+'>'+arr[i].ClassID+'</a>';
-                if (arr[i].Icon==undefined || arr[i].Icon.length==0) resultNodes[i].childNodes[1].innerHTML = '';
-                else resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/monillust/'+arr[i].Icon.toLowerCase()+'.png" />';
-                resultNodes[i].childNodes[2].innerHTML = arr[i].Name+'<br/><br/>'+arr[i].Desc;
-            }
-            for(var i=arr.length;i<resultNodes.length;i++){
-                table.removeChild(resultNodes[i]);
-            }
-            resultNodes.length = arr.length;
-        }
-        function toggle_checkboxList(id){
-            var checkboxList = document.getElementById(id);
-            var checkboxList_head = checkboxList.children[0];
-            var checkboxList_body = checkboxList.children[1];
-            var checkboxList_foot = checkboxList.children[2];
-
-            if (checkboxList_body.style.display === "none"){
-                checkboxList_head.classList.remove("close");
-                checkboxList_head.classList.add("open");
-                checkboxList_body.style.display = "block";
-                checkboxList_foot.style.display = "block";
-            } else {
-                checkboxList_head.classList.remove("open");
-                checkboxList_head.classList.add("close");
-                checkboxList_body.style.display = "none";
-                checkboxList_foot.style.display = "none";
-            }
-        }
-        function onclick_all_checkboxList(id){
-            var checkboxList = document.getElementById(id).children[1].children;
-            for (var i = 0; i < checkboxList.length; i ++){
-                checkboxList[i].checked = true;
-            }
-        }
-        function onclick_none_checkboxList(id){
-            var checkboxList = document.getElementById(id).children[1].children;
-            for (var i = 0; i < checkboxList.length; i ++){
-                checkboxList[i].checked = false;
-            }
-        }
-
-        function searchName_enterCheck() {
-            if (event.keyCode == 13) {
-                search();
-            }
-        }
+        baseTable="monster";
+        searchModule_init();
     </script>
 
 </body>
