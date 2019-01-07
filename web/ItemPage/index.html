@@ -87,9 +87,9 @@
         customFilterSettingMethods.push(setCustom_useLv);
         searchModule_init();
 
-        if (filterSetting["UseLv"] != undefined){
-            document.getElementById("useLvMinFilter").value = Number(filterSetting["UseLv"].split(',')[0].replace('[',''));
-            document.getElementById("useLvMaxFilter").value = Number(filterSetting["UseLv"].split(',')[1].replace(']',''));
+        if (filterSetting["filter_UseLv"] != undefined){
+            document.getElementById("useLvMinFilter").value = Number(filterSetting["filter_UseLv"].split(',')[0].replace('[',''));
+            document.getElementById("useLvMaxFilter").value = Number(filterSetting["filter_UseLv"].split(',')[1].replace(']',''));
         }
 
         function setCustom_useLv(filterSetting){

@@ -28,6 +28,10 @@
         <input type="text" id="searchName">
     </div>
     <div class="filler-area">
+        <select id="filter_QuestMode" class="selectFilter">
+            <option value="Default">Quest Mode</option>
+        </select>
+        <div>Level<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "500"></div>
     </div>
     <button id="searchBtn">Search</button>
     <br/>
@@ -50,7 +54,21 @@
 
     <script>
         baseTable="quest";
+        customFilterSettingMethods.push(setCustom_level);
         searchModule_init();
+
+        if (filterSetting["filter_Level"] != undefined){
+            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_Level"].split(',')[0].replace('[',''));
+            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_Level"].split(',')[1].replace(']',''));
+        }
+
+        function setCustom_level(filterSetting){
+            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=500){
+                filterSetting["filter_Level"] = undefined;
+                return;
+            }
+            filterSetting["filter_Level"] = '['+document.getElementById("levelMinFilter").value+','+document.getElementById("levelMaxFilter").value+']';
+        }
     </script>
 
 </body>

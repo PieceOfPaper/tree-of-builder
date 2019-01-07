@@ -84,9 +84,13 @@
         customFilterSettingMethods.push(setCustom_level);
         searchModule_init();
 
+        if (filterSetting["filter_Lv"] != undefined){
+            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_Lv"].split(',')[0].replace('[',''));
+            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_Lv"].split(',')[1].replace(']',''));
+        }
         
         function setCustom_level(filterSetting){
-            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=500){
+            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=999999){
                 filterSetting["filter_Lv"] = undefined;
                 return;
             }
