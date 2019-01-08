@@ -319,7 +319,7 @@ module.exports = function(app, tableData, scriptData){
         for (var i=0;i<luaMethodList.length;i++){ 
             if (scriptData[luaMethodList[i]] == undefined) continue;
             if (luaMethodList[i] == 'ABIL_REINFORCE_PRICE' || luaMethodList[i] == 'ABIL_COMMON_PRICE'){
-                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
+                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
             } else {
                 output += tos.Lua2JS(scriptData[luaMethodList[i]]);
             }
