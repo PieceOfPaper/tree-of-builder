@@ -378,6 +378,7 @@ footer img{
 }
 
 .search-result-pagenum button{
+    margin: 5px;
     font-size: 2em;
     border: 0;
     border-radius: 0.25em;
