@@ -140,18 +140,29 @@ function searchModule_search(){
     if (searchModule_inited == false) return;
     var filter = [];
 
-    //set input filter
-    if (filterSetting["SearchType"] != undefined && filterSetting["SearchName"] != undefined)
-        filter[filterSetting["SearchType"]] = "@"+filterSetting["SearchName"];
-
     //set select filter
+    var hasFilter = false;
     for (param in filterSetting){
         if (param == undefined) continue;
         if (param == "SearchType" || param == "SearchName") continue;
         if (filterSetting[param] == undefined) continue;
         if (filterSetting[param] == "Default") continue;
         filter[param.split('_')[1]] = filterSetting[param];
+        hasFilter = true;
     }
+
+    if (hasFilter == false && 
+        (filterSetting["SearchName"] == undefined || filterSetting["SearchName"].length == 0)){
+            pageNum = 1;
+            searchedItems = [];
+            searchModule_showResult();
+            searchModule_updatePageNum();
+            return;
+        }
+
+    //set input filter
+    if (filterSetting["SearchType"] != undefined && filterSetting["SearchName"] != undefined)
+        filter[filterSetting["SearchType"]] = "@"+filterSetting["SearchName"];
 
     //request
     createLoadingUI();
@@ -196,6 +207,7 @@ function searchModule_showResult(){
     if (document.getElementById("searchResult") == undefined) return;
     var table=document.getElementById("searchResult").children[0];
     var nodeIndex = 0;
+    var nodeCount = 0;
     for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
         if (i >= searchedItems.length) break;
         nodeIndex = i%itemCount;
@@ -299,11 +311,12 @@ function searchModule_showResult(){
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;
         }
+        nodeCount ++;
     }
-    for(var i=nodeIndex+1;i<resultNodes.length;i++){
+    for(var i=nodeCount;i<resultNodes.length;i++){
         table.removeChild(resultNodes[i]);
     }
-    resultNodes.length = (nodeIndex + 1);
+    resultNodes.length = nodeCount;
 }
 
 function searchModule_settingSelectFilter(id){
