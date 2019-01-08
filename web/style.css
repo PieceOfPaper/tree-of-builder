@@ -373,6 +373,20 @@ footer img{
     height:64px;
 }
 
+.search-result-pagenum{
+
+}
+
+.search-result-pagenum button{
+    font-size: 2em;
+    border: 0;
+    border-radius: 0.25em;
+    background-color: whitesmoke;
+}
+.search-result-pagenum button.selected{
+    background-color: wheat;
+}
+
 /* ======== Detail ======== */
 .add-ability-area {
 

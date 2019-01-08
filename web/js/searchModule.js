@@ -6,8 +6,12 @@ var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
 var searchTypes = [];
 var resultCols = [];
 
+var pageNum = 1;
+
 //------------- 세팅이 필요한 부분 -------------//
 var baseTable = undefined;//Require
+
+var itemCount = 10; //한 페이지당 보여주는 아이템 수
 
 var checkboxFilterSetting = [];
 //각 페이지마다 하드코딩 필요한 부분 (아래는 예시)
@@ -130,6 +134,7 @@ function searchModule_updateFilterSetting(){
     }
 }
 
+var searchedItems;
 function searchModule_search(){
     if (baseTable == undefined) return;
     if (searchModule_inited == false) return;
@@ -153,18 +158,48 @@ function searchModule_search(){
     console.log(filter);
     requestGetData(baseTable, filter, function(arr){
         console.log(arr);
-        searchModule_showResult(arr);
+        searchedItems = arr;
+        searchModule_showResult();
+        searchModule_updatePageNum();
     });
 }
 
+var pageNodes = [];
+function searchModule_updatePageNum(){
+    if (searchedItems == undefined) return;
+    var pageMax = Math.floor((searchedItems.length - 1)/itemCount) + 1;
+    if (pageMax <= 0) pageMax = 1;
+    var pageArea = document.getElementById("pageNumbers");
+    if (pageArea == null) return;
+    for (var i = 1; i <= pageMax; i++){
+        if (pageNodes.length <= (i-1)){
+            var num = document.createElement("span");
+            pageNodes.push(num);
+            pageArea.appendChild(num);
+        }
+        if (pageNum == i){
+            pageNodes[(i-1)].innerHTML = ' <button class="selected" onclick="searchModule_onclick_page('+i+')">'+i+'</butto > ';
+        } else {
+            pageNodes[(i-1)].innerHTML = ' <button onclick="searchModule_onclick_page('+i+')">'+i+'</butto > ';
+        }
+    }
+    for(var i=pageMax;i<pageNodes.length;i++){
+        pageArea.removeChild(pageNodes[i]);
+    }
+    pageNodes.length = pageMax;
+}
+
 var resultNodes = [];
-function searchModule_showResult(arr){
-    if (arr == undefined) return;
+function searchModule_showResult(){
+    if (searchedItems == undefined) return;
     destroyLoadingUI();
     if (document.getElementById("searchResult") == undefined) return;
     var table=document.getElementById("searchResult").children[0];
-    for(var i=0;i<arr.length;i++){
-        if (resultNodes.length <= i){
+    var nodeIndex = 0;
+    for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
+        if (i >= searchedItems.length) break;
+        nodeIndex = i%itemCount;
+        if (resultNodes.length <= nodeIndex){
             var row = document.createElement("tr");
             resultNodes.push(row);
             table.appendChild(row);
@@ -180,20 +215,20 @@ function searchModule_showResult(arr){
                     for (var k=0;k<resultCols[j]["datalist"].length;k++){
                         if (k > 0) tdstr += "<br/>";
                         if (k == 0){
-                            switch(arr[i].TableName){
+                            switch(searchedItems[i].TableName){
                                 case "skill":
-                                tdstr += '<img src="../img/icon/skillicon/icon_'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                tdstr += '<img src="../img/icon/skillicon/icon_'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
                                 case "ability":
-                                tdstr += '<img src="../img/icon/skillicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                tdstr += '<img src="../img/icon/skillicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
                                 case "buff":
-                                var iconName = arr[i][resultCols[j]["datalist"][k]].toLowerCase();
+                                var iconName = searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase();
                                 if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
                                 tdstr += '<img src="../img/icon/skillicon/'+iconName+'.png" />';
                                 break;
                                 case "job":
-                                tdstr += '<img src="../img/icon/classicon/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                tdstr += '<img src="../img/icon/classicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
                                 case "item":
                                 case "item_Equip":
@@ -201,27 +236,27 @@ function searchModule_showResult(arr){
                                 case "item_gem":
                                 case "item_premium":
                                 case "item_recipe":
-                                if (arr[i].EqpType != undefined && arr[i].UseGender != undefined && 
-                                    arr[i].EqpType.toLowerCase() == 'outer' && arr[i].UseGender.toLowerCase() == 'both'){
-                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '_f.png"/>';
-                                } else if(arr[i].EquipXpGroup != undefined && arr[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
-                                    tdstr += '<img src="../img/icon/mongem/' + arr[i].Icon.toLowerCase()  + '.png"/>';
-                                } else if(arr[i].Icon != undefined){
-                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Icon.toLowerCase()  + '.png"/>';
-                                } else if(arr[i].Illust != undefined){
-                                    tdstr += '<img src="../img/icon/itemicon/' + arr[i].Illust.toLowerCase()  + '.png"/>';
+                                if (searchedItems[i].EqpType != undefined && searchedItems[i].UseGender != undefined && 
+                                    searchedItems[i].EqpType.toLowerCase() == 'outer' && searchedItems[i].UseGender.toLowerCase() == 'both'){
+                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '_f.png"/>';
+                                } else if(searchedItems[i].EquipXpGroup != undefined && searchedItems[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
+                                    tdstr += '<img src="../img/icon/mongem/' + searchedItems[i].Icon.toLowerCase()  + '.png"/>';
+                                } else if(searchedItems[i].Icon != undefined){
+                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '.png"/>';
+                                } else if(searchedItems[i].Illust != undefined){
+                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Illust.toLowerCase()  + '.png"/>';
                                 } else {
                                     tdstr += '';
                                 }
                                 break;
                                 case "monster":
-                                tdstr += '<img src="../img/icon/monillust/'+arr[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                tdstr += '<img src="../img/icon/monillust/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
                             }
                             continue;
                         }
-                        if (arr[i][resultCols[j]["datalist"][k]] != undefined){
-                            tdstr += arr[i][resultCols[j]["datalist"][k]];
+                        if (searchedItems[i][resultCols[j]["datalist"][k]] != undefined){
+                            tdstr += searchedItems[i][resultCols[j]["datalist"][k]];
                         }
                     }
                 }
@@ -229,19 +264,19 @@ function searchModule_showResult(arr){
                 if (resultCols[j]["datalist"] != undefined){
                     for (var k=0;k<resultCols[j]["datalist"].length;k++){
                         if (k > 0) tdstr += "<br/>";
-                        if (arr[i][resultCols[j]["datalist"][k]] != undefined){
-                            tdstr += arr[i][resultCols[j]["datalist"][k]];
+                        if (searchedItems[i][resultCols[j]["datalist"][k]] != undefined){
+                            tdstr += searchedItems[i][resultCols[j]["datalist"][k]];
                         }
                     }
                 }
             }
             if (resultCols[j]["link"]){
-                switch(arr[i].TableName){
+                switch(searchedItems[i].TableName){
                     case "skill":
-                    tdstr = '<a href=../Skill?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    tdstr = '<a href=../Skill?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
                     case "ability":
-                    tdstr = '<a href=../Ability?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    tdstr = '<a href=../Ability?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
                     case "item":
                     case "item_Equip":
@@ -249,26 +284,26 @@ function searchModule_showResult(arr){
                     case "item_gem":
                     case "item_premium":
                     case "item_recipe":
-                    tdstr = '<a href="../Item?table='+arr[i].TableName+'&id='+arr[i].ClassID+'">'+tdstr+'</a>';
+                    tdstr = '<a href="../Item?table='+searchedItems[i].TableName+'&id='+searchedItems[i].ClassID+'">'+tdstr+'</a>';
                     break;
                     case "buff":
-                    tdstr = '<a href=../Buff?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    tdstr = '<a href=../Buff?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
                     case "monster":
-                    tdstr = '<a href=../Monster?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    tdstr = '<a href=../Monster?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
                     case "questprogresscheck":
-                    tdstr = '<a href=../Quest?id='+arr[i].ClassID+'>'+tdstr+'</a>';
+                    tdstr = '<a href=../Quest?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
                 }
             }
-            resultNodes[i].childNodes[j].innerHTML = tdstr;
+            resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;
         }
     }
-    for(var i=arr.length;i<resultNodes.length;i++){
+    for(var i=nodeIndex+1;i<resultNodes.length;i++){
         table.removeChild(resultNodes[i]);
     }
-    resultNodes.length = arr.length;
+    resultNodes.length = (nodeIndex + 1);
 }
 
 function searchModule_settingSelectFilter(id){
@@ -288,6 +323,7 @@ function searchModule_settingSelectFilter(id){
 
 
 function searchModule_onclick_search(){
+    pageNum = 1;
     searchModule_updateFilterSetting();
     searchModule_search();
 }
@@ -296,4 +332,10 @@ function searchModule_onkeydown_search() {
     if (event.keyCode == 13) {
         searchModule_onclick_search();
     }
+}
+
+function searchModule_onclick_page(index) {
+    pageNum = index;
+    searchModule_showResult();
+    searchModule_updatePageNum();
 }
