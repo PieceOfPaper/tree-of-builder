@@ -89,11 +89,16 @@ function searchModule_init(){
 
     //set order event
     if (document.getElementById("orderAttribute")!=undefined){
+        if (filterSetting["orderAttr"]!=undefined) document.getElementById("orderAttribute").value=filterSetting["orderAttr"];
         document.getElementById("orderAttribute").onchange=searchModule_onchange_order;
     }
     if (document.getElementById("orderType")!=undefined){
+        if (filterSetting["orderType"]!=undefined) document.getElementById("orderType").value=filterSetting["orderType"];
         document.getElementById("orderType").onchange=searchModule_onchange_order;
     }
+
+    //set pageNum
+    if (filterSetting["pageNum"]!=undefined) pageNum=filterSetting["pageNum"];
 
 
     if (window.location.href.indexOf("?") >= 0){
@@ -105,8 +110,14 @@ function searchModule_updateFilterSetting(){
     if (baseTable == undefined) return;
     if (searchModule_inited == false) return;
 
-    if (document.getElementById("searchType")!=undefined) filterSetting["SearchType"]=document.getElementById("searchType").value;
-    if (document.getElementById("searchName")!=undefined) filterSetting["SearchName"]=document.getElementById("searchName").value;
+    if (document.getElementById("searchType")!=undefined && document.getElementById("searchName")!=undefined &&
+        document.getElementById("searchName").value.length > 0){
+        filterSetting["SearchType"]=document.getElementById("searchType").value;
+        filterSetting["SearchName"]=document.getElementById("searchName").value;
+    } else {
+        filterSetting["SearchType"]=undefined;
+        filterSetting["SearchName"]=undefined;
+    }
 
     var selectFilters = document.getElementsByClassName("selectFilter");
     for (param in selectFilters){
@@ -135,6 +146,12 @@ function searchModule_updateFilterSetting(){
         customFilterSettingMethods[param](filterSetting);
     }
 
+    filterSetting["pageNum"]=pageNum;
+    if (document.getElementById("orderAttribute")!=undefined) filterSetting["orderAttr"]=document.getElementById("orderAttribute").value;
+    else filterSetting["orderAttr"]=undefined;
+    if (document.getElementById("orderType")!=undefined) filterSetting["orderType"]=document.getElementById("orderType").value;
+    else filterSetting["orderType"]=undefined;
+
     //set query string
     if (history.pushState) {
         var newurl = url + filterToQueryStr(filterSetting);
@@ -152,7 +169,7 @@ function searchModule_search(){
     var hasFilter = false;
     for (param in filterSetting){
         if (param == undefined) continue;
-        if (param == "SearchType" || param == "SearchName") continue;
+        if (param.indexOf('filter_') < 0) continue;
         if (filterSetting[param] == undefined) continue;
         if (filterSetting[param] == "Default") continue;
         filter[param.split('_')[1]] = filterSetting[param];
@@ -390,12 +407,14 @@ function searchModule_onkeydown_search() {
 
 function searchModule_onclick_page(index) {
     pageNum = index;
+    searchModule_updateFilterSetting();
     searchModule_showResult();
     searchModule_updatePageNum();
 }
 
 function searchModule_onchange_order() {
     pageNum = 1;
+    searchModule_updateFilterSetting();
     searchModule_updateOrder();
     searchModule_showResult();
     searchModule_updatePageNum();
