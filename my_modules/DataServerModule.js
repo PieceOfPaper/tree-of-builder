@@ -2,7 +2,7 @@ class DataServerModule {
 
     static DefaultQueryFilter(tableData, queryString) {
         var filteredArray = [];
-        var itemCount = 10;
+        var itemCount = 999999;
         var pageNum = 1;
         var orderAttr = "ClassID";
         var orderType = 1;

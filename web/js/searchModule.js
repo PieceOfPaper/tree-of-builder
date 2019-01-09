@@ -148,7 +148,7 @@ function searchModule_updateFilterSetting(){
         customFilterSettingMethods[param](filterSetting);
     }
 
-    if (itemCount != 10) filterSetting["itemCount"]=itemCount;
+    if (itemCount != 999999) filterSetting["itemCount"]=itemCount;
     else filterSetting["itemCount"]=undefined;
     filterSetting["pageNum"]=pageNum;
     if (document.getElementById("orderAttribute")!=undefined) filterSetting["orderAttr"]=document.getElementById("orderAttribute").value;
