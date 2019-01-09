@@ -21,6 +21,23 @@
 <body>
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
     <div class="class-area"></div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute" onchange="searchModule_search()">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+            <option value="STR">STR</option>
+            <option value="DEX">DEX</option>
+            <option value="CON">CON</option>
+            <option value="INT">INT</option>
+            <option value="MNA">MNA</option>
+        </select>
+        <select id="orderType" onchange="searchModule_search()">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
     <input id="filter_ClassName" type="hidden" class="selectFilter settedFilter"></input>
     <!--
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>

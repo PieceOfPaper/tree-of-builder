@@ -91,11 +91,11 @@ function searchModule_init(){
     //set order event
     if (document.getElementById("orderAttribute")!=undefined){
         if (filterSetting["orderAttr"]!=undefined) document.getElementById("orderAttribute").value=filterSetting["orderAttr"];
-        document.getElementById("orderAttribute").onchange=searchModule_onchange_order;
+        //document.getElementById("orderAttribute").onchange=searchModule_onchange_order;
     }
     if (document.getElementById("orderType")!=undefined){
         if (filterSetting["orderType"]!=undefined) document.getElementById("orderType").value=filterSetting["orderType"];
-        document.getElementById("orderType").onchange=searchModule_onchange_order;
+        //document.getElementById("orderType").onchange=searchModule_onchange_order;
     }
 
     //set pageNum
