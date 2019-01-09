@@ -87,6 +87,14 @@ function searchModule_init(){
         if (filterSetting[checkboxFilters[param].id]!=undefined) checkboxFilters[param].checked=filterSetting[checkboxFilters[param].id];
     }
 
+    //set order event
+    if (document.getElementById("orderAttribute")!=undefined){
+        document.getElementById("orderAttribute").onchange=searchModule_onchange_order;
+    }
+    if (document.getElementById("orderType")!=undefined){
+        document.getElementById("orderType").onchange=searchModule_onchange_order;
+    }
+
 
     if (window.location.href.indexOf("?") >= 0){
         searchModule_search();
@@ -170,8 +178,41 @@ function searchModule_search(){
     requestGetData(baseTable, filter, function(arr){
         console.log(arr);
         searchedItems = arr;
+        searchModule_updateOrder();
         searchModule_showResult();
         searchModule_updatePageNum();
+    });
+}
+
+function searchModule_updateOrder(){
+    var orderAttr = "ClassID";
+    var orderType = 1;
+    if (document.getElementById("orderAttribute")!=undefined &&
+        document.getElementById("orderAttribute").value != "Default"){
+        orderAttr=document.getElementById("orderAttribute").value;
+    }
+    if (document.getElementById("orderType")!=undefined){
+        orderType=document.getElementById("orderType").value;
+    }
+    searchedItems.sort(function(a,b){
+        if (a[orderAttr] != b[orderAttr]){
+            if (a[orderAttr] == undefined) return -1 * orderType;
+            else if (b[orderAttr] == undefined) return 1 * orderType;
+            else {
+                if ((typeof a[orderAttr])=="number" && (typeof b[orderAttr])=="number"){
+                    if (a[orderAttr] < b[orderAttr]) return -1 * orderType;
+                    else return 1 * orderType;
+                }
+                else if ((typeof a[orderAttr])=="string" && (typeof b[orderAttr])=="string"){
+                    return a[orderAttr].localeCompare(b[orderAttr]) * orderType;
+                }
+                else if ((typeof a[orderAttr])=="boolean" && (typeof b[orderAttr])=="boolean"){
+                    if (a[orderAttr]) return -1 * orderType;
+                    else return 1 * orderType;
+                }
+            }
+        }
+        return 0;
     });
 }
 
@@ -349,6 +390,13 @@ function searchModule_onkeydown_search() {
 
 function searchModule_onclick_page(index) {
     pageNum = index;
+    searchModule_showResult();
+    searchModule_updatePageNum();
+}
+
+function searchModule_onchange_order() {
+    pageNum = 1;
+    searchModule_updateOrder();
     searchModule_showResult();
     searchModule_updatePageNum();
 }

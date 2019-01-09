@@ -309,6 +309,14 @@ footer img{
     font-size: 1em;
 }
 
+.order-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.order-area select{
+    font-size: 1em;
+}
 
 .checkboxList {
     padding: 0;
