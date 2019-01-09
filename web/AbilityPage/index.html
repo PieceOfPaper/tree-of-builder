@@ -88,7 +88,7 @@
             var filter = document.getElementById("filter_Job");
             for(var i=0;i<arr.length;i++){
                 var option=document.createElement("option");
-                option.value="@"+arr[i].ClassName;
+                option.value=arr[i].ClassName;
                 option.innerText=arr[i].Name;
                 filter.appendChild(option);
             }
