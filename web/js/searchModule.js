@@ -7,6 +7,7 @@ var searchTypes = [];
 var resultCols = [];
 
 var pageNum = 1;
+var pageMax = 1;
 
 //------------- 세팅이 필요한 부분 -------------//
 var baseTable = undefined;//Require
@@ -98,6 +99,7 @@ function searchModule_init(){
     }
 
     //set pageNum
+    if (filterSetting["itemCount"]!=undefined) itemCount=filterSetting["itemCount"];
     if (filterSetting["pageNum"]!=undefined) pageNum=filterSetting["pageNum"];
 
 
@@ -146,6 +148,8 @@ function searchModule_updateFilterSetting(){
         customFilterSettingMethods[param](filterSetting);
     }
 
+    if (itemCount != 10) filterSetting["itemCount"]=itemCount;
+    else filterSetting["itemCount"]=undefined;
     filterSetting["pageNum"]=pageNum;
     if (document.getElementById("orderAttribute")!=undefined) filterSetting["orderAttr"]=document.getElementById("orderAttribute").value;
     else filterSetting["orderAttr"]=undefined;
@@ -169,11 +173,19 @@ function searchModule_search(){
     var hasFilter = false;
     for (param in filterSetting){
         if (param == undefined) continue;
-        if (param.indexOf('filter_') < 0) continue;
+        if (param=="SearchType" || param=="SearchName") continue;
+        //if (param.indexOf('filter_') < 0) continue;
         if (filterSetting[param] == undefined) continue;
         if (filterSetting[param] == "Default") continue;
-        filter[param.split('_')[1]] = filterSetting[param];
-        hasFilter = true;
+        if (param.indexOf('filter_') > -1){
+            filter[param.split('_')[1]] = filterSetting[param];
+            hasFilter = true;
+        } else {
+            if (param=="pageNum"&&filterSetting[param]==1) continue;
+            if (param=="orderAttr"&&filterSetting[param]=="ClassID") continue;
+            if (param=="orderType"&&filterSetting[param]==1) continue;
+            filter[param] = filterSetting[param];
+        }
     }
 
     if (hasFilter == false && 
@@ -192,9 +204,10 @@ function searchModule_search(){
     //request
     createLoadingUI();
     console.log(filter);
-    requestGetData(baseTable, filter, function(arr){
+    requestGetData(baseTable, filter, function(arr, pm){
         console.log(arr);
         searchedItems = arr;
+        pageMax = pm;
         searchModule_updateOrder();
         searchModule_showResult();
         searchModule_updatePageNum();
@@ -236,8 +249,8 @@ function searchModule_updateOrder(){
 var pageNodes = [];
 function searchModule_updatePageNum(){
     if (searchedItems == undefined) return;
-    var pageMax = Math.floor((searchedItems.length - 1)/itemCount) + 1;
-    if (pageMax <= 0) pageMax = 1;
+    // var pageMax = Math.floor((searchedItems.length - 1)/itemCount) + 1;
+    // if (pageMax <= 0) pageMax = 1;
     var pageArea = document.getElementById("pageNumbers");
     if (pageArea == null) return;
     for (var i = 1; i <= pageMax; i++){
@@ -266,7 +279,8 @@ function searchModule_showResult(){
     var table=document.getElementById("searchResult").children[0];
     var nodeIndex = 0;
     var nodeCount = 0;
-    for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
+    //for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
+    for(var i=0;i<searchedItems.length;i++){
         if (i >= searchedItems.length) break;
         nodeIndex = i%itemCount;
         if (resultNodes.length <= nodeIndex){
@@ -408,14 +422,16 @@ function searchModule_onkeydown_search() {
 function searchModule_onclick_page(index) {
     pageNum = index;
     searchModule_updateFilterSetting();
-    searchModule_showResult();
-    searchModule_updatePageNum();
+    // searchModule_showResult();
+    // searchModule_updatePageNum();
+    searchModule_search();
 }
 
 function searchModule_onchange_order() {
-    pageNum = 1;
-    searchModule_updateFilterSetting();
-    searchModule_updateOrder();
-    searchModule_showResult();
-    searchModule_updatePageNum();
+    //pageNum = 1;
+    //searchModule_updateFilterSetting();
+    // searchModule_updateOrder();
+    // searchModule_showResult();
+    // searchModule_updatePageNum();
+    //searchModule_search();
 }
