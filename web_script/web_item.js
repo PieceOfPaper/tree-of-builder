@@ -798,7 +798,8 @@ module.exports = function(app, tableData, scriptData){
 
     var baseSkillString = '';
     for(param in skillTable){
-      if (('Gem_'+skillTable[param].ClassName)==itemTable[index].ClassName){
+      if (('Gem_'+skillTable[param].ClassName)==itemTable[index].ClassName ||
+        ('GEM_'+skillTable[param].ClassName)==itemTable[index].ClassName){
         baseSkillString += '<p><a href="../Skill?id='+skillTable[param].ClassID+'">'+skillTable[param].Name+'</a></p>';
       }
     }

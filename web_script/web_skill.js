@@ -590,6 +590,7 @@ module.exports = function(app, tableData, scriptData){
 
     var skillGemString = '';
     var skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'Gem_'+skillTable[index].ClassName);
+    if (skillGemData == undefined) skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'GEM_'+skillTable[index].ClassName);
     if (skillGemData!=undefined){
       skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
     }
