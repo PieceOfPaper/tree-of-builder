@@ -588,6 +588,11 @@ module.exports = function(app, tableData, scriptData){
     if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0 && scriptData[skillTable[index].CaptionRatio3] != undefined) rawScript += '<tr><td>CaptionRatio3</td><td class="script">' + scriptData[skillTable[index].CaptionRatio3] + '</td></tr>';
     if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && scriptData[skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td><td class="script">' + scriptData[skillTable[index].SpendItemCount] + '</td></tr>';
 
+    var skillGemString = '';
+    var skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'Gem_'+skillTable[index].ClassName);
+    if (skillGemData!=undefined){
+      skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
+    }
 
     var output = layout_detail.toString();
     //output = output.replace(/style.css/g, '../Layout/style.css');
@@ -620,6 +625,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%DeadHitDelay%/g, Number(skillTable[index].DeadHitDelay)/1000 + 's');
     output = output.replace(/%HitTime%/g, Number(skillTable[index].HitTime)/1000 + 's');
     output = output.replace(/%AniTime%/g, Number(skillTable[index].AniTime)/1000 + 's');
+
+    output = output.replace(/%SkillGem%/g, skillGemString);
 
     output = output.replace(/%Keyword%/g, skillTable[index].Keyword==undefined?'':skillTable[index].Keyword.replace(/;/g,', '));
 
