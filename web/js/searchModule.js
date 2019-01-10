@@ -336,6 +336,27 @@ function searchModule_showResult(){
                                 case "monster":
                                 tdstr += '<img src="../img/icon/monillust/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
+                                case "questprogresscheck":
+                                if (resultCols[j]["datalist"][k]=="QuestMode"){
+                                    switch(searchedItems[i][resultCols[j]["datalist"][k]]){
+                                        case "MAIN":
+                                        tdstr += '<img style="width:42px;height:42px" src="../img/minimap_icons/minimap_1_main.png" />';
+                                        break;
+                                        case "SUB":
+                                        tdstr += '<img style="width:42px;height:42px" src="../img/minimap_icons/minimap_1_sub.png" />';
+                                        break;
+                                        case "REPEAT":
+                                        tdstr += '<img style="width:42px;height:42px" src="../img/minimap_icons/minimap_1_repeat.png" />';
+                                        break;
+                                        case "PARTY":
+                                        tdstr += '<img style="width:42px;height:42px" src="../img/minimap_icons/minimap_1_party.png" />';
+                                        break;
+                                        case "KEYITEM":
+                                        tdstr += '<img style="width:42px;height:42px" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+                                        break;
+                                    }
+                                }
+                                break;
                             }
                             continue;
                         }
