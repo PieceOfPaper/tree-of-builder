@@ -94,6 +94,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
                     console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
                     sendSlack("Image Import SUCCESS (with UI Skin)");
                     copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+                    copyImage('./web/img/actionicon', './web/img/icon/skillicon');
                   });
                 });
               });
@@ -102,6 +103,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
             console.log("IMAGE IMPORT SUCCESS");
             sendSlack("Image Import SUCCESS");
             copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+            copyImage('./web/img/actionicon', './web/img/icon/skillicon');
           }
         });
       });
