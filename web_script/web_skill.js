@@ -613,6 +613,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%SklFactor%/g, Number(skillTable[index].SklFactor));
     output = output.replace(/%SklFactorByLevel%/g, Number(skillTable[index].SklFactorByLevel));
+    output = output.replace(/%SklSR%/g, Number(skillTable[index].SklSR));
     output = output.replace(/%BasicSP%/g, Number(skillTable[index].BasicSP));
     output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
     output = output.replace(/%BasicCoolDown%/g, Number(skillTable[index].BasicCoolDown)/1000 + 's');

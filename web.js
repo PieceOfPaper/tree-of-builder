@@ -84,6 +84,12 @@ loadTable('job', 'ies.ipf/job.ies', function(){
   });
 });
 loadTable('skill', 'ies.ipf/skill.ies', function(){
+  loadTable('skill_mon', 'ies.ipf/skill_mon.ies', function(){
+    for(var i=0;i<tableData['skill_mon'].length;i++){
+      tableData['skill'].push(tableData['skill_mon'][i]);
+    }
+    console.log('merge skill+skill_mon');
+  });
   loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies', function(){
     for(var i=0;i<tableData['skill_Simony'].length;i++){
       for(var j=0;j<tableData['skill'].length;j++){

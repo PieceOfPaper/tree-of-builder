@@ -26,6 +26,7 @@ module.exports = function(app, tableData, scriptData){
     var layout_detail = fs.readFileSync('./web/MonsterPage/detail.html');
     function monsterDetailPage(index, request, response) {
         var monsterTable = tableData['monster'];
+        var skillTable = tableData['skill_mon'];
         
         var statScript = '';
         statScript += '<script>';
@@ -122,6 +123,27 @@ module.exports = function(app, tableData, scriptData){
         statScript += tos.Lua2JS(scriptData['SCR_Get_MON_MSP']);
         statScript += '</script>';
 
+        var skillList = [];
+        for (param in skillTable){
+          if (skillTable[param].ClassName.indexOf('Mon_'+monsterTable[index].SkillType+'_Skill_') > -1){
+            skillList.push(skillTable[param]);
+          }
+        }
+        var skillString = '';
+        skillString += '<table><tbody>';
+        skillString += '<tr><td>Name</td><td>Factor</td><td>SR</td><td>CD</td></tr>';
+        if (skillList.length > 0){
+          for (var i=0;i<skillList.length;i++){
+            skillString += '<tr>';
+            skillString += '<td><a href="../Skill?id='+skillList[i].ClassID+'">'+skillList[i].Name+'</a></td>';
+            skillString += '<td>'+skillList[i].SklFactor+'%</td>';
+            skillString += '<td>'+skillList[i].SklSR+'</td>';
+            skillString += '<td>'+(skillList[i].BasicCoolDown/1000)+'s</td>';
+            skillString += '</tr>';
+          }
+        }
+        skillString += '</tbody></table>';
+
         var output = layout_detail.toString();
         output = output.replace(/%Icon%/g, '<img src="../img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png" />');
         output = output.replace(/%Name%/g, monsterTable[index].Name);
@@ -137,6 +159,7 @@ module.exports = function(app, tableData, scriptData){
         output = output.replace(/%Size%/g, monsterTable[index].Size);
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
 
+        output = output.replace(/%SkillString%/g, skillString);
 
         output = output.replace(/%StatScript%/g, statScript);
 
