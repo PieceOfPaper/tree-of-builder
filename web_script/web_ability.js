@@ -215,7 +215,7 @@ module.exports = function(app, tableData, scriptData){
     if (abilityJob != undefined){
       captionScript += 'var price = Number(0);';
       captionScript += 'for (var i = Number(abilLvPrev + 1); i <= abilLvNext; i ++){';
-      captionScript +=  'console.log(i);'
+      //captionScript +=  'console.log(i);'
       captionScript +=  'price+=Number(' + abilityJob.ScrCalcPrice + '(undefined,"' + abilityTable[index].ClassName + '",i,' + abilityJob.MaxLevel + '));';
       captionScript += '}';
       captionScript += 'if (document.getElementById("PricePoint") != undefined) document.getElementById("PricePoint").innerHTML=price;';
