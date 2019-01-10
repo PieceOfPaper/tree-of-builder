@@ -287,6 +287,8 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%SpineString%/g, spineString);
     }
 
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
@@ -651,6 +653,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%AddCaptionScript%/g, captionScript);
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     response.send(output);
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
@@ -763,6 +767,8 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
   
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
     response.send(output);
@@ -843,6 +849,8 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%EnableEquipParts%/g, itemTable[index].EnableEquipParts.replace(/\//g,', '));
     }
 
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     response.send(output);
   }
 
@@ -891,6 +899,64 @@ module.exports = function(app, tableData, scriptData){
     } else {
       return '';
     }
+  }
+
+  function getCanQuestRewardString(tableName, index){
+    var itemTable = tableData[tableName];
+    var questTable = tableData['questprogresscheck'];
+    var questAutoTable = tableData['questprogresscheck_auto'];
+
+    var questList = [];
+    for (param in questAutoTable){
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_ItemName' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_ItemName' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_SelectItemName' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_SelectItemName' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_JobItem_Name' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_JobItem_Name' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+    }
+
+    var output = '';
+    if (questList.length>0){
+      output += '<h3>Quest Rewards</h3>';
+      for (var i=0;i<questList.length;i++){
+        var quest=tos.FindDataClassName(tableData,'questprogresscheck',questList[i]);
+        if (quest==undefined) continue;
+        var imgstr = '';
+        switch(quest.QuestMode){
+          case "MAIN":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_main.png" />';
+          break;
+          case "SUB":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_sub.png" />';
+          break;
+          case "REPEAT":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_repeat.png" />';
+          break;
+          case "PARTY":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_party.png" />';
+          break;
+          case "KEYITEM":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+          break;
+        }
+        output += '<p><a href="../Quest?id='+quest.ClassID+'">'+imgstr+quest.Name+'</a></p>';
+      }
+    }
+
+    return output;
   }
 
   return route;
