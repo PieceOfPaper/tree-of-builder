@@ -68,8 +68,13 @@ module.exports = function(app, tableData, scriptData){
 
       // } else if (request.query.table == 'item_Quest') {
 
-      // } else if (request.query.table == 'item_gem') {
-
+      } else if (request.query.table == 'item_gem') {
+        for (var i = 0; i < tableData[request.query.table].length; i ++){
+          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+            itemGemDetailPage(request.query.table, i, request, response);
+            return;
+          }
+        }
       } else if (request.query.table == 'item_recipe') {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
@@ -191,7 +196,7 @@ module.exports = function(app, tableData, scriptData){
   var layout_itemEquip_detail = fs.readFileSync('./web/Layout/index-itemdetail-equip.html');
   var layout_itemPremium_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
   var layout_itemQuest_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
-  var layout_itemGem_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
+  var layout_itemGem_detail = fs.readFileSync('./web/Layout/index-itemdetail-gem.html');
   var layout_itemRecipe_detail = fs.readFileSync('./web/Layout/index-itemdetail-recipe.html');
 
   function itemDetailPage(tableName, index, request, response) {
@@ -760,6 +765,84 @@ module.exports = function(app, tableData, scriptData){
   
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
+    response.send(output);
+  }
+
+  function itemGemDetailPage(tableName, index, request, response) {
+    var itemTable = tableData[tableName];
+    var skillTable = tableData['skill'];
+
+    var icon = '';
+    var tooltipImg = '';
+    if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
+      itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+    } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
+      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+    } else if(itemTable[index].Icon != undefined){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+    } else if(itemTable[index].Illust != undefined){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+    } else {
+      icon = 'No Img';
+    }
+
+    var baseSkillString = '';
+    for(param in skillTable){
+      if (('Gem_'+skillTable[param].ClassName)==itemTable[index].ClassName){
+        baseSkillString += '<p><a href="../Skill?id='+skillTable[param].ClassID+'">'+skillTable[param].Name+'</a></p>';
+      }
+    }
+
+    var output = layout_itemGem_detail.toString();
+    output = output.replace(/style.css/g, '../style.css');
+    output = output.replace(/%Icon%/g, icon);
+    if (itemTable[index].TooltipImage == undefined){
+      output = output.replace(/%TooltipImage%/g, '');
+    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+    } else {
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+    }
+    output = output.replace(/%Name%/g, itemTable[index].Name);
+    output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
+    output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
+
+    output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
+    output = output.replace(/%Journal%/g, itemTable[index].Journal);
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%Weight%/g, itemTable[index].Weight);
+    output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
+    if (itemTable[index].CardGroupName == undefined){
+      output = output.replace(/%CardGroupName%/g, '');
+    } else {
+      output = output.replace(/%CardGroupName%/g, itemTable[index].CardGroupName);
+    }
+
+    output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
+    output = output.replace(/%Price%/g, itemTable[index].Price);
+    output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
+    output = output.replace(/%SellPrice%/g, itemTable[index].SellPrice);
+    output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
+
+    output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
+    if (itemTable[index].Desc_Sub == undefined){
+      output = output.replace(/%Desc_Sub%/g, '');
+    } else {
+      output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
+    }
+
+    output = output.replace(/%BaseSkillString%/g, baseSkillString);
+    if (itemTable[index].EnableEquipParts==undefined){
+      output = output.replace(/%EnableEquipParts%/g, '');
+    } else {
+      output = output.replace(/%EnableEquipParts%/g, itemTable[index].EnableEquipParts.replace(/\//g,', '));
+    }
+
     response.send(output);
   }
 
