@@ -309,6 +309,14 @@ footer img{
     font-size: 1em;
 }
 
+.order-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.order-area select{
+    font-size: 1em;
+}
 
 .checkboxList {
     padding: 0;
@@ -371,6 +379,21 @@ footer img{
 .class-area img{
     width:64px;
     height:64px;
+}
+
+.search-result-pagenum{
+
+}
+
+.search-result-pagenum button{
+    margin: 5px;
+    font-size: 2em;
+    border: 0;
+    border-radius: 0.25em;
+    background-color: whitesmoke;
+}
+.search-result-pagenum button.selected{
+    background-color: wheat;
 }
 
 /* ======== Detail ======== */

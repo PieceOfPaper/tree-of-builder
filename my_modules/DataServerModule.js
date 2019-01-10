@@ -2,8 +2,28 @@ class DataServerModule {
 
     static DefaultQueryFilter(tableData, queryString) {
         var filteredArray = [];
+        var itemCount = 999999;
+        var pageNum = 1;
+        var orderAttr = "ClassID";
+        var orderType = 1;
         if (queryString != undefined){
             for (var param in queryString) {
+                if (param=="itemCount"){
+                    itemCount = Number(queryString[param]);
+                    continue;
+                }
+                if (param=="pageNum"){
+                    pageNum = Number(queryString[param]);
+                    continue;
+                }
+                if (param=="orderAttr"){
+                    orderAttr = queryString[param];
+                    continue;
+                }
+                if (param=="orderType"){
+                    orderType = Number(queryString[param]);
+                    continue;
+                }
                 //if (tableData[0][param]!=undefined){
                     if (queryString[param].indexOf(';') >= 0){
                         // list
@@ -62,7 +82,41 @@ class DataServerModule {
             }
         }
 
-        return output;
+        //sort
+        output.sort(function(a,b){
+            if (a[orderAttr] != b[orderAttr]){
+                if (a[orderAttr] == undefined) return -1 * orderType;
+                else if (b[orderAttr] == undefined) return 1 * orderType;
+                else {
+                    if ((typeof a[orderAttr])=="number" && (typeof b[orderAttr])=="number"){
+                        if (a[orderAttr] < b[orderAttr]) return -1 * orderType;
+                        else return 1 * orderType;
+                    }
+                    else if ((typeof a[orderAttr])=="string" && (typeof b[orderAttr])=="string"){
+                        return a[orderAttr].localeCompare(b[orderAttr]) * orderType;
+                    }
+                    else if ((typeof a[orderAttr])=="boolean" && (typeof b[orderAttr])=="boolean"){
+                        if (a[orderAttr]) return -1 * orderType;
+                        else return 1 * orderType;
+                    }
+                }
+            }
+            return 0;
+        });
+
+        var output2 = [];
+        for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
+            if (i >= output.length) break;
+            output2.push(output[i]);
+        }
+
+        var outDataPackage = {};
+        outDataPackage["pageMax"] = Math.floor((output.length - 1)/itemCount) + 1;
+        outDataPackage["datalist"] = output2;
+
+        //console.log(JSON.stringify(outDataPackage));
+
+        return outDataPackage;
     }
 
     static SameContains(a, b){

@@ -33,6 +33,9 @@
         <select id="filter_ItemType" class="selectFilter">
             <option value="Default">Item Type</option>
         </select>
+        <select id="filter_ItemGrade" class="selectFilter">
+            <option value="Default">ItemGrade</option>
+        </select>
         <select id="filter_GroupName" class="selectFilter">
             <option value="Default">Group Name</option>
         </select>
@@ -50,6 +53,22 @@
             <option value="Default">Use Gender</option>
         </select>
         <div>UseLv<input type="number" id="useLvMinFilter" min="0" value = "0">~<input type="number" id="useLvMaxFilter" min="1" value = "500"></div>
+    </div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+            <option value="ItemGrade">ItemGrade</option>
+            <option value="UseLv">UseLv</option>
+            <option value="Socket">Socket</option>
+            <option value="PR">PR</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
     </div>
     <button id="searchBtn">Search</button>
     <br/>
@@ -79,6 +98,9 @@
             </tr>
         </tbody>
     </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
 
     <script>
         var url = window.location.href.split('?')[0];

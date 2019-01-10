@@ -33,6 +33,18 @@
             <option value="Default">Job</option>
         </select>
     </div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
     <button id="searchBtn">Search</button>
     <br/>
     <!--
@@ -62,6 +74,9 @@
         </tbody>
     </table>
 
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
+
     <script>
         var url = window.location.href.split('?')[0];
 
@@ -85,7 +100,7 @@
             var filter = document.getElementById("filter_Job");
             for(var i=0;i<arr.length;i++){
                 var option=document.createElement("option");
-                option.value="@"+arr[i].ClassName;
+                option.value=arr[i].ClassName;
                 option.innerText=arr[i].Name;
                 filter.appendChild(option);
             }

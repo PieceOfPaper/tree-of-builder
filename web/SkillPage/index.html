@@ -73,6 +73,18 @@
         <!--<input type="checkbox" id="bunsinFilter" class="checkboxFilter">Bunsin<br>-->
         <!--<input type="checkbox" id="nocoolFilter" class="checkboxFilter">No-Cool Skill<br>-->
     </div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
     <button id="searchBtn">Search</button>
     <br/>
     <!--
@@ -101,6 +113,9 @@
             </tr>
         </tbody>
     </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
 
     <script>
         var url = window.location.href.split('?')[0];
