@@ -31,6 +31,9 @@ module.exports = function(app, tableData){
 
     var stanceServer = require('./data_quest')(app, tableData);
     app.use('/data/quest', stanceServer);
+
+    var mapServer = require('./data_map')(app, tableData);
+    app.use('/data/map', mapServer);
   
     return route;
   }

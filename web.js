@@ -181,6 +181,7 @@ loadTable('statbase_monster_type', 'ies.ipf/statbase_monster_type.ies');
 loadTable('questprogresscheck', 'ies.ipf/questprogresscheck.ies');
 loadTable('questprogresscheck_auto', 'ies.ipf/questprogresscheck_auto.ies');
 loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
+loadTable('map2', 'ies.ipf/map.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -390,6 +391,9 @@ app.use('/Monster', monsterPage);
 
 var questPage = require('./web_script/web_quest')(app, tableData, scriptData);
 app.use('/Quest', questPage);
+
+var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
+app.use('/Map', mapPage);
 
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);

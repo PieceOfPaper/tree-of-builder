@@ -400,6 +400,9 @@ function searchModule_showResult(){
                     case "questprogresscheck":
                     tdstr = '<a href=../Quest?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
+                    case "map2":
+                    tdstr = '<a href=../Map?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
+                    break;
                 }
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;

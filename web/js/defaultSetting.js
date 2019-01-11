@@ -46,6 +46,11 @@ topMenuButtons['quest']["Path"] = "QuestPage";
 topMenuButtons['quest']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
 topMenuButtons['quest']["Name"] = "Quest";
 
+topMenuButtons['map'] = [];
+topMenuButtons['map']["Path"] = "MapPage";
+topMenuButtons['map']["Img"] = "../img/minimap_icons/minimap_complete.png";
+topMenuButtons['map']["Name"] = "Map";
+
 topMenuButtons['category_tool'] = [];
 topMenuButtons['category_tool']["Path"] = undefined;
 topMenuButtons['category_tool']["Img"] = "";
