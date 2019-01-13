@@ -29,10 +29,27 @@
     </div>
     <div class="filler-area">
         <p>Filter</p>
-        <select id="filter_QuestMode" class="selectFilter">
-            <option value="Default">Quest Mode</option>
+        <select id="filter_MapRank" class="selectFilter">
+            <option value="Default">Map Rank</option>
         </select>
-        <div>Level<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "500"></div>
+        <select id="filter_CategoryName" class="selectFilter">
+            <option value="Default">Category Name</option>
+        </select>
+        <select id="filter_Group" class="selectFilter">
+            <option value="Default">Group</option>
+        </select>
+        <select id="filter_Theme" class="selectFilter">
+            <option value="Default">Theme</option>
+        </select>
+        <select id="filter_MapType" class="selectFilter">
+            <option value="Default">Map Type</option>
+        </select>
+        <select id="filter_Grimreaper" class="selectFilter">
+            <option value="Default">Grimreaper</option>
+        </select>
+        <div>QuestLevel<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "500"></div>
+        <input type="checkbox" id="filter_ChallengeMode" class="checkboxFilter">Challenge Mode<br>
+        <input type="checkbox" id="filter_Journal" class="checkboxFilter">Journal<br>
     </div>
     <div class="order-area">
         <p>Order</p>
@@ -40,7 +57,7 @@
             <option value="ClassID">ClassID</option>
             <option value="ClassName">ClassName</option>
             <option value="Name">Name</option>
-            <option value="Level">Level</option>
+            <option value="QuestLevel">QuestLevel</option>
         </select>
         <select id="orderType">
             <option value=1>Asc</option>
@@ -53,12 +70,12 @@
         <tbody>
             <tr>
                 <td>ClassID</td>
-                <td>Level</td>
+                <td>QuestLevel</td>
                 <td>Name</td>
             </tr>
             <tr>
                 <td class="result-link">ClassID</td>
-                <td>Level</td>
+                <td>QuestLevel</td>
                 <td>Name</td>
             </tr>
         </tbody>
@@ -69,7 +86,22 @@
 
     <script>
         baseTable="map";
+        checkboxFilterSetting["filter_ChallengeMode"]="YES";
+        customFilterSettingMethods.push(setCustom_level);
         searchModule_init();
+
+        if (filterSetting["filter_QuestLevel"] != undefined){
+            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_QuestLevel"].split(',')[0].replace('[',''));
+            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_QuestLevel"].split(',')[1].replace(']',''));
+        }
+
+        function setCustom_level(filterSetting){
+            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=500){
+                filterSetting["filter_QuestLevel"] = undefined;
+                return;
+            }
+            filterSetting["filter_QuestLevel"] = '['+document.getElementById("levelMinFilter").value+','+document.getElementById("levelMaxFilter").value+']';
+        }
     </script>
 
 </body>
