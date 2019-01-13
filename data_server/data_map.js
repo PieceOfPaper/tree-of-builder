@@ -12,10 +12,12 @@ module.exports = function(app, tableData){
     });
 
     var typeList = [];
+    var lastTableLength = 0;
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined){
+        if (typeList[typeKey] == undefined || (lastTableLength != tableData['map2'].length)){
+            lastTableLength = tableData['map2'].length;
             typeList[typeKey] = [];
             for (var i=0;i<tableData['map2'].length;i++){
                 if (tableData['map2'][i][typeKey] == undefined) continue;
