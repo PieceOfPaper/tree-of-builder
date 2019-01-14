@@ -6,6 +6,7 @@ module.exports = function(app, tableData, scriptData){
     
     var route = express.Router();
   
+    var layout_worldmap = fs.readFileSync('./web/MapPage/worldmap.html');
     route.get('/', function (request, response) {
         var mapTable = tableData['map2'];
 
@@ -19,7 +20,8 @@ module.exports = function(app, tableData, scriptData){
           }
         }
 
-        response.send('');
+        var output = layout_worldmap.toString();
+        response.send(output);
     });
   
 
