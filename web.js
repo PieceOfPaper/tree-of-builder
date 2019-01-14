@@ -358,11 +358,22 @@ app.get('/', function (req, response) {
     //   illustNpcMention +=     illustNpcText[i] + '<br/>';
     // }
 
+    var serverName = '';
+    switch(serverCode){
+      case 'kr':
+      serverName = 'Korea';
+      break;
+      case 'ktest':
+      serverName = 'Korea Test';
+      break;
+    }
+
     var output = layout.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
     output = output.replace(/%IllustMention%/g, illustNpcText);
+    output = output.replace(/%ServerName%/g, serverName);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   

@@ -16,7 +16,8 @@
 
 <body align="center">
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
-    <!--<h1>Tree of Builder</h1>-->
+    <h1>Tree of Builder</h1>
+    <p>-%ServerName%-</p>
     <!--
         <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
         <ins class="adsbygoogle"
@@ -32,6 +33,15 @@
     <img class="main-illust" src="%IllustPath%" />
     <h2>%IllustName%</h2>
     <p>%IllustMention%</p>
+
+    <script>
+        setTimeout(openMenuTimer, 500);
+        function openMenuTimer(){
+            var leftMenu = document.getElementById("left-menu");
+            if (leftMenu.classList.contains("opened")) return;
+            onclick_leftMenuOpen();
+        }
+    </script>
 </body>
 
 <footer>
