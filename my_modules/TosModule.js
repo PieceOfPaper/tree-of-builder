@@ -208,5 +208,32 @@ class TosModule {
         }
         return output;
     }
+
+    static GetQuestModeImgString(tableData, className){
+        var output = '';
+
+        var questData=this.FindDataClassName(tableData,'questprogresscheck',className);
+        if (questData!=undefined){
+            switch(questData.QuestMode){
+                case "MAIN":
+                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_main.png" />';
+                break;
+                case "SUB":
+                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_sub.png" />';
+                break;
+                case "REPEAT":
+                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_repeat.png" />';
+                break;
+                case "PARTY":
+                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_party.png" />';
+                break;
+                case "KEYITEM":
+                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+                break;
+            }
+        }
+
+        return output;
+    }
 }
 module.exports = TosModule;

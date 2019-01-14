@@ -37,6 +37,17 @@ module.exports = function(app, tableData, scriptData){
       }
       if (hasDropItem) dropItemString = '<h3>Drop Items</h3>' + dropItemString;
 
+      var questString = '';
+      var hasQuest = false;
+      for (param in tableData['questprogresscheck']){
+        if (tableData['questprogresscheck'][param]==undefined) continue;
+        if (tableData['questprogresscheck'][param].StartMap==undefined) continue;
+        if (tableData['questprogresscheck'][param].StartMap!=mapTable[index].ClassName) continue;
+        questString += '<p><a href="../Quest?id='+tableData['questprogresscheck'][param].ClassID+'">'+tos.GetQuestModeImgString(tableData,tableData['questprogresscheck'][param].ClassName)+tableData['questprogresscheck'][param].Name+'</a></p>';
+        hasQuest = true;
+      }
+      if (hasQuest) questString = '<h3>Quest</h3>' + questString;
+
       var output = layout_detail.toString();
 
       output = output.replace(/%ClassID%/g, mapData.ClassID);
@@ -63,6 +74,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(tableData,mapData.MapRatingRewardItem1));
 
       output = output.replace(/%DropItemString%/g, dropItemString);
+      output = output.replace(/%QuestString%/g, questString);
 
       response.send(output);
     }
