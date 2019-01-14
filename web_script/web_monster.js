@@ -76,8 +76,8 @@ module.exports = function(app, tableData, scriptData){
         statScript +=   'return value;';
         statScript += '}';
 
-        statScript += 'function SCR_MON_ITEM_ARMOR_DEF_CALC(pc){ return 0; }';
-        statScript += 'function SCR_MON_ITEM_ARMOR_MDEF_CALC(pc){ return 0; }';
+        //statScript += 'function SCR_MON_ITEM_ARMOR_DEF_CALC(pc){ return 0; }';
+        //statScript += 'function SCR_MON_ITEM_ARMOR_MDEF_CALC(pc){ return 0; }';
 
         statScript += 'document.getElementById("stat_STR").innerText=SCR_Get_MON_STR(rawData);';
         statScript += 'document.getElementById("stat_CON").innerText=SCR_Get_MON_CON(rawData);';
@@ -121,6 +121,10 @@ module.exports = function(app, tableData, scriptData){
         statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_TRANSCEND_CALC']);
         statScript += tos.Lua2JS(scriptData['SCR_Get_MON_MHP']);
         statScript += tos.Lua2JS(scriptData['SCR_Get_MON_MSP']);
+        statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_ARMOR_DEF_CALC']);
+        statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_ARMOR_MDEF_CALC']);
+        statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_ARMOR_CALC']).replace('var basicGradeRatio, reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade);','var basicGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[0]; var reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[1];');
+        statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_REINFORCE_ARMOR_CALC']);
         statScript += '</script>';
 
         var skillList = [];
