@@ -20,7 +20,7 @@
     </div>
 
     <script>
-        var itemPosScale = 64.75;
+        var itemPosScale = 64.875;
 
         var mapDataList = [];
         var filter = [];
@@ -47,7 +47,7 @@
                 var htmlString = '';
                 if (mapDataList[param].length > 1 && 
                     mapDataList[param][0].MainName != undefined && mapDataList[param][0].MainName.length > 0){
-                    htmlString+='<p style="font-weight:bold; font-size:11px;">'+mapDataList[param][0].MainName+'</p>';
+                    htmlString+='<p class="head">'+mapDataList[param][0].MainName+'</p>';
                 }
                 for (var i=0;i<mapDataList[param].length;i++){
                     htmlString+='<p><a href="../Map?id='+mapDataList[param][i].ClassID+'">'+mapDataList[param][i].Name+'</a></p>';
