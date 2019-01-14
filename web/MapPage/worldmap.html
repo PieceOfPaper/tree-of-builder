@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <title>World Map</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/requestMethod.js"></script>
+</head>
+
+<body style="padding:0; margin:0; overflow:scroll;">
+    <div id="worldmap">
+    </div>
+
+    <script>
+        var itemPosScale = 64.875;
+
+        var mapDataList = [];
+        var filter = [];
+        filter['WorldMap']='@/';
+        //filter['MapType']='City';
+        requestGetData('map', filter, function(arr, pm){
+            for (param in arr){
+                if (arr[param].WorldMap == undefined) continue;
+                var splited = arr[param].WorldMap.split('/');
+                if (splited.length < 3) continue;
+                if (mapDataList[splited[0]+'/'+splited[1]] == undefined) {
+                    mapDataList[splited[0]+'/'+splited[1]] = [];
+                }
+                mapDataList[splited[0]+'/'+splited[1]].push(arr[param]);
+            }
+            var worldmap = document.getElementById('worldmap');
+            for (param in mapDataList){
+                var pos = param.split('/');
+                if (pos.length < 2) continue;
+                var item = document.createElement('div');
+                item.classList.add('worldmap-item');
+                item.style.left = (Number(pos[0])*itemPosScale - itemPosScale*0.5);
+                item.style.top = (3620-Number(pos[1])*itemPosScale - 12*(mapDataList[param].length-1)*0.5);
+                var htmlString = '';
+                if (mapDataList[param].length > 1 && 
+                    mapDataList[param][0].MainName != undefined && mapDataList[param][0].MainName.length > 0){
+                    htmlString+='<p class="head">'+mapDataList[param][0].MainName+'</p>';
+                }
+                for (var i=0;i<mapDataList[param].length;i++){
+                    htmlString+='<p><a href="../Map?id='+mapDataList[param][i].ClassID+'">'+mapDataList[param][i].Name+'</a></p>';
+                }
+                item.innerHTML=htmlString;
+                worldmap.appendChild(item);
+            }
+        });
+    </script>
+</body>
+
+</html>
