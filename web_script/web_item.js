@@ -525,6 +525,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function APPLY_RARE_RANDOM_OPTION(item){ return 0; }\n';
     captionScript += 'function MakeItemOptionByOptionSocket(item){ return 0; }\n';
     captionScript += 'function GetItemOwner(item){ return 0; }\n';
+    captionScript += 'function MAKE_ITEM_OPTION_BY_OPTION_SOCKET(item){ return; }\n';
 
     captionScript += 'function onChangeReinforceLevel(){';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) itemData.Reinforce_2=Number(document.getElementById("ReinforceLevel").value);';
