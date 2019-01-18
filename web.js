@@ -52,6 +52,8 @@ process.argv.forEach(function (val, index, array) {
 });
 console.log('argument loaded');
 
+var dbclient;
+
 
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
@@ -384,6 +386,9 @@ app.get('/', function (req, response) {
 
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
+
+var boardFree = require('./board_server/board_free')(app, dbclient);
+app.use('/BoardFree', boardFree);
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
