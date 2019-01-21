@@ -235,5 +235,14 @@ class TosModule {
 
         return output;
     }
+
+    static GetMapString(tableData, className){
+        var output = '';
+        var mapData=this.FindDataClassName(tableData, 'map2', className);
+        if (mapData!=undefined){
+            output += '<a href="../Map?id='+mapData.ClassID+'">'+mapData.Name+'</a>';
+        }
+        return output;
+    }
 }
 module.exports = TosModule;
