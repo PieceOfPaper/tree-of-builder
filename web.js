@@ -387,8 +387,8 @@ app.get('/', function (req, response) {
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
 
-var boardFree = require('./board_server/board_free')(app, dbclient);
-app.use('/BoardFree', boardFree);
+// var boardFree = require('./board_server/board_free')(app, dbclient);
+// app.use('/BoardFree', boardFree);
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
