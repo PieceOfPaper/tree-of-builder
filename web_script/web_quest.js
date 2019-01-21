@@ -154,12 +154,18 @@ module.exports = function(app, tableData, scriptData){
 
         output = output.replace(/%StartDesc%/g, questData.StartDesc);
         output = output.replace(/%StartStory%/g, questData.StartStory);
+        output = output.replace(/%StartMapListUI%/g, questData.StartMapListUI==undefined?'':questData.StartMapListUI);
+        output = output.replace(/%StartMap%/g, tos.GetMapString(tableData,questData.StartMap));
 
         output = output.replace(/%ProgDesc%/g, questData.ProgDesc);
         output = output.replace(/%ProgStory%/g, questData.ProgStory);
+        output = output.replace(/%ProgMapListUI%/g, questData.ProgMapListUI==undefined?'':questData.ProgMapListUI);
+        output = output.replace(/%ProgMap%/g, tos.GetMapString(tableData,questData.ProgMap));
 
         output = output.replace(/%EndDesc%/g, questData.EndDesc);
         output = output.replace(/%EndStory%/g, questData.EndStory);
+        output = output.replace(/%EndMapListUI%/g, questData.EndMapListUI==undefined?'':questData.EndMapListUI);
+        output = output.replace(/%EndMap%/g, tos.GetMapString(tableData,questData.EndMap));
 
 
         output = output.replace(/%NextQuestString%/g, nextQuestString);
