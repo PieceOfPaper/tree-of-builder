@@ -76,26 +76,29 @@ module.exports = function(app, tableData, scriptData){
         statScript +=   'return value;';
         statScript += '}';
 
+        statScript += 'function NumberComma(x) { if (x == undefined) return "";'; 
+        statScript += 'return x.toLocaleString(); }';
+
         //statScript += 'function SCR_MON_ITEM_ARMOR_DEF_CALC(pc){ return 0; }';
         //statScript += 'function SCR_MON_ITEM_ARMOR_MDEF_CALC(pc){ return 0; }';
 
-        statScript += 'document.getElementById("stat_STR").innerText=SCR_Get_MON_STR(rawData);';
-        statScript += 'document.getElementById("stat_CON").innerText=SCR_Get_MON_CON(rawData);';
-        statScript += 'document.getElementById("stat_INT").innerText=SCR_Get_MON_INT(rawData);';
-        statScript += 'document.getElementById("stat_DEX").innerText=SCR_Get_MON_DEX(rawData);';
-        statScript += 'document.getElementById("stat_MNA").innerText=SCR_Get_MON_MNA(rawData);';
-        statScript += 'document.getElementById("stat_EXP").innerText=SCR_GET_MON_EXP(rawData);';
-        statScript += 'document.getElementById("stat_JOBEXP").innerText=SCR_GET_MON_JOBEXP(rawData);';
-        statScript += 'document.getElementById("stat_DEF").innerText=SCR_Get_MON_DEF(rawData);';
-        statScript += 'document.getElementById("stat_MDEF").innerText=SCR_Get_MON_MDEF(rawData);';
-        statScript += 'document.getElementById("stat_CRTATK").innerText=SCR_Get_MON_CRTATK(rawData);';
-        statScript += 'document.getElementById("stat_CRTMATK").innerText=SCR_Get_MON_CRTMATK(rawData);';
-        statScript += 'document.getElementById("stat_MINPATK").innerText=SCR_Get_MON_MINPATK(rawData);';
-        statScript += 'document.getElementById("stat_MAXPATK").innerText=SCR_Get_MON_MAXPATK(rawData);';
-        statScript += 'document.getElementById("stat_MINMATK").innerText=SCR_Get_MON_MINMATK(rawData);';
-        statScript += 'document.getElementById("stat_MAXMATK").innerText=SCR_Get_MON_MAXMATK(rawData);';
-        statScript += 'document.getElementById("stat_MHP").innerText=SCR_Get_MON_MHP(rawData);';
-        statScript += 'document.getElementById("stat_MSP").innerText=SCR_Get_MON_MSP(rawData);';
+        statScript += 'document.getElementById("stat_STR").innerText=NumberComma(SCR_Get_MON_STR(rawData));';
+        statScript += 'document.getElementById("stat_CON").innerText=NumberComma(SCR_Get_MON_CON(rawData));';
+        statScript += 'document.getElementById("stat_INT").innerText=NumberComma(SCR_Get_MON_INT(rawData));';
+        statScript += 'document.getElementById("stat_DEX").innerText=NumberComma(SCR_Get_MON_DEX(rawData));';
+        statScript += 'document.getElementById("stat_MNA").innerText=NumberComma(SCR_Get_MON_MNA(rawData));';
+        statScript += 'document.getElementById("stat_EXP").innerText=NumberComma(SCR_GET_MON_EXP(rawData));';
+        statScript += 'document.getElementById("stat_JOBEXP").innerText=NumberComma(SCR_GET_MON_JOBEXP(rawData));';
+        statScript += 'document.getElementById("stat_DEF").innerText=NumberComma(SCR_Get_MON_DEF(rawData));';
+        statScript += 'document.getElementById("stat_MDEF").innerText=NumberComma(SCR_Get_MON_MDEF(rawData));';
+        statScript += 'document.getElementById("stat_CRTATK").innerText=NumberComma(SCR_Get_MON_CRTATK(rawData));';
+        statScript += 'document.getElementById("stat_CRTMATK").innerText=NumberComma(SCR_Get_MON_CRTMATK(rawData));';
+        statScript += 'document.getElementById("stat_MINPATK").innerText=NumberComma(SCR_Get_MON_MINPATK(rawData));';
+        statScript += 'document.getElementById("stat_MAXPATK").innerText=NumberComma(SCR_Get_MON_MAXPATK(rawData));';
+        statScript += 'document.getElementById("stat_MINMATK").innerText=NumberComma(SCR_Get_MON_MINMATK(rawData));';
+        statScript += 'document.getElementById("stat_MAXMATK").innerText=NumberComma(SCR_Get_MON_MAXMATK(rawData));';
+        statScript += 'document.getElementById("stat_MHP").innerText=NumberComma(SCR_Get_MON_MHP(rawData));';
+        statScript += 'document.getElementById("stat_MSP").innerText=NumberComma(SCR_Get_MON_MSP(rawData));';
 
         statScript += tos.Lua2JS(scriptData['GET_MON_STAT']).replace('var statRateList = { \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' };', 'var statRateList = [ \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' ];').replace('for i = 1, #statRateList do', 'for(i in statRateList){');
         statScript += tos.Lua2JS(scriptData['SCR_Get_MON_STR']);
