@@ -475,6 +475,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
     captionScript += 'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
+    captionScript += 'function GetZoneName(pc){ return 0; }';
 
     // captionScript += 'var currentSkill = {';
     // captionScript +=  'Level: Number(1),';
