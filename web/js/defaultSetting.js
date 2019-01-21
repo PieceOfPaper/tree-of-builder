@@ -6,6 +6,16 @@ topMenuButtons['home']["Path"] = ".";
 topMenuButtons['home']["Img"] = "../img/minimap_icons/questinfo_return.png";
 topMenuButtons['home']["Name"] = "HOME";
 
+// topMenuButtons['category_board'] = [];
+// topMenuButtons['category_board']["Path"] = undefined;
+// topMenuButtons['category_board']["Img"] = "";
+// topMenuButtons['category_board']["Name"] = "BOARD";
+
+// topMenuButtons['board_free'] = [];
+// topMenuButtons['board_free']["Path"] = "BoardFree";
+// topMenuButtons['board_free']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
+// topMenuButtons['board_free']["Name"] = "Free Board";
+
 topMenuButtons['category_database'] = [];
 topMenuButtons['category_database']["Path"] = undefined;
 topMenuButtons['category_database']["Img"] = "";
