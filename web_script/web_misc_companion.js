@@ -6,7 +6,7 @@ module.exports = function(app, tableData, scriptData){
     
     var route = express.Router();
   
-    var layout = fs.readFileSync('./web/Layout/misc_guildEvent.html');
+    var layout = fs.readFileSync('./web/Layout/misc_companion.html');
     route.get('/', function (request, response) {
         var companionTable = tableData['companion'];
 

@@ -71,6 +71,11 @@ topMenuButtons['misc_guildevent']["Path"] = "GuildEvent";
 topMenuButtons['misc_guildevent']["Img"] = "../img/icon/itemicon/icon_item_indunonemoreenter.png";
 topMenuButtons['misc_guildevent']["Name"] = "Guild Event";
 
+topMenuButtons['misc_companion'] = [];
+topMenuButtons['misc_companion']["Path"] = "Companion";
+topMenuButtons['misc_companion']["Img"] = "../img/icon/itemicon/icon_item_egg_toucan.png";
+topMenuButtons['misc_companion']["Name"] = "Companion";
+
 topMenuButtons['category_tool'] = [];
 topMenuButtons['category_tool']["Path"] = undefined;
 topMenuButtons['category_tool']["Img"] = "";
