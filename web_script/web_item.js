@@ -359,7 +359,9 @@ module.exports = function(app, tableData, scriptData){
         }
         var statStr = tos.parseCaption(tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]));
         if (statStr.indexOf('{value}') > -1){
-          statListString += i +' Step. ' + statStr.replace('{value}',sealOption['SealOptionValue_'+i]*0.1) + '<br/>';
+          var value = Number(sealOption['SealOptionValue_'+i]);
+          if (sealOption['SealOption_'+i].indexOf('Rate') > -1) value *= 0.1;
+          statListString += i +' Step. ' + statStr.replace('{value}',value) + '<br/>';
         } else {
           statListString += i +' Step. ' + statStr + (Number(sealOption['SealOptionValue_'+i]) > 0 ? '▲' : '▼') + sealOption['SealOptionValue_'+i] + '<br/>';
         }
