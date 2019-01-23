@@ -348,14 +348,18 @@ module.exports = function(app, tableData, scriptData){
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
     if (sealOption != undefined){
       statListString += '<h3>Seal Option</h3>';
-      for (var i=1;i<=5;i++){
-        if(sealOption['SealOption_'+i]==undefined) continue;
-        if(sealOption['SealOption_'+i].length==0) continue;
-        if(sealOption['SealOptionValue_'+i]==undefined) continue;
-        if(sealOption['SealOptionValue_'+i]==0) continue;
-        var statStr = tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]);
+      for (var i=1;i<=sealOption.MaxReinforceCount;i++){
+        // if(sealOption['SealOption_'+i]==undefined) continue;
+        // if(sealOption['SealOption_'+i].length==0) continue;
+        // if(sealOption['SealOptionValue_'+i]==undefined) continue;
+        // if(sealOption['SealOptionValue_'+i]==0) continue;
+        if(sealOption['SealOption_'+i]==undefined || sealOption['SealOption_'+i].length==0){
+          statListString += i +' Step. ??? <br/>';
+          continue;
+        }
+        var statStr = tos.parseCaption(tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]));
         if (statStr.indexOf('{value}') > -1){
-          statListString += i +' Step. ' + tos.parseCaption(statStr).replace('{value}',sealOption['SealOptionValue_'+i]) + '<br/>';
+          statListString += i +' Step. ' + statStr.replace('{value}',sealOption['SealOptionValue_'+i]*0.1) + '<br/>';
         } else {
           statListString += i +' Step. ' + statStr + (Number(sealOption['SealOptionValue_'+i]) > 0 ? '▲' : '▼') + sealOption['SealOptionValue_'+i] + '<br/>';
         }
