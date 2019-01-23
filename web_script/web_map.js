@@ -50,6 +50,15 @@ module.exports = function(app, tableData, scriptData){
       }
       if (hasQuest) questString = '<h3>Quest</h3>' + questString;
 
+      var physicalLinkZoneString = '';
+      if (mapData.PhysicalLinkZone != undefined && mapData.PhysicalLinkZone.length>0){
+        var splited = mapData.PhysicalLinkZone.split('/');
+        physicalLinkZoneString += '<h3>Physical Link Zone</h3>';
+        for (param in splited){
+          physicalLinkZoneString += '<p>'+tos.GetMapString(tableData,splited[param])+'</p>';
+        }
+      }
+
       var output = layout_detail.toString();
 
       output = output.replace(/%ClassID%/g, mapData.ClassID);
@@ -75,6 +84,7 @@ module.exports = function(app, tableData, scriptData){
 
       output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(tableData,mapData.MapRatingRewardItem1));
 
+      output = output.replace(/%PhysicalLinkZoneString%/g, physicalLinkZoneString);
       output = output.replace(/%DropItemString%/g, dropItemString);
       output = output.replace(/%QuestString%/g, questString);
 
