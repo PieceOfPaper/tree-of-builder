@@ -296,6 +296,7 @@ module.exports = function(app, tableData, scriptData){
 
   function itemEquipDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
+    var sealOption = tos.FindDataClassName(tableData, 'item_seal_option', itemTable[index].ClassName)
     var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
 
@@ -345,6 +346,21 @@ module.exports = function(app, tableData, scriptData){
       statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
+    if (sealOption != undefined){
+      statListString += '<h3>Seal Option</h3>';
+      for (var i=1;i<=5;i++){
+        if(sealOption['SealOption_'+i]==undefined) continue;
+        if(sealOption['SealOption_'+i].length==0) continue;
+        if(sealOption['SealOptionValue_'+i]==undefined) continue;
+        if(sealOption['SealOptionValue_'+i]==0) continue;
+        var statStr = tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]);
+        if (statStr.indexOf('{value}') > -1){
+          statListString += i +' Step. ' + tos.parseCaption(statStr).replace('{value}',sealOption['SealOptionValue_'+i]) + '<br/>';
+        } else {
+          statListString += i +' Step. ' + statStr + (Number(sealOption['SealOptionValue_'+i]) > 0 ? '▲' : '▼') + sealOption['SealOptionValue_'+i] + '<br/>';
+        }
+      }
+    }
 
 
     var setDataString = '';

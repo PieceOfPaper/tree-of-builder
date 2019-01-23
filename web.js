@@ -159,6 +159,7 @@ loadTable('item_equip_default', 'ies.ipf/item_equip_default.ies');
 loadTable('setitem', 'ies.ipf/setitem.ies');
 loadTable('legend_recipe', 'ies.ipf/legend_recipe.ies');
 loadTable('legend_setitem', 'ies.ipf/legend_setitem.ies');
+loadTable('item_seal_option', 'ies.ipf/item_seal_option.ies');
 loadTable('monster', 'ies.ipf/monster.ies', function(){
   loadTable('monster', 'ies.ipf/monster_event.ies', function(){
     loadTable('monster', 'ies.ipf/monster_guild.ies', function(){
