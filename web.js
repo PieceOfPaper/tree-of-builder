@@ -185,6 +185,7 @@ loadTable('questprogresscheck', 'ies.ipf/questprogresscheck.ies');
 loadTable('questprogresscheck_auto', 'ies.ipf/questprogresscheck_auto.ies');
 loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
 loadTable('map2', 'ies.ipf/map.ies');
+loadTable('guild_event', 'ies.ipf/guild_event.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -411,6 +412,9 @@ app.use('/Quest', questPage);
 
 var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
 app.use('/Map', mapPage);
+
+var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
+app.use('/GuildEvent', miscGuildEventPage);
 
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);

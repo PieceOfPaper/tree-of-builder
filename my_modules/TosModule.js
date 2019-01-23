@@ -244,5 +244,14 @@ class TosModule {
         }
         return output;
     }
+
+    static GetMonsterString(tableData, className){
+        var output = '';
+        var monData=this.FindDataClassName(tableData, 'monster', className);
+        if (monData!=undefined){
+            output += '<a href="../Monster?id='+monData.ClassID+'">'+monData.Name+'</a>';
+        }
+        return output;
+    }
 }
 module.exports = TosModule;

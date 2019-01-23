@@ -66,6 +66,11 @@ topMenuButtons['category_miscdata']["Path"] = undefined;
 topMenuButtons['category_miscdata']["Img"] = "";
 topMenuButtons['category_miscdata']["Name"] = "MISC DATA";
 
+topMenuButtons['misc_guildevent'] = [];
+topMenuButtons['misc_guildevent']["Path"] = "GuildEvent";
+topMenuButtons['misc_guildevent']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
+topMenuButtons['misc_guildevent']["Name"] = "Guild Event";
+
 topMenuButtons['category_tool'] = [];
 topMenuButtons['category_tool']["Path"] = undefined;
 topMenuButtons['category_tool']["Img"] = "";
