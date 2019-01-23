@@ -95,6 +95,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
                     sendSlack("Image Import SUCCESS (with UI Skin)");
                     copyImage('./web/img/bufficon', './web/img/icon/skillicon');
                     copyImage('./web/img/actionicon', './web/img/icon/skillicon');
+                    copyImage('./web/img/barrack', './web/img/icon/monillust');
                   });
                 });
               });
@@ -104,6 +105,7 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
             sendSlack("Image Import SUCCESS");
             copyImage('./web/img/bufficon', './web/img/icon/skillicon');
             copyImage('./web/img/actionicon', './web/img/icon/skillicon');
+            copyImage('./web/img/barrack', './web/img/icon/monillust');
           }
         });
       });

@@ -195,6 +195,7 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
   });
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
+loadTable('companion', 'ies.ipf/companion.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -424,6 +425,9 @@ app.use('/Map', mapPage);
 
 var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
 app.use('/GuildEvent', miscGuildEventPage);
+
+var miscCompanionPage = require('./web_script/web_misc_companion')(app, tableData, scriptData);
+app.use('/Companion', miscCompanionPage);
 
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
