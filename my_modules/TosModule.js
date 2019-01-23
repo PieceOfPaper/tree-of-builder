@@ -253,5 +253,14 @@ class TosModule {
         }
         return output;
     }
+
+    static GetQuestString(tableData, className){
+        var output = '';
+        var questData=this.FindDataClassName(tableData, 'questprogresscheck', className);
+        if (questData!=undefined){
+            output += this.GetQuestModeImgString(tableData,className)+'<a href="../Quest?id='+questData.ClassID+'">'+questData.Name+'</a>';
+        }
+        return output;
+    }
 }
 module.exports = TosModule;

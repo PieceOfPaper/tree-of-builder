@@ -184,7 +184,16 @@ loadTable('statbase_monster_type', 'ies.ipf/statbase_monster_type.ies');
 loadTable('questprogresscheck', 'ies.ipf/questprogresscheck.ies');
 loadTable('questprogresscheck_auto', 'ies.ipf/questprogresscheck_auto.ies');
 loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
-loadTable('map2', 'ies.ipf/map.ies');
+loadTable('map2', 'ies.ipf/map.ies', function(){
+  loadTable('camp_warp', 'ies.ipf/camp_warp.ies', function(){
+    for (param in tableData['camp_warp']){
+      var mapdata = tos.FindDataClassName(tableData,'map2',tableData['camp_warp'][param].Zone);
+      if (mapdata != undefined){
+        mapdata['CanCampWarp']=true;
+      }
+    }
+  });
+});
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];

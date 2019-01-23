@@ -59,6 +59,20 @@ module.exports = function(app, tableData, scriptData){
         }
       }
 
+      var canWarp = false;
+      var campWarpData = undefined;
+      for (param in tableData['camp_warp']){
+        if (tableData['camp_warp'][param].Zone == mapData.ClassName){
+          campWarpData = tableData['camp_warp'][param];
+          break;
+        }
+      }
+      var warpQuestString = '';
+      if (campWarpData!=undefined){
+        canWarp = true;
+        warpQuestString = tos.GetQuestString(tableData,campWarpData.WarpOpenQuest);
+      }
+
       var output = layout_detail.toString();
 
       output = output.replace(/%ClassID%/g, mapData.ClassID);
@@ -81,6 +95,8 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%ChaseRange%/g, mapData.ChaseRange);
       output = output.replace(/%BornRange%/g, mapData.BornRange);
       output = output.replace(/%isVillage%/g, mapData.isVillage);
+      output = output.replace(/%CanWarp%/g, canWarp?'TRUE':'FALSE');
+      output = output.replace(/%WarpQuest%/g, warpQuestString);
 
       output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(tableData,mapData.MapRatingRewardItem1));
 

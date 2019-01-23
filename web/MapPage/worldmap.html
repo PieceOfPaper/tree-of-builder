@@ -45,12 +45,20 @@
                 item.style.left = (Number(pos[0])*itemPosScale - itemPosScale*0.5);
                 item.style.top = (3620-Number(pos[1])*itemPosScale - 12*(mapDataList[param].length-1)*0.5);
                 var htmlString = '';
+                var mainName = '';
                 if (mapDataList[param].length > 1 && 
                     mapDataList[param][0].MainName != undefined && mapDataList[param][0].MainName.length > 0){
                     htmlString+='<p class="head">'+mapDataList[param][0].MainName+'</p>';
+                    mainName = mapDataList[param][0].MainName;
                 }
                 for (var i=0;i<mapDataList[param].length;i++){
-                    htmlString+='<p><a href="../Map?id='+mapDataList[param][i].ClassID+'">'+mapDataList[param][i].Name+'</a></p>';
+                    var mapName = mapDataList[param][i].Name;
+                    mapName = mapName.replace(mainName, '');
+                    htmlString+='<p>';
+                    if (mapDataList[param][i].CanCampWarp){
+                        htmlString+='<img style="width:1.25em; height:1.25em; vertical-align:middle;" src="../img/minimap_icons/minimap_goddess.png" />';
+                    }
+                    htmlString+='<a href="../Map?id='+mapDataList[param][i].ClassID+'">'+mapName+'</a></p>';
                 }
                 item.innerHTML=htmlString;
                 worldmap.appendChild(item);
