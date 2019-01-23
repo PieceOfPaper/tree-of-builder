@@ -68,7 +68,7 @@ topMenuButtons['category_miscdata']["Name"] = "MISC DATA";
 
 topMenuButtons['misc_guildevent'] = [];
 topMenuButtons['misc_guildevent']["Path"] = "GuildEvent";
-topMenuButtons['misc_guildevent']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
+topMenuButtons['misc_guildevent']["Img"] = "../img/icon/itemicon/icon_item_indunonemoreenter.png";
 topMenuButtons['misc_guildevent']["Name"] = "Guild Event";
 
 topMenuButtons['category_tool'] = [];
