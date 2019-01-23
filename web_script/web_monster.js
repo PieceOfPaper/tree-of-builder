@@ -99,6 +99,8 @@ module.exports = function(app, tableData, scriptData){
         statScript += 'document.getElementById("stat_MAXMATK").innerText=NumberComma(SCR_Get_MON_MAXMATK(rawData));';
         statScript += 'document.getElementById("stat_MHP").innerText=NumberComma(SCR_Get_MON_MHP(rawData));';
         statScript += 'document.getElementById("stat_MSP").innerText=NumberComma(SCR_Get_MON_MSP(rawData));';
+        statScript += 'document.getElementById("stat_CRTHR").innerText=NumberComma(SCR_Get_MON_CRTHR(rawData));';
+        statScript += 'document.getElementById("stat_CRTDR").innerText=NumberComma(SCR_Get_MON_CRTDR(rawData));';
 
         statScript += tos.Lua2JS(scriptData['GET_MON_STAT']).replace('var statRateList = { \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' };', 'var statRateList = [ \'STR\', \'INT\', \'CON\', \'MNA\', \'DEX\' ];').replace('for i = 1, #statRateList do', 'for(i in statRateList){');
         statScript += tos.Lua2JS(scriptData['SCR_Get_MON_STR']);
@@ -128,6 +130,8 @@ module.exports = function(app, tableData, scriptData){
         statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_ARMOR_MDEF_CALC']);
         statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_ARMOR_CALC']).replace('var basicGradeRatio, reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade);','var basicGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[0]; var reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[1];');
         statScript += tos.Lua2JS(scriptData['SCR_MON_ITEM_REINFORCE_ARMOR_CALC']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_CRTHR']);
+        statScript += tos.Lua2JS(scriptData['SCR_Get_MON_CRTDR']);
         statScript += '</script>';
 
         var skillList = [];
