@@ -61,6 +61,11 @@ topMenuButtons['map']["Path"] = "MapPage";
 topMenuButtons['map']["Img"] = "../img/minimap_icons/minimap_complete.png";
 topMenuButtons['map']["Name"] = "Map";
 
+topMenuButtons['category_miscdata'] = [];
+topMenuButtons['category_miscdata']["Path"] = undefined;
+topMenuButtons['category_miscdata']["Img"] = "";
+topMenuButtons['category_miscdata']["Name"] = "MISC DATA";
+
 topMenuButtons['category_tool'] = [];
 topMenuButtons['category_tool']["Path"] = undefined;
 topMenuButtons['category_tool']["Img"] = "";
