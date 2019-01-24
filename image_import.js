@@ -257,7 +257,7 @@ function importImage(srcPath, dstPath, useCategory, callback){
                 if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
                 var rect = dataList[dataIndex]['imgrect'].split(' ');
                 var config1 = {width: rect[2], height: rect[3], top: rect[1], left: rect[0]};
-                console.log(targetPath+" to "+outputPath+" ("+dataList[dataIndex]['imgrect']+")");
+                //console.log(targetPath+" to "+outputPath+" ("+dataList[dataIndex]['imgrect']+")");
                 PNGCrop.crop(targetPath, outputPath, config1, function(err) {
                   //if (err) throw err;
                   if (err) console.log('error img ' + dataList[dataIndex]['name'] + '\n'+ err);
