@@ -90,13 +90,13 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
             importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', true, function(){
               importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
                 importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
-                  importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
+                  //importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
                     console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
                     sendSlack("Image Import SUCCESS (with UI Skin)");
                     copyImage('./web/img/bufficon', './web/img/icon/skillicon');
                     copyImage('./web/img/actionicon', './web/img/icon/skillicon');
                     copyImage('./web/img/barrack', './web/img/icon/monillust');
-                  });
+                  //});
                 });
               });
             });
