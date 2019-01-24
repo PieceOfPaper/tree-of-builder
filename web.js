@@ -56,11 +56,11 @@ console.log('argument loaded');
 
 
 const config = {
-  user: 'postgres',
+  user     : 'postgres',
   host     : '/cloudsql/tree-of-builder:asia-east2:tree-of-builder',
   database : 'postgres',
-  password: 'FE5iFatpuJFC8kjB',
-  port: 5432,
+  password : 'FE5iFatpuJFC8kjB',
+  port     : 5432,
   // this object will be passed to the TLSSocket constructor
   // ssl : {
   //   rejectUnauthorized : false,
@@ -70,12 +70,13 @@ const config = {
   // }
 };
 
+console.log('### DB Connect Request');
 var dbclient = new Client(config);
 dbclient.connect((err) => {
   if (err) {
-    console.error('DB error connecting', err.stack)
+    console.error('### DB Connect Error.\n', err.stack)
   } else {
-    console.log('DB Connected')
+    console.log('### DB Connect Success.')
     dbclient.end()
   }
 });
