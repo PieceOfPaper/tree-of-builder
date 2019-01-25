@@ -224,6 +224,7 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 loadTable('companion', 'ies.ipf/companion.ies');
+loadTable('foodtable', 'ies.ipf/foodtable.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -462,6 +463,9 @@ app.use('/Builder', builderPage);
 
 var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, tableData, scriptData);
 app.use('/QuestCalculator', toolQuestCalcPage);
+
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
+app.use('/FoodCalculator', toolFoodCalcPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);

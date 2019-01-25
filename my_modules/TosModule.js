@@ -183,7 +183,7 @@ class TosModule {
         return this.FindDataClassName(tableData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
     }
 
-    static GetItemResultString(tableData, className){
+    static GetItemResultString(tableData, className, itemcount){
         var itemData = undefined;
         var output = '';
         if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item',className);
@@ -204,7 +204,11 @@ class TosModule {
           } else if(itemData.Illust != undefined){
             icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
           }
-          output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a></p>';
+          output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
+          if (itemcount != undefined){
+            output += ' x '+itemcount;
+          }
+          output += '</p>';
         }
         return output;
     }
