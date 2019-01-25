@@ -3,6 +3,8 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 
+const { Pool, Client } = require('pg');
+
 var csv = require('csv-parser');
 var xml = require('xml-parser');
 
@@ -52,7 +54,33 @@ process.argv.forEach(function (val, index, array) {
 });
 console.log('argument loaded');
 
-var dbclient;
+
+const config = {
+  user     : 'postgres',
+  host     : '/cloudsql/tree-of-builder:asia-east2:tree-of-builder',
+  database : 'postgres',
+  password : 'FE5iFatpuJFC8kjB',
+  port     : 5432,
+  // this object will be passed to the TLSSocket constructor
+  // ssl : {
+  //   rejectUnauthorized : false,
+  //   ca   : fs.readFileSync("server-ca.pem").toString(),
+  //   key  : fs.readFileSync("client-cert.pem").toString(),
+  //   cert : fs.readFileSync("client-cert.pem").toString(),
+  // }
+};
+
+console.log('### DB Connect Request');
+var dbclient = new Client(config);
+dbclient.connect((err) => {
+  if (err) {
+    console.error('### DB Connect Error.\n', err.stack)
+  } else {
+    console.log('### DB Connect Success.')
+    dbclient.end()
+  }
+});
+
 
 
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
@@ -196,6 +224,7 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 loadTable('companion', 'ies.ipf/companion.ies');
+loadTable('foodtable', 'ies.ipf/foodtable.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -399,8 +428,8 @@ app.get('/', function (req, response) {
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
 
-// var boardFree = require('./board_server/board_free')(app, dbclient);
-// app.use('/BoardFree', boardFree);
+var boardFree = require('./board_server/board_free')(app, dbclient);
+app.use('/BoardFree', boardFree);
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
@@ -431,6 +460,12 @@ app.use('/Companion', miscCompanionPage);
 
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
+
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, tableData, scriptData);
+app.use('/QuestCalculator', toolQuestCalcPage);
+
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
+app.use('/FoodCalculator', toolFoodCalcPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);

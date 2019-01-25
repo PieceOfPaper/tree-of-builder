@@ -86,6 +86,16 @@ topMenuButtons['builder']["Path"] = "Builder";
 topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
 topMenuButtons['builder']["Name"] = "Builder";
 
+topMenuButtons['tool_questcalc'] = [];
+topMenuButtons['tool_questcalc']["Path"] = "QuestCalculator";
+topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_sub.png";
+topMenuButtons['tool_questcalc']["Name"] = "Quest Calc";
+
+topMenuButtons['tool_foodcalc'] = [];
+topMenuButtons['tool_foodcalc']["Path"] = "FoodCalculator";
+topMenuButtons['tool_foodcalc']["Img"] = "../img/icon/itemicon/icon_item_bbq.png";
+topMenuButtons['tool_foodcalc']["Name"] = "Food Calc";
+
 
 
 

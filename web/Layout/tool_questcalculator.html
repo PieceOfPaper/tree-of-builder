@@ -1,0 +1,53 @@
+<html>
+
+<head>
+    <title>Quest Calculator</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <!--
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2172243042066207"
+         data-ad-slot="8369609764"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+    <div>
+        <h3>Class ID</h3>
+        <p>From <input type="number" id="from" value=1></p>
+        <p>To <input type="number" id="to" value=1></p>
+    </div>
+    <button id="searchBtn" onclick="search()">Search</button>
+    <br/>
+    <script>
+        var url = window.location.href.split('?')[0];
+        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
+        if (window.location.href.split('?').length > 0){
+            document.getElementById('from').value=filterSetting['from'];
+            document.getElementById('to').value=filterSetting['to'];
+        }
+        function search(){
+            window.location.href = url + "?from="+document.getElementById('from').value+'&to='+document.getElementById('to').value;
+        }
+    </script>
+    %ResultString%
+</body>
+
+</html>

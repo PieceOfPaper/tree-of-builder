@@ -14,7 +14,7 @@ module.exports = function(app, tableData, scriptData){
         var resultString = '';
         
         for (param in guildEventTable){
-            resultString += '<table><tbody>';
+            resultString += '<table class="search-result-table"><tbody>';
             resultString += '<tr><td>Name</td><td>'+guildEventTable[param].Name+'</td><td>Type</td><td>'+guildEventTable[param].EventType+'</td></tr>';
             resultString += '<tr><td>Guild Lv</td><td>'+guildEventTable[param].GuildLv+'</td><td>Max Player</td><td>'+guildEventTable[param].MaxPlayerCnt+'</td></tr>';
             resultString += '<tr><td>Time Limit</td><td>'+guildEventTable[param].TimeLimit+'</td><td>Recruiting Sec</td><td>'+guildEventTable[param].RecruitingSec+'</td></tr>';

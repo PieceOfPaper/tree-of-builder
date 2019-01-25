@@ -13,7 +13,7 @@ module.exports = function(app, tableData, scriptData){
         var output = layout.toString();
         var resultString = '';
         
-        resultString += '<table><tbody>';
+        resultString += '<table class="search-result-table"><tbody>';
         resultString += '<tr><td>Icon</td><td>Name</td><td>Job</td><td>Ride Speed</td><td>Is Ride</td></tr>';
         for (param in companionTable){
             resultString += '<tr>';
