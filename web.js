@@ -460,6 +460,9 @@ app.use('/Companion', miscCompanionPage);
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
 
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, tableData, scriptData);
+app.use('/QuestCalculator', toolQuestCalcPage);
+
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);
 
