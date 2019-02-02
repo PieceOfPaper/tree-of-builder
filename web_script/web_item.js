@@ -299,7 +299,6 @@ module.exports = function(app, tableData, scriptData){
     var sealOption = tos.FindDataClassName(tableData, 'item_seal_option', itemTable[index].ClassName)
     var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
-
     //set data
     var setItemTable = tableData['setitem'];
     var setList = [];
@@ -326,15 +325,15 @@ module.exports = function(app, tableData, scriptData){
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      iconPath = '../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      iconPath = '../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      iconPath = '../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
