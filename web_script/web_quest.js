@@ -143,12 +143,32 @@ module.exports = function(app, tableData, scriptData){
           }
         }
 
+        var questModeIconPath = '';
+        switch(questData.QuestMode){
+          case "MAIN":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_main.png';
+          break;
+          case "SUB":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_sub.png';
+          break;
+          case "REPEAT":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_repeat.png';
+          break;
+          case "PARTY":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_party.png';
+          break;
+          case "KEYITEM":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_keyquest.png';
+          break;
+        }
+
         var output = layout_detail.toString();
         output = output.replace(/%Name%/g, questData.Name);
         output = output.replace(/%ClassName%/g, questData.ClassName);
         output = output.replace(/%ClassID%/g, questData.ClassID);
 
         output = output.replace(/%QuestMode%/g, questData.QuestMode);
+        output = output.replace(/%QuestModeIconPath%/g, questModeIconPath);
         output = output.replace(/%Level%/g, questData.Level);
         output = output.replace(/%Lvup%/g, questData.Lvup);
 

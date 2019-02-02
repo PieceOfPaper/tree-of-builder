@@ -152,6 +152,7 @@ module.exports = function(app, tableData, scriptData){
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
+    output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + iconName + '.png');
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
     output = output.replace(/%ClassID%/g, buffTable[index].ClassID);
