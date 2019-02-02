@@ -176,3 +176,7 @@ function destroyLoadingUI(){
     document.body.removeChild(loadingUI);
     loadingUI=undefined;
 }
+
+document.addEventListener('gesturestart', function (e) {
+    e.preventDefault();
+});
