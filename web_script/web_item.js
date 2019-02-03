@@ -470,6 +470,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'ItemStar:' + itemTable[index].ItemStar  + ',';
     if (itemTable[index].Material != undefined && itemTable[index].Material.length > 0)
       captionScript +=  'Material:"' + itemTable[index].Material  + '",';
+    captionScript +=  'GroupName:"' + itemTable[index].GroupName  + '",';
     captionScript +=  'MAXATK:' + 0  + ',';
     captionScript +=  'MINATK:' + 0  + ',';
     captionScript +=  'MAXATK_AC:' + 0 + ',';
@@ -583,11 +584,13 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'itemData.Transcend ++;';
     captionScript +=  'if(itemData.Transcend>10) itemData.Transcend=10;';
     captionScript +=  'updateBasicValue();';
+    captionScript +=  'updateTranscendMaterialCount();';
     captionScript += '}';
     captionScript += 'function onClickTranscendLevelDown(){';
     captionScript +=  'itemData.Transcend --;';
     captionScript +=  'if(itemData.Transcend<0) itemData.Transcend=0;';
     captionScript +=  'updateBasicValue();';
+    captionScript +=  'updateTranscendMaterialCount();';
     captionScript += '}';
 
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
@@ -621,6 +624,13 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) document.getElementById("TranscendLevel").value=itemData.Transcend;';
     captionScript += '}';
 
+    captionScript += 'function updateTranscendMaterialCount(){';
+    captionScript +=  'var totalcnt=Number(0);';
+    captionScript +=  'for(var i=0;i<itemData.Transcend;i++){ totalcnt+=Number(GET_TRANSCEND_MATERIAL_COUNT(itemData,i)); }';
+    captionScript +=  'document.getElementById("transcendMatCnt").innerText=GET_TRANSCEND_MATERIAL_COUNT(itemData,itemData.Transcend-1);';
+    captionScript +=  'document.getElementById("transcendMatTotalCnt").innerText=totalcnt;';
+    captionScript += '}';
+
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);console.log(atkPair);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
@@ -633,8 +643,11 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
+    captionScript += tos.Lua2JS(scriptData['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
     captionScript += '</script>';
 
+
+    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 
@@ -643,6 +656,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%StatList%/g, statListString);
+
+    output = output.replace(/%TranscendMaterialItem%/g, transcendMaterialItemString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
