@@ -281,6 +281,7 @@ loadScript('shared.ipf/script/ability_price.lua');
 loadScript('shared.ipf/script/ability_unlock.lua');
 loadScript('shared.ipf/script/item_calculate.lua');
 loadScript('shared.ipf/script/item_transcend_shared.lua');
+loadScript('shared.ipf/script/lib_reinforce_131014.lua');
 loadScript('shared.ipf/script/calc_pvp_item.lua');
 loadScript('shared.ipf/script/calc_property_monster.lua');
 loadScript('script.ipf/buff/buff_monster_ability.lua');

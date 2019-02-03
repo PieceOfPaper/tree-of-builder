@@ -491,6 +491,14 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'StringArg:"' + itemTable[index].StringArg + '",';
     captionScript += '};';
 
+    captionScript += 'var dummyMoru = {';
+    captionScript +=  'StringArg:"",';
+    captionScript += '};';
+
+    captionScript += 'var dummyMoruDia = {';
+    captionScript +=  'StringArg:"DIAMOND",';
+    captionScript += '};';
+
 
     captionScript += 'function SCR_GET_ITEM_GRADE_RATIO(grade, prop){';
     if (myGrade != undefined){
@@ -559,39 +567,45 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function MakeItemOptionByOptionSocket(item){ return 0; }\n';
     captionScript += 'function GetItemOwner(item){ return 0; }\n';
     captionScript += 'function MAKE_ITEM_OPTION_BY_OPTION_SOCKET(item){ return; }\n';
+    captionScript += 'function IS_MORU_DISCOUNT_50_PERCENT(item){ return false; }\n';
+    captionScript += 'function IS_MORU_FREE_PRICE(item){ return false; }\n';
 
     captionScript += 'function onChangeReinforceLevel(){';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) itemData.Reinforce_2=Number(document.getElementById("ReinforceLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onChangeTranscendLevel(){';
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) itemData.Transcend=Number(document.getElementById("TranscendLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickReinforceLevelUp(){';
     captionScript +=  'itemData.Reinforce_2 ++;';
     captionScript +=  'if(itemData.Reinforce_2>40) itemData.Reinforce_2=40;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onClickReinforceLevelDown(){';
     captionScript +=  'itemData.Reinforce_2 --;';
     captionScript +=  'if(itemData.Reinforce_2<0) itemData.Reinforce_2=0;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickTranscendLevelUp(){';
     captionScript +=  'itemData.Transcend ++;';
     captionScript +=  'if(itemData.Transcend>10) itemData.Transcend=10;';
     captionScript +=  'updateBasicValue();';
     captionScript +=  'updateTranscendMaterialCount();';
-    captionScript += '}';
+    captionScript += '}\n';
     captionScript += 'function onClickTranscendLevelDown(){';
     captionScript +=  'itemData.Transcend --;';
     captionScript +=  'if(itemData.Transcend<0) itemData.Transcend=0;';
     captionScript +=  'updateBasicValue();';
     captionScript +=  'updateTranscendMaterialCount();';
-    captionScript += '}';
+    captionScript += '}\n';
 
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
     captionScript += 'updateBasicValue();';
@@ -624,11 +638,18 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) document.getElementById("TranscendLevel").value=itemData.Transcend;';
     captionScript += '}';
 
+    captionScript += 'updateTranscendMaterialCount();';
     captionScript += 'function updateTranscendMaterialCount(){';
     captionScript +=  'var totalcnt=Number(0);';
     captionScript +=  'for(var i=0;i<itemData.Transcend;i++){ totalcnt+=Number(GET_TRANSCEND_MATERIAL_COUNT(itemData,i)); }';
     captionScript +=  'document.getElementById("transcendMatCnt").innerText=GET_TRANSCEND_MATERIAL_COUNT(itemData,itemData.Transcend-1);';
     captionScript +=  'document.getElementById("transcendMatTotalCnt").innerText=totalcnt;';
+    captionScript += '}';
+
+    captionScript += 'updateReinforceSilverCount();';
+    captionScript += 'function updateReinforceSilverCount(){';
+    captionScript +=  'document.getElementById("reinforceSilver").innerText=GET_REINFORCE_PRICE(itemData,dummyMoru,undefined).toLocaleString();';
+    captionScript +=  'document.getElementById("reinforceSilverDia").innerText=GET_REINFORCE_PRICE(itemData,dummyMoruDia,undefined).toLocaleString();';
     captionScript += '}';
 
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
@@ -644,8 +665,12 @@ module.exports = function(app, tableData, scriptData){
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
     captionScript += tos.Lua2JS(scriptData['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
+    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
     captionScript += '</script>';
 
+    var reinforceSilverItemString = '';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData, 'Moru_W_01')+' <span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData, 'Moru_Diamond')+' <span id="reinforceSilverDia">0</span></p>';
 
     var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
@@ -657,6 +682,7 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%StatList%/g, statListString);
 
+    output = output.replace(/%ReinforceSilverItem%/g, reinforceSilverItemString);
     output = output.replace(/%TranscendMaterialItem%/g, transcendMaterialItemString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);

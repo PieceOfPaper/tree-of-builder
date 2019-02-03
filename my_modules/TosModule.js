@@ -183,6 +183,28 @@ class TosModule {
         return this.FindDataClassName(tableData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
     }
 
+    static GetItemImgString(tableData, className){
+        var itemData = undefined;
+        var icon = '';
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Equip',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Quest',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_gem',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_premium',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
+        if (itemData == undefined) return icon;
+          if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+            icon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          } else if(itemData.Icon != undefined){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          } else if(itemData.Illust != undefined){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          }
+        return icon;
+    }
+
     static GetItemResultString(tableData, className, itemcount){
         var itemData = undefined;
         var output = '';
@@ -194,16 +216,7 @@ class TosModule {
         if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
         if (itemData != undefined){
             output += '<p>';
-            var icon = '';
-          if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            icon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-          } else if(itemData.Icon != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-          } else if(itemData.Illust != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-          }
+            var icon = this.GetItemImgString(tableData,className);
           output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
           if (itemcount != undefined){
             output += ' x '+itemcount;
