@@ -65,6 +65,14 @@
                 worldmap.appendChild(item);
             }
         });
+
+        var homeButton=document.createElement('a');
+        homeButton.id="homebutton";
+        homeButton.href="..";
+        var homeButtonImg = document.createElement("img");
+        homeButtonImg.src="../img/minimap_icons/questinfo_return.png";
+        homeButton.appendChild(homeButtonImg);
+        document.body.appendChild(homeButton);
     </script>
 </body>
 
