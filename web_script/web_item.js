@@ -227,10 +227,11 @@ module.exports = function(app, tableData, scriptData){
 
     var dialogString = undefined;
     if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
-      var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
-      if (dialogData != undefined) {
-        dialogString = tos.parseCaption(dialogData.Text);
-      }
+      // var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
+      // if (dialogData != undefined) {
+      //   dialogString = tos.parseCaption(dialogData.Text);
+      // }
+      dialogString = tos.GetDialogString(tableData,itemTable[index].ClassName);
     }
 
     var output = layout_item_detail.toString();

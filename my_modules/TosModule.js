@@ -279,5 +279,14 @@ class TosModule {
         }
         return output;
     }
+
+    static GetDialogString(tableData, className){
+        var output = '';
+        var dialogData=this.FindDataClassName(tableData, 'dialogtext', className);
+        if (dialogData!=undefined){
+            output += this.GetQuestModeImgString(tableData,className)+'<a href="../Dialog?id='+dialogData.ClassID+'">Read Dialog</a>';
+        }
+        return output;
+    }
 }
 module.exports = TosModule;
