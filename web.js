@@ -477,6 +477,9 @@ app.use('/Quest', questPage);
 var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
 app.use('/Map', mapPage);
 
+var dialogPage = require('./web_script/web_dialog')(app, tableData, scriptData);
+app.use('/Dialog', dialogPage);
+
 var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
 app.use('/GuildEvent', miscGuildEventPage);
 

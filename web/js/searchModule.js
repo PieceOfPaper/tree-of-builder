@@ -403,6 +403,9 @@ function searchModule_showResult(){
                     case "map2":
                     tdstr = '<a href=../Map?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
+                    case "dialogtext":
+                    tdstr = '<a href=../Dialog?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
+                    break;
                 }
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;
