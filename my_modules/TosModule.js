@@ -280,11 +280,12 @@ class TosModule {
         return output;
     }
 
-    static GetDialogString(tableData, className){
+    static GetDialogString(tableData, className, readText){
+        if (readText == undefined) readText='Read Dialog';
         var output = '';
         var dialogData=this.FindDataClassName(tableData, 'dialogtext', className);
         if (dialogData!=undefined){
-            output += this.GetQuestModeImgString(tableData,className)+'<a href="../Dialog?id='+dialogData.ClassID+'">Read Dialog</a>';
+            output += '<a href="../Dialog?id='+dialogData.ClassID+'">'+readText+'</a>';
         }
         return output;
     }
