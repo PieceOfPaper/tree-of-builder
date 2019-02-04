@@ -184,8 +184,9 @@ function parseCaption(caption) {
     output = output.replace(/#{CaptionRatio3}#/g, '<span id="CaptionRatio3"></span>');
     output = output.replace(/#{SpendItemCount}#/g, '<span id="SpendItemCount"></span>');
     return output;
-var loadingUI = undefined;
+}
 
+var loadingUI = undefined;
 function createLoadingUI(){
     if (loadingUI!=undefined) return;
     loadingUI = document.createElement('div');
