@@ -18,28 +18,29 @@ module.exports = function(app, tableData, scriptData){
         var abilityJobTable = tableData['ability_job'];
 
         var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
+        var CLASS_MAX = 4;
 
         var luaMethodList = [];
 
         var classArray = [];
         var skillArray = [];
-        var classCount = [];
+        //var classCount = [];
         var abilityArray = [];
         if (request.query.class != undefined && request.query.class.length > 0){
-            for (var i = 0; i < jobTable.length; i ++){
-                classCount.push(0);
-            }
+            // for (var i = 0; i < jobTable.length; i ++){
+            //     classCount.push(0);
+            // }
             for (var i = 0; i < request.query.class.length; i ++){
                 classArray.push(AsciiToNumber(request.query.class[i]));
-                if (i > 0){
-                    for (var j = 0; j < jobTable.length; j ++){
-                        if (GetJobNumber1(jobTable[j].ClassName) === classArray[0] &&
-                            GetJobNumber2(jobTable[j].ClassName) === classArray[i]){
-                            classCount[j] ++;
-                            break;
-                        }
-                    }
-                }
+                // if (i > 0){
+                //     for (var j = 0; j < jobTable.length; j ++){
+                //         if (GetJobNumber1(jobTable[j].ClassName) === classArray[0] &&
+                //             GetJobNumber2(jobTable[j].ClassName) === classArray[i]){
+                //             classCount[j] ++;
+                //             break;
+                //         }
+                //     }
+                // }
             }
         }
         if (request.query.skill != undefined && request.query.skill.length > 0){
@@ -73,6 +74,7 @@ module.exports = function(app, tableData, scriptData){
         output +=   '<head>';
         output +=     '<title>Builder Page</title>';
         output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
+        output +=     '<link rel="icon" href="../img/minimap_icons/questinfo_return.png">';
         output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
         output +=     '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
         output +=     '<script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2172243042066207", enable_page_level_ads: true }) </script>';
@@ -85,12 +87,14 @@ module.exports = function(app, tableData, scriptData){
         output +=           '<div class="builder-class-selected">';
         if (request.query.class === undefined || request.query.class === ''){
             //선택된 클래스가 없음.
+            output +=   '<h1 style="width:calc(100vw-20px); text-align:center;">Select Class</h1>';
         } else {
            for (var i = 1; i < classArray.length; i ++){
                 var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
         }
@@ -101,9 +105,10 @@ module.exports = function(app, tableData, scriptData){
         if (request.query.class === undefined || request.query.class === ''){
             for (var i = 0; i < jobTable.length; i ++){
                 if (jobTable[i].Rank > 1) continue;
-                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
-                output +=       '<img src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
-                output +=   '</btn>';
+                output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
+                output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
+                output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
+                output +=   '</div>';
             }
             // for (var i = 1; i <= 4; i ++){
             //     var jobData = tos.GetJobData(tableData, i, 1);
@@ -112,34 +117,46 @@ module.exports = function(app, tableData, scriptData){
             //     output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
             //     output +=   '</btn>';
             // }
-        } else {
+        } else if (classArray.length <= CLASS_MAX) {
             var jobList = [];
             for (var i = 0; i < jobTable.length; i ++){
                 if (GetJobNumber1(jobTable[i].ClassName) != classArray[0]) continue;
                 if (jobTable[i].Rank > request.query.class.length) continue;
-                if (jobTable[i].MaxCircle <= classCount[i]) continue;
+                //if (jobTable[i].MaxCircle <= classCount[i]) continue;
+                var isHas = false;
+                for (var j = 1; j < classArray.length; j ++){
+                    var jobData = tos.GetJobData(tableData, classArray[0], classArray[j]);
+                    if (jobData != undefined && jobData.ClassID == jobTable[i].ClassID){
+                        isHas = true;
+                        break;
+                    }
+                }
+                if (isHas) continue;
                 jobList.push(jobTable[i]);
             }
             for (var i = 0; i < jobList.length; i ++){
-                output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
-                output +=       '<img src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
-                output +=   '</btn>';
+                output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
+                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
+                output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
+                output +=   '</div>';
             }
         }
         output +=           '</div>';
         output +=       '</div>';
         output +=       '<hr>';
-        output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
+        //output +=       '<button id="viewDetailBtn" onclick="onClickViewDetail()">View Details</button>';
         output +=       '<div class="builder-skill-area">';
         output +=       '<script>var skillData=[]; var abilityData=[];  var abilityJobData=[];</script>';
         var skillIndex = 0;
-        for (var i = 0; i < classCount.length; i ++){
-            if (classCount[i] <= 0)
-                continue;
+        for (var i = 1; i < classArray.length; i ++){
+            // if (classCount[i] <= 0)
+            //     continue;
+            var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
+            if (jobData == null || jobData.hasOwnProperty('Name') == false) continue;
             output +=       '<div class="class">';
-            //output +=       '<h3>' + jobTable[i].Name + ' ' + classCount[i] + ' Circle</h3>';
-            output +=       '<h3>' + jobTable[i].Name + '</h3>';
-            var jobNum2 = GetJobNumber2(jobTable[i].ClassName);
+            //output +=       '<h3>' + jobData.Name + ' ' + classCount[i] + ' Circle</h3>';
+            output +=       '<h3>' + jobData['Name'] + '</h3>';
+            var jobNum2 = GetJobNumber2(jobData.ClassName);
             var skillLvSum = 0;
             for (var k = 0; k < skillArray.length; k ++){
                 if (skillArray[k][0] == jobNum2){
@@ -154,7 +171,7 @@ module.exports = function(app, tableData, scriptData){
             output +=       '<p>Ability Point: <span id="' + jobNum2 + '" class="abilityPntSum"></span></p>';
             // ------ Skill
             for (var j = 0; j < skilltreeTable.length; j ++){
-                if (skilltreeTable[j].ClassName.indexOf(jobTable[i].ClassName + '_') > -1){
+                if (skilltreeTable[j].ClassName.indexOf(jobData.ClassName + '_') > -1){
                     var skillTableIndex;
                     for (var k = 0; k < skillTable.length; k ++){
                         if (skilltreeTable[j].SkillName === skillTable[k].ClassName){
@@ -176,18 +193,20 @@ module.exports = function(app, tableData, scriptData){
                     // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=       '<img src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
                     output +=       '<br>';
-                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
-                    output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
-                    output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
-                    output +=       '</div>';
+                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    //output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
+                    // output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
+                    // output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
+                    // output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption2) + '</p>';
+                    // output +=       '</div>';
                     output +=       '<script>';
                     output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]=' + JSON.stringify(skillTable[skillTableIndex]) + ';';
                     output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["Level"]=Number('+skillLv+');';
+                    output +=           'skillData["'+jobNum2+'_'+skillIndex+'"]["FullCaption"]="' + tos.parseCaption(skillTable[skillTableIndex].Caption).replace(/\"/g, '\'') + '<br/>' + tos.parseCaption(skillTable[skillTableIndex].Caption2).replace(/\"/g, '\'') + '";';
                     output +=       '</script>';
                     output +=   '</div>';
 
@@ -202,10 +221,11 @@ module.exports = function(app, tableData, scriptData){
                     skillIndex ++;
                 }
             }
+            output +=   '<br/>';
             // ------ Ability
             var abilIndex = 0;
             for (var j = 0; j < abilityTable.length; j ++){
-                if (abilityTable[j].Job == jobTable[i].ClassName){
+                if (abilityTable[j].Job == jobData.ClassName){
                     var abil_job = undefined;
                     for (var k = 0; k < abilityJobTable.length; k ++){
                         if (abilityTable[j].ClassName == abilityJobTable[k].ClassName){
@@ -225,20 +245,21 @@ module.exports = function(app, tableData, scriptData){
                         }
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
-                    output +=       '<img src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png"/>';
+                    output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
                     output +=       '<br>';
-                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<p><a href="../Ability/?id=' + abilityTable[j].ClassID  + '">' + abilityTable[j].Name + '</a>(<span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span>/' + abil_job.MaxLevel + ')</p>';
-                    output +=       '<div align="center" class="ability-desc" id="' + abilityTable[j].ClassID + '" >';
-                    output +=           '<p>' + abil_job.UnlockDesc + '</p>';
-                    output +=           '<p>' + tos.parseCaption(abilityTable[j].Desc) + '</p>';
-                    output +=       '</div>';
+                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    // output +=       '<div align="center" class="ability-desc" id="' + abilityTable[j].ClassID + '" >';
+                    // output +=           '<p>' + abil_job.UnlockDesc + '</p>';
+                    // output +=           '<p>' + tos.parseCaption(abilityTable[j].Desc) + '</p>';
+                    // output +=       '</div>';
                     output +=       '<input type="hidden" id="Ability_' + abilityTable[j].ClassName + '" class="AbilityData" min="0" max="' + abil_job.MaxLevel + '" value="0" >';
                     output +=       '<script>';
                     output +=           'abilityData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abilityTable[j]) + ';';
                     output +=           'abilityJobData["'+jobNum2+','+abilIndex+'"]=' + JSON.stringify(abil_job) + ';';
                     output +=           'abilityData["'+jobNum2+','+abilIndex+'"]["Level"]=Number('+abilLv+');';
+                    output +=           'abilityData["'+jobNum2+','+abilIndex+'"]["FullCaption"]="' + abil_job.UnlockDesc + '<br/><br/>' + tos.parseCaption(abilityTable[j].Desc).replace(/\"/g, '\'') + '";';
                     output +=       '</script>';
                     output +=   '</div>';
 
@@ -253,6 +274,16 @@ module.exports = function(app, tableData, scriptData){
             skillIndex = 0;
         }
         output +=       '</div>';
+
+        //dummy
+        output +=       '<div style="height:50vh;"></div>';
+
+        //Desc Area
+        output +=   '<div class="builder-desc-area">';
+        output +=   '<h3 id="desc-name"></h3>';
+        output +=   '<p id="desc-desc"></p>';
+        output +=   '</div>';
+
         output +=   '<script>';
 
         output += 'function GetSkillOwner(skill){ return playerSetting; }';
@@ -279,6 +310,8 @@ module.exports = function(app, tableData, scriptData){
         output +=       'function IsBuffApplied(pc, buff){ return false; }';
         output +=       'function IGetSumOfEquipItem(pc, equip){ return 0; }';
         output +=       'function IsPVPServer(pc){ return 0; }';
+        output +=       'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
+        output +=       'function GetZoneName(pc){ return 0; }';
 
         output +=   'var methods=[];';
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR');
@@ -288,7 +321,7 @@ module.exports = function(app, tableData, scriptData){
         for (var i=0;i<luaMethodList.length;i++){ 
             if (scriptData[luaMethodList[i]] == undefined) continue;
             if (luaMethodList[i] == 'ABIL_REINFORCE_PRICE' || luaMethodList[i] == 'ABIL_COMMON_PRICE'){
-                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
+                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
             } else {
                 output += tos.Lua2JS(scriptData[luaMethodList[i]]);
             }

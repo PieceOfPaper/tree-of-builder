@@ -9,7 +9,8 @@ function requestGetData(tableName, filter, callback){
     xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var myArr = JSON.parse(this.responseText);
-            callback(myArr);
+            if (myArr['datalist']==undefined) callback(myArr);
+            else callback(myArr['datalist'], myArr['pageMax']);
         }
     };
 

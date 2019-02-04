@@ -3,7 +3,11 @@
 <head>
     <title>%Name%</title>
     <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="%Name%" />
+    <meta property="og:description" content="%EngName%" />
+    <meta property="og:image" content="%IconPath%" />
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({
@@ -83,12 +87,14 @@
     <table>
         <tr>
             <td>Skill Factor</td>
+            <td>SR</td>
             <td>Basic SP</td>
             <td>CD</td>
             <td>OH</td>
         </tr>
         <tr>
             <td>%SklFactor%% (+%SklFactorByLevel%%)</td>
+            <td>%SklSR%</td>
             <td>%BasicSP% (+%LvUpSpendSp%)</td>
             <td>%BasicCoolDown%</td>
             <td>%OverHeat%</td>
@@ -101,15 +107,22 @@
             <td>Shoot Time</td>
             <td>Cancel Time</td>
             <td>Delay Time</td>
-            <td>Dead Hit Delay</td>
-            <td>Hit Time</td>
-            <td>Ani Time</td>
         </tr>
         <tr>
             <td>%DefaultHitDelay%</td>
             <td>%ShootTime%</td>
             <td>%CancelTime%</td>
             <td>%DelayTime%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Dead Hit Delay</td>
+            <td>Hit Time</td>
+            <td>Ani Time</td>
+        </tr>
+        <tr>
             <td>%DeadHitDelay%</td>
             <td>%HitTime%</td>
             <td>%AniTime%</td>
@@ -124,11 +137,20 @@
             <td>%Keyword%</td>
         </tr>
     </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Skill Gem</td>
+        </tr>
+        <tr>
+            <td>%SkillGem%</td>
+        </tr>
+    </table>
 
     <br/>
     
-    <input type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()">
-    <div><button onclick="onClickLevelUp()">▲</button><button onclick="onClickLevelDown()">▼</button></div>
+    <input class="lv-add-input" type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()"><br>
+    <div><button class="lv-add-button plus" onclick="onClickLevelUp()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDown()"><img src="../img/button/btn_minus.png" /></button></div>
 
     <p>%Caption%</p>
     <p>%Caption2%</p>

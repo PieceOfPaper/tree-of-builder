@@ -22,6 +22,7 @@
     "express": "^4.16.3",
     "json-rules-engine": "^2.3.0",
     "node-lua": "^1.0.4",
+    "pg": "^7.8.0",
     "png-crop": "0.0.2",
     "pngjs": "^3.3.3",
     "slack-node": "^0.1.8",

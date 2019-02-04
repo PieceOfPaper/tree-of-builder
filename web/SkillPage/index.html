@@ -4,6 +4,7 @@
     <title>Skill Page</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
@@ -15,6 +16,7 @@
 
     <script src="../js/requestMethod.js"></script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
 </head>
 
 <body>
@@ -25,28 +27,30 @@
             <option value="ClassName">ClassName</option>
             <option value="EngName">EngName</option>
         </select>
-        <input type="text" id="searchName" onkeydown="searchName_enterCheck()">
+        <input type="text" id="searchName">
     </div>
     <div class="filler-area">
-        <select id="jobFilter">
-            <option value="">Job</option>
+        <p>Filter</p>
+        <input id="filter_TableName" type="hidden" class="selectFilter settedFilter" value="skill"></input>
+        <select id="filter_SkillTree" class="selectFilter settedFilter">
+            <option value="Default">Job</option>
         </select>
-        <select id="classTypeFilter">
+        <select id="filter_ClassType" class="selectFilter">
             <option value="Default">Class Type</option>
         </select>
-        <select id="valueTypeFilter">
+        <select id="filter_ValueType" class="selectFilter">
             <option value="Default">Value Type</option>
         </select>
-        <select id="attributeFilter">
+        <select id="filter_Attribute" class="selectFilter">
             <option value="Default">Attribute Type</option>
         </select>
-        <select id="attackTypeFilter">
+        <select id="filter_AttackType" class="selectFilter">
             <option value="Default">Attack Type</option>
         </select>
-        <select id="hitTypeFilter">
+        <select id="filter_HitType" class="selectFilter">
             <option value="Default">Hit Type</option>
         </select>
-        <select id="companionFilter">
+        <select id="filter_EnableCompanion" class="selectFilter settedFilter">
             <option value="Default">Companion</option>
             <option value="">Stand Only</option>
             <option value="YES">Companion Only</option>
@@ -56,22 +60,34 @@
         </select>
         <br/>
         <br/>
-        <div id="stanceFilter" class="checkboxList">
-            <button class="checkboxList-head" onclick='toggle_checkboxList("stanceFilter")'>
+        <div id="filter_ReqStance" class="checkboxList selectFilter settedFilter customFilter">
+            <button class="checkboxList-head" onclick='toggle_checkboxList("filter_ReqStance")'>
                 Select Stance<span>▼</span>
             </button>
             <div class="checkboxList-body" style="display:none;">
             </div>
             <div class="checkboxList-foot" style="display:none;">
-                <button onclick='onclick_all_checkboxList("stanceFilter")'>All</button><button onclick='onclick_none_checkboxList("stanceFilter")'>None</button>
+                <button onclick='onclick_all_checkboxList("filter_ReqStance")'>All</button><button onclick='onclick_none_checkboxList("filter_ReqStance")'>None</button>
             </div>
         </div>
         <br/>
-        <input type="checkbox" id="simonyFilter">Simony<br>
-        <input type="checkbox" id="bunsinFilter">Bunsin<br>
-        <input type="checkbox" id="nocoolFilter">No-Cool Skill<br>
+        <input type="checkbox" id="filter_CanMakeSimony" class="checkboxFilter">Simony<br>
+        <!--<input type="checkbox" id="bunsinFilter" class="checkboxFilter">Bunsin<br>-->
+        <!--<input type="checkbox" id="nocoolFilter" class="checkboxFilter">No-Cool Skill<br>-->
     </div>
-    <button id="searchBtn" onclick="search()">Search</button>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
+    <button id="searchBtn">Search</button>
     <br/>
     <!--
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
@@ -86,47 +102,30 @@
     </script>
     -->
     <table id="searchResult" class="search-result-table" style="width:100%">
-
-    <!--
-        <tr>
-            <td align="center"><a href="">1234</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser1.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <td align="center"><a href="">4321</a></td>
-            <td align="center"><img src="../img/icon/skillicon/ability_archer_Appraiser2.png" /></td>
-            <td>
-                <p>Name<br/>ClaeeName
-                </p>
-            </td>
-        </tr>
-    -->
-
+        <tbody>
+            <tr>
+                <td>ClassID</td>
+                <td>Icon</td>
+                <td>Name</td>
+            </tr>
+            <tr>
+                <td class="result-link">ClassID</td>
+                <td class="result-img">Icon</td>
+                <td>Name</td>
+            </tr>
+        </tbody>
     </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
 
     <script>
         var url = window.location.href.split('?')[0];
-        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
-        
-        if(filterSetting["Name"] != undefined){
-            document.getElementById("searchType").value = "Name";
-            document.getElementById("searchName").value = filterSetting["Name"];
-        } else if (filterSetting["ClassName"] != undefined){
-            document.getElementById("searchType").value = "ClassName";
-            document.getElementById("searchName").value = filterSetting["ClassName"];
-        }
-        //document.getElementById("jobFilter").value=filterSetting["jobFilter"];
-        if(filterSetting["simonyFilter"] != undefined) document.getElementById("simonyFilter").checked=filterSetting["simonyFilter"];
-        if(filterSetting["bunsinFilter"] != undefined) document.getElementById("bunsinFilter").checked=filterSetting["bunsinFilter"];
-        if(filterSetting["nocoolFilter"] != undefined) document.getElementById("nocoolFilter").checked=filterSetting["nocoolFilter"];
 
-        if (window.location.href.indexOf("?") >= 0){
-            searchQuery();
-        }
+        baseTable="skill";
+        checkboxFilterSetting["filter_CanMakeSimony"]="YES";
+        customFilterSettingMethods.push(setCustome_stance);
+        searchModule_init();
 
         requestGetData("job", undefined, function(arr){
             arr.sort(function (a, b) {
@@ -142,7 +141,7 @@
                 else return -1;
             });
             //console.log(arr);
-            var filter = document.getElementById("jobFilter");
+            var filter = document.getElementById("filter_SkillTree");
             for(var i=0;i<arr.length;i++){
                 if (Number(arr[i].Rank) == 1){
                     var lineOption=document.createElement("option");
@@ -155,11 +154,12 @@
                 option.innerText=arr[i].Name;
                 filter.appendChild(option);
             }
-            if (filterSetting["jobFilter"]!=undefined) document.getElementById("jobFilter").value=filterSetting["jobFilter"];
+            if (filterSetting["filter_SkillTree"]!=undefined) document.getElementById("filter_SkillTree").value=filterSetting["filter_SkillTree"];
         });
+        
         requestGetData("stance", undefined, function(arr){
             //console.log(arr);
-            var filter = document.getElementById("stanceFilter");
+            var filter = document.getElementById("filter_ReqStance");
             var body;
             for (var i=0;i<filter.childNodes.length;i++){
                 if (filter.childNodes[i].className=="checkboxList-body"){
@@ -174,8 +174,8 @@
                 }
                 body.innerHTML=htmlstr;
             }
-            if (filterSetting["stanceFilter"]!=undefined){
-                var splited=filterSetting["stanceFilter"].split(';');
+            if (filterSetting["filter_ReqStance"]!=undefined){
+                var splited=filterSetting["filter_ReqStance"].split(';');
                 var stanceFilterElements=document.getElementsByClassName("stanceFilterElement");
                 for (var i=0;i<stanceFilterElements.length;i++) stanceFilterElements[i].checked=false;
                 for (var i=0;i<splited.length;i++){
@@ -187,192 +187,25 @@
                         }
                     }
                 }
-                toggle_checkboxList("stanceFilter");
+                toggle_checkboxList("filter_ReqStance");
             }
         });
-        
-        updateSelectFilter("classTypeFilter","skill/type/ClassType");
-        updateSelectFilter("valueTypeFilter","skill/type/ValueType");
-        updateSelectFilter("attributeFilter","skill/type/Attribute");
-        updateSelectFilter("attackTypeFilter","skill/type/AttackType");
-        updateSelectFilter("hitTypeFilter","skill/type/HitType");
 
-        function updateSelectFilter(filterName, dataPath){
-            requestGetData(dataPath, undefined, function(arr){
-                var filter = document.getElementById(filterName);
-                for(var i=0;i<arr.length;i++){
-                    var option=document.createElement("option");
-                    option.value=arr[i];
-                    option.innerText=arr[i];
-                    filter.appendChild(option);
-                }
-                if (filterSetting[filterName]!=undefined) document.getElementById(filterName).value=filterSetting[filterName];
-            });
-        }
-
-        function search(){
-            document.getElementById("searchName").blur();
-            updateQueryString();
-            searchQuery();
-        }
-
-        function searchQuery(){
-            createLoadingUI();
-            var filter = convertFilter();
-            if (filterSetting["jobFilter"] != ""){
-                var skilltreeFilter = [];
-                skilltreeFilter["ClassName"] = filterSetting["jobFilter"];
-                requestGetData("skilltree", skilltreeFilter, function(skilltree){
-                    var skillNames = "";
-                    for (var i=0;i<skilltree.length;i++){
-                        if (skillNames.length > 0) skillNames += ";";
-                        skillNames += skilltree[i].SkillName;
-                    }
-                    filter["ClassName"] = skillNames;
-                    requestGetData("skill", filter, function(arr){
-                        //console.log(arr);
-                        showResult(arr);
-                    });
-                });
-                return;
-            }
-            requestGetData("skill", filter, function(arr){
-                //console.log(arr);
-                showResult(arr);
-            });
-        }
-
-        //Element -> Setting
-        function updateQueryString(){
-            if (document.getElementById("searchType").value == "Name"){
-                filterSetting["Name"] = document.getElementById("searchName").value;
-                filterSetting["ClassName"] = undefined;
-                filterSetting["EngName"] = undefined;
-            } else if(document.getElementById("searchType").value == "ClassName"){
-                filterSetting["Name"] = undefined;
-                filterSetting["ClassName"] = document.getElementById("searchName").value;
-                filterSetting["EngName"] = undefined;
-            } else if(document.getElementById("searchType").value == "EngName"){
-                filterSetting["Name"] = undefined;
-                filterSetting["ClassName"] = undefined;
-                filterSetting["EngName"] = document.getElementById("searchName").value;
-            }
-            setFilterSetting("jobFilter");
-            setFilterSetting("classTypeFilter");
-            setFilterSetting("valueTypeFilter");
-            setFilterSetting("attributeFilter");
-            setFilterSetting("attackTypeFilter");
-            setFilterSetting("hitTypeFilter");
-            setFilterSetting("companionFilter");
-            setFilterSetting_checkBox("simonyFilter");
-            setFilterSetting_checkBox("bunsinFilter");
-            setFilterSetting_checkBox("nocoolFilter");
-            var requireStanceFilter=false;
-            var stanceFilterElements=document.getElementsByClassName("stanceFilterElement");
-            for (var i=0;i<stanceFilterElements.length;i++){
-                if (stanceFilterElements[i].checked==false){
-                    requireStanceFilter = true;
-                    break;
+        function setCustome_stance(filterSetting){
+            var stanceFilters = document.getElementsByClassName("stanceFilterElement");
+            var useFilter = false;
+            var filterstr = '';
+            for (param in stanceFilters){
+                if (stanceFilters[param] == undefined || stanceFilters[param].tagName == undefined) continue;
+                if (stanceFilters[param].checked == false) useFilter = true;
+                if (stanceFilters[param].checked){
+                    filterstr += ';'+stanceFilters[param].id.split('_')[1];
                 }
             }
-            if (requireStanceFilter){
-                var count=0;
-                for (var i=0;i<stanceFilterElements.length;i++){
-                    if (stanceFilterElements[i].checked==true){
-                        if (count==0){
-                            filterSetting["stanceFilter"]=";"+stanceFilterElements[i].id.replace("stanceFilter_", "");
-                        } else {
-                            filterSetting["stanceFilter"]+=";"+stanceFilterElements[i].id.replace("stanceFilter_", "");
-                        }
-                        count ++;
-                    }
-                }
-            } else {
-                filterSetting["stanceFilter"] = undefined;
-            }
-            if (history.pushState) {
-                var newurl = url + filterToQueryStr(filterSetting);
-                window.history.pushState({path:newurl},'',newurl);
-            }
+            if (useFilter) filterSetting["filter_ReqStance"]=filterstr;
+            else filterSetting["filter_ReqStance"]=undefined;
         }
 
-        //Setting -> filter
-        function convertFilter(){
-            var filter = [];
-            if (filterSetting["Name"] != undefined) filter["Name"]="@"+filterSetting["Name"];
-            if (filterSetting["ClassName"] != undefined) filter["ClassName"]="@"+filterSetting["ClassName"];
-            if (filterSetting["EngName"] != undefined) filter["EngName"]="@"+filterSetting["EngName"];
-            //Job
-            //job은 따로 동작하므로 생략
-            //ClassType
-            if (filterSetting["classTypeFilter"] != undefined && filterSetting["classTypeFilter"] != "Default")
-                filter["ClassType"]=filterSetting["classTypeFilter"];
-            //ClassType
-            if (filterSetting["valueTypeFilter"] != undefined && filterSetting["valueTypeFilter"] != "Default")
-                filter["ValueType"]=filterSetting["valueTypeFilter"];
-            //ClassType
-            if (filterSetting["attributeFilter"] != undefined && filterSetting["attributeFilter"] != "Default")
-                filter["Attribute"]=filterSetting["attributeFilter"];
-            //ClassType
-            if (filterSetting["attackTypeFilter"] != undefined && filterSetting["attackTypeFilter"] != "Default")
-                filter["AttackType"]=filterSetting["attackTypeFilter"];
-            //ClassType
-            if (filterSetting["hitTypeFilter"] != undefined && filterSetting["hitTypeFilter"] != "Default")
-                filter["HitType"]=filterSetting["hitTypeFilter"];
-            //Companion
-            if (filterSetting["companionFilter"] != undefined && filterSetting["companionFilter"] != "Default")
-                filter["EnableCompanion"]=filterSetting["companionFilter"];
-            //Simony
-            if (filterSetting["simonyFilter"] != undefined && filterSetting["simonyFilter"])
-                filter["CanMakeSimony"]="YES";
-            //Bunsin
-            if (filterSetting["bunsinFilter"] != undefined && filterSetting["bunsinFilter"])
-                filter["CoolDown"]="@BUNSIN";
-            //No-Cool
-            if (filterSetting["nocoolFilter"] != undefined && filterSetting["nocoolFilter"])
-                filter["BasicCoolDown"]=0;
-            //Stance
-            if (filterSetting["stanceFilter"] != undefined)
-                filter["ReqStance"]=filterSetting["stanceFilter"];
-
-            return filter;
-        }
-
-        function setFilterSetting(filterName){
-            if (document.getElementById(filterName).value != "Default") filterSetting[filterName]=document.getElementById(filterName).value;
-            else filterSetting[filterName]=undefined;
-        }
-
-        function setFilterSetting_checkBox(filterName){
-            if (document.getElementById(filterName).checked) filterSetting[filterName]=document.getElementById(filterName).checked;
-            else filterSetting[filterName]=undefined;
-        }
-
-        var resultNodes = [];
-        function showResult(arr){
-            destroyLoadingUI();
-            var table=document.getElementById("searchResult");
-            for(var i=0;i<arr.length;i++){
-                if (resultNodes.length <= i){
-                    var row = document.createElement("tr");
-                    resultNodes.push(row);
-                    table.appendChild(row);
-                    for (var j=0;j<3;j++){
-                        var col = document.createElement("td");
-                        row.appendChild(col);
-                    }
-                }
-                //console.log(i + " " + resultNodes.length + " " + table.childNodes[i].childNodes.length);
-                resultNodes[i].childNodes[0].innerHTML = '<a href=../Skill?id='+arr[i].ClassID+'>'+arr[i].ClassID+'</a>';
-                if (arr[i].Icon==undefined || arr[i].Icon.length==0) resultNodes[i].childNodes[1].innerHTML = '';
-                else resultNodes[i].childNodes[1].innerHTML = '<img src="../img/icon/skillicon/icon_'+arr[i].Icon.toLowerCase()+'.png" />';
-                resultNodes[i].childNodes[2].innerHTML = arr[i].Name+'<br/>'+arr[i].EngName;
-            }
-            for(var i=arr.length;i<resultNodes.length;i++){
-                table.removeChild(resultNodes[i]);
-            }
-            resultNodes.length = arr.length;
-        }
         function toggle_checkboxList(id){
             var checkboxList = document.getElementById(id);
             var checkboxList_head = checkboxList.children[0];
@@ -401,12 +234,6 @@
             var checkboxList = document.getElementById(id).children[1].children;
             for (var i = 0; i < checkboxList.length; i ++){
                 checkboxList[i].checked = false;
-            }
-        }
-
-        function searchName_enterCheck() {
-            if (event.keyCode == 13) {
-                search();
             }
         }
     </script>

@@ -12,16 +12,39 @@ module.exports = function(app, tableData){
     });
 
     var typeList = [];
+    var lastTableLength = 0;
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined){
+        if (typeList[typeKey] == undefined || (lastTableLength != tableData['skill'].length)){
+            lastTableLength = tableData['skill'].length;
             typeList[typeKey] = [];
             for (var i=0;i<tableData['skill'].length;i++){
+                if (tableData['skill'][i][typeKey] == undefined) continue;
                 if (typeList[typeKey].includes(tableData['skill'][i][typeKey]) == false){
                     typeList[typeKey].push(tableData['skill'][i][typeKey]);
                 }
             }
+            typeList[typeKey].sort(function(a,b){
+                if (a != b){
+                    if (a == undefined) return -1;
+                    else if (b == undefined) return 1;
+                    else {
+                        if ((typeof a)=="number" && (typeof b)=="number"){
+                            if (a < b) return -1;
+                            else return 1;
+                        }
+                        else if ((typeof a)=="string" && (typeof b)=="string"){
+                            return a.localeCompare(b);
+                        }
+                        else if ((typeof a)=="boolean" && (typeof b)=="boolean"){
+                            if (a) return -1;
+                            else return 1;
+                        }
+                    }
+                }
+                return 0;
+            });
         }
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(typeList[typeKey]));

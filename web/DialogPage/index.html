@@ -1,0 +1,72 @@
+<html>
+
+<head>
+    <title>Dialog Page</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <div class="search-area">
+        <select id="searchType">
+            <option value="Text">Text</option>
+            <option value="Caption">Caption</option>
+            <option value="ClassName">ClassName</option>
+        </select>
+        <input type="text" id="searchName">
+    </div>
+    <div class="filler-area">
+    </div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
+    <button id="searchBtn">Search</button>
+    <br/>
+    <table id="searchResult" class="search-result-table" style="width:100%">
+        <tbody>
+            <tr>
+                <td>ClassID</td>
+                <!--<td>ClassName</td>-->
+                <td>Caption</td>
+            </tr>
+            <tr>
+                <td class="result-link">ClassID</td>
+                <!--<td>ClassName</td>-->
+                <td>Caption</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
+
+    <script>
+        baseTable="dialog";
+        searchModule_init();
+    </script>
+
+</body>
+
+</html>

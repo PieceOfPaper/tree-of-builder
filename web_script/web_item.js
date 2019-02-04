@@ -68,8 +68,13 @@ module.exports = function(app, tableData, scriptData){
 
       // } else if (request.query.table == 'item_Quest') {
 
-      // } else if (request.query.table == 'item_gem') {
-
+      } else if (request.query.table == 'item_gem') {
+        for (var i = 0; i < tableData[request.query.table].length; i ++){
+          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+            itemGemDetailPage(request.query.table, i, request, response);
+            return;
+          }
+        }
       } else if (request.query.table == 'item_recipe') {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
@@ -191,28 +196,42 @@ module.exports = function(app, tableData, scriptData){
   var layout_itemEquip_detail = fs.readFileSync('./web/Layout/index-itemdetail-equip.html');
   var layout_itemPremium_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
   var layout_itemQuest_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
-  var layout_itemGem_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');
+  var layout_itemGem_detail = fs.readFileSync('./web/Layout/index-itemdetail-gem.html');
   var layout_itemRecipe_detail = fs.readFileSync('./web/Layout/index-itemdetail-recipe.html');
 
   function itemDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
     } else {
       icon = 'No Img';
+    }
+
+    var dialogString = undefined;
+    if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
+      // var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
+      // if (dialogData != undefined) {
+      //   dialogString = tos.parseCaption(dialogData.Text);
+      // }
+      dialogString = tos.GetDialogString(tableData,itemTable[index].ClassName);
     }
 
     var output = layout_item_detail.toString();
@@ -221,10 +240,12 @@ module.exports = function(app, tableData, scriptData){
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
     } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
-      output = output.replace(/%TooltipImage%/g, '<img src="../img/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      iconPath = 'http://'+request.headers.host+'/img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png';
     } else {
-      output = output.replace(/%TooltipImage%/g, '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     }
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
@@ -245,6 +266,7 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
     output = output.replace(/%SellPrice%/g, itemTable[index].SellPrice);
     output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
 
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){
@@ -253,6 +275,28 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
 
+    if (dialogString == undefined){
+      output = output.replace(/%DialogString%/g, '');
+    } else {
+      output = output.replace(/%DialogString%/g, dialogString);
+    }
+
+    //console.log(itemTable[index].SpineTooltipImage);
+    if (itemTable[index].SpineTooltipImage == undefined || itemTable[index].SpineTooltipImage.length == 0){
+      output = output.replace(/%SpineString%/g, '');
+    } else {
+      var spineString = '<button onclick="onClick_showSpine()">Show Spine</button><script>';//'<canvas id="spine_canvas"></canvas><script>';
+      spineString += 'spine_json="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.json";';
+      spineString += 'spine_atlas="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.atlas";';
+      spineString += 'spine_png="https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/spine.ipf/' + itemTable[index].SpineTooltipImage + '/' + itemTable[index].SpineTooltipImage + '.png";';
+      spineString += 'spine_skelName="' + itemTable[index].SpineTooltipImage + '";';
+      spineString += 'spine_animName="animation";';
+      spineString += '</script>';
+      output = output.replace(/%SpineString%/g, spineString);
+    }
+
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     response.send(output);
@@ -260,8 +304,8 @@ module.exports = function(app, tableData, scriptData){
 
   function itemEquipDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
+    var sealOption = tos.FindDataClassName(tableData, 'item_seal_option', itemTable[index].ClassName)
     var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
-
 
     //set data
     var setItemTable = tableData['setitem'];
@@ -284,16 +328,20 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
@@ -309,6 +357,27 @@ module.exports = function(app, tableData, scriptData){
       statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
+    if (sealOption != undefined){
+      statListString += '<h3>Seal Option</h3>';
+      for (var i=1;i<=sealOption.MaxReinforceCount;i++){
+        // if(sealOption['SealOption_'+i]==undefined) continue;
+        // if(sealOption['SealOption_'+i].length==0) continue;
+        // if(sealOption['SealOptionValue_'+i]==undefined) continue;
+        // if(sealOption['SealOptionValue_'+i]==0) continue;
+        if(sealOption['SealOption_'+i]==undefined || sealOption['SealOption_'+i].length==0){
+          statListString += i +' Step. ??? <br/>';
+          continue;
+        }
+        var statStr = tos.parseCaption(tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]));
+        if (statStr.indexOf('{value}') > -1){
+          var value = Number(sealOption['SealOptionValue_'+i]);
+          if (sealOption['SealOption_'+i].indexOf('Rate') > -1) value *= 0.1;
+          statListString += i +' Step. ' + statStr.replace('{value}',value) + '<br/>';
+        } else {
+          statListString += i +' Step. ' + statStr + (Number(sealOption['SealOptionValue_'+i]) > 0 ? '▲' : '▼') + sealOption['SealOptionValue_'+i] + '<br/>';
+        }
+      }
+    }
 
 
     var setDataString = '';
@@ -322,7 +391,7 @@ module.exports = function(app, tableData, scriptData){
       //desc
       for(var i=1;i<=7;i++){
         if (setList[setIndex]['EffectDesc_' + i] == undefined || setList[setIndex]['EffectDesc_' + i].length == 0) continue;
-        setDataString += '<p>' + tos.parseCaption(setList[setIndex]['EffectDesc_' + i]) + '</p>';
+        setDataString += '<p><b>' + i + ' Set.</b><br>' + tos.parseCaption(setList[setIndex]['EffectDesc_' + i]) + '</p>';
       }
       //material
       for(var i=1;i<=7;i++){
@@ -338,7 +407,7 @@ module.exports = function(app, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
             materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
           } else if(itemData.Icon != undefined){
@@ -366,7 +435,7 @@ module.exports = function(app, tableData, scriptData){
       //desc
       for(var j=1;j<=5;j++){
         if (legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) continue;
-        legendSetDataString += '<p>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
+        legendSetDataString += '<p><b>' + j + ' Set.</b><br>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
       }
       //skill
       for(var j=1;j<=5;j++){
@@ -402,6 +471,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'ItemStar:' + itemTable[index].ItemStar  + ',';
     if (itemTable[index].Material != undefined && itemTable[index].Material.length > 0)
       captionScript +=  'Material:"' + itemTable[index].Material  + '",';
+    captionScript +=  'GroupName:"' + itemTable[index].GroupName  + '",';
     captionScript +=  'MAXATK:' + 0  + ',';
     captionScript +=  'MINATK:' + 0  + ',';
     captionScript +=  'MAXATK_AC:' + 0 + ',';
@@ -419,6 +489,15 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'Reinforce_2:' + 0  + ',';
     captionScript +=  'ReinforceRatio:' + itemTable[index].ReinforceRatio  + ',';
     captionScript +=  'BuffValue:' + 0  + ',';
+    captionScript +=  'StringArg:"' + itemTable[index].StringArg + '",';
+    captionScript += '};';
+
+    captionScript += 'var dummyMoru = {';
+    captionScript +=  'StringArg:"",';
+    captionScript += '};';
+
+    captionScript += 'var dummyMoruDia = {';
+    captionScript +=  'StringArg:"DIAMOND",';
     captionScript += '};';
 
 
@@ -488,37 +567,46 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function APPLY_RARE_RANDOM_OPTION(item){ return 0; }\n';
     captionScript += 'function MakeItemOptionByOptionSocket(item){ return 0; }\n';
     captionScript += 'function GetItemOwner(item){ return 0; }\n';
+    captionScript += 'function MAKE_ITEM_OPTION_BY_OPTION_SOCKET(item){ return; }\n';
+    captionScript += 'function IS_MORU_DISCOUNT_50_PERCENT(item){ return false; }\n';
+    captionScript += 'function IS_MORU_FREE_PRICE(item){ return false; }\n';
 
     captionScript += 'function onChangeReinforceLevel(){';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) itemData.Reinforce_2=Number(document.getElementById("ReinforceLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onChangeTranscendLevel(){';
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) itemData.Transcend=Number(document.getElementById("TranscendLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickReinforceLevelUp(){';
     captionScript +=  'itemData.Reinforce_2 ++;';
     captionScript +=  'if(itemData.Reinforce_2>40) itemData.Reinforce_2=40;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onClickReinforceLevelDown(){';
     captionScript +=  'itemData.Reinforce_2 --;';
     captionScript +=  'if(itemData.Reinforce_2<0) itemData.Reinforce_2=0;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickTranscendLevelUp(){';
     captionScript +=  'itemData.Transcend ++;';
     captionScript +=  'if(itemData.Transcend>10) itemData.Transcend=10;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
     captionScript += 'function onClickTranscendLevelDown(){';
     captionScript +=  'itemData.Transcend --;';
     captionScript +=  'if(itemData.Transcend<0) itemData.Transcend=0;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
     captionScript += 'updateBasicValue();';
@@ -551,6 +639,20 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) document.getElementById("TranscendLevel").value=itemData.Transcend;';
     captionScript += '}';
 
+    captionScript += 'updateTranscendMaterialCount();';
+    captionScript += 'function updateTranscendMaterialCount(){';
+    captionScript +=  'var totalcnt=Number(0);';
+    captionScript +=  'for(var i=0;i<itemData.Transcend;i++){ totalcnt+=Number(GET_TRANSCEND_MATERIAL_COUNT(itemData,i)); }';
+    captionScript +=  'document.getElementById("transcendMatCnt").innerText=GET_TRANSCEND_MATERIAL_COUNT(itemData,itemData.Transcend-1);';
+    captionScript +=  'document.getElementById("transcendMatTotalCnt").innerText=totalcnt;';
+    captionScript += '}';
+
+    captionScript += 'updateReinforceSilverCount();';
+    captionScript += 'function updateReinforceSilverCount(){';
+    captionScript +=  'document.getElementById("reinforceSilver").innerText=GET_REINFORCE_PRICE(itemData,dummyMoru,undefined).toLocaleString();';
+    captionScript +=  'document.getElementById("reinforceSilverDia").innerText=GET_REINFORCE_PRICE(itemData,dummyMoruDia,undefined).toLocaleString();';
+    captionScript += '}';
+
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);console.log(atkPair);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
@@ -563,15 +665,26 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
+    captionScript += tos.Lua2JS(scriptData['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
+    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
     captionScript += '</script>';
 
+    var reinforceSilverItemString = '';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_W_01')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_Diamond')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
+
+    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%StatList%/g, statListString);
+
+    output = output.replace(/%ReinforceSilverItem%/g, reinforceSilverItemString);
+    output = output.replace(/%TranscendMaterialItem%/g, transcendMaterialItemString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
@@ -611,30 +724,38 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%SetData%/g, setDataString);
     output = output.replace(/%LegendSetData%/g, legendSetDataString);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
 
     output = output.replace(/%AddCaptionScript%/g, captionScript);
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
 
     response.send(output);
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
     var itemTable = tableData[tableName];
-    var recipeData = tos.FindDataClassID(tableData,'recipe',itemTable[index].ClassID);
+    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
     } else {
       icon = 'No Img';
     }
@@ -652,7 +773,7 @@ module.exports = function(app, tableData, scriptData){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
           itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
         } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
           materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
         } else if(itemData.Icon != undefined){
@@ -667,7 +788,7 @@ module.exports = function(app, tableData, scriptData){
 
     var materialString = '';
     if (recipeData != undefined){
-      for(var i=1;i<=5;i++){
+      for(var i=2;i<=5;i++){
         if (recipeData['Item_' + i + '_1'] == undefined) continue;
         var itemData = undefined;
         if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData['Item_' + i + '_1']);
@@ -680,7 +801,7 @@ module.exports = function(app, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
             materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
           } else if(itemData.Icon != undefined){
@@ -698,6 +819,7 @@ module.exports = function(app, tableData, scriptData){
   
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     
     output = output.replace(/%Name%/g, itemTable[index].Name);
@@ -718,6 +840,7 @@ module.exports = function(app, tableData, scriptData){
 
     output = output.replace(/%Target%/g, targetString);
     output = output.replace(/%Materials%/g, materialString);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
   
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){
@@ -726,9 +849,203 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
     }
   
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
     response.send(output);
+  }
+
+  function itemGemDetailPage(tableName, index, request, response) {
+    var itemTable = tableData[tableName];
+    var skillTable = tableData['skill'];
+
+    var icon = '';
+    var iconPath = '';
+    var tooltipImg = '';
+    if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
+      itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+    } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
+      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+    } else if(itemTable[index].Icon != undefined){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
+      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+    } else if(itemTable[index].Illust != undefined){
+      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
+    } else {
+      icon = 'No Img';
+    }
+
+    var baseSkillString = '';
+    for(param in skillTable){
+      if (('Gem_'+skillTable[param].ClassName)==itemTable[index].ClassName ||
+        ('GEM_'+skillTable[param].ClassName)==itemTable[index].ClassName){
+        baseSkillString += '<p><a href="../Skill?id='+skillTable[param].ClassID+'">'+skillTable[param].Name+'</a></p>';
+      }
+    }
+
+    var output = layout_itemGem_detail.toString();
+    output = output.replace(/style.css/g, '../style.css');
+    output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
+    if (itemTable[index].TooltipImage == undefined){
+      output = output.replace(/%TooltipImage%/g, '');
+    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+    } else {
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+    }
+    output = output.replace(/%Name%/g, itemTable[index].Name);
+    output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
+    output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
+
+    output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
+    output = output.replace(/%Journal%/g, itemTable[index].Journal);
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%Weight%/g, itemTable[index].Weight);
+    output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
+    if (itemTable[index].CardGroupName == undefined){
+      output = output.replace(/%CardGroupName%/g, '');
+    } else {
+      output = output.replace(/%CardGroupName%/g, itemTable[index].CardGroupName);
+    }
+
+    output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
+    output = output.replace(/%Price%/g, itemTable[index].Price);
+    output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
+    output = output.replace(/%SellPrice%/g, itemTable[index].SellPrice);
+    output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
+    output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
+
+    output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
+    if (itemTable[index].Desc_Sub == undefined){
+      output = output.replace(/%Desc_Sub%/g, '');
+    } else {
+      output = output.replace(/%Desc_Sub%/g, tos.parseCaption(itemTable[index].Desc_Sub));
+    }
+
+    output = output.replace(/%BaseSkillString%/g, baseSkillString);
+    if (itemTable[index].EnableEquipParts==undefined){
+      output = output.replace(/%EnableEquipParts%/g, '');
+    } else {
+      output = output.replace(/%EnableEquipParts%/g, itemTable[index].EnableEquipParts.replace(/\//g,', '));
+    }
+
+    output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+
+    response.send(output);
+  }
+
+  function getCanRecipeString(tableName, index){
+    var itemTable = tableData[tableName];
+    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
+
+    var itemList = [];
+    for (param in tableData['recipe']){
+      if (tableData['recipe'][param].TargetItem == itemTable[index].ClassName){
+        itemList.push(tableData['recipe'][param].ClassName);
+        continue;
+      }
+      for(var i=2;i<=5;i++){
+        if (tableData['recipe'][param]['Item_' + i + '_1'] == undefined) continue;
+        if (tableData['recipe'][param]['Item_' + i + '_1'] == itemTable[index].ClassName){
+          itemList.push(tableData['recipe'][param].ClassName);
+          break;
+        }
+      }
+    }
+
+    if (itemList.length > 0){
+      var resultString = '';
+      resultString += '<h3>Recipes</h3>';
+      for(var i=0;i<=itemList.length;i++){
+        if (itemList[i] == undefined) continue;
+        var itemData = undefined;
+        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',itemList[i]);
+        if (itemData != undefined){
+          var materialIcon = '';
+          if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+            itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          } else if(itemData.Icon != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          } else if(itemData.Illust != undefined){
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          }
+          resultString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a><br/>';
+        }
+      }
+      return resultString;
+    } else {
+      return '';
+    }
+  }
+
+  function getCanQuestRewardString(tableName, index){
+    var itemTable = tableData[tableName];
+    var questTable = tableData['questprogresscheck'];
+    var questAutoTable = tableData['questprogresscheck_auto'];
+
+    var questList = [];
+    for (param in questAutoTable){
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_ItemName' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_ItemName' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_SelectItemName' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_SelectItemName' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+      for(var i=1;i<=4;i++){
+        if (questAutoTable[param]['Success_JobItem_Name' + i] == undefined) continue;
+        if (questAutoTable[param]['Success_JobItem_Name' + i]==tableData[tableName][index].ClassName){
+          if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+        }
+      }
+    }
+
+    var output = '';
+    if (questList.length>0){
+      output += '<h3>Quest Rewards</h3>';
+      for (var i=0;i<questList.length;i++){
+        var quest=tos.FindDataClassName(tableData,'questprogresscheck',questList[i]);
+        if (quest==undefined) continue;
+        var imgstr = '';
+        switch(quest.QuestMode){
+          case "MAIN":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_main.png" />';
+          break;
+          case "SUB":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_sub.png" />';
+          break;
+          case "REPEAT":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_repeat.png" />';
+          break;
+          case "PARTY":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_party.png" />';
+          break;
+          case "KEYITEM":
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+          break;
+        }
+        output += '<p><a href="../Quest?id='+quest.ClassID+'">'+imgstr+quest.Name+'</a></p>';
+      }
+    }
+
+    return output;
   }
 
   return route;

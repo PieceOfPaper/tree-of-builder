@@ -3,6 +3,8 @@ var fs = require('fs');
 var http = require('http');
 var https = require('https');
 
+const { Pool, Client } = require('pg');
+
 var csv = require('csv-parser');
 var xml = require('xml-parser');
 var bodyParser = require('body-parser')
@@ -57,6 +59,34 @@ process.argv.forEach(function (val, index, array) {
 console.log('argument loaded');
 
 
+const config = {
+  user     : 'postgres',
+  host     : '/cloudsql/tree-of-builder:asia-east2:tree-of-builder',
+  database : 'postgres',
+  password : 'FE5iFatpuJFC8kjB',
+  port     : 5432,
+  // this object will be passed to the TLSSocket constructor
+  // ssl : {
+  //   rejectUnauthorized : false,
+  //   ca   : fs.readFileSync("server-ca.pem").toString(),
+  //   key  : fs.readFileSync("client-cert.pem").toString(),
+  //   cert : fs.readFileSync("client-cert.pem").toString(),
+  // }
+};
+
+console.log('### DB Connect Request');
+var dbclient = new Client(config);
+dbclient.connect((err) => {
+  if (err) {
+    console.error('### DB Connect Error.\n', err.stack)
+  } else {
+    console.log('### DB Connect Success.')
+    dbclient.end()
+  }
+});
+
+
+
 if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
 if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_client.ipf');
@@ -88,6 +118,12 @@ loadTable('job', 'ies.ipf/job.ies', function(){
   });
 });
 loadTable('skill', 'ies.ipf/skill.ies', function(){
+  loadTable('skill_mon', 'ies.ipf/skill_mon.ies', function(){
+    for(var i=0;i<tableData['skill_mon'].length;i++){
+      tableData['skill'].push(tableData['skill_mon'][i]);
+    }
+    console.log('merge skill+skill_mon');
+  });
   loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies', function(){
     for(var i=0;i<tableData['skill_Simony'].length;i++){
       for(var j=0;j<tableData['skill'].length;j++){
@@ -99,8 +135,18 @@ loadTable('skill', 'ies.ipf/skill.ies', function(){
     }
     console.log('merge skill+simony');
   });
+  loadTable('skilltree', 'ies.ipf/skilltree.ies', function(){
+    for(var i=0;i<tableData['skilltree'].length;i++){
+      for(var j=0;j<tableData['skill'].length;j++){
+        if(tableData['skill'][j].ClassName==tableData['skilltree'][i].SkillName){
+          tableData['skill'][j]['SkillTree'] = tableData['skilltree'][i].ClassName;
+          break;
+        }
+      }
+    }
+    console.log('merge skill+skilltree');
+  });
 });
-loadTable('skilltree', 'ies.ipf/skilltree.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
 //loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
@@ -123,16 +169,21 @@ loadTable('stance', 'ies.ipf/stance.ies');
 loadTable('cooldown', 'ies.ipf/cooldown.ies');
 loadTable('item_grade', 'ies.ipf/item_grade.ies');
 loadTable('item', 'ies.ipf/item.ies', function(){
-});
-loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
-});
-loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
-});
-loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
-});
-loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
-});
-loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
+  loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
+    for (param in tableData['item_Equip']) tableData['item'].push(tableData['item_Equip'][param]);
+    loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
+      for (param in tableData['item_Quest']) tableData['item'].push(tableData['item_Quest'][param]);
+      loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
+        for (param in tableData['item_gem']) tableData['item'].push(tableData['item_gem'][param]);
+        loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
+          for (param in tableData['item_premium']) tableData['item'].push(tableData['item_premium'][param]);
+          loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
+            for (param in tableData['item_recipe']) tableData['item'].push(tableData['item_recipe'][param]);
+          });
+        });
+      });
+    });
+  });
 });
 loadTable('recipe', 'ies.ipf/recipe.ies');
 loadTable('item_equip_classtype', 'ies.ipf/item_equip_classtype.ies');
@@ -140,6 +191,44 @@ loadTable('item_equip_default', 'ies.ipf/item_equip_default.ies');
 loadTable('setitem', 'ies.ipf/setitem.ies');
 loadTable('legend_recipe', 'ies.ipf/legend_recipe.ies');
 loadTable('legend_setitem', 'ies.ipf/legend_setitem.ies');
+loadTable('item_seal_option', 'ies.ipf/item_seal_option.ies');
+loadTable('monster', 'ies.ipf/monster.ies', function(){
+  loadTable('monster', 'ies.ipf/monster_event.ies', function(){
+    loadTable('monster', 'ies.ipf/monster_guild.ies', function(){
+      loadTable('monster', 'ies.ipf/monster_item.ies', function(){
+        loadTable('monster', 'ies.ipf/monster_item_summon.ies', function(){
+          loadTable('monster', 'ies.ipf/monster_mgame.ies', function(){
+            loadTable('monster', 'ies.ipf/monster_npc.ies', function(){
+              loadTable('monster', 'ies.ipf/monster_pet.ies', function(){
+                loadTable('monster', 'ies.ipf/monster_sends.ies', function(){
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+loadTable('statbase_monster', 'ies.ipf/statbase_monster.ies');
+loadTable('statbase_monster_race', 'ies.ipf/statbase_monster_race.ies');
+loadTable('statbase_monster_type', 'ies.ipf/statbase_monster_type.ies');
+loadTable('questprogresscheck', 'ies.ipf/questprogresscheck.ies');
+loadTable('questprogresscheck_auto', 'ies.ipf/questprogresscheck_auto.ies');
+loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
+loadTable('map2', 'ies.ipf/map.ies', function(){
+  loadTable('camp_warp', 'ies.ipf/camp_warp.ies', function(){
+    for (param in tableData['camp_warp']){
+      var mapdata = tos.FindDataClassName(tableData,'map2',tableData['camp_warp'][param].Zone);
+      if (mapdata != undefined){
+        mapdata['CanCampWarp']=true;
+      }
+    }
+  });
+});
+loadTable('guild_event', 'ies.ipf/guild_event.ies');
+loadTable('companion', 'ies.ipf/companion.ies');
+loadTable('foodtable', 'ies.ipf/foodtable.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (noDownload && fs.existsSync('./web/data/' + path)){
@@ -215,38 +304,6 @@ generateLuaScript(scriptArray, 0, function(result){
 
   lua.DoString(result);
 });
-// function loadScript(path){
-//   var pathSplited = path.split('/');
-//   var filename = pathSplited[pathSplited.length - 1];
-//   if (noDownload && fs.existsSync('./web/data/' + filename)){
-//     fs.readFile('./web/data/' + filename, function(err, data){
-//       if (err) sendSlack(err.toString());
-//       var luaFuncSplit = data.toString().split('function');
-//       for (var i = 0; i < luaFuncSplit.length; i ++){
-//         var methodName = luaFuncSplit[i].split('(')[0].trim();
-//         scriptData[methodName] = 'function' + luaFuncSplit[i];
-//         //console.log('[' + i + ']' + methodName);
-//       }
-//       console.log('import script [' + filename + ']');
-//     });
-//     return;
-//   }
-//   var file = fs.createWriteStream('./web/data/' + filename);
-//   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
-//     response.pipe(file).on('close', function(){
-//       console.log('download script [' + filename + ']');
-//       fs.readFile('./web/data/' + filename, function(err, data){
-//         if (err) sendSlack(err.toString());
-//         var luaFuncSplit = data.toString().split('function');
-//         for (var i = 0; i < luaFuncSplit.length; i ++){
-//           var methodName = luaFuncSplit[i].split('(')[0].trim();
-//           scriptData[methodName] = 'function' + luaFuncSplit[i];
-//           //console.log('[' + i + ']' + methodName);
-//         }
-//       });
-//     });
-//   });
-// }
 function generateLuaScript(array, index, callback){
   if (index >= array.length) {
     callback('');
@@ -265,6 +322,80 @@ function generateLuaScript(array, index, callback){
           callback(result);
         });
         return;
+      }
+      luaString = data.toString();
+      console.log('import script [' + filename + ']');
+      generateLuaScript(array, index + 1, function(result){
+        callback(luaString + '\n' + result);
+      });
+    });
+  } else {
+    var file = fs.createWriteStream('./web/lua/' + filename);
+    var request = https.get(dataServerPath + serverCode + '/' + array[index], function(response) {
+      response.pipe(file).on('close', function(){
+        console.log('download script [' + filename + ']');
+        fs.readFile('./web/lua/' + filename, function(err, data){
+          if (err) {
+            sendSlack(err.toString());
+            generateLuaScript(array, index + 1, function(result){
+              callback(result);
+            });
+            return;
+          }
+          luaString = data.toString();
+          generateLuaScript(array, index + 1, function(result){
+            callback(luaString + '\n' + result);
+          });
+        });
+      });
+    });
+  }
+}
+
+loadScript('shared.ipf/script/calc_property_skill.lua');
+loadScript('shared.ipf/script/ability.lua');
+loadScript('shared.ipf/script/ability_price.lua');
+loadScript('shared.ipf/script/ability_unlock.lua');
+loadScript('shared.ipf/script/item_calculate.lua');
+loadScript('shared.ipf/script/item_transcend_shared.lua');
+loadScript('shared.ipf/script/lib_reinforce_131014.lua');
+loadScript('shared.ipf/script/calc_pvp_item.lua');
+loadScript('shared.ipf/script/calc_property_monster.lua');
+loadScript('script.ipf/buff/buff_monster_ability.lua');
+loadScript('script.ipf/buff/colonywar_buff.lua');
+loadScript('script.ipf/buff/etc_buff.lua');
+loadScript('script.ipf/buff/item_buff.lua');
+loadScript('script.ipf/buff/quest_buff.lua');
+loadScript('script.ipf/buff/raid_buff_hardcode.lua');
+loadScript('script.ipf/buff/skill_buff_addcheckon.lua');
+loadScript('script.ipf/buff/skill_buff_aftercalc.lua');
+loadScript('script.ipf/buff/skill_buff_deadcalc.lua');
+loadScript('script.ipf/buff/skill_buff_givedamage.lua');
+loadScript('script.ipf/buff/skill_buff_monster.lua');
+loadScript('script.ipf/buff/skill_buff_monster_ratetable.lua');
+loadScript('script.ipf/buff/skill_buff_pc.lua');
+loadScript('script.ipf/buff/skill_buff_ratetable.lua');
+loadScript('script.ipf/buff/skill_buff_takedamage.lua');
+loadScript('script.ipf/buff/skill_buff_useskill.lua');
+function loadScript(path){
+  var pathSplited = path.split('/');
+  var filename = pathSplited[pathSplited.length - 1];
+  if (noDownload && fs.existsSync('./web/data/' + filename)){
+    fs.readFile('./web/data/' + filename, function(err, data){
+      if (err) sendSlack(err.toString());
+      var luaFuncSplit = data.toString().split('function');
+      for (var i = 0; i < luaFuncSplit.length; i ++){
+        var methodName = luaFuncSplit[i].split('(')[0].trim();
+        var lines = luaFuncSplit[i].split('\n');
+        var methodBody = '';
+        for (var j=0;j<lines.length;j++){
+          if (lines[j].trim().length==0) continue;
+          if (lines[j].trim().indexOf('--')==0) continue;
+          if (methodBody.length>0) methodBody += '\n';
+          methodBody += lines[j];
+        }
+        scriptData[methodName] = 'function' + methodBody;
+        //console.log('[' + i + ']' + methodName);
       }
       luaString = data.toString();
       console.log('import script [' + filename + ']');
@@ -383,11 +514,22 @@ app.get('/', function (req, response) {
     //   illustNpcMention +=     illustNpcText[i] + '<br/>';
     // }
 
+    var serverName = '';
+    switch(serverCode){
+      case 'kr':
+      serverName = 'Korea';
+      break;
+      case 'ktest':
+      serverName = 'Korea Test';
+      break;
+    }
+
     var output = layout.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
     output = output.replace(/%IllustMention%/g, illustNpcText);
+    output = output.replace(/%ServerName%/g, serverName);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
@@ -425,6 +567,9 @@ app.post('/Lua', function (req, res) {
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
 
+var boardFree = require('./board_server/board_free')(app, dbclient);
+app.use('/BoardFree', boardFree);
+
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
 app.use('/Skill', skillPage);
 
@@ -437,8 +582,32 @@ app.use('/Buff', buffPage);
 var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
 app.use('/Item', itemPage);
 
+var monsterPage = require('./web_script/web_monster')(app, tableData, scriptData);
+app.use('/Monster', monsterPage);
+
+var questPage = require('./web_script/web_quest')(app, tableData, scriptData);
+app.use('/Quest', questPage);
+
+var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
+app.use('/Map', mapPage);
+
+var dialogPage = require('./web_script/web_dialog')(app, tableData, scriptData);
+app.use('/Dialog', dialogPage);
+
+var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
+app.use('/GuildEvent', miscGuildEventPage);
+
+var miscCompanionPage = require('./web_script/web_misc_companion')(app, tableData, scriptData);
+app.use('/Companion', miscCompanionPage);
+
 var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
 app.use('/Builder', builderPage);
+
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, tableData, scriptData);
+app.use('/QuestCalculator', toolQuestCalcPage);
+
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
+app.use('/FoodCalculator', toolFoodCalcPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);

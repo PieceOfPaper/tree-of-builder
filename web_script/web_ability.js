@@ -215,6 +215,7 @@ module.exports = function(app, tableData, scriptData){
     if (abilityJob != undefined){
       captionScript += 'var price = Number(0);';
       captionScript += 'for (var i = Number(abilLvPrev + 1); i <= abilLvNext; i ++){';
+      //captionScript +=  'console.log(i);'
       captionScript +=  'price+=Number(' + abilityJob.ScrCalcPrice + '(undefined,"' + abilityTable[index].ClassName + '",i,' + abilityJob.MaxLevel + '));';
       captionScript += '}';
       captionScript += 'if (document.getElementById("PricePoint") != undefined) document.getElementById("PricePoint").innerHTML=price;';
@@ -222,7 +223,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript += '}';
 
     if (abilityJob != undefined){
-      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length');
+      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
     }
     captionScript += tos.Lua2JS(scriptData['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
     
@@ -270,6 +271,7 @@ module.exports = function(app, tableData, scriptData){
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
+    output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + abilityTable[index].Icon + '.png');
     output = output.replace(/%Name%/g, abilityTable[index].Name);
     output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);
     output = output.replace(/%ClassID%/g, abilityTable[index].ClassID);

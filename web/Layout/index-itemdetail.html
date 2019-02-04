@@ -3,7 +3,11 @@
 <head>
     <title>%Name%</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="%Name%" />
+    <meta property="og:description" content="%Desc%" />
+    <meta property="og:image" content="%IconPath%" />
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({
@@ -12,6 +16,8 @@
     });
     </script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/spine/spine-canvas.js"></script>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 </head>
 
 <body>
@@ -22,14 +28,21 @@
     <p>%Desc_Sub%</p>
     <table>
         <tr>
-            <td>ClassID</td>
-            <td>ClassName</td>
-            <td>ItemType</td>
-            <td>GroupName</td>
+            <td>Class ID</td>
+            <td>Class Name</td>
         </tr>
         <tr>
             <td>%ClassID%</td>
             <td>%ClassName%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Item Type</td>
+            <td>Group Name</td>
+        </tr>
+        <tr>
             <td>%ItemType%</td>
             <td>%GroupName%</td>
         </tr>
@@ -38,8 +51,8 @@
     <table>
         <tr>
             <td>Weight</td>
-            <td>MaxStack</td>
-            <td>CardGroupName</td>
+            <td>Max Stack</td>
+            <td>Card Group Name</td>
         </tr>
         <tr>
             <td>%Weight%</td>
@@ -50,9 +63,9 @@
     <br/>
     <table>
         <tr>
-            <td>MaterialPrice</td>
+            <td>Material Price</td>
             <td>Price</td>
-            <td>PriceRatio</td>
+            <td>Price Ratio</td>
         </tr>
         <tr>
             <td>%MaterialPrice%</td>
@@ -63,8 +76,8 @@
     <br/>
     <table>
         <tr>
-            <td>SellPrice</td>
-            <td>RepairPriceRatio</td>
+            <td>Sell Price</td>
+            <td>Repair Price Ratio</td>
         </tr>
         <tr>
             <td>%SellPrice%</td>
@@ -72,11 +85,169 @@
         </tr>
     </table>
     <br/>
+    <br/>
+    %Recipes%
+    %QuestRewards%
 
     <br/>
     <br/>
 
     %TooltipImage%
+    <br/>
+    %DialogString%
+
+    <script>
+        var spine_json = undefined;
+        var spine_atlas;
+        var spine_png;
+        var spine_skel;
+        var spine_skelName;
+        var spine_animName;
+    </script>
+    %SpineString%
+    <script>
+        var lastFrameTime = Date.now() / 1000;
+        var canvas, context;
+        var assetManager;
+        var skeleton, state, bounds;
+        var skeletonRenderer;
+
+        function spine_init () {
+            //canvas = document.getElementById("spine_canvas");
+            canvas.classList.add("item-card-spine");
+            // canvas.style.width = "calc(100vw - 20px);"
+            // canvas.style.height = "calc(((100vw - 20px) / 330px) * 400px);"
+            // canvas.style.maxWidth = "330px";
+            // canvas.style.maxHeight = "400px";
+            context = canvas.getContext("2d");
+            skeletonRenderer = new spine.canvas.SkeletonRenderer(context);
+            // enable debug rendering
+            skeletonRenderer.debugRendering = false;
+            // enable the triangle renderer, supports meshes, but may produce artifacts in some browsers
+            skeletonRenderer.triangleRendering = true;
+            assetManager = new spine.canvas.AssetManager();
+            assetManager.loadText(spine_json);
+            assetManager.loadText(spine_atlas);
+            assetManager.loadTexture(spine_png);
+            requestAnimationFrame(spine_load);
+        }
+        function spine_load () {
+            if (assetManager.isLoadingComplete()) {
+                var data = spine_loadSkeleton(spine_skelName, spine_animName, "default");
+                skeleton = data.skeleton;
+                state = data.state;
+                bounds = data.bounds;
+                requestAnimationFrame(spine_render);
+            } else {
+                requestAnimationFrame(spine_load);
+            }
+        }
+        function spine_loadSkeleton (name, initialAnimation, skin) {
+            if (skin === undefined) skin = "default";
+            // Load the texture atlas using name.atlas and name.png from the AssetManager.
+            // The function passed to TextureAtlas is used to resolve relative paths.
+            atlas = new spine.TextureAtlas(assetManager.get(spine_atlas), function(path) {
+                return assetManager.get(spine_png);
+            });
+            // Create a AtlasAttachmentLoader, which is specific to the WebGL backend.
+            atlasLoader = new spine.AtlasAttachmentLoader(atlas);
+            // Create a SkeletonJson instance for parsing the .json file.
+            var skeletonJson = new spine.SkeletonJson(atlasLoader);
+            // Set the scale to apply during parsing, parse the file, and create a new skeleton.
+            var skeletonData = skeletonJson.readSkeletonData(assetManager.get(spine_json));
+            var skeleton = new spine.Skeleton(skeletonData);
+            skeleton.flipY = true;
+            var bounds = spine_calculateBounds(skeleton);
+            skeleton.setSkinByName(skin);
+            // Create an AnimationState, and set the initial animation in looping mode.
+            var animationState = new spine.AnimationState(new spine.AnimationStateData(skeleton.data));
+            animationState.setAnimation(0, initialAnimation, true);
+            animationState.addListener({
+                event: function(trackIndex, event) {
+                    // console.log("Event on track " + trackIndex + ": " + JSON.stringify(event));
+                },
+                complete: function(trackIndex, loopCount) {
+                    // console.log("Animation on track " + trackIndex + " completed, loop count: " + loopCount);
+                },
+                start: function(trackIndex) {
+                    // console.log("Animation on track " + trackIndex + " started");
+                },
+                end: function(trackIndex) {
+                    // console.log("Animation on track " + trackIndex + " ended");
+                }
+            })
+            // Pack everything up and return to caller.
+            return { skeleton: skeleton, state: animationState, bounds: bounds };
+        }
+
+        function spine_calculateBounds(skeleton) {
+            var data = skeleton.data;
+            skeleton.setToSetupPose();
+            skeleton.updateWorldTransform();
+            var offset = new spine.Vector2();
+            var size = new spine.Vector2();
+            skeleton.getBounds(offset, size, []);
+            return { offset: offset, size: size };
+        }
+
+        function spine_render () {
+            var now = Date.now() / 1000;
+            var delta = now - lastFrameTime;
+            lastFrameTime = now;
+            spine_resize();
+            context.save();
+            context.setTransform(1, 0, 0, 1, 0, 0);
+            context.fillStyle = "#cccccc";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+            context.restore();
+            state.update(delta);
+            state.apply(skeleton);
+            skeleton.updateWorldTransform();
+            skeletonRenderer.draw(skeleton);
+            // context.strokeStyle = "green";
+            // context.beginPath();
+            // context.moveTo(-1000, 0);
+            // context.lineTo(1000, 0);
+            // context.moveTo(0, -1000);
+            // context.lineTo(0, 1000);
+            // context.stroke();
+            requestAnimationFrame(spine_render);
+        }
+
+        function spine_resize () {
+            var w = canvas.clientWidth;
+            var h = canvas.clientHeight;
+            if (canvas.width != w || canvas.height != h) {
+                canvas.width = w;
+                canvas.height = h;
+            }
+            // magic
+            var centerX = bounds.offset.x + bounds.size.x / 2;
+            var centerY = bounds.offset.y + bounds.size.y / 2;
+            var scaleX = bounds.size.x / canvas.width;
+            var scaleY = bounds.size.y / canvas.height;
+            var scale = Math.max(scaleX, scaleY) * 1.2;
+            if (scale < 1) scale = 1;
+            var width = canvas.width * scale;
+            var height = canvas.height * scale;
+            context.setTransform(1, 0, 0, 1, 0, 0);
+            context.scale(1 / scale, 1 / scale);
+            context.translate(-centerX, -centerY);
+            context.translate(width / 2, height / 2);
+        }
+
+        function onClick_showSpine() {
+            console.log("onClick_showSpine " + spine_json);
+            if (spine_json == undefined) return;
+            if (canvas == undefined) {
+                console.log("create canvas");
+                canvas = document.createElement("canvas");
+                canvas.id = "spine_canvas";
+                document.body.appendChild(canvas);
+            }
+            spine_init();
+        };
+    </script>
     
 </body>
 

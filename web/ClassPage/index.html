@@ -1,0 +1,115 @@
+<html>
+
+<head>
+    <title>Class Page</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <div class="class-area"></div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute" onchange="searchModule_search()">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+            <option value="STR">STR</option>
+            <option value="DEX">DEX</option>
+            <option value="CON">CON</option>
+            <option value="INT">INT</option>
+            <option value="MNA">MNA</option>
+        </select>
+        <select id="orderType" onchange="searchModule_search()">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
+    <input id="filter_ClassName" type="hidden" class="selectFilter settedFilter"></input>
+    <!--
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2172243042066207"
+         data-ad-slot="8369609764"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+    <table id="searchResult" class="search-result-table" style="width:100%">
+        <tbody>
+            <tr>
+                <td></td>
+                <td>STR</td>
+                <td>DEX</td>
+                <td>CON</td>
+                <td>INT</td>
+                <td>MNA</td>
+            </tr>
+            <tr>
+                <td class="result-img">Icon;Name</td>
+                <td>STR</td>
+                <td>DEX</td>
+                <td>CON</td>
+                <td>INT</td>
+                <td>MNA</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
+
+    <script>
+        baseTable="job";
+        itemCount=999999;
+        searchModule_init();
+
+        if (filterSetting["filter_ClassName"]!=undefined) document.getElementById("filter_ClassName").value=filterSetting["filter_ClassName"];
+        requestGetData("job", undefined, function(arr){
+            arr.sort(function (a, b) {
+                var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
+                var class_b = Number(b.ClassName.replace("Char", "").split("_")[0]);
+                if (class_a != class_b){
+                    if(class_a > class_b) return 1;
+                    else return -1;
+                }
+
+                if (a.Rank == b.Rank) return 0;
+                else if(Number(a.Rank) > Number(b.Rank)) return 1;
+                else return -1;
+            });
+            //console.log(arr);
+            var filter = document.getElementsByClassName("class-area")[0];
+            for(var i=0;i<arr.length;i++){
+                if (Number(arr[i].Rank) == 1){
+                    var classButton=document.createElement("a");
+                    var classImg=document.createElement("img");
+                    classButton.href=url+"?filter_ClassName=@"+arr[i].ClassName.split("_")[0];
+                    classImg.src="../img/icon/classicon/"+arr[i].Icon.toLowerCase()+".png";
+                    classButton.appendChild(classImg);
+                    filter.appendChild(classButton);
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

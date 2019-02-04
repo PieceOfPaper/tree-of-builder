@@ -1,0 +1,149 @@
+<html>
+
+<head>
+    <title>%Name%</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="%Name%" />
+    <meta property="og:description" content="%Desc%" />
+    <meta property="og:image" content="%IconPath%" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/defaultSetting.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    %Icon%
+    <h1>%Name%</h1>
+    <p>%Desc%</p>
+    <table>
+        <tr>
+            <td>ClassID</td>
+            <td>ClassName</td>
+        </tr>
+        <tr>
+            <td>%ClassID%</td>
+            <td>%ClassName%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Level</td>
+            <td>Attribute</td>
+            <td>Armor Material</td>
+            <td>Move Type</td>
+            <td>Size</td>
+        </tr>
+        <tr>
+            <td>%Level%</td>
+            <td>%Attribute%</td>
+            <td>%ArmorMaterial%</td>
+            <td>%MoveType%</td>
+            <td>%Size%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>Race Type</td>
+            <td>Rank</td>
+        </tr>
+        <tr>
+            <td>%RaceType%</td>
+            <td>%MonRank%</td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>STR</td>
+            <td>INT</td>
+            <td>CON</td>
+            <td>MNA</td>
+            <td>DEX</td>
+        </tr>
+        <tr>
+            <td id="stat_STR"></td>
+            <td id="stat_INT"></td>
+            <td id="stat_CON"></td>
+            <td id="stat_MNA"></td>
+            <td id="stat_DEX"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>PATK</td>
+            <td>PCRIATK</td>
+            <td>MATK</td>
+            <td>MCRIATK</td>
+        </tr>
+        <tr>
+            <td><span id="stat_MINPATK"></span>~<span id="stat_MAXPATK"></span></td>
+            <td id="stat_CRTATK"></td>
+            <td><span id="stat_MINMATK"></span>~<span id="stat_MAXMATK"></span></td>
+            <td id="stat_CRTMATK"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>CRTHR</td>
+            <td>CRTDR</td>
+        </tr>
+        <tr>
+            <td id="stat_CRTHR"></td>
+            <td id="stat_CRTDR"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>HP</td>
+            <td>SP</td>
+            <td>DEF</td>
+            <td>MDEF</td>
+        </tr>
+        <tr>
+            <td id="stat_MHP"></td>
+            <td id="stat_MSP"></td>
+            <td id="stat_DEF"></td>
+            <td id="stat_MDEF"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>EXP</td>
+            <td>JOB EXP</td>
+        </tr>
+        <tr>
+            <td id="stat_EXP"></td>
+            <td id="stat_JOBEXP"></td>
+        </tr>
+    </table>
+
+
+    <br/>
+    <br/>
+
+    <h2>Skills</h2>
+    %SkillString%
+    <br/>
+    <br/>
+
+    <script>
+    </script>
+
+    %StatScript%
+</body>
+
+</html>
