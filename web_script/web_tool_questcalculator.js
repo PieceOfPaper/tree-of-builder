@@ -9,24 +9,28 @@ module.exports = function(app, tableData, scriptData){
     var layout = fs.readFileSync('./web/Layout/tool_questcalculator.html');
     route.get('/', function (request, response) {
 
-        var from=0;
-        var to=0;
-
-        if (request.query.from != undefined && request.query.from != ''){
-            from=request.query.from;
-        }
-        if (request.query.to != undefined && request.query.to != ''){
-            to=request.query.to;
+        var targetId=0;
+        if (request.query.targetId != undefined && request.query.targetId != ''){
+            targetId=request.query.targetId;
         }
 
         var questList = [];
+        var questLvTemp = 0;
+        var questDataTemp = tos.FindDataClassID(tableData,'questprogresscheck',targetId);
+        while(questDataTemp!=undefined){
+            questLvTemp = questDataTemp.Level;
+            if (questList.includes(questDataTemp)==false) questList.push(questDataTemp);
+
+            questDataTemp = tos.FindDataClassName(tableData,'questprogresscheck',questDataTemp['QuestName'+1]);
+            if (questDataTemp==undefined) break;
+            if (Math.abs(questDataTemp.Level-questLvTemp)>10) break;
+        }
+
         var itemSum = [];
         var expSum = 0;
-        for (var i=from;i<=to;i++){
-            var questData = tos.FindDataClassID(tableData,'questprogresscheck',i);
-            if (questData==undefined) continue;
-            questList.push(questData.ClassName);
-            var questAutoData = tos.FindDataClassName(tableData,'questprogresscheck_auto',questData.ClassName);
+        for (var i=0;i<questList.length;i++){
+            if (questList[i] == undefined) continue;
+            var questAutoData = tos.FindDataClassName(tableData,'questprogresscheck_auto',questList[i].ClassName);
             for(var j=1;j<=4;j++){
                 if (questAutoData['Success_ItemName'+j] == undefined) continue;
                 if (questAutoData['Success_ItemCount'+j] == undefined || questAutoData['Success_ItemCount'+j] == 0) continue;
@@ -38,7 +42,7 @@ module.exports = function(app, tableData, scriptData){
 
         var output = layout.toString();
         var resultString = '';
-        if (from > 0 && to > 0){
+        if (targetId > 0){
             resultString += '<table><tbody>';
             resultString += '<tr><td>EXP</td><td>'+expSum.toLocaleString()+'</td></tr>';
             for (param in itemSum){
@@ -50,7 +54,7 @@ module.exports = function(app, tableData, scriptData){
             resultString += '</tbody></table>';
             resultString += '<br/>';
             for (param in questList){
-                resultString += tos.GetQuestString(tableData,questList[param]);
+                resultString += ' '+tos.GetQuestString(tableData,questList[param].ClassName);
             }
         }
 

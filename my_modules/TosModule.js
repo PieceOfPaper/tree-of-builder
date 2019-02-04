@@ -174,7 +174,7 @@ class TosModule {
     static FindDataClassID(tableData, tableName, classID){
         if (tableData[tableName] == undefined) return undefined;
         for (var i = 0; i < tableData[tableName].length; i ++){
-          if (tableData[tableName][i].ClassID === classID) return tableData[tableName][i];
+          if (Number(tableData[tableName][i].ClassID) === Number(classID)) return tableData[tableName][i];
         }
         return undefined;
     }

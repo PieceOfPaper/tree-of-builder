@@ -31,9 +31,8 @@
     </script>
     -->
     <div>
-        <h3>Class ID</h3>
-        <p>From <input type="number" id="from" value=1></p>
-        <p>To <input type="number" id="to" value=1></p>
+        <p>Calculating by Last Quest's Class ID</p>
+        <p><input type="number" id="targetId" value=1></p>
     </div>
     <button id="searchBtn" onclick="search()">Search</button>
     <br/>
@@ -41,11 +40,10 @@
         var url = window.location.href.split('?')[0];
         var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
         if (window.location.href.split('?').length > 0){
-            document.getElementById('from').value=filterSetting['from'];
-            document.getElementById('to').value=filterSetting['to'];
+            document.getElementById('targetId').value=filterSetting['targetId'];
         }
         function search(){
-            window.location.href = url + "?from="+document.getElementById('from').value+'&to='+document.getElementById('to').value;
+            window.location.href = url + "?targetId="+document.getElementById('targetId').value;
         }
     </script>
     %ResultString%

@@ -53,7 +53,7 @@ topMenuButtons['monster']["Name"] = "Monster";
 
 topMenuButtons['quest'] = [];
 topMenuButtons['quest']["Path"] = "QuestPage";
-topMenuButtons['quest']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
+topMenuButtons['quest']["Img"] = "../img/minimap_icons/minimap_1_sub.png";
 topMenuButtons['quest']["Name"] = "Quest";
 
 topMenuButtons['map'] = [];
@@ -63,7 +63,7 @@ topMenuButtons['map']["Name"] = "Map";
 
 topMenuButtons['dialog'] = [];
 topMenuButtons['dialog']["Path"] = "DialogPage";
-topMenuButtons['dialog']["Img"] = "../img/icon/itemicon/icon_item_paper.png";
+topMenuButtons['dialog']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
 topMenuButtons['dialog']["Name"] = "Dialog";
 
 topMenuButtons['category_miscdata'] = [];
@@ -93,7 +93,7 @@ topMenuButtons['builder']["Name"] = "Builder";
 
 topMenuButtons['tool_questcalc'] = [];
 topMenuButtons['tool_questcalc']["Path"] = "QuestCalculator";
-topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_sub.png";
+topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_main.png";
 topMenuButtons['tool_questcalc']["Name"] = "Quest Calc";
 
 topMenuButtons['tool_foodcalc'] = [];
