@@ -281,8 +281,25 @@ loadScript('shared.ipf/script/ability_price.lua');
 loadScript('shared.ipf/script/ability_unlock.lua');
 loadScript('shared.ipf/script/item_calculate.lua');
 loadScript('shared.ipf/script/item_transcend_shared.lua');
+loadScript('shared.ipf/script/lib_reinforce_131014.lua');
 loadScript('shared.ipf/script/calc_pvp_item.lua');
 loadScript('shared.ipf/script/calc_property_monster.lua');
+loadScript('script.ipf/buff/buff_monster_ability.lua');
+loadScript('script.ipf/buff/colonywar_buff.lua');
+loadScript('script.ipf/buff/etc_buff.lua');
+loadScript('script.ipf/buff/item_buff.lua');
+loadScript('script.ipf/buff/quest_buff.lua');
+loadScript('script.ipf/buff/raid_buff_hardcode.lua');
+loadScript('script.ipf/buff/skill_buff_addcheckon.lua');
+loadScript('script.ipf/buff/skill_buff_aftercalc.lua');
+loadScript('script.ipf/buff/skill_buff_deadcalc.lua');
+loadScript('script.ipf/buff/skill_buff_givedamage.lua');
+loadScript('script.ipf/buff/skill_buff_monster.lua');
+loadScript('script.ipf/buff/skill_buff_monster_ratetable.lua');
+loadScript('script.ipf/buff/skill_buff_pc.lua');
+loadScript('script.ipf/buff/skill_buff_ratetable.lua');
+loadScript('script.ipf/buff/skill_buff_takedamage.lua');
+loadScript('script.ipf/buff/skill_buff_useskill.lua');
 function loadScript(path){
   var pathSplited = path.split('/');
   var filename = pathSplited[pathSplited.length - 1];
@@ -292,7 +309,15 @@ function loadScript(path){
       var luaFuncSplit = data.toString().split('function');
       for (var i = 0; i < luaFuncSplit.length; i ++){
         var methodName = luaFuncSplit[i].split('(')[0].trim();
-        scriptData[methodName] = 'function' + luaFuncSplit[i];
+        var lines = luaFuncSplit[i].split('\n');
+        var methodBody = '';
+        for (var j=0;j<lines.length;j++){
+          if (lines[j].trim().length==0) continue;
+          if (lines[j].trim().indexOf('--')==0) continue;
+          if (methodBody.length>0) methodBody += '\n';
+          methodBody += lines[j];
+        }
+        scriptData[methodName] = 'function' + methodBody;
         //console.log('[' + i + ']' + methodName);
       }
       console.log('import script [' + filename + ']');
@@ -451,6 +476,9 @@ app.use('/Quest', questPage);
 
 var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
 app.use('/Map', mapPage);
+
+var dialogPage = require('./web_script/web_dialog')(app, tableData, scriptData);
+app.use('/Dialog', dialogPage);
 
 var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
 app.use('/GuildEvent', miscGuildEventPage);

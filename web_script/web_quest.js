@@ -143,12 +143,97 @@ module.exports = function(app, tableData, scriptData){
           }
         }
 
+        var questModeIconPath = '';
+        switch(questData.QuestMode){
+          case "MAIN":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_main.png';
+          break;
+          case "SUB":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_sub.png';
+          break;
+          case "REPEAT":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_repeat.png';
+          break;
+          case "PARTY":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_party.png';
+          break;
+          case "KEYITEM":
+          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_keyquest.png';
+          break;
+        }
+
+        var possibleString = '';
+        if (true){
+          //possibleString += '<h2>Start Dialog</h2>';
+          if (questAutoData['Possible_SelectDialog1'] != undefined && questAutoData['Possible_SelectDialog1'].length > 0){
+            possibleString += '<p>'+tos.GetDialogString(tableData,questAutoData['Possible_SelectDialog1'])+' [ '+questAutoData['Possible_AnswerAgree']+' / '+questAutoData['Possible_AnswerAgree']+' ]</p>';
+          }
+          for (var i=1;i<=10;i++){
+            if (questAutoData['Possible_AgreeDialog'+i] == undefined) continue;
+            if (questAutoData['Possible_AgreeDialog'+i].length == 0) continue;
+            if (questAutoData['Possible_AgreeDialog'+i].indexOf('Notice') > -1){
+              possibleString += '<p> ('+i+') '+questAutoData['Possible_AgreeDialog'+i]+'</p>';
+              continue;
+            }
+            var agreeDialog = tos.GetDialogString(tableData,questAutoData['Possible_AgreeDialog'+i]);
+            if (agreeDialog == undefined || agreeDialog.length == 0) continue;
+            possibleString += '<p> ('+i+') '+agreeDialog+'</p>';
+          }
+        }
+
+        var progressString = '';
+        if (true){
+          //possibleString += '<h2>Start Dialog</h2>';
+          if (questAutoData['Progress_StartNPCDialog1'] != undefined && questAutoData['Progress_StartNPCDialog1'].length > 0){
+            if (questAutoData['Progress_StartNPCDialog1'].indexOf('Notice') > -1){
+              progressString += '<p>'+questAutoData['Progress_StartNPCDialog1']+'</p>';
+            } else {
+              progressString += '<p>'+tos.GetDialogString(tableData,questAutoData['Progress_StartNPCDialog1'])+'</p>';
+            }
+          }
+          for (var i=1;i<=10;i++){
+            if (questAutoData['Progress_Dialog'+i] == undefined) continue;
+            if (questAutoData['Progress_Dialog'+i].length == 0) continue;
+            if (questAutoData['Progress_Dialog'+i].indexOf('Notice') > -1){
+              progressString += '<p> ('+i+') '+questAutoData['Progress_Dialog'+i]+'</p>';
+              continue;
+            }
+            var agreeDialog = tos.GetDialogString(tableData,questAutoData['Progress_Dialog'+i]);
+            if (agreeDialog == undefined || agreeDialog.length == 0) continue;
+            progressString += '<p> ('+i+') '+agreeDialog+'</p>';
+          }
+        }
+
+        var endString = '';
+        if (true){
+          //possibleString += '<h2>Start Dialog</h2>';
+          if (questAutoData['Success_StartNPCDialog1'] != undefined && questAutoData['Success_StartNPCDialog1'].length > 0){
+            if (questAutoData['Success_StartNPCDialog1'].indexOf('Notice') > -1){
+              endString += '<p>'+questAutoData['Success_StartNPCDialog1']+'</p>';
+            } else {
+              endString += '<p>'+tos.GetDialogString(tableData,questAutoData['Success_StartNPCDialog1'])+'</p>';
+            }
+          }
+          for (var i=1;i<=10;i++){
+            if (questAutoData['Success_Dialog'+i] == undefined) continue;
+            if (questAutoData['Success_Dialog'+i].length == 0) continue;
+            if (questAutoData['Success_Dialog'+i].indexOf('Notice') > -1){
+              endString += '<p> ('+i+') '+questAutoData['Success_Dialog'+i]+'</p>';
+              continue;
+            }
+            var agreeDialog = tos.GetDialogString(tableData,questAutoData['Success_Dialog'+i]);
+            if (agreeDialog == undefined || agreeDialog.length == 0) continue;
+            endString += '<p> ('+i+') '+agreeDialog+'</p>';
+          }
+        }
+
         var output = layout_detail.toString();
         output = output.replace(/%Name%/g, questData.Name);
         output = output.replace(/%ClassName%/g, questData.ClassName);
         output = output.replace(/%ClassID%/g, questData.ClassID);
 
         output = output.replace(/%QuestMode%/g, questData.QuestMode);
+        output = output.replace(/%QuestModeIconPath%/g, questModeIconPath);
         output = output.replace(/%Level%/g, questData.Level);
         output = output.replace(/%Lvup%/g, questData.Lvup);
 
@@ -172,6 +257,10 @@ module.exports = function(app, tableData, scriptData){
         output = output.replace(/%RequireQuestString%/g, requireQuestString);
 
         output = output.replace(/%RewardString%/g, rewardString);
+
+        output = output.replace(/%PossibleDialogString%/g, possibleString);
+        output = output.replace(/%ProgressDialogString%/g, progressString);
+        output = output.replace(/%EndDialogString%/g, endString);
 
         //output = output.replace(/%StatScript%/g, statScript);
 

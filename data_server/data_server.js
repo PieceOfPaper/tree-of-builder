@@ -34,6 +34,9 @@ module.exports = function(app, tableData){
 
     var mapServer = require('./data_map')(app, tableData);
     app.use('/data/map', mapServer);
+
+    var dialogServer = require('./data_dialog')(app, tableData);
+    app.use('/data/dialog', dialogServer);
   
     return route;
   }

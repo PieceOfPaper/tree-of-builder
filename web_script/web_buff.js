@@ -142,6 +142,13 @@ module.exports = function(app, tableData, scriptData){
   function buffDetailPage(index, request, response) {
     var buffTable = tableData['buff'];
 
+    var rawScripts = '';
+    for(param in scriptData){
+      if (param.indexOf(buffTable[index].ClassName)>-1){
+        rawScripts += '<tr><td>'+param+'</td></tr><tr><td class="script">'+scriptData[param]+'</td></tr>';
+      }
+    }
+
     var captionScript = '';
     captionScript += '<script>';
     captionScript += '</script>';
@@ -152,6 +159,7 @@ module.exports = function(app, tableData, scriptData){
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
+    output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + iconName + '.png');
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
     output = output.replace(/%ClassID%/g, buffTable[index].ClassID);
@@ -165,6 +173,8 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%Position%/g, buffTable[index].Position);
 
     output = output.replace(/%Keyword%/g, buffTable[index].Keyword);
+
+    output = output.replace(/%RawScripts%/g, '<table class="script-details"><tbody>'+rawScripts+'</tbody></table>');
 
 
     //output = output.replace(/%RawData%/g, JSON.stringify(buffTable[index]));

@@ -157,6 +157,7 @@ module.exports = function(app, tableData, scriptData){
 
         var output = layout_detail.toString();
         output = output.replace(/%Icon%/g, '<img src="../img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png" />');
+        output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png');
         output = output.replace(/%Name%/g, monsterTable[index].Name);
         output = output.replace(/%ClassName%/g, monsterTable[index].ClassName);
         output = output.replace(/%ClassID%/g, monsterTable[index].ClassID);

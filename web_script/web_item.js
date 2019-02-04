@@ -203,29 +203,35 @@ module.exports = function(app, tableData, scriptData){
     var itemTable = tableData[tableName];
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
     } else {
       icon = 'No Img';
     }
 
     var dialogString = undefined;
     if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
-      var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
-      if (dialogData != undefined) {
-        dialogString = tos.parseCaption(dialogData.Text);
-      }
+      // var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
+      // if (dialogData != undefined) {
+      //   dialogString = tos.parseCaption(dialogData.Text);
+      // }
+      dialogString = tos.GetDialogString(tableData,itemTable[index].ClassName);
     }
 
     var output = layout_item_detail.toString();
@@ -235,9 +241,11 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%TooltipImage%/g, '');
     } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
       output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      iconPath = 'http://'+request.headers.host+'/img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png';
     } else {
       output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
     }
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
@@ -299,7 +307,6 @@ module.exports = function(app, tableData, scriptData){
     var sealOption = tos.FindDataClassName(tableData, 'item_seal_option', itemTable[index].ClassName)
     var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
 
-
     //set data
     var setItemTable = tableData['setitem'];
     var setList = [];
@@ -321,16 +328,20 @@ module.exports = function(app, tableData, scriptData){
     }
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
@@ -396,7 +407,7 @@ module.exports = function(app, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
             materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
           } else if(itemData.Icon != undefined){
@@ -460,6 +471,7 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'ItemStar:' + itemTable[index].ItemStar  + ',';
     if (itemTable[index].Material != undefined && itemTable[index].Material.length > 0)
       captionScript +=  'Material:"' + itemTable[index].Material  + '",';
+    captionScript +=  'GroupName:"' + itemTable[index].GroupName  + '",';
     captionScript +=  'MAXATK:' + 0  + ',';
     captionScript +=  'MINATK:' + 0  + ',';
     captionScript +=  'MAXATK_AC:' + 0 + ',';
@@ -478,6 +490,14 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'ReinforceRatio:' + itemTable[index].ReinforceRatio  + ',';
     captionScript +=  'BuffValue:' + 0  + ',';
     captionScript +=  'StringArg:"' + itemTable[index].StringArg + '",';
+    captionScript += '};';
+
+    captionScript += 'var dummyMoru = {';
+    captionScript +=  'StringArg:"",';
+    captionScript += '};';
+
+    captionScript += 'var dummyMoruDia = {';
+    captionScript +=  'StringArg:"DIAMOND",';
     captionScript += '};';
 
 
@@ -548,37 +568,45 @@ module.exports = function(app, tableData, scriptData){
     captionScript += 'function MakeItemOptionByOptionSocket(item){ return 0; }\n';
     captionScript += 'function GetItemOwner(item){ return 0; }\n';
     captionScript += 'function MAKE_ITEM_OPTION_BY_OPTION_SOCKET(item){ return; }\n';
+    captionScript += 'function IS_MORU_DISCOUNT_50_PERCENT(item){ return false; }\n';
+    captionScript += 'function IS_MORU_FREE_PRICE(item){ return false; }\n';
 
     captionScript += 'function onChangeReinforceLevel(){';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) itemData.Reinforce_2=Number(document.getElementById("ReinforceLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onChangeTranscendLevel(){';
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) itemData.Transcend=Number(document.getElementById("TranscendLevel").value);';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickReinforceLevelUp(){';
     captionScript +=  'itemData.Reinforce_2 ++;';
     captionScript +=  'if(itemData.Reinforce_2>40) itemData.Reinforce_2=40;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
     captionScript += 'function onClickReinforceLevelDown(){';
     captionScript +=  'itemData.Reinforce_2 --;';
     captionScript +=  'if(itemData.Reinforce_2<0) itemData.Reinforce_2=0;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript += '}\n';
 
     captionScript += 'function onClickTranscendLevelUp(){';
     captionScript +=  'itemData.Transcend ++;';
     captionScript +=  'if(itemData.Transcend>10) itemData.Transcend=10;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
     captionScript += 'function onClickTranscendLevelDown(){';
     captionScript +=  'itemData.Transcend --;';
     captionScript +=  'if(itemData.Transcend<0) itemData.Transcend=0;';
     captionScript +=  'updateBasicValue();';
-    captionScript += '}';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'var basicValue=document.getElementById("BasicValue");';
     captionScript += 'updateBasicValue();';
@@ -611,6 +639,20 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'if(document.getElementById("TranscendLevel")!=undefined) document.getElementById("TranscendLevel").value=itemData.Transcend;';
     captionScript += '}';
 
+    captionScript += 'updateTranscendMaterialCount();';
+    captionScript += 'function updateTranscendMaterialCount(){';
+    captionScript +=  'var totalcnt=Number(0);';
+    captionScript +=  'for(var i=0;i<itemData.Transcend;i++){ totalcnt+=Number(GET_TRANSCEND_MATERIAL_COUNT(itemData,i)); }';
+    captionScript +=  'document.getElementById("transcendMatCnt").innerText=GET_TRANSCEND_MATERIAL_COUNT(itemData,itemData.Transcend-1);';
+    captionScript +=  'document.getElementById("transcendMatTotalCnt").innerText=totalcnt;';
+    captionScript += '}';
+
+    captionScript += 'updateReinforceSilverCount();';
+    captionScript += 'function updateReinforceSilverCount(){';
+    captionScript +=  'document.getElementById("reinforceSilver").innerText=GET_REINFORCE_PRICE(itemData,dummyMoru,undefined).toLocaleString();';
+    captionScript +=  'document.getElementById("reinforceSilverDia").innerText=GET_REINFORCE_PRICE(itemData,dummyMoruDia,undefined).toLocaleString();';
+    captionScript += '}';
+
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);console.log(atkPair);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
@@ -623,15 +665,26 @@ module.exports = function(app, tableData, scriptData){
     captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
     //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
+    captionScript += tos.Lua2JS(scriptData['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
+    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
     captionScript += '</script>';
 
+    var reinforceSilverItemString = '';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_W_01')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_Diamond')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
+
+    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%StatList%/g, statListString);
+
+    output = output.replace(/%ReinforceSilverItem%/g, reinforceSilverItemString);
+    output = output.replace(/%TranscendMaterialItem%/g, transcendMaterialItemString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
@@ -685,19 +738,24 @@ module.exports = function(app, tableData, scriptData){
     var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
     } else {
       icon = 'No Img';
     }
@@ -715,7 +773,7 @@ module.exports = function(app, tableData, scriptData){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
           itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
         } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
           materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
         } else if(itemData.Icon != undefined){
@@ -743,7 +801,7 @@ module.exports = function(app, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
             materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
           } else if(itemData.Icon != undefined){
@@ -761,6 +819,7 @@ module.exports = function(app, tableData, scriptData){
   
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%TooltipImage%/g, tooltipImg);
     
     output = output.replace(/%Name%/g, itemTable[index].Name);
@@ -802,19 +861,24 @@ module.exports = function(app, tableData, scriptData){
     var skillTable = tableData['skill'];
 
     var icon = '';
+    var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Icon != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
       tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
     } else if(itemTable[index].Illust != undefined){
       icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
     } else {
       icon = 'No Img';
     }
@@ -830,6 +894,7 @@ module.exports = function(app, tableData, scriptData){
     var output = layout_itemGem_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
+    output = output.replace(/%IconPath%/g, iconPath);
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
     } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
@@ -908,7 +973,7 @@ module.exports = function(app, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
             materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
           } else if(itemData.Icon != undefined){

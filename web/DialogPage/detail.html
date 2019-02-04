@@ -1,10 +1,12 @@
 <html>
 
 <head>
-    <title>Guild Event</title>
+    <title>%Caption%</title>
     <link rel="stylesheet" type="text/css" href="../style.css">
     <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="%Caption%" />
+    <meta property="og:image" content="%ImagePath%" />
     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
     <script>
     (adsbygoogle = window.adsbygoogle || []).push({
@@ -17,19 +19,32 @@
 
 <body>
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
-    <!--
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-2172243042066207"
-         data-ad-slot="8369609764"
-         data-ad-format="auto"
-         data-full-width-responsive="true"></ins>
+
+    <table>
+        <tr>
+            <td>Class ID</td>
+            <td>Class Name</td>
+        </tr>
+        <tr>
+            <td>%ClassID%</td>
+            <td>%ClassName%</td>
+        </tr>
+    </table>
+
+    <br>
+
+    %Image%
+
+    <br>
+    
+    <h1>%Caption%</h1>
+
+    <br>
+
+    %Text%
+
     <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
-    -->
-    %ResultString%
 </body>
 
 </html>

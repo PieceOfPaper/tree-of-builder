@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <title>Quest Page</title>
+    <title>Dialog Page</title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="../style.css">
     <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
@@ -23,25 +23,19 @@
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
     <div class="search-area">
         <select id="searchType">
-            <option value="Name">Name</option>
+            <option value="Text">Text</option>
+            <option value="Caption">Caption</option>
             <option value="ClassName">ClassName</option>
         </select>
         <input type="text" id="searchName">
     </div>
     <div class="filler-area">
-        <p>Filter</p>
-        <select id="filter_QuestMode" class="selectFilter">
-            <option value="Default">Quest Mode</option>
-        </select>
-        <div>Level<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "500"></div>
     </div>
     <div class="order-area">
         <p>Order</p>
         <select id="orderAttribute">
             <option value="ClassID">ClassID</option>
             <option value="ClassName">ClassName</option>
-            <option value="Name">Name</option>
-            <option value="Level">Level</option>
         </select>
         <select id="orderType">
             <option value=1>Asc</option>
@@ -54,15 +48,13 @@
         <tbody>
             <tr>
                 <td>ClassID</td>
-                <td>QuestMode</td>
-                <td>Level</td>
-                <td>Name</td>
+                <!--<td>ClassName</td>-->
+                <td>Caption</td>
             </tr>
             <tr>
                 <td class="result-link">ClassID</td>
-                <td class="result-img">QuestMode</td>
-                <td>Level</td>
-                <td>Name</td>
+                <!--<td>ClassName</td>-->
+                <td>Caption</td>
             </tr>
         </tbody>
     </table>
@@ -71,22 +63,8 @@
     <div id="pageNumbers" class="search-result-pagenum"></div>
 
     <script>
-        baseTable="quest";
-        customFilterSettingMethods.push(setCustom_level);
+        baseTable="dialog";
         searchModule_init();
-
-        if (filterSetting["filter_Level"] != undefined){
-            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_Level"].split(',')[0].replace('[',''));
-            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_Level"].split(',')[1].replace(']',''));
-        }
-
-        function setCustom_level(filterSetting){
-            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=500){
-                filterSetting["filter_Level"] = undefined;
-                return;
-            }
-            filterSetting["filter_Level"] = '['+document.getElementById("levelMinFilter").value+','+document.getElementById("levelMaxFilter").value+']';
-        }
     </script>
 
 </body>

@@ -618,3 +618,26 @@ footer img{
 .worldmap-item a{
     color: whitesmoke;
 }
+
+#homebutton {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: rgba(0,0,0,0);
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+}
+#homebutton img {
+    width: 40px;
+}
+#homebutton:hover img{
+    transform:scale(1.1);
+}
+#homebutton:active img{
+    transform:scale(0.9);
+}

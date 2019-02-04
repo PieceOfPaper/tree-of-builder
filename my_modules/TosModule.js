@@ -174,13 +174,35 @@ class TosModule {
     static FindDataClassID(tableData, tableName, classID){
         if (tableData[tableName] == undefined) return undefined;
         for (var i = 0; i < tableData[tableName].length; i ++){
-          if (tableData[tableName][i].ClassID === classID) return tableData[tableName][i];
+          if (Number(tableData[tableName][i].ClassID) === Number(classID)) return tableData[tableName][i];
         }
         return undefined;
     }
 
     static Skilltree2Job(tableData, className){
         return this.FindDataClassName(tableData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
+    }
+
+    static GetItemImgString(tableData, className){
+        var itemData = undefined;
+        var icon = '';
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Equip',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Quest',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_gem',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_premium',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
+        if (itemData == undefined) return icon;
+          if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+            icon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          } else if(itemData.Icon != undefined){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          } else if(itemData.Illust != undefined){
+            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          }
+        return icon;
     }
 
     static GetItemResultString(tableData, className, itemcount){
@@ -194,16 +216,7 @@ class TosModule {
         if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
         if (itemData != undefined){
             output += '<p>';
-            var icon = '';
-          if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            icon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-          } else if(itemData.Icon != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-          } else if(itemData.Illust != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-          }
+            var icon = this.GetItemImgString(tableData,className);
           output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
           if (itemcount != undefined){
             output += ' x '+itemcount;
@@ -263,6 +276,16 @@ class TosModule {
         var questData=this.FindDataClassName(tableData, 'questprogresscheck', className);
         if (questData!=undefined){
             output += this.GetQuestModeImgString(tableData,className)+'<a href="../Quest?id='+questData.ClassID+'">'+questData.Name+'</a>';
+        }
+        return output;
+    }
+
+    static GetDialogString(tableData, className, readText){
+        if (readText == undefined) readText='Read Dialog';
+        var output = '';
+        var dialogData=this.FindDataClassName(tableData, 'dialogtext', className);
+        if (dialogData!=undefined){
+            output += '<a href="../Dialog?id='+dialogData.ClassID+'">'+readText+'</a>';
         }
         return output;
     }
