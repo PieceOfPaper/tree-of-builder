@@ -308,31 +308,29 @@ scriptArray.push('script.ipf/buff/skill_buff_useskill.lua');
 //for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
 generateLuaScript(scriptArray, 0, function(result){
   // 기존 데이터 저장
-  // var luaFuncSplit = result.split('function');
-  // for (var i = 0; i < luaFuncSplit.length; i ++){
-  //   var methodName = luaFuncSplit[i].split('(')[0].trim();
-  //   scriptData[methodName] = 'function' + luaFuncSplit[i];
-  // }
-  var luaFuncSplit = result.toString().split('function');
+  var lines = result.toString().split('\n');
+  var clearedResult = '';
+  var clearedResultTrim = ''; //간혹 깨진 문자열이 끼이는데, Trim으로 해결 가능
+  for (var i=0;i<lines.length;i++){
+    if (lines[i].trim().length==0) continue;
+    if (lines[i].trim().indexOf('--[')<0 && (lines[i].trim().indexOf('--')==0 || lines[i].trim().indexOf('--')==1)) continue;
+    if (clearedResult.length>0) clearedResult += '\n';
+    if (clearedResultTrim.length>0) clearedResultTrim += '\n';
+    clearedResult += lines[i];
+    clearedResultTrim += lines[i].trim();
+  }
+  clearedResult = clearedResult.replace(/�/g,''); //깨진 문자열
+  var luaFuncSplit = clearedResult.split('function');
   for (var i = 0; i < luaFuncSplit.length; i ++){
     var methodName = luaFuncSplit[i].split('(')[0].trim();
-    var lines = luaFuncSplit[i].split('\n');
-    var methodBody = '';
-    for (var j=0;j<lines.length;j++){
-      if (lines[j].trim().length==0) continue;
-      if (lines[j].trim().indexOf('--')==0) continue;
-      if (methodBody.length>0) methodBody += '\n';
-      methodBody += lines[j];
-    }
-    scriptData[methodName] = 'function' + methodBody;
+    scriptData[methodName] = 'function' + luaFuncSplit[i];
   }
   // 파일로 저장
-  fs.writeFile('./web/js/generated_lua.lua', result, function(err) {
+  fs.writeFile('./web/js/generated_lua.lua', clearedResultTrim, function(err) {
       if(err) return console.log(err);
       console.log('Success Generate Lua Scripts');
+      lua.DoString(clearedResultTrim);
   }); 
-
-  //lua.DoString(result);
 });
 function generateLuaScript(array, index, callback){
   if (index >= array.length) {
