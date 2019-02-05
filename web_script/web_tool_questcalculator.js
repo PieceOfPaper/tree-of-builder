@@ -19,7 +19,8 @@ module.exports = function(app, tableData, scriptData){
         var questDataTemp = tos.FindDataClassID(tableData,'questprogresscheck',targetId);
         while(questDataTemp!=undefined){
             questLvTemp = questDataTemp.Level;
-            if (questList.includes(questDataTemp)==false) questList.push(questDataTemp);
+            if (questList.includes(questDataTemp)==true) break;
+            questList.push(questDataTemp);
 
             questDataTemp = tos.FindDataClassName(tableData,'questprogresscheck',questDataTemp['QuestName'+1]);
             if (questDataTemp==undefined) break;
