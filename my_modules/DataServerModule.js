@@ -1,5 +1,9 @@
 class DataServerModule {
 
+    static RequestLog(request){
+        console.log('[ReqDataLog] '+request.originalUrl);
+    }
+
     static DefaultQueryFilter(tableData, queryString) {
         var filteredArray = [];
         var itemCount = 999999;

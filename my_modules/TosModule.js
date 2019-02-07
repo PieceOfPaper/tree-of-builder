@@ -1,7 +1,7 @@
 class TosModule {
 
     static RequestLog(request){
-        console.log('[ReqLog] '+request.originalUrl);
+        console.log('[ReqPageLog] '+request.originalUrl);
     }
 
     static parseCaption(caption) {
