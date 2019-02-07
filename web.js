@@ -494,32 +494,32 @@ app.get('/', function (req, response) {
   })
 });
 
-app.post('/Lua', function (req, res) {
-  var method = req.body.method;
-  //console.log(req.body);
+// app.post('/Lua', function (req, res) {
+//   var method = req.body.method;
+//   //console.log(req.body);
 
-  if (method == undefined){
-    res.setHeader('Content-Type', 'application/json');
-    res.send(undefined);
-    return;
-  }
+//   if (method == undefined){
+//     res.setHeader('Content-Type', 'application/json');
+//     res.send(undefined);
+//     return;
+//   }
   
-  var argStr = '';
-  for(var i = 1; ;i ++){
-    if (req.body['arg' + i] == undefined) break;
-    if (i > 1) argStr += ',';
-    argStr += req.body['arg' + i];
-  }
+//   var argStr = '';
+//   for(var i = 1; ;i ++){
+//     if (req.body['arg' + i] == undefined) break;
+//     if (i > 1) argStr += ',';
+//     argStr += req.body['arg' + i];
+//   }
 
-  lua.SetGlobal('builderResult');
-  lua.DoString('builderResult=' + method + '(' + argStr + ')');
-  lua.GetGlobal('builderResult');
+//   lua.SetGlobal('builderResult');
+//   lua.DoString('builderResult=' + method + '(' + argStr + ')');
+//   lua.GetGlobal('builderResult');
   
-  var result = lua.ToValue(-1);
+//   var result = lua.ToValue(-1);
   
-  res.setHeader('Content-Type', 'application/json');
-  res.send(result);
-});
+//   res.setHeader('Content-Type', 'application/json');
+//   res.send(result);
+// });
 
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
