@@ -2,15 +2,18 @@
 <html>
 <head>
     <script src="../js/requestMethod.js"></script>
-     
+    <script src="../js/luajs/lua.min.js"></script>
+    <script src="../js/generated_lua.js"></script>
 </head>
 <body>
     
     <script>
-        requestPostScript("GET_COMMON_PROP_LIST", function(result){
-            console.log(result);
-            console.log(JSON.parse(result));
-        });
+        // requestPostScript("GET_COMMON_PROP_LIST", function(result){
+        //     console.log(result);
+        //     console.log(JSON.parse(result));
+        // });
+        var value = lua_call(lua_tableget(lua_script, "SCR_REFRESH_WEAPON"), [itemData,0,0,0]);
+        console.log(value[0]);
     </script>
 
 </body>
