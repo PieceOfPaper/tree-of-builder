@@ -2,6 +2,8 @@ class TosModule {
 
     static RequestLog(request){
         console.log('[ReqPageLog] '+request.originalUrl);
+        console.log('ip:'+request.ip);
+        console.log('ips:'+request.ips);
     }
 
     static parseCaption(caption) {
