@@ -20,6 +20,8 @@ var tos = require('./my_modules/TosModule');
 var nodelua = require('node-lua');
 var lua = new nodelua.LuaState();
 
+var cmd=require('node-cmd');
+
 var app = express();
 
 
@@ -329,7 +331,8 @@ generateLuaScript(scriptArray, 0, function(result){
   fs.writeFile('./web/js/generated_lua.lua', clearedResultTrim, function(err) {
       if(err) return console.log(err);
       console.log('Success Generate Lua Scripts');
-      lua.DoString(clearedResultTrim);
+      //lua.DoString(clearedResultTrim);
+      cmd.run('./tools/luajs/lua2js ./web/js/generated_lua.lua ./web/js/generated_lua.js')
   }); 
 });
 function generateLuaScript(array, index, callback){
