@@ -8,6 +8,7 @@ module.exports = function(app, tableData, scriptData){
   
     var layout_worldmap = fs.readFileSync('./web/MapPage/worldmap.html');
     route.get('/', function (request, response) {
+      tos.RequestLog(request);
         var mapTable = tableData['map2'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동

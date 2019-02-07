@@ -15,6 +15,7 @@ module.exports = function(app, tableData, scriptData){
   // var skillTreeTable = tableData['skilltree'];
 
   route.get('/', function (request, response) {
+    tos.RequestLog(request);
     var skillTable = tableData['skill'];
     var skillTreeTable = tableData['skilltree'];
     var jobTable = tableData['job'];

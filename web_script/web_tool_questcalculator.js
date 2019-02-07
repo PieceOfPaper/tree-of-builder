@@ -8,6 +8,7 @@ module.exports = function(app, tableData, scriptData){
   
     var layout = fs.readFileSync('./web/Layout/tool_questcalculator.html');
     route.get('/', function (request, response) {
+        tos.RequestLog(request);
 
         var targetId=0;
         if (request.query.targetId != undefined && request.query.targetId != ''){
