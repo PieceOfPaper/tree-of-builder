@@ -1,7 +1,8 @@
 class TosModule {
 
     static RequestLog(request){
-        console.log('[ReqPageLog] '+request.ip+' '+request.originalUrl);
+        var date = new Date();
+        console.log(date.toISOString()+' [ReqPageLog] '+request.ip+' '+request.originalUrl);
     }
 
     static parseCaption(caption) {

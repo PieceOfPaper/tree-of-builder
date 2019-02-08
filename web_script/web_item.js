@@ -14,50 +14,10 @@ module.exports = function(app, tableData, scriptData){
 
   route.get('/', function (request, response) {
     tos.RequestLog(request);
-    var itemTable = tableData['item'];
-    var itemEquipTable = tableData['item_Equip'];
-    var itemPremiumTable = tableData['item_premium'];
-    var itemQuestTable = tableData['item_Quest'];
-    var itemGemTable = tableData['item_gem'];
-    var itemRecipeTable = tableData['item_recipe'];
-
-    var equipClassTypeTable = tableData['item_equip_classtype'];
-    var equipDefaultTable = tableData['item_equip_default'];
-
-    // 종합테이블 세팅
-    var itemAllTable = [];
-    for (var i = 0; i < itemTable.length; i ++) itemAllTable.push(itemTable[i]);
-    for (var i = 0; i < itemEquipTable.length; i ++) itemAllTable.push(itemEquipTable[i]);
-    for (var i = 0; i < itemPremiumTable.length; i ++) itemAllTable.push(itemPremiumTable[i]);
-    for (var i = 0; i < itemQuestTable.length; i ++) itemAllTable.push(itemQuestTable[i]);
-    for (var i = 0; i < itemGemTable.length; i ++) itemAllTable.push(itemGemTable[i]);
-    for (var i = 0; i < itemRecipeTable.length; i ++) itemAllTable.push(itemRecipeTable[i]);
-
-    var equipClassTypeFilterTable = [];
-    for (var i = 0; i < equipClassTypeTable.length; i ++) {
-      var hasClass = false;
-      for (var j = 0; j < equipClassTypeFilterTable.length; j ++){
-        if (equipClassTypeFilterTable[j].ClassName == equipClassTypeTable[i].ClassName){
-          hasClass = true;
-          break;
-        }
-      }
-      if (!hasClass) equipClassTypeFilterTable.push(equipClassTypeTable[i]);
-    }
-    for (var i = 0; i < equipDefaultTable.length; i ++) {
-      var hasClass = false;
-      for (var j = 0; j < equipClassTypeFilterTable.length; j ++){
-        if (equipClassTypeFilterTable[j].ClassName == equipDefaultTable[i].ClassName){
-          hasClass = true;
-          break;
-        }
-      }
-      if (!hasClass) equipClassTypeFilterTable.push(equipDefaultTable[i]);
-    }
-
+    
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.table != undefined && request.query.id != undefined){
-      if (request.query.table == 'item_Equip') {
+      if (request.query.table == 'item_Equip' && tableData[request.query.table] != undefined) {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemEquipDetailPage(request.query.table, i, request, response);
@@ -69,21 +29,21 @@ module.exports = function(app, tableData, scriptData){
 
       // } else if (request.query.table == 'item_Quest') {
 
-      } else if (request.query.table == 'item_gem') {
+      } else if (request.query.table == 'item_gem' && tableData[request.query.table] != undefined) {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemGemDetailPage(request.query.table, i, request, response);
             return;
           }
         }
-      } else if (request.query.table == 'item_recipe') {
+      } else if (request.query.table == 'item_recipe' && tableData[request.query.table] != undefined) {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemRecipeDetailPage(request.query.table, i, request, response);
             return;
           }
         }
-      } else {
+      } else if (tableData[request.query.table] != undefined) {
         for (var i = 0; i < tableData[request.query.table].length; i ++){
           if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
             itemDetailPage(request.query.table, i, request, response);
@@ -93,104 +53,7 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
-    var filteredItemTable = [];
-
-    var resultArray = [];
-
-    // Item
-    for (var i = 0; i < itemAllTable.length; i ++){
-      var filter = false;
-      for (var j = 0; j < filteredItemTable.length; j ++){
-        if (filteredItemTable[j] === itemAllTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      // 필터 - Equip ClassType
-      if (request.query.equipClassTypeFilter != undefined && request.query.equipClassTypeFilter != ''){
-        if (itemAllTable[i].ClassType == undefined || itemAllTable[i].ClassType != request.query.equipClassTypeFilter) continue;
-      }
-
-      // 필터 - Equip UseLv
-      if (request.query.useLvMinFilter != undefined && request.query.useLvMinFilter != '' &&
-        request.query.useLvMaxFilter != undefined && request.query.useLvMaxFilter != ''){
-        if (itemAllTable[i].UseLv == undefined || Number(itemAllTable[i].UseLv) < Number(request.query.useLvMinFilter) || Number(itemAllTable[i].UseLv) > Number(request.query.useLvMaxFilter)) continue;
-      }
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || itemAllTable[i].Name.indexOf(request.query.searchName) > -1)){
-        if (request.query.table == undefined || (request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase()))
-          resultArray.push(itemAllTable[i]);
-      }
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || itemAllTable[i].ClassName.indexOf(request.query.searchName) > -1)){
-        if (request.query.table == undefined || (request.query.table.length > 0 && itemAllTable[i].TableName.toLowerCase() == request.query.table.toLowerCase()))
-          resultArray.push(itemAllTable[i]);
-      }
-    }
-
-    // 최종 소팅
-    // resultArray.sort(function(a,b){
-    //   if (Number(a.ClassID) > Number(b.ClassID)) return 1;
-    //   else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
-    //   else return 0;
-    // });
-
-    var equipClassTypeFilterString = '';
-    equipClassTypeFilterString += '<option value="">ClassType</option>';
-    for (var i = 0; i < equipClassTypeFilterTable.length; i ++){
-      equipClassTypeFilterString += '<option value="' + equipClassTypeFilterTable[i].ClassName + '">' + tos.ClassName2Lang(tableData, equipClassTypeFilterTable[i].ClassName) + '</option>';
-    }
-    equipClassTypeFilterString += '<option value="' + 'Armband' + '">' + tos.ClassName2Lang(tableData, 'Armband') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Cannon' + '">' + tos.ClassName2Lang(tableData, 'Cannon') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Dagger' + '">' + tos.ClassName2Lang(tableData, 'Dagger') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Hair' + '">' + tos.ClassName2Lang(tableData, 'Hair') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Helmet' + '">' + tos.ClassName2Lang(tableData, 'Helmet') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Lens' + '">' + tos.ClassName2Lang(tableData, 'Lens') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Neck' + '">' + tos.ClassName2Lang(tableData, 'Neck') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Ring' + '">' + tos.ClassName2Lang(tableData, 'Ring') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Outer' + '">' + tos.ClassName2Lang(tableData, 'Outer') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Hat' + '">' + tos.ClassName2Lang(tableData, 'Hat') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'Artefact' + '">' + tos.ClassName2Lang(tableData, 'Artefact') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'SpecialCostume' + '">' + tos.ClassName2Lang(tableData, 'SpecialCostume') + '</option>';
-    equipClassTypeFilterString += '<option value="' + 'EffectCostume' + '">' + tos.ClassName2Lang(tableData, 'EffectCostume') + '</option>';
-
-    var resultString = '';
-    for (var i = 0; i < resultArray.length; i ++){
-      resultString += '<tr>';
-      resultString += '<td align="center"><a href="?table=' + resultArray[i].TableName + '&id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      //resultString += '<td align="center">' + resultArray[i].ClassID + '</td>';
-      // 공용 코스튬은 아이콘이 두개
-      if (resultArray[i].EqpType != undefined && resultArray[i].UseGender != undefined && 
-          resultArray[i].EqpType.toLowerCase() == 'outer' && resultArray[i].UseGender.toLowerCase() == 'both'){
-        resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '_f.png"/></td>';
-      } else if(resultArray[i].EquipXpGroup != undefined && resultArray[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
-        resultString += '<td align="center"><img src="../img/icon/mongem/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
-      } else if(resultArray[i].Icon != undefined){
-        resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
-      } else if(resultArray[i].Illust != undefined){
-        resultString += '<td align="center"><img src="../img/icon/itemicon/' + resultArray[i].Illust.toLowerCase()  + '.png"/></td>';
-      } else {
-        resultString += '<td align="center">No Img</td>';
-      }
-      resultString += '<td>';
-      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '</p>';
-      //resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].Desc) + '</p>';
-      resultString += '</td>';
-      resultString += '</tr>';
-    }
-
-
-    var output = layout.toString();
-    output = output.replace(/style.css/g, '../style.css');
-
-    output = output.replace(/%EquipClassTypeFilter%/g, equipClassTypeFilterString);
-
-    output = output.replace(/%SearchResult%/g, resultString);
-
-    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
-
-    response.send(output);
+    response.send('no data');
   });
 
   var layout_item_detail = fs.readFileSync('./web/Layout/index-itemdetail.html');

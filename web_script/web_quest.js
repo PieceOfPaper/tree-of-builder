@@ -11,7 +11,7 @@ module.exports = function(app, tableData, scriptData){
         var questTable = tableData['questprogresscheck'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동
-        if (request.query.id != undefined && request.query.id != ''){
+        if (questTable != undefined && request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < questTable.length; i ++){
             if (questTable[i].ClassID === Number(request.query.id)){
                 monsterDetailPage(i, request, response);
@@ -20,7 +20,7 @@ module.exports = function(app, tableData, scriptData){
           }
         }
 
-        response.send('');
+        response.send('no data');
     });
   
 

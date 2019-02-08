@@ -11,7 +11,7 @@ module.exports = function(app, tableData, scriptData){
         var dialogTable = tableData['dialogtext'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동
-        if (request.query.id != undefined && request.query.id != ''){
+        if (dialogTable !=undefined && request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < dialogTable.length; i ++){
             if (dialogTable[i].ClassID === Number(request.query.id)){
                 dialogDetailPage(i, request, response);
@@ -20,7 +20,7 @@ module.exports = function(app, tableData, scriptData){
           }
         }
 
-        response.send('');
+        response.send('no data');
     });
   
 
