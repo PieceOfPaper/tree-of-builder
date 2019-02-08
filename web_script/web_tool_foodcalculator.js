@@ -8,6 +8,7 @@ module.exports = function(app, tableData, scriptData){
   
     var layout = fs.readFileSync('./web/Layout/tool_foodcalculator.html');
     route.get('/', function (request, response) {
+        tos.RequestLog(request);
         var foodTable = tableData['foodtable'];
 
         var output = layout.toString();

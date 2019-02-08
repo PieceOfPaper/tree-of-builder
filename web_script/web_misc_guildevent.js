@@ -8,6 +8,7 @@ module.exports = function(app, tableData, scriptData){
   
     var layout = fs.readFileSync('./web/Layout/misc_guildEvent.html');
     route.get('/', function (request, response) {
+        tos.RequestLog(request);
         var guildEventTable = tableData['guild_event'];
 
         var output = layout.toString();

@@ -1,5 +1,9 @@
 class TosModule {
 
+    static RequestLog(request){
+        console.log('[ReqPageLog] '+request.ip+' '+request.originalUrl);
+    }
+
     static parseCaption(caption) {
         if (caption == undefined) return caption;
         var output = caption;

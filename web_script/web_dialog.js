@@ -7,6 +7,7 @@ module.exports = function(app, tableData, scriptData){
     var route = express.Router();
   
     route.get('/', function (request, response) {
+      tos.RequestLog(request);
         var dialogTable = tableData['dialogtext'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동

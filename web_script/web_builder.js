@@ -10,6 +10,7 @@ module.exports = function(app, tableData, scriptData){
     var builder_script = fs.readFileSync('./web/Builder/builder_script.html');
   
     route.get('/', function (request, response) {
+        tos.RequestLog(request);
         var jobTable = tableData['job'];
         var skillTable = tableData['skill'];
         var skilltreeTable = tableData['skilltree'];

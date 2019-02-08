@@ -5,6 +5,7 @@ module.exports = function(app, tableData){
 
     var route = express.Router();
     route.get('/', function (req, res) {
+        dataModule.RequestLog(req);
         var output = dataModule.DefaultQueryFilter(tableData['ability'], req.query);
 
         res.setHeader('Content-Type', 'application/json');
