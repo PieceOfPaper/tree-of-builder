@@ -1,7 +1,7 @@
 class DataServerModule {
 
     static RequestLog(request){
-        console.log('[ReqDataLog] '+request.originalUrl);
+        console.log('[ReqDataLog] '+request.ip+' '+request.originalUrl);
     }
 
     static DefaultQueryFilter(tableData, queryString) {
