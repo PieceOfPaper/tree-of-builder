@@ -16,14 +16,11 @@ module.exports = function(app, tableData, scriptData){
 
   route.get('/', function (request, response) {
     tos.RequestLog(request);
-    //var skillTable = tableData['skill'];
+    
     var abilityTable = tableData['ability'];
-    var abilityJobTable = tableData['ability_job'];
-    //var skillTreeTable = tableData['skilltree'];
-    var jobTable = tableData['job'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
-    if (request.query.id != undefined && request.query.id != ''){
+    if (abilityTable != undefined && request.query.id != undefined && request.query.id != ''){
       for (var i = 0; i < abilityTable.length; i ++){
         if (abilityTable[i].ClassID === Number(request.query.id)){
           abilityDetailPage(i, request, response);
@@ -32,93 +29,7 @@ module.exports = function(app, tableData, scriptData){
       }
     }
 
-    var filteredTable = [];
-
-    // 필터 - 직업
-    if (request.query.jobFilter != undefined && request.query.jobFilter != ''){
-      if (request.query.jobFilter === 'Unused'){
-        for (var i = 0; i < abilityTable.length; i ++){
-          if ((abilityTable[i].Job != undefined && abilityTable[i].Job.length > 0) || (abilityTable[i].SkillCategory != undefined && abilityTable[i].SkillCategory.length > 0)) continue;
-          if (!filteredTable.includes(abilityTable[i].ClassName)) filteredTable.push(abilityTable[i].ClassName);
-        }
-      } else if(request.query.jobFilter === 'None') {
-        for (var i = 0; i < abilityTable.length; i ++){
-          if ((abilityTable[i].Job != undefined && abilityTable[i].Job.length > 0) && (abilityTable[i].SkillCategory === undefined || abilityTable[i].SkillCategory.length <= 0)) continue;
-          if (!filteredTable.includes(abilityTable[i].ClassName)) filteredTable.push(abilityTable[i].ClassName);
-        }
-      } else {
-        for (var i = 0; i < abilityTable.length; i ++) {
-          if (abilityTable[i].Job != undefined){
-            var jobs = abilityTable[i].Job.split(';');
-            var isUse = false;
-            for (var j = 0; j < jobs.length; j ++){
-              if (jobs[j] === undefined) continue;
-              if (tos.GetJobNumber1(jobs[j]) === tos.GetJobNumber1(request.query.jobFilter) && tos.GetJobNumber2(jobs[j]) === tos.GetJobNumber2(request.query.jobFilter)){
-                isUse = true;
-                break;
-              }
-            }
-            if (isUse) continue;
-          }
-          if (!filteredTable.includes(abilityTable[i].ClassName)) filteredTable.push(abilityTable[i].ClassName);
-        }
-      }
-    }
-
-    // string query에 검색 데이터가 있는 경우, 검색 결과 가져옴.
-    var resultArray = [];
-    for (var i = 0; i < abilityTable.length; i ++){
-      //if (resultArray.length >= 10) break;
-      var filter = false;
-      for (var j = 0; j < filteredTable.length; j ++){
-        if (filteredTable[j] === abilityTable[i].ClassName){
-          filter = true;
-          break;
-        }
-      }
-      if (filter) continue;
-
-      if (request.query.searchType === "Name" && (request.query.searchName === undefined || abilityTable[i].Name.indexOf(request.query.searchName) > -1))
-        resultArray.push(abilityTable[i]);
-      else if (request.query.searchType === "ClassName" && (request.query.searchName === undefined || abilityTable[i].ClassName.indexOf(request.query.searchName) > -1))
-      resultArray.push(abilityTable[i]);
-    }
-
-    var resultString = '';
-    for (var i = 0; i < resultArray.length; i ++){
-      resultString += '<tr>';
-      resultString += '<td align="center"><a href="?id=' + resultArray[i].ClassID + '">' + resultArray[i].ClassID + '</a></td>';
-      resultString += '<td align="center"><img src="../img/icon/skillicon/' + resultArray[i].Icon.toLowerCase()  + '.png"/></td>';
-      resultString += '<td>';
-      resultString +=   '<p>' + resultArray[i].Name + '<br/>' + resultArray[i].ClassName + '<br/>' + '<br/>' + tos.parseCaption(resultArray[i].Desc) + '</p>';
-      resultString += '</td>';
-      resultString += '</tr>';
-    }
-
-    var jobFilterString = '';
-    jobFilterString += '<option value="">Job</option>';
-    jobFilterString += '<option value="Unused">Unused</option>';
-    jobFilterString += '<option value="None">None</option>';
-    for (var i = 0; i < jobTable.length; i ++){
-      if (jobTable[i].Name != undefined && jobTable[i].Name.length > 0){
-        jobFilterString += '<option value="' + jobTable[i].ClassName + '">' + jobTable[i].Name + '</option>';
-      } else if (jobTable[i].ClassName != undefined && jobTable[i].ClassName.length > 0){
-        jobFilterString += '<option value="' + jobTable[i].ClassName + '">' + jobTable[i].ClassName + '</option>';
-      }
-    }
-
-
-    var output = layout.toString();
-    output = output.replace(/style.css/g, '../style.css');
-
-    output = output.replace(/%JobFilter%/g, jobFilterString);
-
-    output = output.replace(/%SearchResult%/g, resultString);
-
-    //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
-
-    response.send(output);
-    //console.log(request.query.searchType + " " + request.query.searchName);
+    response.send('no data');
   });
 
   var layout_detail = fs.readFileSync('./web/Layout/index-abilitydetail.html');

@@ -16,6 +16,26 @@ topMenuButtons['home']["Name"] = "HOME";
 // topMenuButtons['board_free']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
 // topMenuButtons['board_free']["Name"] = "Free Board";
 
+topMenuButtons['category_tool'] = [];
+topMenuButtons['category_tool']["Path"] = undefined;
+topMenuButtons['category_tool']["Img"] = "";
+topMenuButtons['category_tool']["Name"] = "TOOL";
+
+topMenuButtons['builder'] = [];
+topMenuButtons['builder']["Path"] = "Builder";
+topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
+topMenuButtons['builder']["Name"] = "Builder";
+
+topMenuButtons['tool_questcalc'] = [];
+topMenuButtons['tool_questcalc']["Path"] = "QuestCalculator";
+topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_main.png";
+topMenuButtons['tool_questcalc']["Name"] = "Quest Calc";
+
+topMenuButtons['tool_foodcalc'] = [];
+topMenuButtons['tool_foodcalc']["Path"] = "FoodCalculator";
+topMenuButtons['tool_foodcalc']["Img"] = "../img/icon/itemicon/icon_item_bbq.png";
+topMenuButtons['tool_foodcalc']["Name"] = "Food Calc";
+
 topMenuButtons['category_database'] = [];
 topMenuButtons['category_database']["Path"] = undefined;
 topMenuButtons['category_database']["Img"] = "";
@@ -80,26 +100,6 @@ topMenuButtons['misc_companion'] = [];
 topMenuButtons['misc_companion']["Path"] = "Companion";
 topMenuButtons['misc_companion']["Img"] = "../img/icon/itemicon/icon_item_egg_toucan.png";
 topMenuButtons['misc_companion']["Name"] = "Companion";
-
-topMenuButtons['category_tool'] = [];
-topMenuButtons['category_tool']["Path"] = undefined;
-topMenuButtons['category_tool']["Img"] = "";
-topMenuButtons['category_tool']["Name"] = "TOOL";
-
-topMenuButtons['builder'] = [];
-topMenuButtons['builder']["Path"] = "Builder";
-topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
-topMenuButtons['builder']["Name"] = "Builder";
-
-topMenuButtons['tool_questcalc'] = [];
-topMenuButtons['tool_questcalc']["Path"] = "QuestCalculator";
-topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_main.png";
-topMenuButtons['tool_questcalc']["Name"] = "Quest Calc";
-
-topMenuButtons['tool_foodcalc'] = [];
-topMenuButtons['tool_foodcalc']["Path"] = "FoodCalculator";
-topMenuButtons['tool_foodcalc']["Img"] = "../img/icon/itemicon/icon_item_bbq.png";
-topMenuButtons['tool_foodcalc']["Name"] = "Food Calc";
 
 
 
