@@ -414,12 +414,19 @@ app.get('/', function (req, response) {
       }
     }
     var illustNpcName = imgname;
-    var illustNpcText = [];
+    var illustNpcText = '';
     if (captionList.length > 0){
       var caption = captionList[Math.floor(Math.random()*captionList.length)];
       illustNpcName = caption.Caption;
       //illustNpcText = caption.Text.split(/{np}|{nl}/g);
-      illustNpcText = tos.parseCaption(caption.Text);
+      //illustNpcText = tos.parseCaption(caption.Text);
+      var illustNpcText = caption['Text'];
+      if (illustNpcText != undefined){
+        illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
+        illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
+      } else {
+        illustNpcText = '';
+      }
     }
 
     // var illustNpcMention = '';

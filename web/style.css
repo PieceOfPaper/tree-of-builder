@@ -267,10 +267,17 @@ table, td, th {
 
 
 /* ======== Main ======== */
+.main-illust-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
+
 .main-illust {
     /*width: 100%;*/
     /*max-width: 100vh;*/
     max-width: 95vw;
+    display: inline-block;
 }
 
 footer {
