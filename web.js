@@ -74,7 +74,7 @@ console.log('### DB Connect Request');
 var dbclient = new Client(config);
 dbclient.connect((err) => {
   if (err) {
-    console.error('### DB Connect Error.\n', err.stack)
+    console.error('### DB Connect Error.\n', JSON.stringify(err, ["message", "arguments", "type", "name"]))
   } else {
     console.log('### DB Connect Success.')
     dbclient.end()
