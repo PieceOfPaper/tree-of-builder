@@ -4,6 +4,7 @@ var http = require('http');
 var https = require('https');
 
 const { Pool, Client } = require('pg');
+var mysql = require('mysql');
 
 var csv = require('csv-parser');
 var xml = require('xml-parser');
@@ -22,6 +23,7 @@ var app = express();
 var webhookUri = 'https://hooks.slack.com/services/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';
 var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
 var serverCode = 'kr';
+var isLocalServer = false;
 
 var noDownload = false;
 var slackOff = false;
@@ -40,14 +42,28 @@ function sendSlack(message){
 
 process.argv.forEach(function (val, index, array) {
   if (val != undefined){
+
+    //option
     if (val == 'noDownload'){
       noDownload = true;
       console.log('No Downlaod');
     } else if (val == 'slackOff'){
       slackOff = true;
       console.log('Slack Off');
+
+    //change server
+    } else if (val == 'server-kr'){
+      serverCode = 'kr';
+      console.log('change server ' + serverCode);
     } else if (val == 'server-ktest'){
       serverCode = 'ktest';
+      console.log('change server ' + serverCode);
+    } else if (val == 'server-global'){
+      serverCode = 'global';
+      console.log('change server ' + serverCode);
+    } else if (val == 'server-local'){
+      serverCode = 'ktest';
+      isLocalServer = true;
       console.log('change server ' + serverCode);
     }
   }
@@ -55,48 +71,33 @@ process.argv.forEach(function (val, index, array) {
 console.log('argument loaded');
 
 
-const config = {
-  user     : 'postgres',
-  host     : '/cloudsql/tree-of-builder:asia-east2:tree-of-builder',
-  database : 'postgres',
-  password : 'FE5iFatpuJFC8kjB',
-  port     : 5432,
-  // this object will be passed to the TLSSocket constructor
-  // ssl : {
-  //   rejectUnauthorized : false,
-  //   ca   : fs.readFileSync("server-ca.pem").toString(),
-  //   key  : fs.readFileSync("client-cert.pem").toString(),
-  //   cert : fs.readFileSync("client-cert.pem").toString(),
-  // }
-};
 
 console.log('### DB Connect Request');
-// var dbclient = new Client(config);
-// dbclient.connect((err) => {
-//   if (err) {
-//     console.error('### DB Connect Error.\n', JSON.stringify(err, ["message", "arguments", "type", "name"]))
-//   } else {
-//     console.log('### DB Connect Success.')
-//     dbclient.end()
-//   }
-// });
-var dbclient = undefined;
-var mysql      = require('mysql');
-var connection = mysql.createConnection({
-  host     : '35.220.156.207',
-  user     : 'root',
-  password : 'cGbwHENEf6AmkDhc',
-  database : 'mysql'
-});
+var connection = undefined;
+if (isLocalServer){
+  connection = mysql.createConnection({
+    host     : '127.0.0.1',
+    user     : 'root',
+    password : 'localhost',
+    database : 'mysql'
+  });
+} else {
+  connection = mysql.createConnection({
+    host     : '35.220.156.207',
+    user     : 'root',
+    password : 'cGbwHENEf6AmkDhc',
+    database : 'mysql'
+  });
+}
  
 connection.connect(function(err) {
   if (err) {
     console.error('### DB Connect Error: ' + err.stack);
     return;
   }
- 
   console.log('### DB Connect Success. connected as id ' + connection.threadId);
 });
+connection.end();
 
 
 
@@ -477,7 +478,7 @@ app.get('/', function (req, response) {
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
 
-var boardFree = require('./board_server/board_free')(app, dbclient);
+var boardFree = require('./board_server/board_free')(app, connection);
 app.use('/BoardFree', boardFree);
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
