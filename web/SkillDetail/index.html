@@ -1,0 +1,181 @@
+<html>
+
+<head>
+    <title class="keppChangeValue" id="Name"></title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <img id="Icon" />
+    <h1 class="keppChangeValue" id="Name"></h1>
+    <p class="keppChangeValue" id="EngName"></p>
+    <table>
+        <tr>
+            <td>ClassID</td>
+            <td>ClassName</td>
+            <td>Job</td>
+            <td>Rank</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="ClassID"></td>
+            <td class="keppChangeValue" id="ClassName"></td>
+            <td class="keppChangeValue" id="Job"></td>
+            <td class="keppChangeValue" id="Rank"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>ClassType</td>
+            <td>ValueType</td>
+            <td>Attribute</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="ClassType"></td>
+            <td class="keppChangeValue" id="ValueType"></td>
+            <td class="keppChangeValue" id="Attribute"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>AttackType</td>
+            <td>HitType</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="AttackType"></td>
+            <td class="keppChangeValue" id="HitType"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>EnableCompanion</td>
+            <td>ReqStance</td>
+        </tr>
+        <tr>
+            <td class="keppChangeValue" id="EnableCompanion"></td>
+            <td class="keppChangeValue" id="ReqStance"></td>
+        </tr>
+    </table>
+    <br/>
+    <table>
+        <tr>
+            <td>SkillFactor</td>
+            <td>BasicSP</td>
+            <td>CD</td>
+            <td>OH</td>
+        </tr>
+        <tr>
+            <td><span class="keppChangeValue" id="SklFactor"></span>% (+<span class="keppChangeValue" id="SklFactorByLevel"></span>%)</td>
+            <td><span class="keppChangeValue" id="BasicSP"></span>% (+<span class="keppChangeValue" id="LvUpSpendSp"></span>%)</td>
+            <td class="keppChangeValue" id="BasicCoolDown"></td>
+            <td class="keppChangeValue" id="OverHeat">1</td>
+        </tr>
+    </table>
+
+    <br/>
+    
+    <input type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()">
+    <div><button onclick="onClickLevelUp()">▲</button><button onclick="onClickLevelDown()">▼</button></div>
+
+    <p class="keppChangeValue" id="Caption">%Caption%</p>
+    <p class="keppChangeValue" id="Caption2">%Caption2%</p>
+
+    <div class="add-ability-area">
+    </div>
+
+    <script>
+        var filterSetting = urlToFilter(window.location.href);
+        var baseSkill;
+        var skillLv;
+        if (filterSetting["id"] != undefined){
+            var filter = [];
+            filter["ClassID"] = filterSetting["id"];
+            requestGetData("skill", filter, function(arr){
+                baseSkill = arr[0];
+                var valueElements = document.getElementsByClassName("keppChangeValue");
+                var jobIndex = [];
+                var stanceIndex = [];
+                var overhitIndex = [];
+                for (var i=0;i<valueElements.length;i++){
+                    if (valueElements[i].id=="Job") {
+                        jobIndex.push(i);
+                        requestGetData("job", { "EngName":arr[0][valueElements[i].id] }, function(jobarr){
+                            for (var j=0;j<jobIndex.length;j++){
+                                valueElements[jobIndex[j]].innerText=jobarr[0].Name;
+                            }
+                        });
+                    } else if (valueElements[i].id=="ReqStance") {
+                        stanceIndex.push(i);
+                        requestGetData("stance", { "ClassName":arr[0][valueElements[i].id] }, function(stancearr){
+                            var str = "";
+                            for (var j=0;j<stancearr.length;j++){
+                                if (j > 0) str += ", ";
+                                str += stancearr[j].Name;
+                            }
+                            for (var j=0;j<stanceIndex.length;j++){
+                                valueElements[stanceIndex[j]].innerText=str;
+                            }
+                        });
+                    } else if (valueElements[i].id=="OverHeat") {
+                        if (arr[0].OverHeatGroup != undefined && arr[0].SklUseOverHeat > 0){
+                            overhitIndex.push(i);
+                            requestGetData("cooldown", undefined, function(cooldownarr){
+                                var overHeat = 1;
+                                for (var j = 0; j < cooldownarr.length; j ++){
+                                    if (cooldownarr[j].ClassName === arr[0].OverHeatGroup){
+                                        overHeat = cooldownarr[j].MaxOverTime / arr[0].SklUseOverHeat;
+                                        break;
+                                    }
+                                }
+                                for (var j=0;j<overhitIndex.length;j++){
+                                    valueElements[overhitIndex[j]].innerText=overHeat;
+                                }
+                            });
+                        }
+                    } else if (valueElements[i].id=="SklFactor" || valueElements[i].id=="SklFactorByLevel" || valueElements[i].id=="BasicSP" || valueElements[i].id=="LvUpSpendSp") {
+                        valueElements[i].innerText=Number(arr[0][valueElements[i].id]);
+                    } else if (valueElements[i].id=="BasicCoolDown") {
+                        valueElements[i].innerText=(Number(arr[0][valueElements[i].id])/1000)+"s";
+                    } else if (valueElements[i].id=="Caption" || valueElements[i].id=="Caption2") {
+                        valueElements[i].innerHTML=parseCaption(arr[0][valueElements[i].id]);
+                    } else if (arr[0][valueElements[i].id]==undefined){
+                        valueElements[i].innerText="";
+                    } else if (valueElements[i].id.indexOf(";")) {
+                        valueElements[i].innerText=arr[0][valueElements[i].id].replace(/;/g," ");
+                    } else {
+                        valueElements[i].innerText=arr[0][valueElements[i].id];
+                    }
+                }
+                if (arr[0].Icon==undefined || arr[0].Icon.length==0) document.getElementById("Icon").src = "";
+                else document.getElementById("Icon").src = "../img/icon/skillicon/icon_"+arr[0].Icon.toLowerCase()+".png";
+            });
+        }
+
+        function onClickLevelUp(){
+            var lv = Number(document.getElementById("SkillLevel").value);
+            if (lv >= document.getElementById("SkillLevel").max) return;
+            document.getElementById("SkillLevel").value = lv + 1;
+            onChangeSkillLevel();
+        }
+        function onClickLevelDown(){
+            var lv = Number(document.getElementById("SkillLevel").value);
+            if (lv <= document.getElementById("SkillLevel").min) return;
+            document.getElementById("SkillLevel").value = lv - 1;
+            onChangeSkillLevel();
+        }
+
+        function onChangeSkillLevel(){
+            skillLv = Number(document.getElementById("SkillLevel").value);
+        }
+        
+    </script>
+</body>
+
+</html>

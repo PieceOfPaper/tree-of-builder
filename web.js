@@ -8,6 +8,7 @@ var mysql = require('mysql');
 
 var csv = require('csv-parser');
 var xml = require('xml-parser');
+var bodyParser = require('body-parser')
 
 var Slack = require('slack-node');
 
@@ -16,6 +17,11 @@ var PNG = require('pngjs').PNG;
 var PNGCrop = require('png-crop');
 
 var tos = require('./my_modules/TosModule');
+
+var nodelua = require('node-lua');
+var lua = new nodelua.LuaState();
+
+var cmd=require('node-cmd');
 
 var app = express();
 
@@ -293,70 +299,106 @@ function loadTable(name, path, callback){
 
 // ---------- 스크립트 데이터 불러오기
 var scriptData = [];
-loadScript('shared.ipf/script/calc_property_skill.lua');
-loadScript('shared.ipf/script/ability.lua');
-loadScript('shared.ipf/script/ability_price.lua');
-loadScript('shared.ipf/script/ability_unlock.lua');
-loadScript('shared.ipf/script/item_calculate.lua');
-loadScript('shared.ipf/script/item_transcend_shared.lua');
-loadScript('shared.ipf/script/lib_reinforce_131014.lua');
-loadScript('shared.ipf/script/calc_pvp_item.lua');
-loadScript('shared.ipf/script/calc_property_monster.lua');
-loadScript('script.ipf/buff/buff_monster_ability.lua');
-loadScript('script.ipf/buff/colonywar_buff.lua');
-loadScript('script.ipf/buff/etc_buff.lua');
-loadScript('script.ipf/buff/item_buff.lua');
-loadScript('script.ipf/buff/quest_buff.lua');
-loadScript('script.ipf/buff/raid_buff_hardcode.lua');
-loadScript('script.ipf/buff/skill_buff_addcheckon.lua');
-loadScript('script.ipf/buff/skill_buff_aftercalc.lua');
-loadScript('script.ipf/buff/skill_buff_deadcalc.lua');
-loadScript('script.ipf/buff/skill_buff_givedamage.lua');
-loadScript('script.ipf/buff/skill_buff_monster.lua');
-loadScript('script.ipf/buff/skill_buff_monster_ratetable.lua');
-loadScript('script.ipf/buff/skill_buff_pc.lua');
-loadScript('script.ipf/buff/skill_buff_ratetable.lua');
-loadScript('script.ipf/buff/skill_buff_takedamage.lua');
-loadScript('script.ipf/buff/skill_buff_useskill.lua');
-function loadScript(path){
-  var pathSplited = path.split('/');
-  var filename = pathSplited[pathSplited.length - 1];
-  if (noDownload && fs.existsSync('./web/data/' + filename)){
-    fs.readFile('./web/data/' + filename, function(err, data){
-      if (err) sendSlack(err.toString());
-      var luaFuncSplit = data.toString().split('function');
-      for (var i = 0; i < luaFuncSplit.length; i ++){
-        var methodName = luaFuncSplit[i].split('(')[0].trim();
-        var lines = luaFuncSplit[i].split('\n');
-        var methodBody = '';
-        for (var j=0;j<lines.length;j++){
-          if (lines[j].trim().length==0) continue;
-          if (lines[j].trim().indexOf('--')==0) continue;
-          if (methodBody.length>0) methodBody += '\n';
-          methodBody += lines[j];
-        }
-        scriptData[methodName] = 'function' + methodBody;
-        //console.log('[' + i + ']' + methodName);
-      }
-      console.log('import script [' + filename + ']');
-    });
+var scriptArray = [];
+scriptArray.push('shared.ipf/script/calc_property_skill.lua');
+scriptArray.push('shared.ipf/script/ability.lua');
+scriptArray.push('shared.ipf/script/ability_price.lua');
+scriptArray.push('shared.ipf/script/ability_unlock.lua');
+scriptArray.push('shared.ipf/script/item_calculate.lua');
+scriptArray.push('shared.ipf/script/item_transcend_shared.lua');
+scriptArray.push('shared.ipf/script/lib_reinforce_131014.lua');
+scriptArray.push('shared.ipf/script/calc_pvp_item.lua');
+scriptArray.push('shared.ipf/script/calc_property_monster.lua');
+scriptArray.push('script.ipf/buff/buff_monster_ability.lua');
+scriptArray.push('script.ipf/buff/colonywar_buff.lua');
+scriptArray.push('script.ipf/buff/etc_buff.lua');
+scriptArray.push('script.ipf/buff/item_buff.lua');
+scriptArray.push('script.ipf/buff/quest_buff.lua');
+scriptArray.push('script.ipf/buff/raid_buff_hardcode.lua');
+scriptArray.push('script.ipf/buff/skill_buff_addcheckon.lua');
+scriptArray.push('script.ipf/buff/skill_buff_aftercalc.lua');
+scriptArray.push('script.ipf/buff/skill_buff_deadcalc.lua');
+scriptArray.push('script.ipf/buff/skill_buff_givedamage.lua');
+scriptArray.push('script.ipf/buff/skill_buff_monster.lua');
+scriptArray.push('script.ipf/buff/skill_buff_monster_ratetable.lua');
+scriptArray.push('script.ipf/buff/skill_buff_pc.lua');
+scriptArray.push('script.ipf/buff/skill_buff_ratetable.lua');
+scriptArray.push('script.ipf/buff/skill_buff_takedamage.lua');
+scriptArray.push('script.ipf/buff/skill_buff_useskill.lua');
+//for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
+generateLuaScript(scriptArray, 0, function(result){
+  // 기존 데이터 저장
+  var lines = result.toString().split('\n');
+  var clearedResult = '';
+  var clearedResultTrim = ''; //간혹 깨진 문자열이 끼이는데, Trim으로 해결 가능
+  for (var i=0;i<lines.length;i++){
+    if (lines[i].trim().length==0) continue;
+    if (lines[i].trim().indexOf('--[')<0 && (lines[i].trim().indexOf('--')==0 || lines[i].trim().indexOf('--')==1)) continue;
+    if (clearedResult.length>0) clearedResult += '\n';
+    if (clearedResultTrim.length>0) clearedResultTrim += '\n';
+    clearedResult += lines[i];
+    clearedResultTrim += lines[i].trim();
+  }
+  clearedResult = clearedResult.replace(/�/g,''); //깨진 문자열
+  var luaFuncSplit = clearedResult.split('function');
+  for (var i = 0; i < luaFuncSplit.length; i ++){
+    var methodName = luaFuncSplit[i].split('(')[0].trim();
+    scriptData[methodName] = 'function' + luaFuncSplit[i];
+  }
+  // 파일로 저장
+  fs.writeFile('./web/js/generated_lua.lua', clearedResultTrim, function(err) {
+      if(err) return console.log(err);
+      console.log('Success Generate Lua Scripts');
+      //lua.DoString(clearedResultTrim);
+      cmd.run('./web/js/luajs/lua2js ./web/js/generated_lua.lua ./web/js/generated_lua.js')
+  }); 
+});
+function generateLuaScript(array, index, callback){
+  if (index >= array.length) {
+    callback('');
     return;
   }
-  var file = fs.createWriteStream('./web/data/' + filename);
-  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
-    response.pipe(file).on('close', function(){
-      console.log('download script [' + filename + ']');
-      fs.readFile('./web/data/' + filename, function(err, data){
-        if (err) sendSlack(err.toString());
-        var luaFuncSplit = data.toString().split('function');
-        for (var i = 0; i < luaFuncSplit.length; i ++){
-          var methodName = luaFuncSplit[i].split('(')[0].trim();
-          scriptData[methodName] = 'function' + luaFuncSplit[i];
-          //console.log('[' + i + ']' + methodName);
-        }
+
+  var luaString = '';
+
+  var pathSplited = array[index].split('/');
+  var filename = pathSplited[pathSplited.length - 1];
+  if (noDownload && fs.existsSync('./web/lua/' + filename)){
+    fs.readFile('./web/lua/' + filename, function(err, data){
+      if (err) {
+        sendSlack(err.toString());
+        generateLuaScript(array, index + 1, function(result){
+          callback(result);
+        });
+        return;
+      }
+      luaString = data.toString();
+      console.log('import script [' + filename + ']');
+      generateLuaScript(array, index + 1, function(result){
+        callback(luaString + '\n' + result);
       });
     });
-  });
+  } else {
+    var file = fs.createWriteStream('./web/lua/' + filename);
+    var request = https.get(dataServerPath + serverCode + '/' + array[index], function(response) {
+      response.pipe(file).on('close', function(){
+        console.log('download script [' + filename + ']');
+        fs.readFile('./web/lua/' + filename, function(err, data){
+          if (err) {
+            sendSlack(err.toString());
+            generateLuaScript(array, index + 1, function(result){
+              callback(result);
+            });
+            return;
+          }
+          luaString = data.toString();
+          generateLuaScript(array, index + 1, function(result){
+            callback(luaString + '\n' + result);
+          });
+        });
+      });
+    });
+  }
 }
 
 
@@ -410,6 +452,8 @@ function loadTableLanguage(name, path, callback){
 
 // ---------- 페이지 세팅
 app.use(express.static('web'));
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
@@ -474,6 +518,33 @@ app.get('/', function (req, response) {
     response.send(output);
   })
 });
+
+// app.post('/Lua', function (req, res) {
+//   var method = req.body.method;
+//   //console.log(req.body);
+
+//   if (method == undefined){
+//     res.setHeader('Content-Type', 'application/json');
+//     res.send(undefined);
+//     return;
+//   }
+  
+//   var argStr = '';
+//   for(var i = 1; ;i ++){
+//     if (req.body['arg' + i] == undefined) break;
+//     if (i > 1) argStr += ',';
+//     argStr += req.body['arg' + i];
+//   }
+
+//   lua.SetGlobal('builderResult');
+//   lua.DoString('builderResult=' + method + '(' + argStr + ')');
+//   lua.GetGlobal('builderResult');
+  
+//   var result = lua.ToValue(-1);
+  
+//   res.setHeader('Content-Type', 'application/json');
+//   res.send(result);
+// });
 
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
