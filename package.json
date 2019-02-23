@@ -17,10 +17,13 @@
   },
   "homepage": "https://gitlab.com/PieceOfPaper/tree-of-builder#README",
   "dependencies": {
+    "body-parser": "^1.18.3",
     "csv-parser": "^1.12.1",
     "express": "^4.16.3",
     "json-rules-engine": "^2.3.0",
     "mysql": "^2.16.0",
+    "node-cmd": "^3.0.0",
+    "node-lua": "^1.0.4",
     "pg": "^7.8.0",
     "png-crop": "0.0.2",
     "pngjs": "^3.3.3",
