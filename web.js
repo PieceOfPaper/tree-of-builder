@@ -520,6 +520,9 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
+var db_loginPage = require('./web_script/DBPage/web_login')(app, tableData, scriptData, connection);
+app.use('/Login', db_loginPage);
+
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);
 
