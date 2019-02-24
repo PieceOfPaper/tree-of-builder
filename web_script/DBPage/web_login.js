@@ -11,14 +11,15 @@ module.exports = function(app, tableData, scriptData, connection){
 
         connection.query('SELECT * FROM user WHERE email="'+email+'" AND pwd="'+pwd+'";', function (error, results, fields) {
             if (error) throw error;
-            console.log(results);
-            console.log(fields);
             if (results == undefined || results.length == 0){
-                //no data
+                res.send('<script> alert("No Data"); window.location.href=".."; </script>');
+                return;
+            } else {
+                req.session.login_userno = results[0].userno;
+                res.send('<script> window.location.href=".."; </script>');
             }
         });
 
-        res.send('<script> window.history.back(); </script>');
     });
 
     return route;
