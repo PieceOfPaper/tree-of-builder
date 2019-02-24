@@ -513,6 +513,17 @@ app.get('/', function (req, response) {
       break;
     }
 
+
+
+    var output = layout.toString();
+    output = output.replace(/style.css/g, '../style.css');
+    output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
+    output = output.replace(/%IllustName%/g, illustNpcName);
+    output = output.replace(/%IllustMention%/g, illustNpcText);
+    output = output.replace(/%ServerName%/g, serverName);
+
+    output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+
     var loginData = '';
     if (req.session.login_userno == undefined){
       loginData += '<form action="/Login" method="POST" style="padding:0; margin:0; width:calc(100vw - 20px);">';
@@ -522,15 +533,7 @@ app.get('/', function (req, response) {
       loginData += '</form>';
       loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./JoinPage">Join</a></p>';
 
-      var output = layout.toString();
-      output = output.replace(/style.css/g, '../style.css');
-      output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
-      output = output.replace(/%IllustName%/g, illustNpcName);
-      output = output.replace(/%IllustMention%/g, illustNpcText);
-      output = output.replace(/%ServerName%/g, serverName);
       output = output.replace(/%LoginData%/g, loginData);
-  
-      output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
     
       response.send(output);
     } else {
@@ -541,16 +544,9 @@ app.get('/', function (req, response) {
           } else {
             loginData += '<p style="width:calc(100vw - 20px); text-align:center;">Longin Error</p>';
           }
+          loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./Logout">Logout</a></p>';
 
-          var output = layout.toString();
-          output = output.replace(/style.css/g, '../style.css');
-          output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
-          output = output.replace(/%IllustName%/g, illustNpcName);
-          output = output.replace(/%IllustMention%/g, illustNpcText);
-          output = output.replace(/%ServerName%/g, serverName);
           output = output.replace(/%LoginData%/g, loginData);
-      
-          output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
         
           response.send(output);
       });
@@ -632,6 +628,9 @@ app.use('/FoodCalculator', toolFoodCalcPage);
 
 var db_loginPage = require('./web_script/DBPage/web_login')(app, tableData, scriptData, connection);
 app.use('/Login', db_loginPage);
+
+var db_logoutPage = require('./web_script/DBPage/web_logout')(app, tableData, scriptData, connection);
+app.use('/Logout', db_logoutPage);
 
 var db_joinPage = require('./web_script/DBPage/web_join')(app, tableData, scriptData, connection);
 app.use('/Join', db_joinPage);
