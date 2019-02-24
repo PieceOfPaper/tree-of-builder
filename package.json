@@ -20,6 +20,7 @@
     "body-parser": "^1.18.3",
     "csv-parser": "^1.12.1",
     "express": "^4.16.3",
+    "express-session": "^1.15.6",
     "json-rules-engine": "^2.3.0",
     "mysql": "^2.16.0",
     "node-cmd": "^3.0.0",

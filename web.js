@@ -2,6 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var http = require('http');
 var https = require('https');
+var session = require('express-session');
 
 const { Pool, Client } = require('pg');
 var mysql = require('mysql');
@@ -85,14 +86,14 @@ if (isLocalServer){
     host     : '127.0.0.1',
     user     : 'root',
     password : 'localhost',
-    database : 'mysql'
+    database : 'tree-of-builder',
   });
 } else {
   connection = mysql.createConnection({
     host     : '35.220.156.207',
     user     : 'root',
     password : 'cGbwHENEf6AmkDhc',
-    database : 'mysql'
+    database : 'tree-of-builder',
   });
 }
  
@@ -103,7 +104,7 @@ connection.connect(function(err) {
   }
   console.log('### DB Connect Success. connected as id ' + connection.threadId);
 });
-connection.end();
+//connection.end();
 
 
 
@@ -455,6 +456,12 @@ app.use(express.static('web'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.use(session({
+  secret: 'ekdtlsdmfdnlgkdu',
+  resave: false,
+  saveUninitialized: true
+}));
+
 var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
@@ -506,12 +513,24 @@ app.get('/', function (req, response) {
       break;
     }
 
+    var loginData = '';
+    if (req.session.login_userno == undefined){
+      loginData += '<form action="/Login" method="POST" style="padding:0; margin:0; width:calc(100vw - 20px);">';
+      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;">Email <input type="email" name="email"></p>';
+      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;">Pwd <input type="password" name="pwd"></p>';
+      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;"><button type="submit">Login</button><button>Join</button></p>';
+      loginData += '</form>';
+    } else {
+      // TO DO : 쿼리보내서 정보를 가져와서 뿌려준다.
+    }
+
     var output = layout.toString();
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
     output = output.replace(/%IllustName%/g, illustNpcName);
     output = output.replace(/%IllustMention%/g, illustNpcText);
     output = output.replace(/%ServerName%/g, serverName);
+    output = output.replace(/%LoginData%/g, loginData);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   

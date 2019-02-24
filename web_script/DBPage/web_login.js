@@ -1,22 +1,24 @@
-module.exports = function(app, connection){
+module.exports = function(app, tableData, scriptData, connection){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
+    var bodyParser = require('body-parser')
     
     var route = express.Router();
     route.post('/', function (req, res) {
-        res.send('no data');
-    });
-    route.get('/', function (req, res) {
+        var email = req.body.email;
+        var pwd = req.body.pwd;
 
-        // connection.connect();
-        // connection.query('create table user( sno int not null, name char(10), det char(20), addr char(80), tel char(20), primary key(sno) );', function (error, results, fields) {
-        //     if (error) throw error;
-        //     console.log('The solution is: ', results[0].solution);
-        // });
-        // connection.end();
+        connection.query('SELECT * FROM user WHERE email="'+email+'" AND pwd="'+pwd+'";', function (error, results, fields) {
+            if (error) throw error;
+            console.log(results);
+            console.log(fields);
+            if (results == undefined || results.length == 0){
+                //no data
+            }
+        });
 
-        res.send('no data');
+        res.send('<script> window.history.back(); </script>');
     });
 
     return route;
