@@ -5,6 +5,28 @@ module.exports = function(app, tableData, scriptData, connection){
     var bodyParser = require('body-parser');
     var md5 = require('md5');
     var sha256 = require('sha256');
+    var nodemailer = require('nodemailer');
+
+    var smtpTransport = nodemailer.createTransport({  
+        service: 'Gmail',
+        auth: { user: 'tree.of.builder', pass: '2009#*&&dltjdgml' }
+    });
+
+    var mailOptions = {  
+        from: 'Tree of Builder <tree.of.builder@gmail.com>',
+        to: 'the.paper@live.co.kr',
+        subject: 'Nodemailer 테스트',
+        text: '평문 보내기 테스트 '
+    };
+
+    // smtpTransport.sendMail(mailOptions, function(error, response){
+    //     if (error){
+    //         console.log(error);
+    //     } else {
+    //         console.log("Message sent : " + response.message);
+    //     }
+    //     smtpTransport.close();
+    // });
     
     var route = express.Router();
     route.post('/', function (req, res) {
