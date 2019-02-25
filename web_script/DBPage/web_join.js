@@ -20,7 +20,6 @@ module.exports = function(app, tableData, scriptData, connection){
             if (results != undefined && results.length > 0){
                 index = results.length;
             }
-            console.log(sha256(pwd+pwd_salt));
             connection.query('INSERT INTO user VALUES ('+index+',"'+email+'","'+sha256(pwd+pwd_salt)+'","'+pwd_salt+'","'+nickname+'");', function (error, results, fields) {
                 if (error) throw error;
             });
