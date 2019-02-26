@@ -541,8 +541,15 @@ app.get('/', function (req, response) {
           if (error) throw error;
           if (results != undefined && results.length > 0){
             loginData += '<p style="width:calc(100vw - 20px); text-align:center;">Welocme. '+results[0].nickname+'</p>';
+            loginData += '<br/>';
+            if (results[0].mail_auth == undefined || results[0].mail_auth != "A"){
+              loginData += '<p style="width:calc(100vw - 20px); text-align:center;">No Authenticated User.</p>';
+              loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./ReqJoinMail?email='+results[0].email+'">Request Auth Mail</a></p>';
+              loginData += '<br/>';
+            }
           } else {
             loginData += '<p style="width:calc(100vw - 20px); text-align:center;">Longin Error</p>';
+            loginData += '<br/>';
           }
           loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./Logout">Logout</a></p>';
 
