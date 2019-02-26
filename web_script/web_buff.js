@@ -61,7 +61,11 @@ module.exports = function(app, tableData, scriptData){
     output = output.replace(/%SlotType%/g, buffTable[index].SlotType);
     output = output.replace(/%Position%/g, buffTable[index].Position);
 
-    output = output.replace(/%Keyword%/g, buffTable[index].Keyword);
+    if (buffTable[index].Keyword != undefined) {
+      output = output.replace(/%Keyword%/g, buffTable[index].Keyword.replace(/;/g,', '));
+    } else {
+      output = output.replace(/%Keyword%/g, '');
+    }
 
     output = output.replace(/%RawScripts%/g, '<table class="script-details"><tbody>'+rawScripts+'</tbody></table>');
 
