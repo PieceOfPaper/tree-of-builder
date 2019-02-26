@@ -27,6 +27,9 @@ module.exports = function(app, tableData, scriptData, connection){
     //     }
     //     smtpTransport.close();
     // });
+
+
+    var layout_mail = fs.readFileSync('./web/Layout/mail-join.html');
     
     var route = express.Router();
     route.post('/', function (req, res) {
@@ -37,16 +40,23 @@ module.exports = function(app, tableData, scriptData, connection){
         var index = 0;
         var pwd_salt = generateSalt();
 
-        connection.query('SELECT * FROM user;', function (error, results, fields) {
-            if (error) throw error;
+        connection.query('SELECT * FROM user WHERE email="'+email+'";', function (error, results, fields) {
             if (results != undefined && results.length > 0){
-                index = results.length;
+                res.send('<script> alert("Already exits user"); window.history.back(); </script>');
+                return;
             }
-            connection.query('INSERT INTO user VALUES ('+index+',"'+email+'","'+sha256(pwd+pwd_salt)+'","'+pwd_salt+'","'+nickname+'");', function (error, results, fields) {
+            connection.query('SELECT * FROM user;', function (error, results, fields) {
                 if (error) throw error;
+                if (results != undefined && results.length > 0){
+                    index = results.length;
+                }
+                connection.query('INSERT INTO user (userno,email,pwd,pwd_salt,nickname) VALUES ('+index+',"'+email+'","'+sha256(pwd+pwd_salt)+'","'+pwd_salt+'","'+nickname+'");', function (error, results, fields) {
+                    if (error) throw error;
+                    res.send('<script> window.location.href="../ReqJoinMail?email='+email+'"; </script>');
+                });
+        
+                //res.send('<script> window.location.href=".."; </script>');
             });
-    
-            res.send('<script> window.location.href=".."; </script>');
         });
     });
 
