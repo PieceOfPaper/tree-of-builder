@@ -35,7 +35,12 @@ module.exports = function(app, tableData, scriptData, connection){
     route.post('/', function (req, res) {
         var email = req.body.email;
         var pwd = req.body.pwd;
+        var pwd_check = req.body.pwd_check;
         var nickname = req.body.nickname;
+
+        if (pwd != pwd_check){
+            res.send('<script> alert("Not Match Password"); window.history.back(); </script>');
+        }
 
         var index = 0;
         var pwd_salt = generateSalt();
