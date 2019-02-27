@@ -33,7 +33,7 @@ module.exports = function(app, tableData, scriptData, connection){
             
             mailOptions.to = req.query.email;
             //mailOptions.html = layout_mail.toString().replace(/%AddressString%/g,'http://'+req.headers.host+'/EmailAuth?id='+auth);
-            mailOptions.html = 'http://'+req.headers.host+'/EmailAuth?id='+auth;
+            mailOptions.html = '<a href="http://'+req.headers.host+'/EmailAuth?id='+auth+'">http://'+req.headers.host+'/EmailAuth?id='+auth+'</a>';
             smtpTransport.sendMail(mailOptions, function(error, response){
                 if (error){
                     console.log(error);
