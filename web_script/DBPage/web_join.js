@@ -33,6 +33,7 @@ module.exports = function(app, tableData, scriptData, connection){
     
     var route = express.Router();
     route.post('/', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var email = req.body.email;
         var pwd = req.body.pwd;
         var pwd_check = req.body.pwd_check;

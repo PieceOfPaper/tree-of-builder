@@ -27,6 +27,7 @@ module.exports = function(app, tableData, scriptData, connection){
     var route = express.Router();
     route.get('/', function (req, res) {
         if (req.query.email != undefined && req.query.email.length > 0){
+            console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
             connection.query('SELECT * FROM user WHERE email="'+req.query.email+'";', function (error, results, fields) {
                 if (results == undefined || results.length == 0){
                     res.send(layout_message.toString().replace(/%Message%/g, 'Not found Email'));

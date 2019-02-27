@@ -6,6 +6,7 @@ module.exports = function(app, tableData, scriptData, connection){
     
     var route = express.Router();
     route.get('/', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
         req.session.login_userno = undefined;
         res.send('<script> window.location.href=".."; </script>');
     });

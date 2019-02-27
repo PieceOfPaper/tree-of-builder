@@ -9,6 +9,7 @@ module.exports = function(app, tableData, scriptData, connection){
     var route = express.Router();
     route.get('/', function (req, res) {
         if (req.query.id != undefined && req.query.id.length > 0){
+            console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
             connection.query('UPDATE user SET mail_auth="A" WHERE mail_auth="'+req.query.id+'";', function (error, results, fields) {
                 if (error) throw error;
                 if (results == undefined || results.length == 0){

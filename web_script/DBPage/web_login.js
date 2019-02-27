@@ -8,6 +8,7 @@ module.exports = function(app, tableData, scriptData, connection){
     
     var route = express.Router();
     route.post('/', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var email = req.body.email;
 
         connection.query('SELECT * FROM user WHERE email="'+email+'";', function (error, results, fields) {
