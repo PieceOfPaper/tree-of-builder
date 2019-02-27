@@ -526,12 +526,12 @@ app.get('/', function (req, response) {
 
     var loginData = '';
     if (req.session.login_userno == undefined){
-      loginData += '<form action="/Login" method="POST" style="padding:0; margin:0; width:calc(100vw - 20px);">';
-      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;">Email <input type="email" name="email"></p>';
-      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;">Pwd <input type="password" name="pwd"></p>';
-      loginData +=   '<p style="width:calc(100vw - 20px); text-align:center;"><button type="submit">Login</button></p>';
+      loginData += '<form action="/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
+      loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>';
+      loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Pwd</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>';
+      loginData +=   '<button style="margin:2px; width:calc(100% - 4px);" type="submit">Login</button>';
+      loginData +=   '<button style="margin:2px; width:calc(100% - 4px);" type="button" onclick="location.href=\'./JoinPage\'">Join</button>';
       loginData += '</form>';
-      loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./JoinPage">Join</a></p>';
 
       output = output.replace(/%LoginData%/g, loginData);
     
@@ -539,19 +539,21 @@ app.get('/', function (req, response) {
     } else {
         connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";', function (error, results, fields) {
           if (error) throw error;
+          loginData += '<div style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
           if (results != undefined && results.length > 0){
-            loginData += '<p style="width:calc(100vw - 20px); text-align:center;">Welocme. '+results[0].nickname+'</p>';
+            loginData += '<p style="width:calc(100%); text-align:center;">Welocme. '+results[0].nickname+'</p>';
             loginData += '<br/>';
             if (results[0].mail_auth == undefined || results[0].mail_auth != "A"){
-              loginData += '<p style="width:calc(100vw - 20px); text-align:center;">No Authenticated User.</p>';
-              loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./ReqJoinMail?email='+results[0].email+'">Request Auth Mail</a></p>';
+              loginData += '<p style="width:calc(100%); text-align:center;">No Authenticated User.</p>';
+              loginData += '<p style="width:calc(100%); text-align:center;"><a href="./ReqJoinMail?email='+results[0].email+'">Request Auth Mail</a></p>';
               loginData += '<br/>';
             }
           } else {
-            loginData += '<p style="width:calc(100vw - 20px); text-align:center;">Longin Error</p>';
+            loginData += '<p style="width:calc(100%); text-align:center;">Longin Error</p>';
             loginData += '<br/>';
           }
-          loginData += '<p style="width:calc(100vw - 20px); text-align:center;"><a href="./Logout">Logout</a></p>';
+          loginData += '<p style="width:calc(100%); text-align:center;"><a href="./Logout">Logout</a></p>';
+          loginData += '</div>';
 
           output = output.replace(/%LoginData%/g, loginData);
         

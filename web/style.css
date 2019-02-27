@@ -265,8 +265,17 @@ table, td, th {
     content: url("../img/button/btn_minus_clicked.png");
 }
 
+.div-center {
+    
+}
+
 
 /* ======== Main ======== */
+.main-login-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
 .main-illust-container {
     margin: 0;
     width: calc(100vw - 20px);
