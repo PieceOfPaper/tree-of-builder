@@ -33,25 +33,19 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
     -->
-    <form action="/Join" method="POST" >
-        <table style="width:100%">
-            <tbody>
-                <tr>
-                    <td>Email</td>
-                    <td><input type="email" name="email"></td>
-                </tr>
-                <tr>
-                    <td>Pwd</td>
-                    <td><input type="password" name="pwd"></td>
-                </tr>
-                <tr>
-                    <td>Nickname</td>
-                    <td><input type="text" name="nickname"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button type="submit">Join</button>
-    </form>
+
+    <div class="main-login-container">
+        <form action="/Join" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;" >
+            <div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>
+            <div style="display:table-row;"><br/></div>
+            <div style="display:table-row;"><div style="display:table-cell;">Password</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>
+            <div style="display:table-row;"><div style="display:table-cell;"></div><div style="display:table-cell;"><input type="password" name="pwd_check"></div></div>
+            <div style="display:table-row;"><br/></div>
+            <div style="display:table-row;"><div style="display:table-cell;">Nickname</div><div style="display:table-cell;"><input type="text" name="nickname"></div></div>
+            <div style="display:table-row;"><br/></div>
+            <button style="margin:2px; width:calc(100% - 4px);" type="submit">Join</button>
+        </form>
+    </div>
 
     <script>
     </script>
