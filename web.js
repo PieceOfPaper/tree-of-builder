@@ -18,8 +18,8 @@ var PNGCrop = require('png-crop');
 
 var tos = require('./my_modules/TosModule');
 
-var nodelua = require('node-lua');
-var lua = new nodelua.LuaState();
+// var nodelua = require('node-lua');
+// var lua = new nodelua.LuaState();
 
 var cmd=require('node-cmd');
 
@@ -112,6 +112,7 @@ if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
 if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_client.ipf');
 if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_ability.ipf');
 if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
+if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
 
 // ---------- 테이블 데이터 불러오기
 var tableData = [];
