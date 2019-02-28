@@ -16,6 +16,8 @@
     });
     </script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/luajs/lua.min.js"></script>
+    <script src="../js/generated_lua.js"></script>
 </head>
 
 <body>
@@ -131,6 +133,11 @@
 
     <!--%TooltipImage%-->
     %AddCaptionScript%
+
+    <script>
+        var value = lua_call(lua_tableget(lua_script, "SCR_REFRESH_WEAPON"), [JSON.stringify(itemData),0,0,0]);
+        console.log(value[0]);
+    </script>
     
 </body>
 

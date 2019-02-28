@@ -7,7 +7,8 @@ class TosModule {
 
     static parseCaption(caption) {
         if (caption == undefined) return caption;
-        var output = caption;
+        if (caption.length == 0) return '';
+        var output = caption.toString();
         output = output.replace(/{np}|{nl}/g, '<br/>');
         output = output.replace(/{img tooltip_speedofatk}/g, '<img src="../img/tooltip_speedofatk.png" style="height:1em; vertical-align:middle;" />');
         output = output.replace(/{img green_up_arrow 16 16}/g, '▲');
