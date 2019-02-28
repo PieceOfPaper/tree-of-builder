@@ -23,7 +23,7 @@
     "json-rules-engine": "^2.3.0",
     "mysql": "^2.16.0",
     "node-cmd": "^3.0.0",
-    "node-lua": "^1.0.4",
+    //"node-lua": "^1.0.4",
     "pg": "^7.8.0",
     "png-crop": "0.0.2",
     "pngjs": "^3.3.3",
