@@ -18,8 +18,8 @@ var PNGCrop = require('png-crop');
 
 var tos = require('./my_modules/TosModule');
 
-var nodelua = require('node-lua');
-var lua = new nodelua.LuaState();
+// var nodelua = require('node-lua');
+// var lua = new nodelua.LuaState();
 
 var cmd=require('node-cmd');
 
