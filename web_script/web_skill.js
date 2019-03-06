@@ -105,8 +105,14 @@ module.exports = function(app, tableData, scriptData){
     captionScript +=  'INT:Number(0),';
     captionScript +=  'MNA:Number(0),';
     captionScript +=  'DEX:Number(0),';
+    captionScript +=  'HP:Number(0),';
+    captionScript +=  'MHP:Number(0),';
+    captionScript +=  'SP:Number(0),';
+    captionScript +=  'MSP:Number(0),';
     captionScript += '};';
     captionScript += 'return playerSetting; }';
+
+    captionScript += 'var info=undefined;';
 
     captionScript += 'function GetAbility(pc, ability){';
     captionScript +=  'if(document.getElementById("Ability_" + ability)!=undefined){';
