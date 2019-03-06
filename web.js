@@ -95,7 +95,7 @@ if (isLocalServer){
     host     : '35.220.156.207',
     user     : 'root',
     password : 'cGbwHENEf6AmkDhc',
-    database : 'mysql',
+    database : 'treeofbuilder',
     onerror: err=>console.log(err.message),
   };
 }
