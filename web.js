@@ -99,10 +99,10 @@ if (isLocalServer){
     onerror: err=>console.log(err.message),
   };
 }
-var dbimporter = mysql_import.config(dbconfig);
-dbimporter.import('table_structure_dump.sql').then(()=> {
-	console.log('### DB Setting Success.')
-});
+// var dbimporter = mysql_import.config(dbconfig);
+// dbimporter.import('table_structure_dump.sql').then(()=> {
+// 	console.log('### DB Setting Success.')
+// });
 
 var connection = mysql.createConnection(dbconfig);
 connection.connect(function(err) {
