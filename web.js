@@ -534,7 +534,7 @@ app.get('/', function (req, response) {
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     var loginData = '';
-    if (serverCode == 'ktest' && isLocalServer == true) {
+    if (serverCode == 'ktest' && isLocalServer == false) {
       output = output.replace(/%LoginData%/g, '');
       response.send(output);
     } else if (req.session.login_userno == undefined){
