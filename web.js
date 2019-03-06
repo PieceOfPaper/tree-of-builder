@@ -6,6 +6,7 @@ var session = require('express-session');
 
 const { Pool, Client } = require('pg');
 var mysql = require('mysql');
+var mysql_import = require('mysql-import');
 
 var csv = require('csv-parser');
 var xml = require('xml-parser');
@@ -80,23 +81,30 @@ console.log('argument loaded');
 
 
 console.log('### DB Connect Request');
-var connection = undefined;
+var dbconfig = [];
 if (isLocalServer){
-  connection = mysql.createConnection({
+  dbconfig = {
     host     : '127.0.0.1',
     user     : 'root',
     password : 'localhost',
     database : 'tree-of-builder',
-  });
+    onerror: err=>console.log(err.message),
+  };
 } else {
-  connection = mysql.createConnection({
+  dbconfig = {
     host     : '35.220.156.207',
     user     : 'root',
     password : 'cGbwHENEf6AmkDhc',
     database : 'tree-of-builder',
-  });
+    onerror: err=>console.log(err.message),
+  };
 }
- 
+var dbimporter = mysql_import.config(dbconfig);
+dbimporter.import('table_structure_dump.sql').then(()=> {
+	console.log('### DB Setting Success.')
+});
+
+var connection = mysql.createConnection(dbconfig);
 connection.connect(function(err) {
   if (err) {
     console.error('### DB Connect Error: ' + err.stack);
