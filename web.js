@@ -90,7 +90,7 @@ if (isLocalServer){
     database : 'tree-of-builder',
     onerror: err=>console.log(err.message),
   };
-} else {
+} else if(serverCode == 'kr' || serverCode == 'ktest') {
   dbconfig = {
     host     : '35.220.156.207',
     user     : 'root',
@@ -534,7 +534,10 @@ app.get('/', function (req, response) {
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     var loginData = '';
-    if (req.session.login_userno == undefined){
+    if (serverCode == 'ktest' && isLocalServer == true) {
+      output = output.replace(/%LoginData%/g, '');
+      response.send(output);
+    } else if (req.session.login_userno == undefined){
       loginData += '<form action="/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
       loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>';
       loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Pwd</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>';
