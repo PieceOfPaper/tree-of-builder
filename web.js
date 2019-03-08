@@ -105,6 +105,7 @@ if (isLocalServer){
 // });
 
 var connection = mysql.createConnection(dbconfig);
+connection.on('error', function() {});
 connection.connect(function(err) {
   if (err) {
     console.error('### DB Connect Error: ' + err.stack);
