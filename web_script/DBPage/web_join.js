@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, connection){
+module.exports = function(app, tableData, scriptData, dbconfig){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -46,9 +46,14 @@ module.exports = function(app, tableData, scriptData, connection){
         var index = 0;
         var pwd_salt = generateSalt();
 
+        var connection = mysql.createConnection(dbconfig);
+        connection.on('error', function() {});
+        connection.connect();
+
         connection.query('SELECT * FROM user WHERE email="'+email+'";', function (error, results, fields) {
             if (results != undefined && results.length > 0){
                 res.send('<script> alert("Already exits user"); window.history.back(); </script>');
+                connection.end();
                 return;
             }
             connection.query('SELECT * FROM user;', function (error, results, fields) {
@@ -59,6 +64,7 @@ module.exports = function(app, tableData, scriptData, connection){
                 connection.query('INSERT INTO user (userno,email,pwd,pwd_salt,nickname) VALUES ('+index+',"'+email+'","'+sha256(pwd+pwd_salt)+'","'+pwd_salt+'","'+nickname+'");', function (error, results, fields) {
                     if (error) throw error;
                     res.send('<script> window.location.href="../ReqJoinMail?email='+email+'"; </script>');
+                    connection.end();
                 });
         
                 //res.send('<script> window.location.href=".."; </script>');

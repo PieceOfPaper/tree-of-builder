@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, connection){
+module.exports = function(app, tableData, scriptData, dbconfig){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -10,12 +10,14 @@ module.exports = function(app, tableData, scriptData, connection){
     route.post('/', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var email = req.body.email;
+        var connection = mysql.createConnection(dbconfig);
+        connection.on('error', function() {});
+        connection.connect();
 
         connection.query('SELECT * FROM user WHERE email="'+email+'";', function (error, results, fields) {
             if (error) throw error;
             if (results == undefined || results.length == 0){
                 res.send('<script> alert("Not Exist User"); window.location.href=".."; </script>');
-                return;
             } else {
                 var pwd = sha256(req.body.pwd + results[0].pwd_salt);
                 if (pwd == results[0].pwd) {
@@ -25,6 +27,7 @@ module.exports = function(app, tableData, scriptData, connection){
                     res.send('<script> alert("Not Match Password"); window.location.href=".."; </script>');
                 }
             }
+            connection.end();
         });
 
     });

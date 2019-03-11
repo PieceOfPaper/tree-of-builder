@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, connection){
+module.exports = function(app, tableData, scriptData, dbconfig){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -28,18 +28,24 @@ module.exports = function(app, tableData, scriptData, connection){
     route.get('/', function (req, res) {
         if (req.query.email != undefined && req.query.email.length > 0){
             console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
+            var connection = mysql.createConnection(dbconfig);
+            connection.on('error', function() {});
+            connection.connect();
             connection.query('SELECT * FROM user WHERE email="'+req.query.email+'";', function (error, results, fields) {
                 if (results == undefined || results.length == 0){
                     res.send(layout_message.toString().replace(/%Message%/g, 'Not found Email'));
+                    connection.end();
                     return;
                 }
                 if (results[0].mail_auth == 'A'){
                     res.send(layout_message.toString().replace(/%Message%/g, 'Already Authenticated.'));
+                    connection.end();
                     return;
                 }
                 var auth = sha256(req.query.email+generateSalt());
                 connection.query('UPDATE user SET mail_auth="'+auth+'" WHERE email="'+req.query.email+'";', function (error, results, fields) {
                     if (error) throw error;
+                    connection.end();
                 });
                 
                 mailOptions.to = req.query.email;

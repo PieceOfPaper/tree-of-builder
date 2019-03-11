@@ -104,14 +104,15 @@ if (isLocalServer){
 // 	console.log('### DB Setting Success.')
 // });
 
-var connection = mysql.createConnection(dbconfig);
-connection.on('error', function() {});
-connection.connect(function(err) {
+var testConnection = mysql.createConnection(dbconfig);
+testConnection.on('error', function() {});
+testConnection.connect(function(err) {
   if (err) {
     console.error('### DB Connect Error: ' + err.stack);
     return;
   }
-  console.log('### DB Connect Success. connected as id ' + connection.threadId);
+  console.log('### DB Connect Success. connected as id ' + testConnection.threadId);
+  testConnection.end();
 });
 //connection.end();
 
@@ -550,6 +551,9 @@ app.get('/', function (req, response) {
     
       response.send(output);
     } else {
+        var connection = mysql.createConnection(dbconfig);
+        connection.on('error', function() {});
+        connection.connect();
         connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";', function (error, results, fields) {
           if (error) throw error;
           loginData += '<div style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
@@ -571,6 +575,7 @@ app.get('/', function (req, response) {
           output = output.replace(/%LoginData%/g, loginData);
         
           response.send(output);
+          connection.end();
       });
     }
   })
@@ -606,7 +611,7 @@ app.get('/', function (req, response) {
 var dataServer = require('./data_server/data_server')(app, tableData);
 app.use('/data', dataServer);
 
-var boardFree = require('./board_server/board_free')(app, connection);
+var boardFree = require('./board_server/board_free')(app, dbconfig);
 app.use('/BoardFree', boardFree);
 
 var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
@@ -648,19 +653,19 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
-var db_loginPage = require('./web_script/DBPage/web_login')(app, tableData, scriptData, connection);
+var db_loginPage = require('./web_script/DBPage/web_login')(app, tableData, scriptData, dbconfig);
 app.use('/Login', db_loginPage);
 
-var db_logoutPage = require('./web_script/DBPage/web_logout')(app, tableData, scriptData, connection);
+var db_logoutPage = require('./web_script/DBPage/web_logout')(app, tableData, scriptData, dbconfig);
 app.use('/Logout', db_logoutPage);
 
-var db_joinPage = require('./web_script/DBPage/web_join')(app, tableData, scriptData, connection);
+var db_joinPage = require('./web_script/DBPage/web_join')(app, tableData, scriptData, dbconfig);
 app.use('/Join', db_joinPage);
 
-var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, tableData, scriptData, connection);
+var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, tableData, scriptData, dbconfig);
 app.use('/ReqJoinMail', db_reqJoinMailPage);
 
-var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, tableData, scriptData, connection);
+var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, tableData, scriptData, dbconfig);
 app.use('/EmailAuth', db_emailAuthPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);
