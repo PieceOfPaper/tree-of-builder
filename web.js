@@ -6,6 +6,7 @@ var session = require('express-session');
 
 const { Pool, Client } = require('pg');
 var mysql = require('mysql');
+var mysqls = require('sync-mysql');
 var mysql_import = require('mysql-import');
 
 var csv = require('csv-parser');
@@ -19,6 +20,7 @@ var PNG = require('pngjs').PNG;
 var PNGCrop = require('png-crop');
 
 var tos = require('./my_modules/TosModule');
+var dbLayout = require('./my_modules/DBLayoutModule');
 
 // var nodelua = require('node-lua');
 // var lua = new nodelua.LuaState();
@@ -484,6 +486,8 @@ app.get('/', function (req, response) {
       return;
     }
 
+    var connection = new mysqls(dbconfig);
+
     var randomIndex = Math.floor(Math.random()*files.length);
     var imgname = files[randomIndex].split('.')[0].toLowerCase();
     var dialogTable = tableData['dialogtext'];
@@ -528,56 +532,37 @@ app.get('/', function (req, response) {
 
     var output = layout.toString();
     output = output.replace(/style.css/g, '../style.css');
-    output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
-    output = output.replace(/%IllustName%/g, illustNpcName);
-    output = output.replace(/%IllustMention%/g, illustNpcText);
+    // output = output.replace(/%IllustPath%/g, '../img/Dlg_portrait/' + files[randomIndex]);
+    // output = output.replace(/%IllustName%/g, illustNpcName);
+    // output = output.replace(/%IllustMention%/g, illustNpcText);
     output = output.replace(/%ServerName%/g, serverName);
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
-    var loginData = '';
     if (serverCode == 'ktest' && isLocalServer == false) {
       output = output.replace(/%LoginData%/g, '');
-      response.send(output);
-    } else if (req.session.login_userno == undefined){
-      loginData += '<form action="/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
-      loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>';
-      loginData +=   '<div style="display:table-row;"><div style="display:table-cell;">Pwd</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>';
-      loginData +=   '<button style="margin:2px; width:calc(100% - 4px);" type="submit">Login</button>';
-      loginData +=   '<button style="margin:2px; width:calc(100% - 4px);" type="button" onclick="location.href=\'./JoinPage\'">Join</button>';
-      loginData += '</form>';
-
-      output = output.replace(/%LoginData%/g, loginData);
-    
-      response.send(output);
+      output = output.replace(/%ShortBoard%/g, '');
     } else {
-        var connection = mysql.createConnection(dbconfig);
-        connection.on('error', function() {});
-        connection.connect();
-        connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";', function (error, results, fields) {
-          if (error) throw error;
-          loginData += '<div style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
-          if (results != undefined && results.length > 0){
-            loginData += '<p style="width:calc(100%); text-align:center;">Welocme. '+results[0].nickname+'</p>';
-            loginData += '<br/>';
-            if (results[0].mail_auth == undefined || results[0].mail_auth != "A"){
-              loginData += '<p style="width:calc(100%); text-align:center;">No Authenticated User.</p>';
-              loginData += '<p style="width:calc(100%); text-align:center;"><a href="./ReqJoinMail?email='+results[0].email+'">Request Auth Mail</a></p>';
-              loginData += '<br/>';
-            }
-          } else {
-            loginData += '<p style="width:calc(100%); text-align:center;">Longin Error</p>';
-            loginData += '<br/>';
+      var shortboard_results = connection.query('SELECT * FROM board_short ORDER BY time DESC LIMIT 10;');
+      if (shortboard_results != undefined){
+        for (param in shortboard_results){
+          var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+shortboard_results[param].userno+'";');
+          if (nickname_results!=undefined && nickname_results.length>0){
+            shortboard_results[param]["nickname"]=nickname_results[0].nickname;
           }
-          loginData += '<p style="width:calc(100%); text-align:center;"><a href="./Logout">Logout</a></p>';
-          loginData += '</div>';
-
-          output = output.replace(/%LoginData%/g, loginData);
-        
-          response.send(output);
-          connection.end();
-      });
+        }
+      }
+      if (req.session.login_userno == undefined){
+        output = output.replace(/%LoginData%/g, dbLayout.Layout_LoginForm());
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_ShortBoard(undefined,shortboard_results));
+      } else {
+        var user_results = connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";');
+        output = output.replace(/%LoginData%/g, dbLayout.Layout_LogedIn(user_results[0]));
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_ShortBoard(user_results[0],shortboard_results));
+      }
     }
+
+    response.send(output);
   })
 });
 

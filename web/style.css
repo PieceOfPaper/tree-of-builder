@@ -281,6 +281,11 @@ table, td, th {
     width: calc(100vw - 20px);
     text-align: center;
 }
+.main-shortboard-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
 
 .main-illust {
     /*width: 100%;*/
