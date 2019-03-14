@@ -1,0 +1,6 @@
+idx INT(11) unsigned NOT NULL
+userno INT(11) unsigned NOT NULL
+time DATETIME NOT NULL
+state INT(8) NOT NULL
+value VARCHAR(100)
+PRIMARY KEY (idx)

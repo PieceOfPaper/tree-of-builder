@@ -1,0 +1,7 @@
+userno INT(11) unsigned NOT NULL
+email VARCHAR(45) NOT NULL
+pwd VARCHAR(100) NOT NULL
+pwd_salt VARCHAR(10) NOT NULL
+nickname VARCHAR(45)
+mail_auth VARCHAR(100)
+PRIMARY KEY (userno)
