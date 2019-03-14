@@ -653,6 +653,9 @@ app.use('/ReqJoinMail', db_reqJoinMailPage);
 var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, tableData, scriptData, dbconfig);
 app.use('/EmailAuth', db_emailAuthPage);
 
+var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, tableData, scriptData, dbconfig);
+app.use('/BoardShort', db_boardShortPage);
+
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);
 

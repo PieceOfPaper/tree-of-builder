@@ -37,15 +37,21 @@ class DBLayoutModule {
         var output = '';
         output += '<div style="margin:0; padding:5px; width:calc(100vw - 30px); display:inline-block; border: 1px solid black;">';
         if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
-            output += '<form action="/Login" method="POST" >';
+            output += '<form action="/BoardShort/ReqWrite" method="POST" >';
             output +=  '<input type="hidden" name="userno" value="'+userdata.userno+'" style="margin:2px; width:calc(100% - 4px);" >';
             output +=  '<input type="normal" name="value" style="margin:2px; width:calc(100vw - 40px);" >';
-            output +=  '<button type="submit">Submit</button>';
+            output +=  '<button type="submit" style="float:right;">Submit</button>';
             output += '</form>';
+            output += '<br>';
         }
         if (results != undefined){
+            //console.log(JSON.stringify(results));
             for (var i=0;i<results.length;i++){
-                output += '<div style="display:table-row;"><div style="display:table-cell;">'+results[i].nickname+'</div><div style="display:table-cell;">'+results[i].value+'</div></div>';
+                var date = new Date(results[i].time);
+                output += '<div style="margin-top:10px; margin-bottom:5px; text-align:left;">';
+                output +=  '<p style="margin:2px;"><b>['+results[i].nickname+']</b><span style="float:right; font-size:0.5em;">'+date.toLocaleString()+'</span></p>';
+                output +=  '<p style="margin:2px;">'+results[i].value+'</p>';
+                output += '</div>';
             }
         }
 
