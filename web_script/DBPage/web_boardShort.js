@@ -28,8 +28,12 @@ module.exports = function(app, tableData, scriptData, dbconfig){
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var userno = req.body.userno;
         var value = req.body.value;
-        var connection = new mysqls(dbconfig);
 
+        if (value.length > 100){
+            value = value.substring(0,100);
+        }
+
+        var connection = new mysqls(dbconfig);
         var index = 0;
 
         var shortboard_results = connection.query('SELECT * FROM board_short;');

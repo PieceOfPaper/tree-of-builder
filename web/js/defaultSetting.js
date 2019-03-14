@@ -207,3 +207,10 @@ function destroyLoadingUI(){
 document.addEventListener('gesturestart', function (e) {
     e.preventDefault();
 });
+
+function onChangeTextLimit(input_id, number_id, max){
+    console.log('onchange');
+    var input = document.getElementById(input_id);
+    var number = document.getElementById(number_id);
+    number.innerHTML = '('+input.value.length+'/'+max+')';
+}
