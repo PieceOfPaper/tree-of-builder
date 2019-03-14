@@ -133,10 +133,14 @@ table, td, th {
     position: fixed;
     top: 10px;
     left: 10px;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 60px;
+    text-align: center;
     -webkit-transition:left 0.25s, -webkit-transform 0.25s;
     transition:left 0.25s, transform 0.25s;
+    border: 0;
+    border-radius: 0.5em;
+    background-color: whitesmoke;
 }
 #left-menu-open-button.opened {
     left: 210px;

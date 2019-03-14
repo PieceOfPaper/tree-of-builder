@@ -138,14 +138,20 @@ function onInitTopMenu(isHome){
     var leftMenuButton = document.createElement("div");
     var leftMenuButtonA = document.createElement("a");
     var leftMenuButtonImg = document.createElement("img");
+    var leftMenuButtonText = document.createElement("p");
     leftMenuButtonA.onclick=onclick_leftMenuOpen;
     //leftMenuButton.classList.add("open-button");
     leftMenuButton.id = "left-menu-open-button";
     leftMenuButtonImg.src="../img/book/nextbtn.png";
+    leftMenuButtonText.innerHTML="MENU";
+    leftMenuButtonText.style.margin="0";
     leftMenuButtonA.appendChild(leftMenuButtonImg);
+    leftMenuButtonA.appendChild(leftMenuButtonText);
     leftMenuButton.appendChild(leftMenuButtonA);
     //leftMenu.appendChild(leftMenuButton);
     document.body.appendChild(leftMenuButton);
+
+    document.getElementsByClassName("top-menu")[0].outerHTML = "";
 }
 
 function onclick_leftMenuOpen(){
