@@ -60,13 +60,32 @@ class DBLayoutModule {
                 var date = new Date(results[i].time);
                 output += '<div style="margin-top:10px; margin-bottom:5px; text-align:left;">';
                 output +=  '<p style="margin:2px;"><b>['+results[i].nickname+']</b><span style="float:right; font-size:0.5em;">'+date.toLocaleString()+'</span></p>';
+
                 if (results[i].value!=undefined && results[i].value.length>0)
                     output +=  '<p style="margin:2px;">'+this.CommentTextFilter(results[i].value)+'</p>';
+
+                output +=  '<p style="margin:2px; float:right;">';
+                if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
+                    if (results[i].userno==userdata.userno)
+                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img/button/button_chat_w_exit.png"></a>';
+                    if (results[i].userno!=userdata.userno)
+                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img/dungeon_msg/notice_dm_!.png"></a>';
+                }
+                output +=  '</p>';
+                
                 output += '</div>';
+                output += '<br>';
             }
         }
-
         output += '</div>';
+        output += '<script>';
+        output += 'function ShortBoard_ReqDelete(idx){';
+        output +=   'post_to_url("/BoardShort/ReqDelete",{ index:idx },"post");';
+        output += '}';
+        output += 'function ShortBoard_ReqReport(idx){';
+        output +=   'post_to_url("/BoardShort/ReqReport",{ index:idx },"post");';
+        output += '}';
+        output += '</script>';
         return output;
     }
 

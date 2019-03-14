@@ -543,7 +543,7 @@ app.get('/', function (req, response) {
       output = output.replace(/%LoginData%/g, '');
       output = output.replace(/%ShortBoard%/g, '');
     } else {
-      var shortboard_results = connection.query('SELECT * FROM board_short ORDER BY time DESC LIMIT 10;');
+      var shortboard_results = connection.query('SELECT * FROM board_short WHERE state=0 ORDER BY time DESC LIMIT 10;');
       if (shortboard_results != undefined){
         for (param in shortboard_results){
           var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+shortboard_results[param].userno+'";');
