@@ -49,8 +49,9 @@ class DBLayoutModule {
         if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
             output += '<form action="/BoardShort/ReqWrite" method="POST" >';
             output +=  '<input type="hidden" name="userno" value="'+userdata.userno+'" style="margin:2px; width:calc(100% - 4px);" >';
-            output +=  '<textarea name="value" style="margin:2px; width:calc(100vw - 40px);" ></textarea>';
+            output +=  '<textarea id="shortboard-value" name="value" onkeyup="onChangeTextLimit(\'shortboard-value\',\'shortboard-number\',100)" style="margin:2px; width:calc(100vw - 40px);" ></textarea>';
             output +=  '<button type="submit" style="float:right;">Submit</button>';
+            output +=  '<p id="shortboard-number" style="margin:0; float:right;">(0/100)</p>';
             output += '</form>';
             output += '<br>';
         }
