@@ -54,7 +54,8 @@
         function openMenuTimer(){
             var leftMenu = document.getElementById("left-menu");
             if (leftMenu.classList.contains("opened")) return;
-            //onclick_leftMenuOpen();
+            if (window.innerWidth > window.innerHeight)
+                onclick_leftMenuOpen();
         }
     </script>
 </body>
