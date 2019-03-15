@@ -267,12 +267,12 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
     }
   });
   for (param in tableData['map2']){
-    loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies', function(){
-    });
-    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies', function(){
-    });
-    loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies', function(){
-    });
+    loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/gentype_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies');
   }
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
