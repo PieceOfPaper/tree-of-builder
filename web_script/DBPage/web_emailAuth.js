@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, dbconfig){
+module.exports = function(app, serverSetting, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -10,7 +10,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
     route.get('/', function (req, res) {
         if (req.query.id != undefined && req.query.id.length > 0){
             console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
-            var connection = mysql.createConnection(dbconfig);
+            var connection = mysql.createConnection(serverSetting['dbconfig']);
             connection.on('error', function() {});
             connection.connect();
             connection.query('UPDATE user SET mail_auth="A" WHERE mail_auth="'+req.query.id+'";', function (error, results, fields) {

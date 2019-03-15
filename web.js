@@ -30,21 +30,26 @@ var cmd=require('node-cmd');
 var app = express();
 
 
-var webhookUri = 'https://hooks.slack.com/services/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';
-var dataServerPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
-var serverCode = 'kr';
-var isLocalServer = false;
 
-var noDownload = false;
-var slackOff = false;
+var serverSetting = [];
+
+serverSetting['webhookUri'] = 'https://hooks.slack.com/services/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';
+serverSetting['dataServerPath'] = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/';
+serverSetting['serverCode'] = 'kr';
+serverSetting['isLocalServer'] = false;
+
+serverSetting['noDownload'] = false;
+serverSetting['slackOff'] = false;
+
+
 
 
 slack = new Slack();
-slack.setWebhook(webhookUri);
+slack.setWebhook(serverSetting['webhookUri']);
 function sendSlack(message){
-  if (slackOff) return;
+  if (serverSetting['slackOff']) return;
   slack.webhook({
-    channel: '#web-' + serverCode,
+    channel: '#web-' + serverSetting['serverCode'],
     username: "webhookbot",
     text: message,
   }, function(err, response) { console.log(response); });
@@ -55,26 +60,26 @@ process.argv.forEach(function (val, index, array) {
 
     //option
     if (val == 'noDownload'){
-      noDownload = true;
+      serverSetting['noDownload'] = true;
       console.log('No Downlaod');
     } else if (val == 'slackOff'){
-      slackOff = true;
+      serverSetting['slackOff'] = true;
       console.log('Slack Off');
 
     //change server
     } else if (val == 'server-kr'){
-      serverCode = 'kr';
-      console.log('change server ' + serverCode);
+      serverSetting['serverCode'] = 'kr';
+      console.log('change server ' + serverSetting['serverCode']);
     } else if (val == 'server-ktest'){
-      serverCode = 'ktest';
-      console.log('change server ' + serverCode);
+      serverSetting['serverCode'] = 'ktest';
+      console.log('change server ' + serverSetting['serverCode']);
     } else if (val == 'server-global'){
-      serverCode = 'global';
-      console.log('change server ' + serverCode);
+      serverSetting['serverCode'] = 'global';
+      console.log('change server ' + serverSetting['serverCode']);
     } else if (val == 'server-local'){
-      serverCode = 'ktest';
-      isLocalServer = true;
-      console.log('change server ' + serverCode);
+      serverSetting['serverCode'] = 'ktest';
+      serverSetting['isLocalServer'] = true;
+      console.log('change server ' + serverSetting['serverCode']);
     }
   }
 });
@@ -83,17 +88,17 @@ console.log('argument loaded');
 
 
 console.log('### DB Connect Request');
-var dbconfig = [];
-if (isLocalServer){
-  dbconfig = {
+serverSetting['dbconfig'] = [];
+if (serverSetting['isLocalServer']){
+  serverSetting['dbconfig'] = {
     host     : '127.0.0.1',
     user     : 'root',
     password : 'localhost',
     database : 'tree-of-builder',
     onerror: err=>console.log(err.message),
   };
-} else if(serverCode == 'kr' || serverCode == 'ktest') {
-  dbconfig = {
+} else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
+  serverSetting['dbconfig'] = {
     host     : '35.220.156.207',
     user     : 'root',
     password : 'cGbwHENEf6AmkDhc',
@@ -101,12 +106,12 @@ if (isLocalServer){
     onerror: err=>console.log(err.message),
   };
 }
-// var dbimporter = mysql_import.config(dbconfig);
+// var dbimporter = mysql_import.config(serverSetting['dbconfig']);
 // dbimporter.import('table_structure_dump.sql').then(()=> {
 // 	console.log('### DB Setting Success.')
 // });
 
-var testConnection = mysql.createConnection(dbconfig);
+var testConnection = mysql.createConnection(serverSetting['dbconfig']);
 testConnection.on('error', function() {});
 testConnection.connect(function(err) {
   if (err) {
@@ -275,7 +280,7 @@ loadTable('companion', 'ies.ipf/companion.ies');
 loadTable('foodtable', 'ies.ipf/foodtable.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
-  if (noDownload && fs.existsSync('./web/data/' + path)){
+  if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
       data['TableName'] = name;
       for(var param in data){
@@ -297,7 +302,7 @@ function loadTable(name, path, callback){
   }
   var file = fs.createWriteStream('./web/data/' + path);
   //console.log('request download table [' + name + '] ' + path);
-  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
+  var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
       console.log('downloaded table [' + name + '] ' + path);
       if (fs.existsSync('./web/data/' + path) == false){
@@ -394,7 +399,7 @@ function generateLuaScript(array, index, callback){
 
   var pathSplited = array[index].split('/');
   var filename = pathSplited[pathSplited.length - 1];
-  if (noDownload && fs.existsSync('./web/lua/' + filename)){
+  if (serverSetting['noDownload'] && fs.existsSync('./web/lua/' + filename)){
     fs.readFile('./web/lua/' + filename, function(err, data){
       if (err) {
         sendSlack(err.toString());
@@ -411,7 +416,7 @@ function generateLuaScript(array, index, callback){
     });
   } else {
     var file = fs.createWriteStream('./web/lua/' + filename);
-    var request = https.get(dataServerPath + serverCode + '/' + array[index], function(response) {
+    var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + array[index], function(response) {
       response.pipe(file).on('close', function(){
         console.log('download script [' + filename + ']');
         fs.readFile('./web/lua/' + filename, function(err, data){
@@ -439,7 +444,7 @@ loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
 });
 function loadTableLanguage(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
-  if (noDownload && fs.existsSync('./web/data/' + path)){
+  if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     fs.readFile('./web/data/' + path, function(error, data){
       if (error) sendSlack(err.toString());
       var xmlData = xml(data.toString());
@@ -459,7 +464,7 @@ function loadTableLanguage(name, path, callback){
     return;
   }
   var file = fs.createWriteStream('./web/data/' + path);
-  var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
+  var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
       console.log('download table [' + name + '] ' + path);
       fs.readFile('./web/data/' + path, function(error, data){
@@ -503,7 +508,7 @@ app.get('/', function (req, response) {
       return;
     }
 
-    var connection = new mysqls(dbconfig);
+    var connection = new mysqls(serverSetting['dbconfig']);
 
     var randomIndex = Math.floor(Math.random()*files.length);
     var imgname = files[randomIndex].split('.')[0].toLowerCase();
@@ -536,7 +541,7 @@ app.get('/', function (req, response) {
     // }
 
     var serverName = '';
-    switch(serverCode){
+    switch(serverSetting['serverCode']){
       case 'kr':
       serverName = 'Korea';
       break;
@@ -556,7 +561,7 @@ app.get('/', function (req, response) {
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
-    if (serverCode == 'ktest' && isLocalServer == false) {
+    if (serverSetting['serverCode'] == 'ktest' && serverSetting['isLocalServer'] == false) {
       output = output.replace(/%LoginData%/g, '');
       output = output.replace(/%ShortBoard%/g, '');
     } else {
@@ -610,67 +615,67 @@ app.get('/', function (req, response) {
 //   res.send(result);
 // });
 
-var dataServer = require('./data_server/data_server')(app, tableData);
+var dataServer = require('./data_server/data_server')(app, serverSetting, tableData);
 app.use('/data', dataServer);
 
-var boardFree = require('./board_server/board_free')(app, dbconfig);
+var boardFree = require('./board_server/board_free')(app, serverSetting);
 app.use('/BoardFree', boardFree);
 
-var skillPage = require('./web_script/web_skill')(app, tableData, scriptData);
+var skillPage = require('./web_script/web_skill')(app, serverSetting, tableData, scriptData);
 app.use('/Skill', skillPage);
 
-var abilityPage = require('./web_script/web_ability')(app, tableData, scriptData);
+var abilityPage = require('./web_script/web_ability')(app, serverSetting, tableData, scriptData);
 app.use('/Ability', abilityPage);
 
-var buffPage = require('./web_script/web_buff')(app, tableData, scriptData);
+var buffPage = require('./web_script/web_buff')(app, serverSetting, tableData, scriptData);
 app.use('/Buff', buffPage);
 
-var itemPage = require('./web_script/web_item')(app, tableData, scriptData);
+var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData);
 app.use('/Item', itemPage);
 
-var monsterPage = require('./web_script/web_monster')(app, tableData, scriptData);
+var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData);
 app.use('/Monster', monsterPage);
 
-var questPage = require('./web_script/web_quest')(app, tableData, scriptData);
+var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData);
 app.use('/Quest', questPage);
 
-var mapPage = require('./web_script/web_map')(app, tableData, scriptData);
+var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData);
 app.use('/Map', mapPage);
 
-var dialogPage = require('./web_script/web_dialog')(app, tableData, scriptData);
+var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData);
 app.use('/Dialog', dialogPage);
 
-var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, tableData, scriptData);
+var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, tableData, scriptData);
 app.use('/GuildEvent', miscGuildEventPage);
 
-var miscCompanionPage = require('./web_script/web_misc_companion')(app, tableData, scriptData);
+var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData);
 app.use('/Companion', miscCompanionPage);
 
-var builderPage = require('./web_script/web_builder')(app, tableData, scriptData);
+var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
 app.use('/Builder', builderPage);
 
-var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, tableData, scriptData);
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, tableData, scriptData);
 app.use('/QuestCalculator', toolQuestCalcPage);
 
-var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, tableData, scriptData);
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
-var db_loginPage = require('./web_script/DBPage/web_login')(app, tableData, scriptData, dbconfig);
+var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
 app.use('/Login', db_loginPage);
 
-var db_logoutPage = require('./web_script/DBPage/web_logout')(app, tableData, scriptData, dbconfig);
+var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
 app.use('/Logout', db_logoutPage);
 
-var db_joinPage = require('./web_script/DBPage/web_join')(app, tableData, scriptData, dbconfig);
+var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
 app.use('/Join', db_joinPage);
 
-var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, tableData, scriptData, dbconfig);
+var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, serverSetting, tableData, scriptData);
 app.use('/ReqJoinMail', db_reqJoinMailPage);
 
-var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, tableData, scriptData, dbconfig);
+var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
 app.use('/EmailAuth', db_emailAuthPage);
 
-var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, tableData, scriptData, dbconfig);
+var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, tableData, scriptData);
 app.use('/BoardShort', db_boardShortPage);
 
 // var testPage = require('./web_script/web_test')(app, tableData);

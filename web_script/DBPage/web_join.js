@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, dbconfig){
+module.exports = function(app, serverSetting, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -46,7 +46,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
         var index = 0;
         var pwd_salt = generateSalt();
 
-        var connection = mysql.createConnection(dbconfig);
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
         connection.on('error', function() {});
         connection.connect();
 

@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');

@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, dbconfig){
+module.exports = function(app, serverSetting, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -10,7 +10,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
     route.post('/', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var email = req.body.email;
-        var connection = mysql.createConnection(dbconfig);
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
         connection.on('error', function() {});
         connection.connect();
 

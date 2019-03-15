@@ -1,4 +1,4 @@
-module.exports = function(app, dbconfig){
+module.exports = function(app, serverSetting){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');

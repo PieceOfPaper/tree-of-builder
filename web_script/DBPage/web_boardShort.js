@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, scriptData, dbconfig){
+module.exports = function(app, serverSetting, tableData, scriptData){
     var express = require('express');
     var fs = require('fs');
     var mysql = require('mysql');
@@ -33,7 +33,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
             value = value.substring(0,100);
         }
 
-        var connection = new mysqls(dbconfig);
+        var connection = new mysqls(serverSetting['dbconfig']);
         var index = 0;
 
         var shortboard_results = connection.query('SELECT * FROM board_short;');
@@ -48,7 +48,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
     route.post('/ReqDelete', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var index = req.body.index;
-        var connection = new mysqls(dbconfig);
+        var connection = new mysqls(serverSetting['dbconfig']);
         var target_results = connection.query('SELECT * FROM board_short WHERE idx='+index+';');
         var updated_results = connection.query('UPDATE board_short SET state=1 WHERE idx='+index+';');
         res.send('<script> alert("Delete Success. message:'+target_results[0].value+'"); window.location = document.referrer; </script>');
@@ -57,7 +57,7 @@ module.exports = function(app, tableData, scriptData, dbconfig){
     route.post('/ReqReport', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var index = req.body.index;
-        var connection = new mysqls(dbconfig);
+        var connection = new mysqls(serverSetting['dbconfig']);
 
         var user_results = connection.query('SELECT * FROM user WHERE userno='+req.session.login_userno+';');
         var target_results = connection.query('SELECT * FROM board_short WHERE idx='+index+';');
