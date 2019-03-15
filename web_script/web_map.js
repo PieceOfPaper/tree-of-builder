@@ -74,6 +74,35 @@ module.exports = function(app, tableData, scriptData){
         warpQuestString = tos.GetQuestString(tableData,campWarpData.WarpOpenQuest);
       }
 
+      var mongetString = '';
+      var genTypeTable = tableData['GenType_'+mapData.ClassName];
+      if (genTypeTable != undefined){
+        mongetString += '<h3>Objects</h3>';
+        for (param in genTypeTable){
+          if (genTypeTable[param]==undefined) continue;
+          mongetString += '<p>';
+          if (genTypeTable[param].Name!=undefined && genTypeTable[param].Name.length>0){
+            mongetString += genTypeTable[param].Name+' ('+tos.GetMonsterString(tableData,genTypeTable[param].ClassType)+')';
+          } else {
+            mongetString += tos.GetMonsterString(tableData,genTypeTable[param].ClassType);
+          }
+          if (genTypeTable[param].Dialog!=undefined && genTypeTable[param].Dialog.length>0){
+            //mongetString += ' ' + tos.GetDialogString(tableData,genTypeTable[param].Dialog,'Read Dialog');
+            var dialoglist = [];
+            for (param2 in tableData['dialogtext']){
+              if (tableData['dialogtext'][param2].ClassName==undefined) continue;
+              if (tableData['dialogtext'][param2].ClassName.indexOf(genTypeTable[param].Dialog+'_') > -1){
+                dialoglist.push(tableData['dialogtext'][param2].ClassName);
+              }
+            }
+            for (var i=0;i<dialoglist.length;i++){
+              mongetString += ' ' + tos.GetDialogString(tableData,dialoglist[i],'Dialog'+(i+1));
+            }
+          }
+          mongetString += '</p>';
+        }
+      }
+
       var output = layout_detail.toString();
 
       output = output.replace(/%ClassID%/g, mapData.ClassID);
@@ -104,6 +133,7 @@ module.exports = function(app, tableData, scriptData){
       output = output.replace(/%PhysicalLinkZoneString%/g, physicalLinkZoneString);
       output = output.replace(/%DropItemString%/g, dropItemString);
       output = output.replace(/%QuestString%/g, questString);
+      output = output.replace(/%MongenString%/g, mongetString);
 
       response.send(output);
     }

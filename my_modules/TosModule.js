@@ -263,7 +263,7 @@ class TosModule {
         var output = '';
         var mapData=this.FindDataClassName(tableData, 'map2', className);
         if (mapData!=undefined){
-            output += '<a href="../Map?id='+mapData.ClassID+'">'+mapData.Name+'</a>';
+            output += '<a href="../Map?id='+mapData.ClassID+'">['+mapData.Grimreaper+'] '+mapData.Name+' (Lv.'+mapData.QuestLevel+')</a>';
         }
         return output;
     }
@@ -272,7 +272,7 @@ class TosModule {
         var output = '';
         var monData=this.FindDataClassName(tableData, 'monster', className);
         if (monData!=undefined){
-            output += '<a href="../Monster?id='+monData.ClassID+'">'+monData.Name+'</a>';
+            output += '<a href="../Monster?id='+monData.ClassID+'">'+monData.Name+' (Lv.'+monData.Level+')</a>';
         }
         return output;
     }

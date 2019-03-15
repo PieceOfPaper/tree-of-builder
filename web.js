@@ -124,6 +124,8 @@ if (!fs.existsSync('./web/data')) fs.mkdirSync('./web/data');
 if (!fs.existsSync('./web/data/ies.ipf')) fs.mkdirSync('./web/data/ies.ipf');
 if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_client.ipf');
 if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_ability.ipf');
+if (!fs.existsSync('./web/data/ies_mongen.ipf')) fs.mkdirSync('./web/data/ies_mongen.ipf');
+if (!fs.existsSync('./web/data/ies_mongen.ipf/SmartGen')) fs.mkdirSync('./web/data/ies_mongen.ipf/SmartGen');
 if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
 if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
 
@@ -259,6 +261,14 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
       }
     }
   });
+  for (param in tableData['map2']){
+    loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies', function(){
+    });
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies', function(){
+    });
+    loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies', function(){
+    });
+  }
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 loadTable('companion', 'ies.ipf/companion.ies');
@@ -286,9 +296,14 @@ function loadTable(name, path, callback){
     return;
   }
   var file = fs.createWriteStream('./web/data/' + path);
+  //console.log('request download table [' + name + '] ' + path);
   var request = https.get(dataServerPath + serverCode + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('download table [' + name + '] ' + path);
+      console.log('downloaded table [' + name + '] ' + path);
+      if (fs.existsSync('./web/data/' + path) == false){
+        console.log('not exist table [' + name + '] ' + path);
+        return;
+      }
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
         data['TableName'] = name;
         for(var param in data){
@@ -307,6 +322,8 @@ function loadTable(name, path, callback){
         }
       });
     });
+  }).on('error', (e) => {
+    console.log('download error table [' + name + '] ' + path + ' ' + e);
   });
 }
 

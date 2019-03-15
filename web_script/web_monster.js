@@ -156,6 +156,24 @@ module.exports = function(app, tableData, scriptData){
         }
         skillString += '</tbody></table>';
 
+        var genmapString = '';
+        for (param in tableData['map2']){
+          var mongetTable = tableData['GenType_'+tableData['map2'][param].ClassName];
+          var has = false;
+          if (mongetTable != undefined){
+            for (param2 in mongetTable){
+              if (mongetTable[param2]==undefined) continue;
+              if (mongetTable[param2].ClassType==monsterTable[index].ClassName){
+                has = true;
+                break;
+              }
+            }
+          }
+          if (has){
+            genmapString += '<p>'+tos.GetMapString(tableData, tableData['map2'][param].ClassName)+'</p>';
+          }
+        }
+
         var output = layout_detail.toString();
         output = output.replace(/%Icon%/g, '<img src="../img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png" />');
         output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png');
@@ -173,6 +191,7 @@ module.exports = function(app, tableData, scriptData){
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
 
         output = output.replace(/%SkillString%/g, skillString);
+        output = output.replace(/%GenMapString%/g, genmapString);
 
         output = output.replace(/%StatScript%/g, statScript);
 
