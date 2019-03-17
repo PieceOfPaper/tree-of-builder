@@ -83,7 +83,7 @@ topMenuButtons['map']["Name"] = "Map";
 
 topMenuButtons['indun'] = [];
 topMenuButtons['indun']["Path"] = "IndunPage";
-topMenuButtons['indun']["Img"] = "../img/minimap_icons/minimap_complete.png";
+topMenuButtons['indun']["Img"] = "../img/icon/itemicon/icon_item_cube2.png";
 topMenuButtons['indun']["Name"] = "Indun";
 
 topMenuButtons['dialog'] = [];
