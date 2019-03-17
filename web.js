@@ -132,10 +132,15 @@ if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_a
 if (!fs.existsSync('./web/data/ies_mongen.ipf')) fs.mkdirSync('./web/data/ies_mongen.ipf');
 if (!fs.existsSync('./web/data/ies_mongen.ipf/SmartGen')) fs.mkdirSync('./web/data/ies_mongen.ipf/SmartGen');
 if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
+if (!fs.existsSync('./web/data/xml_minigame.ipf')) fs.mkdirSync('./web/data/xml_minigame.ipf');
 if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
 
-// ---------- 테이블 데이터 불러오기
+
 var tableData = [];
+var xmlData = [];
+var scriptData = [];
+
+// ---------- 테이블 데이터 불러오기
 loadTable('job', 'ies.ipf/job.ies', function(){
   loadTable('ability', 'ies_ability.ipf/ability.ies', function(){
     loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
@@ -333,8 +338,39 @@ function loadTable(name, path, callback){
 }
 
 
+// ---------- XML 데이터 불러오기
+loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
+function loadXMLData(name, path, callback){
+  if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
+    // import
+    fs.readFile('./web/data/' + path, function(error, data){
+      xmlData[name] = xml(data.toString());
+      console.log('import xml [' + name + '] ' + path);
+    });
+    return;
+  }
+  var file = fs.createWriteStream('./web/data/' + path);
+  var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('downloaded xml [' + name + '] ' + path);
+      if (fs.existsSync('./web/data/' + path) == false){
+        console.log('not exist xml [' + name + '] ' + path);
+        return;
+      }
+      //import
+      fs.readFile('./web/data/' + path, function(error, data){
+        xmlData[name] = xml(data.toString());
+        console.log('import xml [' + name + '] ' + path);
+      });
+    });
+  }).on('error', (e) => {
+    console.log('download error xml [' + name + '] ' + path + ' ' + e);
+  });
+}
+
+
+
 // ---------- 스크립트 데이터 불러오기
-var scriptData = [];
 var scriptArray = [];
 scriptArray.push('shared.ipf/script/calc_property_skill.lua');
 scriptArray.push('shared.ipf/script/ability.lua');
@@ -361,6 +397,8 @@ scriptArray.push('script.ipf/buff/skill_buff_pc.lua');
 scriptArray.push('script.ipf/buff/skill_buff_ratetable.lua');
 scriptArray.push('script.ipf/buff/skill_buff_takedamage.lua');
 scriptArray.push('script.ipf/buff/skill_buff_useskill.lua');
+scriptArray.push('script.ipf/mgame/mgame.lua');
+scriptArray.push('ui.ipf/uiscp/mgame_action.lua');
 //for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
 generateLuaScript(scriptArray, 0, function(result){
   // 기존 데이터 저장
@@ -644,6 +682,9 @@ app.use('/Map', mapPage);
 
 var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData);
 app.use('/Dialog', dialogPage);
+
+var minigamePage = require('./web_script/web_minigame')(app, serverSetting, tableData, scriptData, xmlData);
+app.use('/Minigame', minigamePage);
 
 var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, tableData, scriptData);
 app.use('/GuildEvent', miscGuildEventPage);

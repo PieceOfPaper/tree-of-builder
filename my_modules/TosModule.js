@@ -163,6 +163,13 @@ class TosModule {
         return grade;
     }
 
+    static ClassIDToClassName(tableData, tableName, classID){
+        for (var i = 0; i < tableData[tableName].length; i ++){
+          if (tableData[tableName][i].ClassID === Number(classID)) return tableData[tableName][i].ClassName;
+        }
+        return undefined;
+    }
+
     static GetCurrentGrade(tableData, grade){
         for (var i = 0; i < tableData['item_grade'].length; i ++){
           if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i];
