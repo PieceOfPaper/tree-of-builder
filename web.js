@@ -283,6 +283,9 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 loadTable('companion', 'ies.ipf/companion.ies');
 loadTable('foodtable', 'ies.ipf/foodtable.ies');
+loadTable('indun', 'ies.ipf/indun.ies');
+loadTable('indun_reward_item', 'ies.ipf/indun_reward_item.ies');
+loadTable('reward_indun', 'ies.ipf/reward_indun.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
@@ -682,6 +685,9 @@ app.use('/Map', mapPage);
 
 var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData);
 app.use('/Dialog', dialogPage);
+
+var indunPage = require('./web_script/web_indun')(app, serverSetting, tableData, scriptData);
+app.use('/Indun', indunPage);
 
 var minigamePage = require('./web_script/web_minigame')(app, serverSetting, tableData, scriptData, xmlData);
 app.use('/Minigame', minigamePage);

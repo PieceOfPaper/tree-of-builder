@@ -406,6 +406,9 @@ function searchModule_showResult(){
                     case "dialogtext":
                     tdstr = '<a href=../Dialog?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
+                    case "indun":
+                    tdstr = '<a href=../Indun?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
+                    break;
                 }
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;

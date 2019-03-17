@@ -81,6 +81,11 @@ topMenuButtons['map']["Path"] = "MapPage";
 topMenuButtons['map']["Img"] = "../img/minimap_icons/minimap_complete.png";
 topMenuButtons['map']["Name"] = "Map";
 
+topMenuButtons['indun'] = [];
+topMenuButtons['indun']["Path"] = "IndunPage";
+topMenuButtons['indun']["Img"] = "../img/minimap_icons/minimap_complete.png";
+topMenuButtons['indun']["Name"] = "Indun";
+
 topMenuButtons['dialog'] = [];
 topMenuButtons['dialog']["Path"] = "DialogPage";
 topMenuButtons['dialog']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";

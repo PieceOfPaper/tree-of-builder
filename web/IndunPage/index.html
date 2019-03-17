@@ -1,0 +1,123 @@
+<html>
+
+<head>
+    <title>Buff Page</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/searchModule.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <div class="search-area">
+        <select id="searchType">
+            <option value="Name">Name</option>
+            <option value="ClassName">ClassName</option>
+        </select>
+        <input type="text" id="searchName">
+    </div>
+    <div class="filler-area">
+        <p>Filter</p>
+        <select id="filter_FindType" class="selectFilter">
+            <option value="Default">FindType</option>
+        </select>
+        <select id="filter_PCRank" class="selectFilter">
+            <option value="Default">PCRank</option>
+        </select>
+        <select id="filter_Journal" class="selectFilter">
+            <option value="Default">Journal</option>
+        </select>
+        <select id="filter_DungeonType" class="selectFilter">
+            <option value="Default">DungeonType</option>
+        </select>
+        <select id="filter_UnitPerReset" class="selectFilter">
+            <option value="Default">UnitPerReset</option>
+        </select>
+        <select id="filter_RewardPerReset" class="selectFilter">
+            <option value="Default">RewardPerReset</option>
+        </select>
+        <div>Level<input type="number" id="levelMinFilter" value = "0">~<input type="number" id="levelMaxFilter" value = "999999"></div>
+    </div>
+    <div class="order-area">
+        <p>Order</p>
+        <select id="orderAttribute">
+            <option value="ClassID">ClassID</option>
+            <option value="ClassName">ClassName</option>
+            <option value="Name">Name</option>
+            <option value="Level">Level</option>
+        </select>
+        <select id="orderType">
+            <option value=1>Asc</option>
+            <option value=-1>Desc</option>
+        </select>
+    </div>
+    <button id="searchBtn">Search</button>
+    <br/>
+    <!--
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2172243042066207"
+         data-ad-slot="8369609764"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+    <table id="searchResult" class="search-result-table" style="width:100%">
+        <tbody>
+            <tr>
+                <td>ClassID</td>
+                <td>Level</td>
+                <td>Category</td>
+                <td>Name</td>
+            </tr>
+            <tr>
+                <td class="result-link">ClassID</td>
+                <td>Level</td>
+                <td>Category</td>
+                <td>Name</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <div id="pageNumbers" class="search-result-pagenum"></div>
+
+    <script>
+        var url = window.location.href.split('?')[0];
+
+        baseTable="indun";
+        customFilterSettingMethods.push(setCustom_level);
+        searchModule_init();
+
+        if (filterSetting["filter_Lv"] != undefined){
+            document.getElementById("levelMinFilter").value = Number(filterSetting["filter_Level"].split(',')[0].replace('[',''));
+            document.getElementById("levelMaxFilter").value = Number(filterSetting["filter_Level"].split(',')[1].replace(']',''));
+        }
+        
+        function setCustom_level(filterSetting){
+            if (document.getElementById("levelMinFilter").value <= 0 && document.getElementById("levelMaxFilter").value>=999999){
+                filterSetting["filter_Level"] = undefined;
+                return;
+            }
+            filterSetting["filter_Level"] = '['+document.getElementById("levelMinFilter").value+','+document.getElementById("levelMaxFilter").value+']';
+        }
+    </script>
+
+</body>
+
+</html>

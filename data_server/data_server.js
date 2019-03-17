@@ -40,6 +40,9 @@ module.exports = function(app, serverSetting, tableData){
 
     var dialogServer = require('./data_dialog')(app, tableData);
     app.use('/data/dialog', dialogServer);
+
+    var indunServer = require('./data_indun')(app, tableData);
+    app.use('/data/indun', indunServer);
   
     return route;
   }
