@@ -339,7 +339,7 @@ function loadTable(name, path, callback){
 
 
 // ---------- XML 데이터 불러오기
-loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
+//loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
 function loadXMLData(name, path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     // import

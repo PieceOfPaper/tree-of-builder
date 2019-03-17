@@ -302,5 +302,12 @@ class TosModule {
         }
         return output;
     }
+
+    static GetMinigameString(className, readText){
+        if (readText == undefined) readText = className;
+        var output = '';
+        output += '<a href="../Minigame?id='+className+'">'+readText+'</a>';
+        return output;
+    }
 }
 module.exports = TosModule;

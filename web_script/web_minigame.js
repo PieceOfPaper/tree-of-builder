@@ -1,7 +1,12 @@
 module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
     var express = require('express');
+    var http = require('http');
+    var https = require('https');
     var fs = require('fs');
-    //var url = require('url');
+
+    var csv = require('csv-parser');
+    var xml = require('xml-parser');
+    
     var tos = require('../my_modules/TosModule');
     
     var route = express.Router();
@@ -19,7 +24,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
 
       // id값이 존재하는 경우, 상세 페이지로 이동
       if (request.query.id != undefined && request.query.id != ''){
-          if (xmlData[request.query.id]!=undefined) detailPage(request.query.id, request, response);
+          if (xmlData['xml_minigame.ipf/'+request.query.id]!=undefined) {
+              detailPage('xml_minigame.ipf/'+request.query.id, request, response);
+          } else {
+            loadXMLData('xml_minigame.ipf/'+request.query.id, 'xml_minigame.ipf/'+request.query.id+'.xml', function(){
+                detailPage(request.query.id, request, response);
+            });
+          }
       }
   
       response.send('no data');
@@ -29,6 +40,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
   
     function detailPage(id, request, response) {
         var missionData = xmlData[id];
+        if (missionData == undefined) {
+            response.send('no data');
+        }
      
         var flowString = '';
         for (var i = 0; i < missionData.root.children.length; i ++){
@@ -117,6 +131,35 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
         output = output.replace(/%FlowString%/g, flowString);
         response.send(output);
     }
+
+    function loadXMLData(name, path, callback){
+        // if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
+        //   // import
+        //   fs.readFile('./web/data/' + path, function(error, data){
+        //     xmlData[name] = xml(data.toString());
+        //     console.log('import xml [' + name + '] ' + path);
+        //   });
+        //   return;
+        // }
+        var file = fs.createWriteStream('./web/data/' + path);
+        var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
+          response.pipe(file).on('close', function(){
+            console.log('downloaded xml [' + name + '] ' + path);
+            if (fs.existsSync('./web/data/' + path) == false){
+              console.log('not exist xml [' + name + '] ' + path);
+              return;
+            }
+            //import
+            fs.readFile('./web/data/' + path, function(error, data){
+              xmlData[name] = xml(data.toString());
+              console.log('import xml [' + name + '] ' + path);
+            });
+          });
+        }).on('error', (e) => {
+          console.log('download error xml [' + name + '] ' + path + ' ' + e);
+        });
+      }
+      
 
     function getScpString(data){
         var output = '';
