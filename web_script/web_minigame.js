@@ -28,20 +28,22 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
               detailPage('xml_minigame.ipf/'+request.query.id, request, response);
           } else {
             loadXMLData('xml_minigame.ipf/'+request.query.id, 'xml_minigame.ipf/'+request.query.id+'.xml', function(){
-                detailPage(request.query.id, request, response);
+                detailPage('xml_minigame.ipf/'+request.query.id, request, response);
             });
           }
+          return;
+      } else {
+        response.send('no data');
       }
-  
-      response.send('no data');
     });
   
     var layout_detail = fs.readFileSync('./web/MinigamePage/detail.html');
   
     function detailPage(id, request, response) {
         var missionData = xmlData[id];
-        if (missionData == undefined) {
+        if (missionData == undefined || missionData.root == undefined || missionData.root.children == undefined) {
             response.send('no data');
+            return;
         }
      
         var flowString = '';
@@ -147,16 +149,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
             console.log('downloaded xml [' + name + '] ' + path);
             if (fs.existsSync('./web/data/' + path) == false){
               console.log('not exist xml [' + name + '] ' + path);
+              if (callback != undefined) callback();
               return;
             }
             //import
             fs.readFile('./web/data/' + path, function(error, data){
               xmlData[name] = xml(data.toString());
               console.log('import xml [' + name + '] ' + path);
+              if (callback != undefined) callback();
             });
           });
         }).on('error', (e) => {
           console.log('download error xml [' + name + '] ' + path + ' ' + e);
+          if (callback != undefined) callback();
         });
       }
       
