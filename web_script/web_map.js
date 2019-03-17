@@ -1,7 +1,12 @@
 module.exports = function(app, serverSetting, tableData, scriptData){
-    var express = require('express');
-    var fs = require('fs');
-    //var url = require('url');
+  var express = require('express');
+  var http = require('http');
+  var https = require('https');
+  var fs = require('fs');
+
+  var csv = require('csv-parser');
+  var xml = require('xml-parser');
+  
     var tos = require('../my_modules/TosModule');
     
     var route = express.Router();
@@ -15,7 +20,19 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         if (request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < mapTable.length; i ++){
             if (mapTable[i].ClassID === Number(request.query.id)){
+              if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
                 mapDetailPage(i, request, response);
+              } else {
+                loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/GenType_'+mapTable[i].ClassName+'.ies', function(){
+                  if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
+                    mapDetailPage(i, request, response);
+                    return;
+                  }
+                  loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/gentype_'+mapTable[i].ClassName+'.ies', function(){
+                    mapDetailPage(i, request, response);
+                  });
+                });
+              }
               return;
             }
           }
@@ -136,6 +153,40 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       output = output.replace(/%MongenString%/g, mongetString);
 
       response.send(output);
+    }
+
+    function loadTable(name, path, callback){
+      if (tableData[name] === undefined) tableData[name] = [];
+      var file = fs.createWriteStream('./web/data/' + path);
+      //console.log('request download table [' + name + '] ' + path);
+      var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
+        response.pipe(file).on('close', function(){
+          console.log('downloaded table [' + name + '] ' + path);
+          if (fs.existsSync('./web/data/' + path) == false){
+            console.log('not exist table [' + name + '] ' + path);
+            if (callback != undefined) callback();
+            return;
+          }
+          fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
+            data['TableName'] = name;
+            for(var param in data){
+              if (data[param] == undefined) continue;
+              if (data[param].toLowerCase().indexOf('true') >= 0 || data[param].toLowerCase().indexOf('false') >= 0){
+                continue;
+              } else if (Number(data[param]).toString() != "NaN" && (Number(data[param]).toString().length == data[param].length  || data[param].indexOf('\.') > 0)){
+                data[param] = Number(data[param]);
+              }
+            }
+            tableData[name].push(data);
+          }).on('end', function(){
+            console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+            if (callback != undefined) callback();
+          });
+        });
+      }).on('error', (e) => {
+        console.log('download error table [' + name + '] ' + path + ' ' + e);
+        if (callback != undefined) callback();
+      });
     }
   
     return route;
