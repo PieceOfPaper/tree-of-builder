@@ -20,19 +20,20 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         if (request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < mapTable.length; i ++){
             if (mapTable[i].ClassID === Number(request.query.id)){
-              if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
-                mapDetailPage(i, request, response);
-              } else {
-                loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/GenType_'+mapTable[i].ClassName+'.ies', function(){
-                  if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
-                    mapDetailPage(i, request, response);
-                    return;
-                  }
-                  loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/gentype_'+mapTable[i].ClassName+'.ies', function(){
-                    mapDetailPage(i, request, response);
-                  });
-                });
-              }
+              // if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
+              //   mapDetailPage(i, request, response);
+              // } else {
+              //   loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/GenType_'+mapTable[i].ClassName+'.ies', function(){
+              //     if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
+              //       mapDetailPage(i, request, response);
+              //       return;
+              //     }
+              //     loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/gentype_'+mapTable[i].ClassName+'.ies', function(){
+              //       mapDetailPage(i, request, response);
+              //     });
+              //   });
+              // }
+              mapDetailPage(i, request, response);
               return;
             }
           }

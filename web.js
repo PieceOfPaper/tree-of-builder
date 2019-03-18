@@ -271,14 +271,14 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
       }
     }
   });
-  // for (param in tableData['map2']){
-  //   loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies');
-  //   loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+tableData['map2'][param].ClassName+'.ies');
-  //   loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies');
-  //   loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/gentype_'+tableData['map2'][param].ClassName+'.ies');
-  //   loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+tableData['map2'][param].ClassName+'.ies');
-  //   loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies');
-  // }
+  for (param in tableData['map2']){
+    // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies');
+    // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/gentype_'+tableData['map2'][param].ClassName+'.ies');
+    // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+tableData['map2'][param].ClassName+'.ies');
+    // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies');
+  }
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
 loadTable('companion', 'ies.ipf/companion.ies');
@@ -302,9 +302,7 @@ function loadTable(name, path, callback){
       tableData[name].push(data);
     }).on('end', function(){
       console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
-      if (callback != undefined){
-        callback();
-      }
+      if (callback != undefined) callback(name, path);
     });
     return;
   }
@@ -315,6 +313,7 @@ function loadTable(name, path, callback){
       console.log('downloaded table [' + name + '] ' + path);
       if (fs.existsSync('./web/data/' + path) == false){
         console.log('not exist table [' + name + '] ' + path);
+        if (callback != undefined) callback(name, path);
         return;
       }
       fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
@@ -330,13 +329,12 @@ function loadTable(name, path, callback){
         tableData[name].push(data);
       }).on('end', function(){
         console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
-        if (callback != undefined){
-          callback();
-        }
+        if (callback != undefined) callback(name, path);
       });
     });
   }).on('error', (e) => {
     console.log('download error table [' + name + '] ' + path + ' ' + e);
+    if (callback != undefined) callback(name, path);
   });
 }
 
