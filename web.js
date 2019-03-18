@@ -425,7 +425,7 @@ generateLuaScript(scriptArray, 0, function(result){
       if(err) return console.log(err);
       console.log('Success Generate Lua Scripts');
       //lua.DoString(clearedResultTrim);
-      cmd.run('./web/js/luajs/lua2js ./web/js/generated_lua.lua ./web/js/generated_lua.js')
+      //cmd.run('./web/js/luajs/lua2js ./web/js/generated_lua.lua ./web/js/generated_lua.js')
   }); 
 });
 function generateLuaScript(array, index, callback){
