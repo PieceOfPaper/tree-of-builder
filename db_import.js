@@ -45,11 +45,18 @@ if (isLocalServer){
     onerror: err=>console.log(err.message),
   };
 } else if(serverCode == 'kr' || serverCode == 'ktest') {
-  dbconfig = {
-    host     : '35.220.156.207',
-    user     : 'root',
-    password : 'cGbwHENEf6AmkDhc',
-    database : 'treeofbuilder',
+  // serverSetting['dbconfig'] = {
+  //   host     : '35.220.156.207',
+  //   user     : 'root',
+  //   password : 'cGbwHENEf6AmkDhc',
+  //   database : 'treeofbuilder',
+  //   onerror: err=>console.log(err.message),
+  // };
+  serverSetting['dbconfig'] = {
+    host     : 'sql12.freemysqlhosting.net',
+    user     : 'sql12284502',
+    password : 'P3J4kUA11E',
+    database : 'sql12284502',
     onerror: err=>console.log(err.message),
   };
 }
