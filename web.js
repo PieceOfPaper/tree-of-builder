@@ -308,7 +308,7 @@ function loadTable(name, path, callback){
       }
       tableData[name].push(data);
     }).on('end', function(){
-      console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
       if (callback != undefined) callback(name, path);
     });
     return;
@@ -317,7 +317,7 @@ function loadTable(name, path, callback){
   //console.log('request download table [' + name + '] ' + path);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('downloaded table [' + name + '] ' + path);
+      //console.log('downloaded table [' + name + '] ' + path);
       if (fs.existsSync('./web/data/' + path) == false){
         console.log('not exist table [' + name + '] ' + path);
         if (callback != undefined) callback(name, path);
@@ -335,7 +335,7 @@ function loadTable(name, path, callback){
         }
         tableData[name].push(data);
       }).on('end', function(){
-        console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
         if (callback != undefined) callback(name, path);
       });
     });
@@ -455,7 +455,7 @@ function generateLuaScript(array, index, callback){
         return;
       }
       luaString = data.toString();
-      console.log('import script [' + filename + ']');
+      //console.log('import script [' + filename + ']');
       generateLuaScript(array, index + 1, function(result){
         callback(luaString + '\n' + result);
       });
@@ -464,7 +464,7 @@ function generateLuaScript(array, index, callback){
     var file = fs.createWriteStream('./web/lua/' + filename);
     var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + array[index], function(response) {
       response.pipe(file).on('close', function(){
-        console.log('download script [' + filename + ']');
+        //console.log('download script [' + filename + ']');
         fs.readFile('./web/lua/' + filename, function(err, data){
           if (err) {
             sendSlack(err.toString());
@@ -502,7 +502,7 @@ function loadTableLanguage(name, path, callback){
           tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
         }
       }
-      console.log('import table [' + name + '] ' + path);
+      //console.log('import table [' + name + '] ' + path);
       if (callback != undefined){
         callback();
       }
@@ -512,7 +512,7 @@ function loadTableLanguage(name, path, callback){
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('download table [' + name + '] ' + path);
+      //console.log('download table [' + name + '] ' + path);
       fs.readFile('./web/data/' + path, function(error, data){
         if (error) sendSlack(err.toString());
         var xmlData = xml(data.toString());
