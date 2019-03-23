@@ -12,7 +12,7 @@ class DBLayoutModule {
 
     static Layout_LoginForm() {
         var output = '';
-        output += '<form action="/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
+        output += '<form action="/Account/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
         output +=   '<div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>';
         output +=   '<div style="display:table-row;"><div style="display:table-cell;">Pwd</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>';
         output +=   '<button style="margin:2px; width:calc(100% - 4px);" type="submit">Login</button>';
@@ -37,7 +37,7 @@ class DBLayoutModule {
             output += '<p style="width:calc(100%); text-align:center;">Longin Error</p>';
             output += '<br/>';
         }
-        output += '<p style="width:calc(100%); text-align:center;"><a href="./Logout">Logout</a></p>';
+        output += '<p style="width:calc(100%); text-align:center;"><a href="./Account/Logout">Logout</a></p>';
         output += '</div>';
 
         return output;

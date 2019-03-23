@@ -29,10 +29,44 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     // });
 
 
+    var layout = fs.readFileSync('./web/Layout/mail-join.html');
     var layout_mail = fs.readFileSync('./web/Layout/mail-join.html');
+    var layout_message = fs.readFileSync('./web/Layout/message.html');
     
     var route = express.Router();
-    route.post('/', function (req, res) {
+
+    route.post('/Login', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
+        var email = req.body.email;
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
+        connection.on('error', function() {});
+        connection.connect();
+
+        connection.query('SELECT * FROM user WHERE email="'+email+'";', function (error, results, fields) {
+            if (error) throw error;
+            if (results == undefined || results.length == 0){
+                res.send('<script> alert("Not Exist User"); window.location = document.referrer; </script>');
+            } else {
+                var pwd = sha256(req.body.pwd + results[0].pwd_salt);
+                if (pwd == results[0].pwd) {
+                    req.session.login_userno = results[0].userno;
+                    res.send('<script> window.location = document.referrer; </script>');
+                } else {
+                    res.send('<script> alert("Not Match Password"); window.location = document.referrer; </script>');
+                }
+            }
+            connection.end();
+        });
+
+    });
+
+    route.get('/Logout', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
+        req.session.login_userno = undefined;
+        res.send('<script> window.location = document.referrer; </script>');
+    });
+
+    route.post('/Join', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var email = req.body.email;
         var pwd = req.body.pwd;
@@ -67,9 +101,30 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                     connection.end();
                 });
         
-                //res.send('<script> window.location.href=".."; </script>');
+                //res.send('<script> window.location = document.referrer; </script>');
             });
         });
+    });
+
+    route.get('/EmailAuth', function (req, res) {
+        if (req.query.id != undefined && req.query.id.length > 0){
+            console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
+            var connection = mysql.createConnection(serverSetting['dbconfig']);
+            connection.on('error', function() {});
+            connection.connect();
+            connection.query('UPDATE user SET mail_auth="A" WHERE mail_auth="'+req.query.id+'";', function (error, results, fields) {
+                if (error) throw error;
+                if (results == undefined || results.length == 0){
+                    res.send('<script> alert("Authentication Fail."); window.location.href=".."; </script>');
+                    connection.end();
+                    return;
+                }
+                res.send('<script> alert("Authentication Success."); window.location.href=".."; </script>');
+                connection.end();
+                return;
+            });
+        }
+        //res.send('not send');
     });
 
     function generateSalt(){

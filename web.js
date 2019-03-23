@@ -712,20 +712,23 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
-var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
-app.use('/Login', db_loginPage);
+// var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
+// app.use('/Login', db_loginPage);
 
-var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
-app.use('/Logout', db_logoutPage);
+// var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
+// app.use('/Logout', db_logoutPage);
 
-var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
-app.use('/Join', db_joinPage);
+// var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
+// app.use('/Join', db_joinPage);
 
 var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, serverSetting, tableData, scriptData);
 app.use('/ReqJoinMail', db_reqJoinMailPage);
 
-var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
-app.use('/EmailAuth', db_emailAuthPage);
+// var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
+// app.use('/EmailAuth', db_emailAuthPage);
+
+var db_accountPage = require('./web_script/DBPage/web_account')(app, serverSetting, tableData, scriptData);
+app.use('/Account', db_accountPage);
 
 var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, tableData, scriptData);
 app.use('/BoardShort', db_boardShortPage);
