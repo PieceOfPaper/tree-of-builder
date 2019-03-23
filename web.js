@@ -548,39 +548,39 @@ var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
-  fs.readdir('./web/img/Dlg_portrait', (err, files) => {
-    if (err) sendSlack(err.toString());
-    if (files === undefined){
-      response.send(layout.toString());
-      return;
-    }
+  //fs.readdir('./web/img/Dlg_portrait', (err, files) => {
+    // if (err) sendSlack(err.toString());
+    // if (files === undefined){
+    //   response.send(layout.toString());
+    //   return;
+    // }
 
     var connection = new mysqls(serverSetting['dbconfig']);
 
-    var randomIndex = Math.floor(Math.random()*files.length);
-    var imgname = files[randomIndex].split('.')[0].toLowerCase();
-    var dialogTable = tableData['dialogtext'];
-    var captionList = [];
-    for (var i = 0; i < dialogTable.length; i++){
-      if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
-        captionList.push(dialogTable[i]);
-      }
-    }
-    var illustNpcName = imgname;
-    var illustNpcText = '';
-    if (captionList.length > 0){
-      var caption = captionList[Math.floor(Math.random()*captionList.length)];
-      illustNpcName = caption.Caption;
-      //illustNpcText = caption.Text.split(/{np}|{nl}/g);
-      //illustNpcText = tos.parseCaption(caption.Text);
-      var illustNpcText = caption['Text'];
-      if (illustNpcText != undefined){
-        illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
-        illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
-      } else {
-        illustNpcText = '';
-      }
-    }
+    // var randomIndex = Math.floor(Math.random()*files.length);
+    // var imgname = files[randomIndex].split('.')[0].toLowerCase();
+    // var dialogTable = tableData['dialogtext'];
+    // var captionList = [];
+    // for (var i = 0; i < dialogTable.length; i++){
+    //   if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
+    //     captionList.push(dialogTable[i]);
+    //   }
+    // }
+    // var illustNpcName = imgname;
+    // var illustNpcText = '';
+    // if (captionList.length > 0){
+    //   var caption = captionList[Math.floor(Math.random()*captionList.length)];
+    //   illustNpcName = caption.Caption;
+    //   //illustNpcText = caption.Text.split(/{np}|{nl}/g);
+    //   //illustNpcText = tos.parseCaption(caption.Text);
+    //   var illustNpcText = caption['Text'];
+    //   if (illustNpcText != undefined){
+    //     illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
+    //     illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
+    //   } else {
+    //     illustNpcText = '';
+    //   }
+    // }
 
     // var illustNpcMention = '';
     // for (var i = 0; i < illustNpcText.length; i ++){
@@ -632,7 +632,7 @@ app.get('/', function (req, response) {
     }
 
     response.send(output);
-  })
+  //})
 });
 
 // app.post('/Lua', function (req, res) {
