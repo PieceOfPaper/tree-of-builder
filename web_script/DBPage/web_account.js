@@ -32,8 +32,44 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var layout = fs.readFileSync('./web/Layout/mail-join.html');
     var layout_mail = fs.readFileSync('./web/Layout/mail-join.html');
     var layout_message = fs.readFileSync('./web/Layout/message.html');
+    var layout_account = fs.readFileSync('./web/Layout/account.html');
     
     var route = express.Router();
+
+    route.get('/', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
+        if (req.session.login_userno == undefined) {
+            res.send('<script> window.location.href=".."; </script>');
+            return;
+        }
+        var userno = req.session.login_userno;
+
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
+        connection.on('error', function() {});
+        connection.connect();
+
+        connection.query('SELECT * FROM user WHERE userno='+userno+';', function (error, results, fields) {
+            if (error) throw error;
+            if (results == undefined || results.length == 0){
+                res.send('<script> window.location.href=".."; </script>');
+            } else {
+                var output = layout_account.toString();
+                var dataSetScriptString = '<script>';
+                for (param in results[0]){
+                    if (param=='pwd') continue;
+                    if (param=='email'){
+                        dataSetScriptString += 'if(document.getElementById("'+param+'")!=undefined) document.getElementById("'+param+'").innerText="'+results[0][param]+'";\n';
+                        continue;
+                    }
+                    dataSetScriptString += 'if(document.getElementById("'+param+'")!=undefined) document.getElementById("'+param+'").value="'+results[0][param]+'";\n';
+                }
+                dataSetScriptString += '</script>';
+                output = output.replace(/%DataSetScriptString%/g, dataSetScriptString);
+                res.send(output);
+            }
+            connection.end();
+        });
+    });
 
     route.post('/Login', function (req, res) {
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
@@ -125,6 +161,100 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             });
         }
         //res.send('not send');
+    });
+
+    route.post('/ReqUpdate', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
+        if (req.session.login_userno == undefined){
+            res.send('<script> alert("Update Fail."); window.history.back(); </script>');
+            return;
+        }
+
+        var userno = req.session.login_userno;
+
+        var updateList = [];
+        var isUpdated = false;
+        if (req.body.pwd!=undefined && req.body.pwd_check!=undefined && 
+            req.body.pwd==req.body.pwd_check && 
+            req.body.pwd.length>0){
+            var pwd_salt = generateSalt();
+            updateList['pwd'] = sha256(req.body.pwd+pwd_salt);
+            updateList['pwd_salt'] = pwd_salt;
+            isUpdated = true;
+        }
+        if (req.body.nickname!=undefined){
+            updateList['nickname'] = req.body.nickname;
+            isUpdated = true;
+        }
+
+        if (isUpdated == false){
+            res.send('<script> alert("Update Empty."); window.history.back(); </script>');
+            return;
+        }
+        var setstring = '';
+        var strcount = 0;
+        for (param in updateList){
+            if (strcount>0) setstring += ' , '
+            setstring += param+'="'+updateList[param]+'"';
+            strcount ++;
+        }
+
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
+        connection.on('error', function() {});
+        connection.connect();
+        connection.query('UPDATE user SET '+setstring+' WHERE userno="'+userno+'";', function (error, results, fields) {
+            if (error) throw error;
+            if (results == undefined || results.length == 0){
+                res.send('<script> alert("Update Fail."); window.history.back(); </script>');
+                connection.end();
+                return;
+            }
+            res.send('<script> alert("Update Success."); window.location = document.referrer; </script>');
+            connection.end();
+            return;
+        });
+
+    });
+
+    route.post('/ReqResetPwd', function (req, res) {
+        console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
+        if (req.body.email == undefined){
+            res.send('<script> alert("Pwd Reset Fail."); window.history.back(); </script>');
+            return;
+        }
+
+        var realPwd = generateSalt();
+        var pwd_salt = generateSalt();
+        var pwd = sha256(realPwd+pwd_salt);
+
+        var connection = mysql.createConnection(serverSetting['dbconfig']);
+        connection.on('error', function() {});
+        connection.connect();
+        connection.query('UPDATE user SET pwd="'+pwd+'" , pwd_salt="'+pwd_salt+'" WHERE email="'+req.body.email+'";', function (error, results, fields) {
+            if (error) throw error;
+            if (results == undefined || results.length == 0){
+                res.send('<script> alert("Pwd Reset Fail."); window.history.back(); </script>');
+                connection.end();
+                return;
+            }
+            mailOptions.subject = '[Tree of Builder] New Password';
+            //res.send('<script> alert("Pwd Reset Success."); window.location = document.referrer; </script>');
+            mailOptions.to = req.body.email;
+            //mailOptions.html = layout_mail.toString().replace(/%AddressString%/g,'http://'+req.headers.host+'/Account/EmailAuth?id='+auth);
+            mailOptions.html = '<p>New Password : ' + realPwd+'</p>';
+            smtpTransport.sendMail(mailOptions, function(error, response){
+                if (error){
+                    console.log(error);
+                } else {
+                    console.log("Message sent : " + response.message);
+                }
+                smtpTransport.close();
+            });
+            res.send(layout_message.toString().replace(/%Message%/g, 'Sent Mail. Check your email').replace(/style.css/g, '../style.css'));
+            connection.end();
+            return;
+        });
+
     });
 
     function generateSalt(){

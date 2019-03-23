@@ -17,6 +17,7 @@ class DBLayoutModule {
         output +=   '<div style="display:table-row;"><div style="display:table-cell;">Pwd</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>';
         output +=   '<button style="margin:2px; width:calc(100% - 4px);" type="submit">Login</button>';
         output +=   '<button style="margin:2px; width:calc(100% - 4px);" type="button" onclick="location.href=\'./JoinPage\'">Join</button>';
+        output +=   '<button style="margin:2px; width:calc(100% - 4px);" type="button" onclick="location.href=\'./ForgotPwdPage\'">Forgot Password</button>';
         output += '</form>';
 
         return output;
@@ -27,6 +28,7 @@ class DBLayoutModule {
         output += '<div style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
         if (userdata != undefined){
             output += '<p style="width:calc(100%); text-align:center;">Welocme. '+userdata.nickname+'</p>';
+            output += '<p style="width:calc(100%); text-align:center;"><a href="./Account">My Info</a></p>';
             output += '<br/>';
             if (userdata.mail_auth == undefined || userdata.mail_auth != "A"){
                 output += '<p style="width:calc(100%); text-align:center;">No Authenticated User.</p>';
