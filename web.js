@@ -293,6 +293,7 @@ loadTable('foodtable', 'ies.ipf/foodtable.ies');
 loadTable('indun', 'ies.ipf/indun.ies');
 loadTable('indun_reward_item', 'ies.ipf/indun_reward_item.ies');
 loadTable('reward_indun', 'ies.ipf/reward_indun.ies');
+loadTable('event_banner', 'ies_client.ipf/event_banner.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
@@ -702,6 +703,9 @@ app.use('/GuildEvent', miscGuildEventPage);
 
 var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData);
 app.use('/Companion', miscCompanionPage);
+
+var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData);
+app.use('/EventBanner', miscEventbannerPage);
 
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
 app.use('/Builder', builderPage);
