@@ -35,20 +35,21 @@
     -->
 
     <div class="main-login-container">
-        <form action="/Account/Join" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;" >
-            <div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><input type="email" name="email"></div></div>
+        <form action="/Account/ReqUpdate" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;" >
+            <div style="display:table-row;"><div style="display:table-cell;">Email</div><div style="display:table-cell;"><!--<input type="email" id="email" name="email">--><p id="email"></p></div></div>
             <div style="display:table-row;"><br/></div>
-            <div style="display:table-row;"><div style="display:table-cell;">Password</div><div style="display:table-cell;"><input type="password" name="pwd"></div></div>
-            <div style="display:table-row;"><div style="display:table-cell;"></div><div style="display:table-cell;"><input type="password" name="pwd_check"></div></div>
+            <div style="display:table-row;"><div style="display:table-cell;">Password</div><div style="display:table-cell;"><input type="password" id="pwd" name="pwd"></div></div>
+            <div style="display:table-row;"><div style="display:table-cell;"></div><div style="display:table-cell;"><input type="password" id="pwd_check" name="pwd_check"></div></div>
             <div style="display:table-row;"><br/></div>
-            <div style="display:table-row;"><div style="display:table-cell;">Nickname</div><div style="display:table-cell;"><input type="text" name="nickname"></div></div>
+            <div style="display:table-row;"><div style="display:table-cell;">Nickname</div><div style="display:table-cell;"><input type="text" id="nickname" name="nickname"></div></div>
             <div style="display:table-row;"><br/></div>
-            <button style="margin:2px; width:calc(100% - 4px);" type="submit">Join</button>
+            <button style="margin:2px; width:calc(100% - 4px);" type="submit">Update</button>
         </form>
     </div>
 
     <script>
     </script>
+    %DataSetScriptString%
 
 </body>
 
