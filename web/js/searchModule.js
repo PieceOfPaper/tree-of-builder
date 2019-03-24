@@ -409,6 +409,9 @@ function searchModule_showResult(){
                     case "indun":
                     tdstr = '<a href=../Indun?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
                     break;
+                    case "collection":
+                    tdstr = '<a href=../Collection?id='+searchedItems[i].ClassID+'>'+tdstr+'</a>';
+                    break;
                 }
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;

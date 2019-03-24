@@ -43,6 +43,9 @@ module.exports = function(app, serverSetting, tableData){
 
     var indunServer = require('./data_indun')(app, tableData);
     app.use('/data/indun', indunServer);
+
+    var collectionServer = require('./data_collection')(app, tableData);
+    app.use('/data/collection', collectionServer);
   
     return route;
   }

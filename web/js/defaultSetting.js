@@ -91,6 +91,11 @@ topMenuButtons['dialog']["Path"] = "DialogPage";
 topMenuButtons['dialog']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
 topMenuButtons['dialog']["Name"] = "Dialog";
 
+topMenuButtons['collection'] = [];
+topMenuButtons['collection']["Path"] = "CollectionPage";
+topMenuButtons['collection']["Img"] = "../img/icon/itemicon/icon_item_box.png";
+topMenuButtons['collection']["Name"] = "Collection";
+
 topMenuButtons['category_miscdata'] = [];
 topMenuButtons['category_miscdata']["Path"] = undefined;
 topMenuButtons['category_miscdata']["Img"] = "";
