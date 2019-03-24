@@ -189,6 +189,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         output = output.replace(/%MoveType%/g, monsterTable[index].MoveType);
         output = output.replace(/%Size%/g, monsterTable[index].Size);
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
+        output = output.replace(/%StatType%/g, monsterTable[index].StatType);
 
         output = output.replace(/%SkillString%/g, skillString);
         output = output.replace(/%GenMapString%/g, genmapString);
