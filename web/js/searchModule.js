@@ -5,6 +5,7 @@ var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
 
 var searchTypes = [];
 var resultCols = [];
+var orderCol = undefined;
 
 var pageNum = 1;
 var pageMax = 1;
@@ -279,6 +280,24 @@ function searchModule_showResult(){
     var table=document.getElementById("searchResult").children[0];
     var nodeIndex = 0;
     var nodeCount = 0;
+
+    var hasOrderCol = false;
+    for (var i=0;i<resultCols.length;i++){
+        if (resultCols[i]["datalist"]==undefined) continue;
+        for (var k=0;k<resultCols[i]["datalist"].length;k++){
+            if (resultCols[i]["datalist"][k]==filterSetting["orderAttr"]){
+                hasOrderCol = true;
+                break;
+            }
+        }
+        if (hasOrderCol) break;
+    }
+    if (hasOrderCol == false){
+        orderCol = filterSetting["orderAttr"];
+    } else {
+        orderCol = undefined;
+    }
+
     //for(var i=(pageNum-1)*itemCount;i<pageNum*itemCount;i++){
     for(var i=0;i<searchedItems.length;i++){
         if (i >= searchedItems.length) break;
@@ -415,6 +434,22 @@ function searchModule_showResult(){
                 }
             }
             resultNodes[nodeIndex].childNodes[j].innerHTML = tdstr;
+        }
+        if (orderCol!=undefined){
+            if (resultNodes[nodeIndex].childNodes[resultCols.length]==undefined){
+                var col = document.createElement("td");
+                resultNodes[nodeIndex].appendChild(col);
+            }
+            if (searchedItems[i][orderCol] != undefined){
+                resultNodes[nodeIndex].childNodes[resultCols.length].innerHTML = Number(searchedItems[i][orderCol]);
+            } else {
+                resultNodes[nodeIndex].childNodes[resultCols.length].innerHTML = 0;
+            }
+        } else {
+            if (resultNodes[nodeIndex].childNodes[resultCols.length]!=undefined){
+                resultNodes[nodeIndex].childNodes[resultCols.length].remove();
+                resultNodes[nodeIndex].childNodes.length = resultCols.length;
+            }
         }
         nodeCount ++;
     }
