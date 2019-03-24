@@ -76,6 +76,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       output = output.replace(/%Name%/g, baseTable[index].Name);
       output = output.replace(/%ClassName%/g, baseTable[index].ClassName);
       output = output.replace(/%ClassID%/g, baseTable[index].ClassID);
+      output = output.replace(/%Journal%/g, baseTable[index].Journal);
 
       output = output.replace(/%BaseItemString%/g, baseItemString);
       output = output.replace(/%ItemString%/g, itemString);
