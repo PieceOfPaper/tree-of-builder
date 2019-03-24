@@ -160,6 +160,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     }
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+    output = output.replace(/%Shops%/g, getShopString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
@@ -600,6 +601,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+    output = output.replace(/%Shops%/g, getShopString(tableName,index));
 
     response.send(output);
   }
@@ -720,6 +722,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     }
   
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+    output = output.replace(/%Shops%/g, getShopString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
@@ -809,6 +812,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     }
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
+    output = output.replace(/%Shops%/g, getShopString(tableName,index));
 
     response.send(output);
   }
@@ -912,6 +916,31 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           break;
         }
         output += '<p><a href="../Quest?id='+quest.ClassID+'">'+imgstr+quest.Name+'</a></p>';
+      }
+    }
+
+    return output;
+  }
+
+  function getShopString(tableName, index){
+    var itemData = tableData[tableName][index];
+    var shopTable = tableData['shop'];
+
+    if (itemData==undefined) return '';
+
+    var shoplist = [];
+    for (param in shopTable){
+      if (shopTable[param]==undefined) continue;
+      if (shopTable[param]['ItemName']==itemData.ClassName) {
+        if (shoplist.includes(shopTable[param]['ShopName'])==false) shoplist.push(shopTable[param]['ShopName']);
+      }
+    }
+
+    var output = '';
+    if (shoplist.length > 0){
+      output += '<h3>Shop</h3>';
+      for (var i=0;i<shoplist.length;i++){
+        output += '<p><a href="../Shop?id='+shoplist[i]+'">'+shoplist[i]+'</a></p>';
       }
     }
 

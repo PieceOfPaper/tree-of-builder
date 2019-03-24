@@ -17,6 +17,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var array = [];
         for (param in shopTable){
             if (shopTable[param]==undefined || shopTable[param]['ShopName']==undefined) continue;
+            if (request.query.id!=undefined && request.query.id.length>0 && request.query.id!=shopTable[param]['ShopName']) continue;
             if (array[shopTable[param]['ShopName']]==undefined){
                 array[shopTable[param]['ShopName']] = [];
             }
@@ -26,6 +27,10 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         for (shopname in array){
             resultString += '<h2>'+shopname+'</h2>';
             resultString += '<table class="search-result-table"><tbody>';
+            resultString += '<tr>';
+            resultString += '<td>Item</td>';
+            resultString += '<td>Price</td>';
+            resultString += '</tr>';
             for (param in array[shopname]){
                 var itemdata = tos.FindDataClassName(tableData,'item',array[shopname][param]['ItemName']);
                 if (itemdata == undefined) continue;
@@ -35,7 +40,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                 
                 resultString += '<tr>';
                 resultString += '<td>'+tos.GetItemResultString(tableData,array[shopname][param]['ItemName'])+'</td>';
-                resultString += '<td>'+price+'</td>';
+                resultString += '<td>'+price.toLocaleString()+'</td>';
                 resultString += '</tr>';
             }
             resultString += '</tbody></table><br/><br/>';

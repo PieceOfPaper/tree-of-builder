@@ -708,6 +708,9 @@ app.use('/Companion', miscCompanionPage);
 var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData);
 app.use('/EventBanner', miscEventbannerPage);
 
+var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData);
+app.use('/Shop', miscShopPage);
+
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
 app.use('/Builder', builderPage);
 
