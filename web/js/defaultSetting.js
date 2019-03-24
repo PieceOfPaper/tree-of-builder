@@ -106,6 +106,11 @@ topMenuButtons['misc_companion']["Path"] = "Companion";
 topMenuButtons['misc_companion']["Img"] = "../img/icon/itemicon/icon_item_egg_toucan.png";
 topMenuButtons['misc_companion']["Name"] = "Companion";
 
+topMenuButtons['misc_eventbanner'] = [];
+topMenuButtons['misc_eventbanner']["Path"] = "EventBanner";
+topMenuButtons['misc_eventbanner']["Img"] = "../img/testje_image/event_btn.png";
+topMenuButtons['misc_eventbanner']["Name"] = "Event Banner";
+
 
 
 

@@ -86,27 +86,25 @@ importImage('ui.ipf/baseskinset/classicon.xml', './web/img/icon/classicon', fals
     importImage('ui.ipf/baseskinset/monillust.xml', './web/img/icon/monillust', false, function(){
       importImage('ui.ipf/baseskinset/mongem.xml', './web/img/icon/mongem', false, function(){
         importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
-          if (withUISkin){
-            importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', true, function(){
-              importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
-                importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
-                  //importImage('ui.ipf/baseskinset/itemicon.xml', './web/img/icon/itemicon', false, function(){
-                    console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
-                    sendSlack("Image Import SUCCESS (with UI Skin)");
-                    copyImage('./web/img/bufficon', './web/img/icon/skillicon');
-                    copyImage('./web/img/actionicon', './web/img/icon/skillicon');
-                    copyImage('./web/img/barrack', './web/img/icon/monillust');
-                  //});
+          importImage('ui.ipf/baseskinset/eventbanner.xml', './web/img/eventbanner', false, function(){
+            importImage('ui.ipf/baseskinset/helpimage.xml', './web/img/helpimage', false, function(){
+              if (withUISkin){
+                importImage('ui.ipf/baseskinset/baseskinset.xml', './web/img', true, function(){
+                  console.log("IMAGE IMPORT SUCCESS (with UI Skin)");
+                  sendSlack("Image Import SUCCESS (with UI Skin)");
+                  copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+                  copyImage('./web/img/actionicon', './web/img/icon/skillicon');
+                  copyImage('./web/img/barrack', './web/img/icon/monillust');
                 });
-              });
+              } else {
+                console.log("IMAGE IMPORT SUCCESS");
+                sendSlack("Image Import SUCCESS");
+                copyImage('./web/img/bufficon', './web/img/icon/skillicon');
+                copyImage('./web/img/actionicon', './web/img/icon/skillicon');
+                copyImage('./web/img/barrack', './web/img/icon/monillust');
+              }
             });
-          } else {
-            console.log("IMAGE IMPORT SUCCESS");
-            sendSlack("Image Import SUCCESS");
-            copyImage('./web/img/bufficon', './web/img/icon/skillicon');
-            copyImage('./web/img/actionicon', './web/img/icon/skillicon');
-            copyImage('./web/img/barrack', './web/img/icon/monillust');
-          }
+          });
         });
       });
     });
@@ -135,6 +133,7 @@ function importImage(srcPath, dstPath, useCategory, callback){
           for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
             //console.log(xmlData.root.children[i].children[j].name + ' ' + xmlData.root.children[i].children[j].attributes['name'] + ' ' + xmlData.root.children[i].children[j].children.length);
             if (xmlData.root.children[i].name.indexOf('skinlist') > -1){
+              continue;
               for (var k = 0; k < xmlData.root.children[i].children[j].children.length; k ++){
                 var data = [];
                 if (xmlData.root.children[i].attributes['category'] != undefined && useCategory){

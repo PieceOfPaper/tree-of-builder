@@ -43,6 +43,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           if (questData['QuestName'+i] == undefined || questData['QuestName'+i].length == 0) continue;
           if (i > 1) requireQuestString += questData.Quest_Condition + ' ';
           var reqQuestData = tos.FindDataClassName(tableData, 'questprogresscheck', questData['QuestName'+i]);
+          if (reqQuestData == undefined) continue;
           requireQuestString += '<a href="?id=' + reqQuestData.ClassID + '">' + reqQuestData.Name + '</a> ';
         }
         requireQuestString += '</p>';

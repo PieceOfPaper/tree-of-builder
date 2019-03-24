@@ -294,6 +294,7 @@ loadTable('indun', 'ies.ipf/indun.ies');
 loadTable('indun_reward_item', 'ies.ipf/indun_reward_item.ies');
 loadTable('reward_indun', 'ies.ipf/reward_indun.ies');
 loadTable('shop', 'ies.ipf/shop.ies');
+loadTable('event_banner', 'ies_client.ipf/event_banner.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
@@ -309,7 +310,7 @@ function loadTable(name, path, callback){
       }
       tableData[name].push(data);
     }).on('end', function(){
-      console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
       if (callback != undefined) callback(name, path);
     });
     return;
@@ -318,7 +319,7 @@ function loadTable(name, path, callback){
   //console.log('request download table [' + name + '] ' + path);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('downloaded table [' + name + '] ' + path);
+      //console.log('downloaded table [' + name + '] ' + path);
       if (fs.existsSync('./web/data/' + path) == false){
         console.log('not exist table [' + name + '] ' + path);
         if (callback != undefined) callback(name, path);
@@ -336,7 +337,7 @@ function loadTable(name, path, callback){
         }
         tableData[name].push(data);
       }).on('end', function(){
-        console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
         if (callback != undefined) callback(name, path);
       });
     });
@@ -456,7 +457,7 @@ function generateLuaScript(array, index, callback){
         return;
       }
       luaString = data.toString();
-      console.log('import script [' + filename + ']');
+      //console.log('import script [' + filename + ']');
       generateLuaScript(array, index + 1, function(result){
         callback(luaString + '\n' + result);
       });
@@ -465,7 +466,7 @@ function generateLuaScript(array, index, callback){
     var file = fs.createWriteStream('./web/lua/' + filename);
     var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + array[index], function(response) {
       response.pipe(file).on('close', function(){
-        console.log('download script [' + filename + ']');
+        //console.log('download script [' + filename + ']');
         fs.readFile('./web/lua/' + filename, function(err, data){
           if (err) {
             sendSlack(err.toString());
@@ -503,7 +504,7 @@ function loadTableLanguage(name, path, callback){
           tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
         }
       }
-      console.log('import table [' + name + '] ' + path);
+      //console.log('import table [' + name + '] ' + path);
       if (callback != undefined){
         callback();
       }
@@ -513,7 +514,7 @@ function loadTableLanguage(name, path, callback){
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('download table [' + name + '] ' + path);
+      //console.log('download table [' + name + '] ' + path);
       fs.readFile('./web/data/' + path, function(error, data){
         if (error) sendSlack(err.toString());
         var xmlData = xml(data.toString());
@@ -548,39 +549,39 @@ var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
-  fs.readdir('./web/img/Dlg_portrait', (err, files) => {
-    if (err) sendSlack(err.toString());
-    if (files === undefined){
-      response.send(layout.toString());
-      return;
-    }
+  //fs.readdir('./web/img/Dlg_portrait', (err, files) => {
+    // if (err) sendSlack(err.toString());
+    // if (files === undefined){
+    //   response.send(layout.toString());
+    //   return;
+    // }
 
     var connection = new mysqls(serverSetting['dbconfig']);
 
-    var randomIndex = Math.floor(Math.random()*files.length);
-    var imgname = files[randomIndex].split('.')[0].toLowerCase();
-    var dialogTable = tableData['dialogtext'];
-    var captionList = [];
-    for (var i = 0; i < dialogTable.length; i++){
-      if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
-        captionList.push(dialogTable[i]);
-      }
-    }
-    var illustNpcName = imgname;
-    var illustNpcText = '';
-    if (captionList.length > 0){
-      var caption = captionList[Math.floor(Math.random()*captionList.length)];
-      illustNpcName = caption.Caption;
-      //illustNpcText = caption.Text.split(/{np}|{nl}/g);
-      //illustNpcText = tos.parseCaption(caption.Text);
-      var illustNpcText = caption['Text'];
-      if (illustNpcText != undefined){
-        illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
-        illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
-      } else {
-        illustNpcText = '';
-      }
-    }
+    // var randomIndex = Math.floor(Math.random()*files.length);
+    // var imgname = files[randomIndex].split('.')[0].toLowerCase();
+    // var dialogTable = tableData['dialogtext'];
+    // var captionList = [];
+    // for (var i = 0; i < dialogTable.length; i++){
+    //   if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
+    //     captionList.push(dialogTable[i]);
+    //   }
+    // }
+    // var illustNpcName = imgname;
+    // var illustNpcText = '';
+    // if (captionList.length > 0){
+    //   var caption = captionList[Math.floor(Math.random()*captionList.length)];
+    //   illustNpcName = caption.Caption;
+    //   //illustNpcText = caption.Text.split(/{np}|{nl}/g);
+    //   //illustNpcText = tos.parseCaption(caption.Text);
+    //   var illustNpcText = caption['Text'];
+    //   if (illustNpcText != undefined){
+    //     illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
+    //     illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
+    //   } else {
+    //     illustNpcText = '';
+    //   }
+    // }
 
     // var illustNpcMention = '';
     // for (var i = 0; i < illustNpcText.length; i ++){
@@ -632,7 +633,7 @@ app.get('/', function (req, response) {
     }
 
     response.send(output);
-  })
+  //})
 });
 
 // app.post('/Lua', function (req, res) {
@@ -704,8 +705,8 @@ app.use('/GuildEvent', miscGuildEventPage);
 var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData);
 app.use('/Companion', miscCompanionPage);
 
-var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData);
-app.use('/Shop', miscShopPage);
+var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData);
+app.use('/EventBanner', miscEventbannerPage);
 
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
 app.use('/Builder', builderPage);
@@ -716,20 +717,23 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
-var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
-app.use('/Login', db_loginPage);
+// var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
+// app.use('/Login', db_loginPage);
 
-var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
-app.use('/Logout', db_logoutPage);
+// var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
+// app.use('/Logout', db_logoutPage);
 
-var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
-app.use('/Join', db_joinPage);
+// var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
+// app.use('/Join', db_joinPage);
 
 var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, serverSetting, tableData, scriptData);
 app.use('/ReqJoinMail', db_reqJoinMailPage);
 
-var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
-app.use('/EmailAuth', db_emailAuthPage);
+// var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
+// app.use('/EmailAuth', db_emailAuthPage);
+
+var db_accountPage = require('./web_script/DBPage/web_account')(app, serverSetting, tableData, scriptData);
+app.use('/Account', db_accountPage);
 
 var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, tableData, scriptData);
 app.use('/BoardShort', db_boardShortPage);
