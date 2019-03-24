@@ -116,6 +116,11 @@ topMenuButtons['misc_shop']["Path"] = "Shop";
 topMenuButtons['misc_shop']["Img"] = "../img/icon/itemicon/icon_item_silver.png";
 topMenuButtons['misc_shop']["Name"] = "Shop";
 
+topMenuButtons['misc_ballenceReward'] = [];
+topMenuButtons['misc_ballenceReward']["Path"] = "BallenceReward";
+topMenuButtons['misc_ballenceReward']["Img"] = "../img/icon/itemicon/icon_item_rankreset_paper.png";
+topMenuButtons['misc_ballenceReward']["Name"] = "B.R.";
+
 
 
 
