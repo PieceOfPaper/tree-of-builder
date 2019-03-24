@@ -111,6 +111,11 @@ topMenuButtons['misc_eventbanner']["Path"] = "EventBanner";
 topMenuButtons['misc_eventbanner']["Img"] = "../img/testje_image/event_btn.png";
 topMenuButtons['misc_eventbanner']["Name"] = "Event Banner";
 
+topMenuButtons['misc_shop'] = [];
+topMenuButtons['misc_shop']["Path"] = "Shop";
+topMenuButtons['misc_shop']["Img"] = "../img/icon/itemicon/icon_item_silver.png";
+topMenuButtons['misc_shop']["Name"] = "Shop";
+
 
 
 
