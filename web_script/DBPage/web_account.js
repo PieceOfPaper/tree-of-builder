@@ -111,6 +111,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
         if (pwd != pwd_check){
             res.send('<script> alert("Not Match Password"); window.history.back(); </script>');
+            return;
         }
 
         var index = 0;
