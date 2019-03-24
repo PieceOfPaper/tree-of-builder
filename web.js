@@ -296,7 +296,22 @@ loadTable('reward_indun', 'ies.ipf/reward_indun.ies');
 loadTable('shop', 'ies.ipf/shop.ies');
 loadTable('event_banner', 'ies_client.ipf/event_banner.ies');
 loadTable('job_ballenceReward', 'ies.ipf/job_ballenceReward.ies');
-loadTable('collection', 'ies.ipf/collection.ies');
+loadTable('collection', 'ies.ipf/collection.ies', function(name, path){
+  for (param in tableData['collection']){
+    if (tableData['collection'][param]['PropList']!=undefined && tableData['collection'][param]['PropList'].length>0){
+      var probsplited = tableData['collection'][param]['PropList'].split('/');
+      for (var i=0;i<probsplited.length;i+=2){
+        tableData['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
+      }
+    }
+    if (tableData['collection'][param]['AccPropList']!=undefined && tableData['collection'][param]['AccPropList'].length>0){
+      var probsplited = tableData['collection'][param]['AccPropList'].split('/');
+      for (var i=0;i<probsplited.length;i+=2){
+        tableData['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
+      }
+    }
+  }
+});
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
