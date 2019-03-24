@@ -385,6 +385,14 @@ footer img{
     height: 64px;
 }
 
+.misc-result-table {
+    padding: 5px;
+    width:100%;
+}
+.misc-result-table table {
+
+}
+
 .tab-button {
     
 }

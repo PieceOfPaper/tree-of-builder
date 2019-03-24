@@ -295,6 +295,7 @@ loadTable('indun_reward_item', 'ies.ipf/indun_reward_item.ies');
 loadTable('reward_indun', 'ies.ipf/reward_indun.ies');
 loadTable('shop', 'ies.ipf/shop.ies');
 loadTable('event_banner', 'ies_client.ipf/event_banner.ies');
+loadTable('job_ballenceReward', 'ies.ipf/job_ballenceReward.ies');
 function loadTable(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
@@ -710,6 +711,9 @@ app.use('/EventBanner', miscEventbannerPage);
 
 var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData);
 app.use('/Shop', miscShopPage);
+
+var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, tableData, scriptData);
+app.use('/BallenceReward', miscBallenceReward);
 
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
 app.use('/Builder', builderPage);
