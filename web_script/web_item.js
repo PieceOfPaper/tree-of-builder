@@ -161,6 +161,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
+    output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
@@ -602,6 +603,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
+    output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
 
     response.send(output);
   }
@@ -723,6 +725,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
   
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
+    output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
   
@@ -813,6 +816,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
+    output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
 
     response.send(output);
   }
@@ -942,6 +946,36 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       for (var i=0;i<shoplist.length;i++){
         output += '<p><a href="../Shop?id='+shoplist[i]+'">'+shoplist[i]+'</a></p>';
       }
+    }
+
+    return output;
+  }
+
+  function getCollectionString(tableName, index){
+    var itemData = tableData[tableName][index];
+    var collectionTable = tableData['collection'];
+    if (itemData==undefined) return '';
+
+    var collectionArray = [];
+    for (param in collectionTable){
+      for (var i=1;i<=9;i++){
+        if (collectionTable[param]['ItemName_'+i]==undefined) continue;
+        if (collectionTable[param]['ItemName_'+i].length==0) continue;
+        if (collectionTable[param]['ItemName_'+i]!=itemData.ClassName) continue;
+        if (collectionArray.includes(collectionTable[param].ClassName)==false) collectionArray.push(collectionTable[param].ClassName);
+        break;
+      }
+    }
+
+    var output = '';
+    output += '<h3>Collection</h3>';
+    for (param in collectionTable){
+      if (collectionTable[param].ClassName==itemData.ClassName){
+        output += '<p>Base. '+tos.GetCollectionString(tableData,collectionTable[param].ClassName)+'</p>';
+      }
+    }
+    for (param in collectionArray){
+      output += '<p>'+tos.GetCollectionString(tableData,collectionArray[param])+'</p>';
     }
 
     return output;

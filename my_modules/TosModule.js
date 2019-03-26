@@ -309,5 +309,14 @@ class TosModule {
         output += '<a href="../Minigame?id='+className+'">'+readText+'</a>';
         return output;
     }
+
+    static GetCollectionString(tableData, className){
+        var output = '';
+        var data=this.FindDataClassName(tableData, 'collection', className);
+        if (data!=undefined){
+            output += '<a href="../Collection?id='+data.ClassID+'">'+data.Name+'</a>';
+        }
+        return output;
+    }
 }
 module.exports = TosModule;
