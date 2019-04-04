@@ -118,6 +118,7 @@ if (serverSetting['isLocalServer']){
 // 	console.log('### DB Setting Success.')
 // });
 
+serverSetting['db-testConnect'] = false;
 var testConnection = mysql.createConnection(serverSetting['dbconfig']);
 testConnection.on('error', function() {});
 testConnection.connect(function(err) {
@@ -126,6 +127,7 @@ testConnection.connect(function(err) {
     return;
   }
   console.log('### DB Connect Success. connected as id ' + testConnection.threadId);
+  serverSetting['db-testConnect'] = true;
   testConnection.end();
 });
 //connection.end();
@@ -626,7 +628,8 @@ app.get('/', function (req, response) {
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
-    if (serverSetting['serverCode'] == 'ktest' && serverSetting['isLocalServer'] == false) {
+    if (serverSetting['db-testConnect'] == false ||
+      (serverSetting['serverCode'] == 'ktest' && serverSetting['isLocalServer'] == false)) {
       output = output.replace(/%LoginData%/g, '');
       output = output.replace(/%ShortBoard%/g, '');
     } else {
