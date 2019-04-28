@@ -12,8 +12,10 @@ module.exports = function(app, tableData, imagePath){
         for (var i=0;i<output["datalist"].length;i++){
             if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
                 var pathdata = imagePath[output["datalist"][i]['Icon']];
-                output["datalist"][i]['IconPath'] = pathdata['path'];
-                output["datalist"][i]['IconRect'] = pathdata['imgrect'];
+                if (pathdata != null) {
+                    output["datalist"][i]['IconPath'] = pathdata['path'];
+                    output["datalist"][i]['IconRect'] = pathdata['imgrect'];
+                }
             }
         }
 

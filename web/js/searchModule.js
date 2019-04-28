@@ -322,7 +322,21 @@ function searchModule_showResult(){
                             switch(searchedItems[i].TableName){
                                 case "skill":
                                 case "ability":
-                                tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'Path'], searchedItems[i][resultCols[j]["datalist"][k]+'Rect'], 0.5);
+                                case "item":
+                                case "item_Equip":
+                                case "item_Quest":
+                                case "item_gem":
+                                case "item_premium":
+                                case "item_recipe":
+                                if (searchedItems[i].TableName == "item_Equip" && searchedItems[i]["EqpType"].toLowerCase() == 'outer' && searchedItems[i]["UseGender"].toLowerCase() == 'both'){
+                                    tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_mPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_mRect'], 64);
+                                    tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_fPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_fRect'], 64);
+                                    break;
+                                } else if (searchedItems[i].TableName == "item_recipe"){
+                                    tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i]['IllustPath'], searchedItems[i]['IllustRect'], 64);
+                                    break;
+                                }
+                                tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'Path'], searchedItems[i][resultCols[j]["datalist"][k]+'Rect'], 64);
                                 ImageLoad(searchedItems[i], resultCols[j]["datalist"][k]);
                                 break;
                                 case "buff":
@@ -332,25 +346,6 @@ function searchModule_showResult(){
                                 break;
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
-                                break;
-                                case "item":
-                                case "item_Equip":
-                                case "item_Quest":
-                                case "item_gem":
-                                case "item_premium":
-                                case "item_recipe":
-                                if (searchedItems[i].EqpType != undefined && searchedItems[i].UseGender != undefined && 
-                                    searchedItems[i].EqpType.toLowerCase() == 'outer' && searchedItems[i].UseGender.toLowerCase() == 'both'){
-                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '_f.png"/>';
-                                } else if(searchedItems[i].EquipXpGroup != undefined && searchedItems[i].EquipXpGroup.toLowerCase() == 'gem_skill') {
-                                    tdstr += '<img src="../img/icon/mongem/' + searchedItems[i].Icon.toLowerCase()  + '.png"/>';
-                                } else if(searchedItems[i].Icon != undefined){
-                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Icon.toLowerCase()  + '.png"/>';
-                                } else if(searchedItems[i].Illust != undefined){
-                                    tdstr += '<img src="../img/icon/itemicon/' + searchedItems[i].Illust.toLowerCase()  + '.png"/>';
-                                } else {
-                                    tdstr += '';
-                                }
                                 break;
                                 case "monster":
                                 tdstr += '<img src="../img/icon/monillust/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
@@ -505,7 +500,7 @@ function searchModule_onchange_order() {
 }
 
 
-function ImagePathToHTML(data, imgpath, imgrect, scale){
+function ImagePathToHTML(data, imgpath, imgrect, height){
     if (data == undefined) return '';
     if (imgpath == undefined) return '';
 
@@ -521,7 +516,8 @@ function ImagePathToHTML(data, imgpath, imgrect, scale){
 
     var generated = data.TableName+'_'+data.ClassName;
     var canvasId = generated+'_canvas';
-    if (scale == undefined) scale = 1;
+    var scale = 1;
+    if (height != undefined) scale = height / rect[3];
     var extention = getExtention(imgpath).toLowerCase();
     
     var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" >';

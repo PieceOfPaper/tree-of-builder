@@ -5,10 +5,10 @@ module.exports = function(app, serverSetting, tableData, imagePath){
     route.get('/', function (req, res) {
     });
 
-    var itemServer = require('./data_item')(app, tableData);
+    var itemServer = require('./data_item')(app, tableData, imagePath);
     app.use('/data/item', itemServer);
 
-    var jobServer = require('./data_job')(app, tableData);
+    var jobServer = require('./data_job')(app, tableData, imagePath);
     app.use('/data/job', jobServer);
 
     var skillServer = require('./data_skill')(app, tableData, imagePath);
@@ -29,7 +29,7 @@ module.exports = function(app, serverSetting, tableData, imagePath){
     var stanceServer = require('./data_buff')(app, tableData);
     app.use('/data/buff', stanceServer);
 
-    var stanceServer = require('./data_monster')(app, tableData);
+    var stanceServer = require('./data_monster')(app, tableData, imagePath);
     app.use('/data/monster', stanceServer);
 
     var stanceServer = require('./data_quest')(app, tableData);

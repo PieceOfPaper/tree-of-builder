@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, tableData, imagePath){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -7,6 +7,45 @@ module.exports = function(app, tableData){
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
         var output = dataModule.DefaultQueryFilter(tableData['item'], req.query);
+
+        for (var i=0;i<output["datalist"].length;i++){
+            if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
+                if (output["datalist"][i].TableName == "item_Equip" && 
+                    output["datalist"][i]["EqpType"].toLowerCase() == 'outer' && 
+                    output["datalist"][i]["UseGender"].toLowerCase() == 'both'){
+                    var pathdatam = imagePath[output["datalist"][i]['Icon']+'_m'];
+                    var pathdataf = imagePath[output["datalist"][i]['Icon']+'_f'];
+                    if (pathdatam != null) {
+                        output["datalist"][i]['Icon_mPath'] = pathdatam['path'];
+                        output["datalist"][i]['Icon_mRect'] = pathdatam['imgrect'];
+                    }
+                    if (pathdataf != null) {
+                        output["datalist"][i]['Icon_fPath'] = pathdataf['path'];
+                        output["datalist"][i]['Icon_fRect'] = pathdataf['imgrect'];
+                    }
+                } else {
+                    var pathdata = imagePath[output["datalist"][i]['Icon']];
+                    if (pathdata != null) {
+                        output["datalist"][i]['IconPath'] = pathdata['path'];
+                        output["datalist"][i]['IconRect'] = pathdata['imgrect'];
+                    }
+                }
+            }
+            if (output["datalist"][i]['TooltipImage'] != undefined && output["datalist"][i]['TooltipImagePath'] == undefined){
+                var pathdata = imagePath[output["datalist"][i]['TooltipImage']];
+                if (pathdata != null) {
+                    output["datalist"][i]['TooltipImagePath'] = pathdata['path'];
+                    output["datalist"][i]['TooltipImageRect'] = pathdata['imgrect'];
+                }
+            }
+            if (output["datalist"][i]['Illust'] != undefined && output["datalist"][i]['IllustPath'] == undefined){
+                var pathdata = imagePath[output["datalist"][i]['Illust']];
+                if (pathdata != null) {
+                    output["datalist"][i]['IllustPath'] = pathdata['path'];
+                    output["datalist"][i]['IllustRect'] = pathdata['imgrect'];
+                }
+            }
+        }
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));
