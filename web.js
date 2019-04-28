@@ -438,7 +438,10 @@ function importImage(srcPath, callback){
               }
               if (xmlData.root.children[i].children[j].attributes['name'] === undefined) continue;
               if (xmlData.root.children[i].children[j].attributes['file'] === undefined) continue;
-              data['path'] = serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/ui.ipf' + xmlData.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
+              data['path'] = serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/ui.ipf';
+              var path = xmlData.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
+              if (''.startsWith('/') == false) data['path'] += '/';
+              data['path'] += path;
               data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
               imagePath[xmlData.root.children[i].children[j].attributes['name'].toString()] = data;
             }

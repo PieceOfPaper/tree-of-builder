@@ -335,34 +335,31 @@ class TosModule {
         if (scale == undefined) scale = 1;
         var extention = this.getExtention(imagePathData.path).toLowerCase();
         
-        var output = '<div ';
-        if (rect.length >= 4){
-            output += 'style="padding:0; margin:0; display:inline-block; overflow:hidden;" ';
-        }
+        var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
         if (addParameter != undefined){
             output += addParameter;
             output += ' ';
         }
         output += '>';
         if (extention == 'tga'){
-            output += '<canvas id="'+canvasId+'" width="'+(splited[2])+'" height="'+(splited[3])+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*scale*0.5)+'px; margin-top: -'+(splited[3]*scale*0.5)+'px; transform:scale('+scale+');"></canvas>';
+            output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*scale*0.5)+'px; margin-top: -'+(splited[3]*scale*0.5)+'px; transform:scale('+scale+');"></canvas>';
         } else {
-
+            output += '<img id="'+canvasId+'" src="'+imagePathData.path+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
         }
         output += '</div>';
 
 
-        output += '<script>';
         if (extention == 'tga'){
+            output += '<script>';
             output += 'var '+generated+'_tga = new TGA();';
             output += ''+generated+'_tga.open("'+imagePathData.path+'", function() {';
             output +=   'var ctx = document.getElementById("'+canvasId+'").getContext("2d");';
             output +=   'var imageData = ctx.createImageData('+generated+'_tga.header.width, '+generated+'_tga.header.height);';
             output +=   'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+splited[0]+', -'+splited[1]+'); });';
+            output += '</script>';
         } else {
 
         }
-        output += '</script>';
 
         return output;
     }
