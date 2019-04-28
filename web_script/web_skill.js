@@ -79,7 +79,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon], 'class="ability-icon"') + '</td>';
+      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon], 0.5, 'class="ability-icon"') + '</td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){

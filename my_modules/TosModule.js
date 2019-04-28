@@ -319,7 +319,9 @@ class TosModule {
         return output;
     }
 
-    static ImagePathToHTML(imagePathData, addParameter){
+    static ImagePathToHTML(imagePathData, scale, addParameter){
+        if (imagePathData == undefined) return '';
+
         var rect = [];
         if (imagePathData.imgrect != undefined){
             var splited = imagePathData.imgrect.split(' ');
@@ -327,24 +329,60 @@ class TosModule {
                 for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
             }
         }
+
+        var generated = this.generateID();
+        var canvasId = generated+'_canvas';
+        if (scale == undefined) scale = 1;
+        var extention = this.getExtention(imagePathData.path).toLowerCase();
         
         var output = '<div ';
         if (rect.length >= 4){
-            output += 'style="display:inline-block; overflow:hidden; position:relative; width:'+rect[2]+'; height:'+rect[3]+'" ';
+            output += 'style="padding:0; margin:0; display:inline-block; overflow:hidden;" ';
         }
         if (addParameter != undefined){
             output += addParameter;
             output += ' ';
         }
         output += '>';
-        output += '<img ';
-        if (rect.length >= 4){
-            output += 'style="position:absolute; left:-'+rect[0]+'; top:-'+rect[1]+'" ';
+        if (extention == 'tga'){
+            output += '<canvas id="'+canvasId+'" width="'+(splited[2])+'" height="'+(splited[3])+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*scale*0.5)+'px; margin-top: -'+(splited[3]*scale*0.5)+'px; transform:scale('+scale+');"></canvas>';
+        } else {
+
         }
-        output += 'src="'+imagePathData.path+'" />'
         output += '</div>';
 
+
+        output += '<script>';
+        if (extention == 'tga'){
+            output += 'var '+generated+'_tga = new TGA();';
+            output += ''+generated+'_tga.open("'+imagePathData.path+'", function() {';
+            output +=   'var ctx = document.getElementById("'+canvasId+'").getContext("2d");';
+            output +=   'var imageData = ctx.createImageData('+generated+'_tga.header.width, '+generated+'_tga.header.height);';
+            output +=   'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+splited[0]+', -'+splited[1]+'); });';
+        } else {
+
+        }
+        output += '</script>';
+
         return output;
+    }
+
+    static getExtention(filepath){
+        if (filepath === undefined || filepath.length === 0)
+          return filepath;
+      
+        var splited = filepath.split('.');
+        return splited[splited.length - 1];
+    }
+
+    static generateID(){
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+        for (var i = 0; i < 20; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
     }
 }
 module.exports = TosModule;
