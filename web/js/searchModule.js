@@ -22,6 +22,9 @@ var checkboxFilterSetting = [];
 var customFilterSettingMethods = [];
 //------------- 세팅이 필요한 부분 -------------//
 
+var imageLoadMethods = [];
+
+
 function searchModule_init(){
     if (baseTable == undefined) return;
     if (searchModule_inited) return;
@@ -320,10 +323,9 @@ function searchModule_showResult(){
                         if (k == 0){
                             switch(searchedItems[i].TableName){
                                 case "skill":
-                                tdstr += '<img src="../img/icon/skillicon/icon_'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
-                                break;
                                 case "ability":
-                                tdstr += '<img src="../img/icon/skillicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
+                                tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'Path'], searchedItems[i][resultCols[j]["datalist"][k]+'Rect'], 0.5);
+                                ImageLoad(searchedItems[i], resultCols[j]["datalist"][k]);
                                 break;
                                 case "buff":
                                 var iconName = searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase();
@@ -502,4 +504,71 @@ function searchModule_onchange_order() {
     // searchModule_showResult();
     // searchModule_updatePageNum();
     //searchModule_search();
+}
+
+
+function ImagePathToHTML(data, imgpath, imgrect, scale){
+    if (data == undefined) return '';
+    if (imgpath == undefined) return '';
+
+    var rect = [];
+    if (imgrect != undefined){
+        var splited = imgrect.split(' ');
+        if (splited != undefined){
+            for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+        }
+    }
+
+    if (rect.length < 4) return '';
+
+    var generated = data.TableName+'_'+data.ClassName;
+    var canvasId = generated+'_canvas';
+    if (scale == undefined) scale = 1;
+    var extention = getExtention(imgpath).toLowerCase();
+    
+    var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" >';
+    if (extention == 'tga'){
+        output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
+    } else {
+        output += '<img id="'+canvasId+'" src="'+imgpath+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
+    }
+    output += '</div>';
+
+    return output;
+}
+
+function ImageLoad(data, column){
+    if (column == undefined) column = 'Icon';
+    if (data[column+'Path'] == undefined) return;
+
+    var rect = [];
+    if (data[column+'Rect'] != undefined){
+        var splited = data[column+'Rect'].split(' ');
+        if (splited != undefined){
+            for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+        }
+    }
+
+    var generated = data.TableName+'_'+data.ClassName;
+    var canvasId = generated+'_canvas';
+    var extention = getExtention(data[column+'Path']).toLowerCase();
+
+    if (extention == 'tga'){
+        var tga = new TGA();
+        tga.open(data[column+'Path'], function() {
+            var ctx = document.getElementById(canvasId).getContext("2d");
+            var imageData = ctx.createImageData(tga.header.width, tga.header.height);
+            ctx.putImageData(tga.getImageData(imageData), -rect[0], -rect[1]);
+        });
+    } else {
+
+    }
+}
+
+function getExtention(filepath){
+    if (filepath === undefined || filepath.length === 0)
+      return filepath;
+  
+    var splited = filepath.split('.');
+    return splited[splited.length - 1];
 }

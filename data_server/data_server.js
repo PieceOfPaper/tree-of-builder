@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData){
+module.exports = function(app, serverSetting, tableData, imagePath){
     var express = require('express');
     
     var route = express.Router();
@@ -11,13 +11,13 @@ module.exports = function(app, serverSetting, tableData){
     var jobServer = require('./data_job')(app, tableData);
     app.use('/data/job', jobServer);
 
-    var skillServer = require('./data_skill')(app, tableData);
+    var skillServer = require('./data_skill')(app, tableData, imagePath);
     app.use('/data/skill', skillServer);
 
     var skilltreeServer = require('./data_skilltree')(app, tableData);
     app.use('/data/skilltree', skilltreeServer);
 
-    var abilityServer = require('./data_ability')(app, tableData);
+    var abilityServer = require('./data_ability')(app, tableData, imagePath);
     app.use('/data/ability', abilityServer);
 
     var stanceServer = require('./data_stance')(app, tableData);

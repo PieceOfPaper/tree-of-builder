@@ -340,9 +340,9 @@ class TosModule {
             output += addParameter;
             output += ' ';
         }
-        output += '>';
+        output += ' >';
         if (extention == 'tga'){
-            output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*scale*0.5)+'px; margin-top: -'+(splited[3]*scale*0.5)+'px; transform:scale('+scale+');"></canvas>';
+            output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
         } else {
             output += '<img id="'+canvasId+'" src="'+imagePathData.path+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
         }
@@ -351,11 +351,14 @@ class TosModule {
 
         if (extention == 'tga'){
             output += '<script>';
-            output += 'var '+generated+'_tga = new TGA();';
-            output += ''+generated+'_tga.open("'+imagePathData.path+'", function() {';
-            output +=   'var ctx = document.getElementById("'+canvasId+'").getContext("2d");';
-            output +=   'var imageData = ctx.createImageData('+generated+'_tga.header.width, '+generated+'_tga.header.height);';
-            output +=   'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+splited[0]+', -'+splited[1]+'); });';
+            output += generated+'_method();';
+            output += 'function '+generated+'_method(){';
+            output +=   'var '+generated+'_tga = new TGA();';
+            output +=   ''+generated+'_tga.open("'+imagePathData.path+'", function() {';
+            output +=       'var ctx = document.getElementById("'+canvasId+'").getContext("2d");';
+            output +=       'var imageData = ctx.createImageData('+generated+'_tga.header.width, '+generated+'_tga.header.height);';
+            output +=       'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+splited[0]+', -'+splited[1]+'); });';
+            output += '}';
             output += '</script>';
         } else {
 

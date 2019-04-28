@@ -380,11 +380,12 @@ footer img{
 .search-result-table table {
 
 }
+/*
 .search-result-table img {
     width: 64px;
     height: 64px;
 }
-
+*/
 .misc-result-table {
     padding: 5px;
     width:100%;

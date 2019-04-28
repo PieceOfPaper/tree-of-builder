@@ -440,7 +440,7 @@ function importImage(srcPath, callback){
               if (xmlData.root.children[i].children[j].attributes['file'] === undefined) continue;
               data['path'] = serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/ui.ipf';
               var path = xmlData.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
-              if (''.startsWith('/') == false) data['path'] += '/';
+              if (path.startsWith('/') == false) data['path'] += '/';
               data['path'] += path;
               data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
               imagePath[xmlData.root.children[i].children[j].attributes['name'].toString()] = data;
@@ -739,7 +739,7 @@ app.get('/', function (req, response) {
 //   res.send(result);
 // });
 
-var dataServer = require('./data_server/data_server')(app, serverSetting, tableData);
+var dataServer = require('./data_server/data_server')(app, serverSetting, tableData, imagePath);
 app.use('/data', dataServer);
 
 var boardFree = require('./board_server/board_free')(app, serverSetting);

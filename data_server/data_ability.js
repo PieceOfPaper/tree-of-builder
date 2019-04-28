@@ -1,12 +1,21 @@
-module.exports = function(app, tableData){
+module.exports = function(app, tableData, imagePath){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
+    var tos = require('../my_modules/TosModule');
 
     var route = express.Router();
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
         var output = dataModule.DefaultQueryFilter(tableData['ability'], req.query);
+
+        for (var i=0;i<output["datalist"].length;i++){
+            if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
+                var pathdata = imagePath[output["datalist"][i]['Icon']];
+                output["datalist"][i]['IconPath'] = pathdata['path'];
+                output["datalist"][i]['IconRect'] = pathdata['imgrect'];
+            }
+        }
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));
