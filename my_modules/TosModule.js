@@ -318,5 +318,33 @@ class TosModule {
         }
         return output;
     }
+
+    static ImagePathToHTML(imagePathData, addParameter){
+        var rect = [];
+        if (imagePathData.imgrect != undefined){
+            var splited = imagePathData.imgrect.split(' ');
+            if (splited != undefined){
+                for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+            }
+        }
+        
+        var output = '<div ';
+        if (rect.length >= 4){
+            output += 'style="display:inline-block; overflow:hidden; position:relative; width:'+rect[2]+'; height:'+rect[3]+'" ';
+        }
+        if (addParameter != undefined){
+            output += addParameter;
+            output += ' ';
+        }
+        output += '>';
+        output += '<img ';
+        if (rect.length >= 4){
+            output += 'style="position:absolute; left:-'+rect[0]+'; top:-'+rect[1]+'" ';
+        }
+        output += 'src="'+imagePathData.path+'" />'
+        output += '</div>';
+
+        return output;
+    }
 }
 module.exports = TosModule;

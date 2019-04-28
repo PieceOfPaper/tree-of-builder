@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -79,7 +79,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center"><img class="ability-icon" src="../img/icon/skillicon/' + skillAbility[i].Icon.toLowerCase()  + '.png"/></td>';
+      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon], 'class="ability-icon"') + '</td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){
@@ -262,8 +262,9 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     var output = layout_detail.toString();
     //output = output.replace(/style.css/g, '../Layout/style.css');
-    output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
-    output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png');
+    //output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+skillTable[index].Icon]));
+    output = output.replace(/%IconPath%/g, imagePath['icon_'+skillTable[index].Icon].path);
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);

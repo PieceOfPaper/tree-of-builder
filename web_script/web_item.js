@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -71,20 +71,20 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f']);
+      iconPath = imagePath[itemTable[index].Icon+'_m'];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
+      iconPath = imagePath[itemTable[index].TooltipImage];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Icon != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon]);
+      iconPath = imagePath[itemTable[index].Icon];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Illust != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust]);
+      iconPath = imagePath[itemTable[index].Illust];
     } else {
       icon = 'No Img';
     }
@@ -103,11 +103,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     output = output.replace(/%Icon%/g, icon);
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
-    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
-      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
-      iconPath = 'http://'+request.headers.host+'/img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png';
+    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card' && imagePath[itemTable[index].TooltipImage] != undefined){
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="' + imagePath[itemTable[index].TooltipImage].path + '" />');
+      iconPath = imagePath[itemTable[index].TooltipImage];
     } else {
-      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
+      output = output.replace(/%TooltipImage%/g, tooltipImg);
     }
     output = output.replace(/%IconPath%/g, iconPath);
     output = output.replace(/%Name%/g, itemTable[index].Name);
@@ -198,19 +198,20 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f']);
+      iconPath = imagePath[itemTable[index].Icon+'_m'];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
-      tooltipImg = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
+      iconPath = imagePath[itemTable[index].TooltipImage];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Icon != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
-      tooltipImg = '<img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon]);
+      iconPath = imagePath[itemTable[index].Icon];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Illust != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust]);
+      iconPath = imagePath[itemTable[index].Illust];
     } else {
       icon = 'No Img';
     }
@@ -273,13 +274,13 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon+'_m'],'class="item-material-icon"')+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f'],'class="item-material-icon"');
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage],'class="item-material-icon"');
           } else if(itemData.Icon != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon],'class="item-material-icon"');
           } else if(itemData.Illust != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust],'class="item-material-icon"');
           }
           setDataString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           setDataString += '<br/>';
@@ -618,20 +619,20 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f']);
+      iconPath = imagePath[itemTable[index].Icon+'_m'];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
+      iconPath = imagePath[itemTable[index].TooltipImage];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Icon != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon]);
+      iconPath = imagePath[itemTable[index].Icon];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Illust != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust]);
+      iconPath = imagePath[itemTable[index].Illust];
     } else {
       icon = 'No Img';
     }
@@ -649,13 +650,13 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
           itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon+'_m'],'class="item-material-icon"')+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f'],'class="item-material-icon"');
         } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-          materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage],'class="item-material-icon"');
         } else if(itemData.Icon != undefined){
-          materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon],'class="item-material-icon"');
         } else if(itemData.Illust != undefined){
-          materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust],'class="item-material-icon"');
         }
         targetString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
         targetString += ' x' + recipeData.TargetItemCnt + '<br/>';
@@ -677,13 +678,13 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon+'_m'],'class="item-material-icon"')+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f'],'class="item-material-icon"');
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage],'class="item-material-icon"');
           } else if(itemData.Icon != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon],'class="item-material-icon"');
           } else if(itemData.Illust != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust],'class="item-material-icon"');
           }
           materialString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           materialString += ' x' + recipeData['Item_' + i + '_1_Cnt'] + '<br/>';
@@ -743,20 +744,20 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_f.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '_m.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '_f.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f']);
+      iconPath = imagePath[itemTable[index].Icon+'_m'];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = '<img src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/mongem/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
+      iconPath = imagePath[itemTable[index].TooltipImage];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Icon != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Icon.toLowerCase()  + '.png';
-      tooltipImg = '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase()  + '.png"/>';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon]);
+      iconPath = imagePath[itemTable[index].Icon];
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage]);
     } else if(itemTable[index].Illust != undefined){
-      icon = '<img src="../img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png"/>';
-      iconPath = 'http://'+request.headers.host+'/img/icon/itemicon/' + itemTable[index].Illust.toLowerCase()  + '.png';
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust]);
+      iconPath = imagePath[itemTable[index].Illust];
     } else {
       icon = 'No Img';
     }
@@ -853,13 +854,13 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon+'_m'],'class="item-material-icon"')+tos.ImagePathToHTML(imagePath[itemTable[index].Icon+'_f'],'class="item-material-icon"');
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage],'class="item-material-icon"');
           } else if(itemData.Icon != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon],'class="item-material-icon"');
           } else if(itemData.Illust != undefined){
-            materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust],'class="item-material-icon"');
           }
           resultString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a><br/>';
         }

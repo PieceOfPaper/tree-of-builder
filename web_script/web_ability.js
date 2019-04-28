@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -182,7 +182,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
-    output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
+    //output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath[abilityTable[index].Icon]));
     output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + abilityTable[index].Icon + '.png');
     output = output.replace(/%Name%/g, abilityTable[index].Name);
     output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);

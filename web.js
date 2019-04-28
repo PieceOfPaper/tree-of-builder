@@ -89,15 +89,15 @@ console.log('argument loaded');
 
 console.log('### DB Connect Request');
 serverSetting['dbconfig'] = [];
-if (serverSetting['isLocalServer']){
-  serverSetting['dbconfig'] = {
-    host     : '127.0.0.1',
-    user     : 'root',
-    password : 'localhost',
-    database : 'tree-of-builder',
-    onerror: err=>console.log(err.message),
-  };
-} else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
+// if (serverSetting['isLocalServer']){
+//   serverSetting['dbconfig'] = {
+//     host     : '127.0.0.1',
+//     user     : 'root',
+//     password : 'localhost',
+//     database : 'tree-of-builder',
+//     onerror: err=>console.log(err.message),
+//   };
+// } else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
   serverSetting['dbconfig'] = {
     host     : 'remotemysql.com',
     user     : '8dsGgaueIQ',
@@ -105,7 +105,7 @@ if (serverSetting['isLocalServer']){
     database : '8dsGgaueIQ',
     onerror: err=>console.log(err.message),
   };
-}
+//}
 // var dbimporter = mysql_import.config(serverSetting['dbconfig']);
 // dbimporter.import('table_structure_dump.sql').then(()=> {
 // 	console.log('### DB Setting Success.')
@@ -141,6 +141,7 @@ if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
 var tableData = [];
 var xmlData = [];
 var scriptData = [];
+var imagePath = [];
 
 // ---------- 테이블 데이터 불러오기
 loadTable('job', 'ies.ipf/job.ies', function(){
@@ -276,8 +277,11 @@ loadTable('map2', 'ies.ipf/map.ies', function(){
   for (param in tableData['map2']){
     // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies');
     // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+tableData['map2'][param].ClassName+'.ies');
-    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies');
-    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/gentype_'+tableData['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies', function(name, path){
+      if (tableData[name] == undefined || tableData[name].langth == 0){
+        loadTable(name, path.replace('GenType_','gentype_'));
+      }
+    });
     // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+tableData['map2'][param].ClassName+'.ies');
     // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies');
   }
@@ -387,6 +391,62 @@ function loadXMLData(name, path, callback){
     });
   }).on('error', (e) => {
     console.log('download error xml [' + name + '] ' + path + ' ' + e);
+  });
+}
+
+importImage('ui.ipf/baseskinset/classicon.xml', function(){
+  importImage('ui.ipf/baseskinset/skillicon.xml', function(){
+    importImage('ui.ipf/baseskinset/monillust.xml', function(){
+      importImage('ui.ipf/baseskinset/mongem.xml', function(){
+        importImage('ui.ipf/baseskinset/itemicon.xml', function(){
+          importImage('ui.ipf/baseskinset/eventbanner.xml', function(){
+            importImage('ui.ipf/baseskinset/helpimage.xml', function(){
+              importImage('ui.ipf/baseskinset/baseskinset.xml', function(){
+                var count = 0;
+                for (param in imagePath){ count ++; }
+                console.log('imagePath Count ' + count);
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
+function importImage(srcPath, callback){
+  autoMkDir('./web/data/' + srcPath);
+  var file = fs.createWriteStream('./web/data/' + srcPath);
+  var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + srcPath, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('download ' + srcPath);
+      //fs.createReadStream('./web/data/' + srcPath).on('data', function (data) {
+      fs.readFile('./web/data/' + srcPath, function(error, data){
+        //console.log(data.toString());
+        var xmlData = xml(data.toString());
+        
+        if (xmlData.root === undefined || xmlData.root.children === undefined)
+          return;
+        
+        for (var i = 0; i < xmlData.root.children.length; i ++){
+          for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
+            if (xmlData.root.children[i].name.indexOf('skinlist') > -1){
+              continue;
+            } else {
+              var data = [];
+              if (xmlData.root.children[i].attributes['category'] != undefined){
+                data['category'] = xmlData.root.children[i].attributes['category'];
+              }
+              if (xmlData.root.children[i].children[j].attributes['name'] === undefined) continue;
+              if (xmlData.root.children[i].children[j].attributes['file'] === undefined) continue;
+              data['path'] = serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/ui.ipf' + xmlData.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
+              data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
+              imagePath[xmlData.root.children[i].children[j].attributes['name'].toString()] = data;
+            }
+          }
+        }
+        if (callback != undefined) callback();
+      });
+    });
   });
 }
 
@@ -682,16 +742,16 @@ app.use('/data', dataServer);
 var boardFree = require('./board_server/board_free')(app, serverSetting);
 app.use('/BoardFree', boardFree);
 
-var skillPage = require('./web_script/web_skill')(app, serverSetting, tableData, scriptData);
+var skillPage = require('./web_script/web_skill')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Skill', skillPage);
 
-var abilityPage = require('./web_script/web_ability')(app, serverSetting, tableData, scriptData);
+var abilityPage = require('./web_script/web_ability')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Ability', abilityPage);
 
 var buffPage = require('./web_script/web_buff')(app, serverSetting, tableData, scriptData);
 app.use('/Buff', buffPage);
 
-var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData);
+var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Item', itemPage);
 
 var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData);
@@ -786,3 +846,63 @@ httpServer.listen(http_port, function (){
 // httpsServer.listen(https_port, function (){
 //   console.log("Https Server Open! port:" + https_port);
 // });
+
+
+
+
+
+
+
+
+
+function pathMerge(pathA, pathB){
+  if (pathA === undefined || pathA.length === 0)
+    return pathB;
+  else if (pathB === undefined || pathB.length === 0)
+      return pathA;
+
+  pathA = pathA.replace(/\\/g, '/');
+  pathB = pathB.replace(/\\/g, '/');
+  if (pathA[0] === '/') pathA = pathA.substring(1, pathA.length)
+  if (pathB[0] === '/') pathB = pathB.substring(1, pathB.length)
+  if (pathA[pathA.length - 1] === '/') pathA = pathA.substring(0, pathA.length - 1)
+  if (pathB[pathB.length - 1] === '/') pathB = pathB.substring(0, pathB.length - 1)
+
+  return pathA + '/' + pathB;
+}
+
+function removeFileName(filepath){
+  if (filepath === undefined || filepath.length === 0)
+    return filepath;
+
+    filepath = filepath.replace(/\\/g, '/');
+  var splited = filepath.split('/');
+  var lastDir = splited[splited.length - 1];
+  if (lastDir.indexOf('.') > -1){
+    return filepath.substring(0, filepath.length - lastDir.length);
+  }
+  return filepath;
+}
+
+function autoMkDir(filepath){
+  if (filepath === undefined || filepath.length === 0)
+    return;
+
+  var dirPath = removeFileName(filepath);
+  var splited = dirPath.split('/');
+
+  var fullPath = splited[0] + '/';
+  for (var i = 1; i < splited.length; i ++){
+    fullPath += splited[i];
+    if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath);
+    fullPath += '/';
+  }
+}
+
+function getExtention(filepath){
+  if (filepath === undefined || filepath.length === 0)
+    return filepath;
+
+  var splited = filepath.split('.');
+  return splited[splited.length - 1];
+}
