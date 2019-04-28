@@ -22,8 +22,6 @@ var checkboxFilterSetting = [];
 var customFilterSettingMethods = [];
 //------------- 세팅이 필요한 부분 -------------//
 
-var imageLoadMethods = [];
-
 
 function searchModule_init(){
     if (baseTable == undefined) return;
