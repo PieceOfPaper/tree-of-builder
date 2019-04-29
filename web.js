@@ -757,7 +757,7 @@ app.use('/Buff', buffPage);
 var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Item', itemPage);
 
-var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData);
+var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Monster', monsterPage);
 
 var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData);

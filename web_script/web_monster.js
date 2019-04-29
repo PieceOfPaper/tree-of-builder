@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -175,8 +175,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         }
 
         var output = layout_detail.toString();
-        output = output.replace(/%Icon%/g, '<img src="../img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png" />');
-        output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/monillust/' + monsterTable[index].Icon.toLowerCase() + '.png');
+        output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath[monsterTable[index].Icon]));
+        output = output.replace(/%IconPath%/g, imagePath[monsterTable[index].Icon] == undefined ? '' : imagePath[monsterTable[index].Icon].path);
         output = output.replace(/%Name%/g, monsterTable[index].Name);
         output = output.replace(/%ClassName%/g, monsterTable[index].ClassName);
         output = output.replace(/%ClassID%/g, monsterTable[index].ClassID);

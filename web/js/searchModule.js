@@ -329,6 +329,7 @@ function searchModule_showResult(){
                                 case "item_premium":
                                 case "item_recipe":
                                 case "buff":
+                                case "monster":
                                 if (searchedItems[i].TableName == "item_Equip" && searchedItems[i]["EqpType"].toLowerCase() == 'outer' && searchedItems[i]["UseGender"].toLowerCase() == 'both'){
                                     tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_mPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_mRect'], 64);
                                     tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_fPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_fRect'], 64);
@@ -342,9 +343,6 @@ function searchModule_showResult(){
                                 break;
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
-                                break;
-                                case "monster":
-                                tdstr += '<img src="../img/icon/monillust/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';
                                 break;
                                 case "questprogresscheck":
                                 if (resultCols[j]["datalist"][k]=="QuestMode"){
