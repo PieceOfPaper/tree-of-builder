@@ -17,6 +17,7 @@
     <script src="../js/requestMethod.js"></script>
     <script src="../js/defaultSetting.js"></script>
     <script src="../js/searchModule.js"></script>
+    <script src="../js/tga.js"></script>
 </head>
 
 <body>
@@ -100,14 +101,76 @@
             for(var i=0;i<arr.length;i++){
                 if (Number(arr[i].Rank) == 1){
                     var classButton=document.createElement("a");
-                    var classImg=document.createElement("img");
+                    var classImg=document.createElement("div");
+                    classImg.style.width = "fit-content";
+                    classImg.style.display = "inline-block";
                     classButton.href=url+"?filter_ClassName=@"+arr[i].ClassName.split("_")[0];
-                    classImg.src="../img/icon/classicon/"+arr[i].Icon.toLowerCase()+".png";
+                    classImg.innerHTML=ImagePathToHTML2(arr[i], arr[i]['IconPath'], arr[i]['IconRect'], 64);
+                    ImageLoad2(arr[i], 'Icon');
                     classButton.appendChild(classImg);
                     filter.appendChild(classButton);
                 }
             }
         });
+
+    function ImagePathToHTML2(data, imgpath, imgrect, height){
+        if (data == undefined) return '';
+        if (imgpath == undefined) return '';
+
+        var rect = [];
+        if (imgrect != undefined){
+            var splited = imgrect.split(' ');
+            if (splited != undefined){
+                for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+            }
+        }
+
+        if (rect.length < 4) return '';
+
+        var generated = data.TableName+'_2_'+data.ClassName;
+        var canvasId = generated+'_canvas';
+        var scale = 1;
+        if (height != undefined) scale = height / rect[3];
+        var extention = getExtention(imgpath).toLowerCase();
+        
+        var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" >';
+        if (extention == 'tga'){
+            output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
+        } else {
+            output += '<img id="'+canvasId+'" src="'+imgpath+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
+        }
+        output += '</div>';
+
+        return output;
+    }
+
+    function ImageLoad2(data, column){
+        if (column == undefined) column = 'Icon';
+        if (data[column+'Path'] == undefined) return;
+
+        var rect = [];
+        if (data[column+'Rect'] != undefined){
+            var splited = data[column+'Rect'].split(' ');
+            if (splited != undefined){
+                for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+            }
+        }
+
+        var generated = data.TableName+'_2_'+data.ClassName;
+        var canvasId = generated+'_canvas';
+        var extention = getExtention(data[column+'Path']).toLowerCase();
+
+        if (extention == 'tga'){
+            var tga = new TGA();
+            tga.open(data[column+'Path'], function() {
+                var ctx = document.getElementById(canvasId).getContext("2d");
+                var imageData = ctx.createImageData(tga.header.width, tga.header.height);
+                ctx.putImageData(tga.getImageData(imageData), -rect[0], -rect[1]);
+            });
+        } else {
+
+        }
+    }
     </script>
 
 </body>
