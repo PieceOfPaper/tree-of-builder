@@ -760,37 +760,37 @@ app.use('/Item', itemPage);
 var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Monster', monsterPage);
 
-var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData);
+var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Quest', questPage);
 
-var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData);
+var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Map', mapPage);
 
-var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData);
+var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Dialog', dialogPage);
 
-var indunPage = require('./web_script/web_indun')(app, serverSetting, tableData, scriptData);
+var indunPage = require('./web_script/web_indun')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Indun', indunPage);
 
-var collectionPage = require('./web_script/web_collection')(app, serverSetting, tableData, scriptData);
+var collectionPage = require('./web_script/web_collection')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Collection', collectionPage);
 
-var minigamePage = require('./web_script/web_minigame')(app, serverSetting, tableData, scriptData, xmlData);
+var minigamePage = require('./web_script/web_minigame')(app, serverSetting, tableData, scriptData, xmlData, imagePath);
 app.use('/Minigame', minigamePage);
 
-var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, tableData, scriptData);
+var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/GuildEvent', miscGuildEventPage);
 
-var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData);
+var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Companion', miscCompanionPage);
 
-var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData);
+var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/EventBanner', miscEventbannerPage);
 
-var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData);
+var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Shop', miscShopPage);
 
-var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, tableData, scriptData);
+var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/BallenceReward', miscBallenceReward);
 
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData, imagePath);

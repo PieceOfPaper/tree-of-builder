@@ -545,10 +545,10 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     captionScript += '</script>';
 
     var reinforceSilverItemString = '';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_W_01')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilver">0</span></p>';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_Diamond')+'  '+tos.GetItemImgString(tableData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_W_01', imagePath)+'  '+tos.GetItemImgString(tableData,'Vis', imagePath)+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_Diamond', imagePath)+'  '+tos.GetItemImgString(tableData,'Vis', imagePath)+'<span id="reinforceSilverDia">0</span></p>';
 
-    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', imagePath, '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 

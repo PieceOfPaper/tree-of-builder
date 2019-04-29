@@ -23,14 +23,14 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             resultString += '<button class="lv-add-button plus" onclick="onclick_add('+i+',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
             var material = foodTable[i].Material.split('/');
             for (var j=0;j<material.length;j+=2){
-                resultString += tos.GetItemResultString(tableData, material[j], '<span class="matcnt" id="matcnt-'+i+'-'+material[j]+'">'+material[j+1]+'</span>');
+                resultString += tos.GetItemResultString(tableData, material[j], imagePath, '<span class="matcnt" id="matcnt-'+i+'-'+material[j]+'">'+material[j+1]+'</span>');
                 if (totalMaterials.includes(material[j])==false) totalMaterials.push(material[j]);
             }
             resultString += '</div>';
         }
         resultString += '<br/><br/><h3>Total</h3>';
         for (var j=0;j<totalMaterials.length;j++){
-            resultString += tos.GetItemResultString(tableData, totalMaterials[j], '<span class="matcnt" id="totalmatcnt-'+totalMaterials[j]+'">'+0+'</span>');
+            resultString += tos.GetItemResultString(tableData, totalMaterials[j], imagePath, '<span class="matcnt" id="totalmatcnt-'+totalMaterials[j]+'">'+0+'</span>');
         }
         resultString += '<script> var foodTable='+JSON.stringify(foodTable)+'</script>';
 

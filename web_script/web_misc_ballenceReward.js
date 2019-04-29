@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -25,7 +25,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             resultString += '<tr>';
             resultString += '<td>';
             if (jobData.Icon != undefined ){
-                resultString += '<img style="width:64px; height:64px;" src="../img/icon/classicon/'+jobData.Icon.toLowerCase()+'.png" />';
+                //resultString += '<img style="width:64px; height:64px;" src="../img/icon/classicon/'+jobData.Icon.toLowerCase()+'.png" />';
+                resultString += tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 0.5);
             }
             resultString += '<p>'+jobData.Name+'</p>';
             resultString += '</td>';
@@ -38,7 +39,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                 if (splited == undefined || splited.length == 0) continue;
                 var itemcount = 1;
                 if (splited.length > 1) itemcount = splited[1];
-                resultString += tos.GetItemResultString(tableData,splited[0],itemcount);
+                resultString += tos.GetItemResultString(tableData,splited[0],imagePath,itemcount);
             }
             resultString += '</td>';
             resultString += '</tr>';

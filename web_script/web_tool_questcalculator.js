@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -49,7 +49,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             resultString += '<tr><td>EXP</td><td>'+expSum.toLocaleString()+'</td></tr>';
             for (param in itemSum){
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(tableData, param)+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(tableData, param, imagePath)+'</td>';
                 resultString += '<td>'+itemSum[param].toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

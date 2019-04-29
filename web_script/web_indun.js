@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -50,14 +50,14 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       output = output.replace(/%Reward_Contribution%/g, indunTable[index].Reward_Contribution);
       output = output.replace(/%Reward_Exp%/g, indunTable[index].Reward_Exp);
 
-      output = output.replace(/%Reward_Item%/g, tos.GetItemResultString(tableData,indunTable[index].Reward_Item));
-      output = output.replace(/%AdmissionItemName%/g, tos.GetItemResultString(tableData,indunTable[index].AdmissionItemName));
+      output = output.replace(/%Reward_Item%/g, tos.GetItemResultString(tableData,indunTable[index].Reward_Item,imagePath));
+      output = output.replace(/%AdmissionItemName%/g, tos.GetItemResultString(tableData,indunTable[index].AdmissionItemName,imagePath));
 
       var indunRewardItem = tos.FindDataClassName(tableData,'indun_reward_item',indunTable[index].ClassName);
       if (indunRewardItem!=undefined){
         var indunRewardItemString = '';
         var itemData = tos.FindDataClassName(tableData,'item',indunRewardItem.Reward_Item);
-        indunRewardItemString += '<h3>'+tos.GetItemResultString(tableData,indunRewardItem.Reward_Item)+'</h3>';
+        indunRewardItemString += '<h3>'+tos.GetItemResultString(tableData,indunRewardItem.Reward_Item,imagePath)+'</h3>';
         var indunRewardItemList = [];
         if (itemData!=undefined && itemData.StringArg!=undefined){
             for (var j=0;j<tableData['reward_indun'].length;j++){
@@ -68,7 +68,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         }
         indunRewardItemString += '<div style="margin-left:20px;">';
         for (var j=0;j<indunRewardItemList.length;j++){
-            indunRewardItemString += '<p>'+tos.GetItemResultString(tableData,indunRewardItemList[j])+'</p>';
+            indunRewardItemString += '<p>'+tos.GetItemResultString(tableData,indunRewardItemList[j],imagePath)+'</p>';
         }
         indunRewardItemString += '</div>';
         output = output.replace(/%IndunRewardItem%/g, indunRewardItemString);
@@ -103,7 +103,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
           var clearItemString = '';
           for (var i=0;i<splited.length;i++){
             if (i>0) clearItemString += ', ';
-            clearItemString += tos.GetItemResultString(+splited[i].trim());
+            clearItemString += tos.GetItemResultString(tableData,splited[i].trim(),imagePath);
           }
           output = output.replace(/%UseClearItemName%/g, clearItemString);
       } else {
@@ -123,7 +123,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       if (indunTable[index].ItemList!=undefined && indunTable[index].ItemList.length>0){
         var splited = indunTable[index].ItemList.split('/');
         for (var i=0;i<splited.length;i++){
-            itemString += '<p>'+tos.GetItemResultString(tableData,splited[i])+'</p>';
+            itemString += '<p>'+tos.GetItemResultString(tableData,splited[i],imagePath)+'</p>';
         }
       }
       output = output.replace(/%ItemListString%/g, itemString);

@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -39,7 +39,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
                 
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(tableData,array[shopname][param]['ItemName'])+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(tableData,array[shopname][param]['ItemName'],imagePath)+'</td>';
                 resultString += '<td>'+price.toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

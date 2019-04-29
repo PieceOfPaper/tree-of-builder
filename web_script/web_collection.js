@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -41,13 +41,13 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         }
       }
       
-      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(tableData,baseTable[index].ClassName)+'</p>';
+      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(tableData,baseTable[index].ClassName,imagePath)+'</p>';
 
       var itemString = '<h3>Items</h3>';
       for (var i=1;i<=9;i++){
           if (baseTable[index]['ItemName_'+i]==undefined) continue;
           if (baseTable[index]['ItemName_'+i].length==0) continue;
-          itemString += '<p>'+tos.GetItemResultString(tableData,baseTable[index]['ItemName_'+i])+'</p>';
+          itemString += '<p>'+tos.GetItemResultString(tableData,baseTable[index]['ItemName_'+i], imagePath)+'</p>';
       }
 
       var rewardString = '<h3>Rewards</h3>';
@@ -66,7 +66,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
       if (baseTable[index]['AccGiveItemList']!=undefined && baseTable[index]['AccGiveItemList'].length>0){
         var probsplited = baseTable[index]['AccGiveItemList'].split('/');
         for (var i=0;i<probsplited.length;i+=2){
-            rewardString += '<p>'+tos.GetItemResultString(tableData,probsplited[i],probsplited[i+1])+'</p>';
+            rewardString += '<p>'+tos.GetItemResultString(tableData,probsplited[i],probsplited[i+1], imagePath)+'</p>';
         }
       }
   
