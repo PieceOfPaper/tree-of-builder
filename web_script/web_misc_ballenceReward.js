@@ -26,7 +26,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
             resultString += '<td>';
             if (jobData.Icon != undefined ){
                 //resultString += '<img style="width:64px; height:64px;" src="../img/icon/classicon/'+jobData.Icon.toLowerCase()+'.png" />';
-                resultString += tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 0.5);
+                resultString += tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 64);
             }
             resultString += '<p>'+jobData.Name+'</p>';
             resultString += '</td>';

@@ -71,19 +71,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f']);
       iconPath = imagePath[itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f'], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
       iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
@@ -274,13 +274,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 1);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f']);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 1);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()]);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 1);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()]);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 1);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()]);
           }
           setDataString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           setDataString += '<br/>';
@@ -619,19 +619,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f'], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f']);
       iconPath = imagePath[itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f'], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
       iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
@@ -650,13 +650,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
           itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 0.25)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 0.25);
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
         } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 0.25);
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
         } else if(itemData.Icon != undefined){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 0.25);
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
         } else if(itemData.Illust != undefined){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 0.25);
+          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
         }
         targetString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
         targetString += ' x' + recipeData.TargetItemCnt + '<br/>';
@@ -678,13 +678,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 0.25)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
           }
           materialString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           materialString += ' x' + recipeData['Item_' + i + '_1_Cnt'] + '<br/>';
@@ -744,19 +744,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f'], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f']);
       iconPath = imagePath[itemTable[index].Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'], 1)+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f'], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
       iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()], 1);
+      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()], 1);
+      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
       iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
@@ -854,13 +854,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 0.25)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 0.25);
+            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
           }
           resultString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a><br/>';
         }

@@ -26,7 +26,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 monData = tos.FindDataClassName(tableData, 'monster', companionTable[param].ClassName);
                 if (monData != undefined && monData.Icon != undefined){
                     //iconString = '<img style="width: 64px; height: 64px;" src="../img/icon/monillust/'+monData.Icon.toLowerCase()+'.png" />';
-                    iconString = tos.ImagePathToHTML(imagePath[monData.Icon.toLowerCase()], 0.5);
+                    iconString = tos.ImagePathToHTML(imagePath[monData.Icon.toLowerCase()], 64);
                 }
             }
             var jobData = undefined;

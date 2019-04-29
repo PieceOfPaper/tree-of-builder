@@ -218,13 +218,13 @@ class TosModule {
           }
         } else {
             if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 0.25) + this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 0.25);
+              icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32) + this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
             } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                icon = this.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 0.25);
+                icon = this.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
             } else if(itemData.Icon != undefined){
-                icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 0.25);
+                icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
             } else if(itemData.Illust != undefined){
-                icon = this.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 0.25);
+                icon = this.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
             } 
         }
         return icon;
@@ -331,7 +331,7 @@ class TosModule {
         return output;
     }
 
-    static ImagePathToHTML(imagePathData, scale, addParameter){
+    static ImagePathToHTML(imagePathData, height, addParameter){
         if (imagePathData == undefined) return '';
 
         var rect = [];
@@ -344,19 +344,20 @@ class TosModule {
 
         var generated = this.generateID();
         var canvasId = generated+'_canvas';
-        if (scale == undefined) scale = 1;
+        if (height == undefined) height = rect[3];
+        var scale = height / rect[3];
         var extention = this.getExtention(imagePathData.path).toLowerCase();
         
-        var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
+        var output = '<div style="width:'+(rect[2]*scale)+'px; height:'+(rect[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
         if (addParameter != undefined){
             output += addParameter;
             output += ' ';
         }
         output += ' >';
         if (extention == 'tga'){
-            output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
+            output += '<canvas id="'+canvasId+'" width="'+rect[2]+'" height="'+rect[3]+'" style="margin:0; padding:0; margin-left: -'+(rect[2]*(1-scale)*0.5)+'px; margin-top: -'+(rect[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
         } else {
-            output += '<img id="'+canvasId+'" src="'+imagePathData.path+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
+            output += '<img id="'+canvasId+'" src="'+imagePathData.path+'" style="margin:0; padding:0; margin-left: -'+(rect[2]*(1-scale)*0.5)+'px; margin-top: -'+(rect[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
         }
         output += '</div>';
 
@@ -369,7 +370,7 @@ class TosModule {
             output +=   ''+generated+'_tga.open("'+imagePathData.path+'", function() {';
             output +=       'var ctx = document.getElementById("'+canvasId+'").getContext("2d");';
             output +=       'var imageData = ctx.createImageData('+generated+'_tga.header.width, '+generated+'_tga.header.height);';
-            output +=       'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+splited[0]+', -'+splited[1]+'); });';
+            output +=       'ctx.putImageData('+generated+'_tga.getImageData(imageData), -'+rect[0]+', -'+rect[1]+'); });';
             output += '}';
             output += '</script>';
         } else {
