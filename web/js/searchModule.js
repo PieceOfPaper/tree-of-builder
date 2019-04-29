@@ -328,6 +328,7 @@ function searchModule_showResult(){
                                 case "item_gem":
                                 case "item_premium":
                                 case "item_recipe":
+                                case "buff":
                                 if (searchedItems[i].TableName == "item_Equip" && searchedItems[i]["EqpType"].toLowerCase() == 'outer' && searchedItems[i]["UseGender"].toLowerCase() == 'both'){
                                     tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_mPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_mRect'], 64);
                                     tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'_fPath'], searchedItems[i][resultCols[j]["datalist"][k]+'_fRect'], 64);
@@ -338,11 +339,6 @@ function searchModule_showResult(){
                                 }
                                 tdstr += ImagePathToHTML(searchedItems[i], searchedItems[i][resultCols[j]["datalist"][k]+'Path'], searchedItems[i][resultCols[j]["datalist"][k]+'Rect'], 64);
                                 ImageLoad(searchedItems[i], resultCols[j]["datalist"][k]);
-                                break;
-                                case "buff":
-                                var iconName = searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase();
-                                if (iconName.indexOf('icon_') < 0) iconName = 'icon_' + iconName;
-                                tdstr += '<img src="../img/icon/skillicon/'+iconName+'.png" />';
                                 break;
                                 case "job":
                                 tdstr += '<img src="../img/icon/classicon/'+searchedItems[i][resultCols[j]["datalist"][k]].toLowerCase()+'.png" />';

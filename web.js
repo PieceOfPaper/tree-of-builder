@@ -751,7 +751,7 @@ app.use('/Skill', skillPage);
 var abilityPage = require('./web_script/web_ability')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Ability', abilityPage);
 
-var buffPage = require('./web_script/web_buff')(app, serverSetting, tableData, scriptData);
+var buffPage = require('./web_script/web_buff')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Buff', buffPage);
 
 var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData, imagePath);

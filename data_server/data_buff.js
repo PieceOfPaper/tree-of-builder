@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, tableData, imagePath){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -7,6 +7,16 @@ module.exports = function(app, tableData){
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
         var output = dataModule.DefaultQueryFilter(tableData['buff'], req.query);
+
+        for (var i=0;i<output["datalist"].length;i++){
+            if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
+                var pathdata = imagePath['icon_'+output["datalist"][i]['Icon']];
+                if (pathdata != null) {
+                    output["datalist"][i]['IconPath'] = pathdata['path'];
+                    output["datalist"][i]['IconRect'] = pathdata['imgrect'];
+                }
+            }
+        }
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));

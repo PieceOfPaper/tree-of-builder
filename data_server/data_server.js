@@ -26,7 +26,7 @@ module.exports = function(app, serverSetting, tableData, imagePath){
     var cooldownServer = require('./data_cooldown')(app, tableData);
     app.use('/data/cooldown', cooldownServer);
 
-    var stanceServer = require('./data_buff')(app, tableData);
+    var stanceServer = require('./data_buff')(app, tableData, imagePath);
     app.use('/data/buff', stanceServer);
 
     var stanceServer = require('./data_monster')(app, tableData, imagePath);
