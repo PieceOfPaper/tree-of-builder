@@ -13,8 +13,8 @@ module.exports = function(app, tableData, imagePath){
                 if (output["datalist"][i].TableName == "item_Equip" && 
                     output["datalist"][i]["EqpType"].toLowerCase() == 'outer' && 
                     output["datalist"][i]["UseGender"].toLowerCase() == 'both'){
-                    var pathdatam = imagePath[output["datalist"][i]['Icon']+'_m'];
-                    var pathdataf = imagePath[output["datalist"][i]['Icon']+'_f'];
+                    var pathdatam = imagePath[output["datalist"][i]['Icon'].toLowerCase()+'_m'];
+                    var pathdataf = imagePath[output["datalist"][i]['Icon'].toLowerCase()+'_f'];
                     if (pathdatam != null) {
                         output["datalist"][i]['Icon_mPath'] = pathdatam['path'];
                         output["datalist"][i]['Icon_mRect'] = pathdatam['imgrect'];
@@ -24,7 +24,7 @@ module.exports = function(app, tableData, imagePath){
                         output["datalist"][i]['Icon_fRect'] = pathdataf['imgrect'];
                     }
                 } else {
-                    var pathdata = imagePath[output["datalist"][i]['Icon']];
+                    var pathdata = imagePath[output["datalist"][i]['Icon'].toLowerCase()];
                     if (pathdata != null) {
                         output["datalist"][i]['IconPath'] = pathdata['path'];
                         output["datalist"][i]['IconRect'] = pathdata['imgrect'];

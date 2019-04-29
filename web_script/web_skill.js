@@ -79,7 +79,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon], 0.5, 'class="ability-icon"') + '</td>';
+      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon.toLowerCase()], 0.5, 'class="ability-icon"') + '</td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){
@@ -263,8 +263,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var output = layout_detail.toString();
     //output = output.replace(/style.css/g, '../Layout/style.css');
     //output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
-    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+skillTable[index].Icon]));
-    output = output.replace(/%IconPath%/g, imagePath['icon_'+skillTable[index].Icon].path);
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+skillTable[index].Icon.toLowerCase()]));
+    output = output.replace(/%IconPath%/g, imagePath['icon_'+skillTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath['icon_'+skillTable[index].Icon.toLowerCase()].path);
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);

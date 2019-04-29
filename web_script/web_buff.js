@@ -49,8 +49,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/style.css/g, '../style.css');
     // output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
     // output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + iconName + '.png');
-    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+buffTable[index].Icon]));
-    output = output.replace(/%IconPath%/g, imagePath['icon_'+buffTable[index].Icon] == undefined ? '' : imagePath['icon_'+buffTable[index].Icon].path);
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+buffTable[index].Icon.toLowerCase()]));
+    output = output.replace(/%IconPath%/g, imagePath['icon_'+buffTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath['icon_'+buffTable[index].Icon.toLowerCase()].path);
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
     output = output.replace(/%ClassID%/g, buffTable[index].ClassID);

@@ -175,8 +175,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         }
 
         var output = layout_detail.toString();
-        output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath[monsterTable[index].Icon]));
-        output = output.replace(/%IconPath%/g, imagePath[monsterTable[index].Icon] == undefined ? '' : imagePath[monsterTable[index].Icon].path);
+        output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath[monsterTable[index].Icon.toLowerCase()]));
+        output = output.replace(/%IconPath%/g, imagePath[monsterTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath[monsterTable[index].Icon.toLowerCase()].path);
         output = output.replace(/%Name%/g, monsterTable[index].Name);
         output = output.replace(/%ClassName%/g, monsterTable[index].ClassName);
         output = output.replace(/%ClassID%/g, monsterTable[index].ClassID);

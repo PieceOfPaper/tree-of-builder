@@ -443,7 +443,7 @@ function importImage(srcPath, callback){
               if (path.startsWith('/') == false) data['path'] += '/';
               data['path'] += path;
               data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
-              imagePath[xmlData.root.children[i].children[j].attributes['name'].toString()] = data;
+              imagePath[xmlData.root.children[i].children[j].attributes['name'].toString().toLowerCase()] = data;
             }
           }
         }

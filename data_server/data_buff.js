@@ -10,7 +10,7 @@ module.exports = function(app, tableData, imagePath){
 
         for (var i=0;i<output["datalist"].length;i++){
             if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
-                var pathdata = imagePath['icon_'+output["datalist"][i]['Icon']];
+                var pathdata = imagePath['icon_'+output["datalist"][i]['Icon'].toLowerCase()];
                 if (pathdata != null) {
                     output["datalist"][i]['IconPath'] = pathdata['path'];
                     output["datalist"][i]['IconRect'] = pathdata['imgrect'];
