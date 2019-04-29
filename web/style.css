@@ -476,7 +476,7 @@ footer img{
 }
 
 .builder-class-btn {
-    width:64px;
+    width:50px;
     display: inline-block;
 }
 .builder-class-btn .class-icon{
@@ -486,7 +486,7 @@ footer img{
 .builder-class-btn .class-name {
     margin: 0;
     padding: 0;
-    width: 64px;
+    width: 50px;
     font-size: 0.75em;
     white-space: nowrap; 
     overflow: hidden;

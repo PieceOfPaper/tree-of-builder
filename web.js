@@ -793,7 +793,7 @@ app.use('/Shop', miscShopPage);
 var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, tableData, scriptData);
 app.use('/BallenceReward', miscBallenceReward);
 
-var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData);
+var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Builder', builderPage);
 
 var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, tableData, scriptData);

@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     var url = require('url');
@@ -80,6 +80,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         output +=     '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
         output +=     '<script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2172243042066207", enable_page_level_ads: true }) </script>';
         output +=     '<script src="../js/defaultSetting.js"></script>';
+        output +=     '<script src="../js/tga.js"></script>';
         output +=   '</head>';
         output +=   '<body>';
         //output += fs.readFileSync('./web/Layout/topMenu.html');
@@ -94,7 +95,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                 var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
-                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
+                output +=       tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 0.5);
                 output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
@@ -107,7 +109,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             for (var i = 0; i < jobTable.length; i ++){
                 if (jobTable[i].Rank > 1) continue;
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
-                output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
+                //output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
+                output +=       tos.ImagePathToHTML(imagePath[jobTable[i].Icon.toLowerCase()], 0.5);
                 output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -137,7 +140,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             }
             for (var i = 0; i < jobList.length; i ++){
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
-                output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
+                //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
+                output +=       tos.ImagePathToHTML(imagePath[jobList[i].Icon.toLowerCase()], 0.5);
                 output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -194,7 +198,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                     // if (skillLvMax > skilltreeTable[j].MaxLevel) skillLvMax = skilltreeTable[j].MaxLevel;
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
-                    output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
+                    //output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
+                    output +=       tos.ImagePathToHTML(imagePath['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 0.5, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
@@ -246,7 +251,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                         }
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
-                    output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
+                    //output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
+                    output +=       tos.ImagePathToHTML(imagePath[abilityTable[j].Icon.toLowerCase()], 0.5, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
