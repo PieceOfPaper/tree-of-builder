@@ -28,15 +28,20 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     function detailPage(index, request, response) {
       var indunTable = tableData['indun'];
 
-      var iconname = '';
-      if (indunTable[index].MapImage!=undefined && indunTable[index].MapImage.length>0){
-        iconname = indunTable[index].MapImage.toLowerCase();
+      var iconpath = '';
+      var iconhtml = '';
+      if (indunTable[index].MapImage!=undefined){
+        imgPathData = imagePath[indunTable[index].MapImage.toLowerCase()];
+        if (imgPathData!=undefined){
+          iconpath = imgPathData.path;
+          iconhtml = tos.ImagePathToHTML(imgPathData);
+        }
       }
   
       var output = layout_detail.toString();
       output = output.replace(/style.css/g, '../style.css');
-      output = output.replace(/%Icon%/g, '<img src="../img/indunmapimage/' + iconname + '.png" />');
-      output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/indunmapimage/' + iconname + '.png');
+      output = output.replace(/%Icon%/g, iconhtml);
+      output = output.replace(/%IconPath%/g, iconpath);
       output = output.replace(/%Name%/g, indunTable[index].Name);
       output = output.replace(/%ClassName%/g, indunTable[index].ClassName);
       output = output.replace(/%ClassID%/g, indunTable[index].ClassID);

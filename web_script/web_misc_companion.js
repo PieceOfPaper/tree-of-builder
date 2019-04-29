@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -21,11 +21,12 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             var nameStr = tos.GetMonsterString(tableData, companionTable[param].ClassName.trim());
             if (nameStr == undefined || nameStr.length == 0) nameStr = companionTable[param].ClassName.replace(/_/g,' ');
             var monData = undefined;
-            var iconString = '<img style="width: 64px; height: 64px;" src="" />';
+            var iconString = '';
             if (companionTable[param].ClassName != undefined && companionTable[param].ClassName.length>0){
                 monData = tos.FindDataClassName(tableData, 'monster', companionTable[param].ClassName);
-                if (monData != undefined){
-                    iconString = '<img style="width: 64px; height: 64px;" src="../img/icon/monillust/'+monData.Icon.toLowerCase()+'.png" />';
+                if (monData != undefined && monData.Icon != undefined){
+                    //iconString = '<img style="width: 64px; height: 64px;" src="../img/icon/monillust/'+monData.Icon.toLowerCase()+'.png" />';
+                    iconString = tos.ImagePathToHTML(imagePath[monData.Icon.toLowerCase()], 0.5);
                 }
             }
             var jobData = undefined;

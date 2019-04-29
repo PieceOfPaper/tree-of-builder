@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -38,9 +38,12 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
       var imgString = '';
       var imgPath = '';
-      if (dialogData['ImgName'] != undefined && dialogData['ImgName'].length > 0){
-        imgString += '<img style="max-width:calc(100% - 20px);" src="../img/Dlg_portrait/'+dialogData['ImgName']+'.png" />';
-        imgPath = 'http://'+request.headers.host+'../img/Dlg_portrait/'+dialogData['ImgName']+'.png';
+      if (dialogData['ImgName'] != undefined){
+        var imgPathData = imagePath[dialogData['ImgName'].toLowerCase()];
+        if (imgPathData != undefined){
+          imgString += '<img style="max-width:calc(100% - 20px);" src="'+imgPathData.path+'" />';
+          imgPath = imgPathData.path;
+        }
       }
 
       var output = layout_detail.toString();
