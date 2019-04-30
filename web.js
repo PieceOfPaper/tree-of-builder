@@ -739,6 +739,9 @@ app.get('/', function (req, response) {
 //   res.send(result);
 // });
 
+var debugPage = require('./web_script/web_debug')(app, serverSetting, tableData, scriptData, imagePath);
+app.use('/%EC%97%B4%EB%A0%A4%EB%9D%BC%EC%B0%B8%EA%B9%A8', debugPage);
+
 var dataServer = require('./data_server/data_server')(app, serverSetting, tableData, imagePath);
 app.use('/data', dataServer);
 
