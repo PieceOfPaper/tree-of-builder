@@ -1,10 +1,11 @@
-@font-face {
-    font-family: IMCM_Origin;
-    src: url('../font/imcm_original.ttf');
-}
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
 @font-face {
     font-family: IMCM_Book;
-    src: url('../font/imcm_book.ttf');
+    src: url('../font/BMHANNA11yrsold.eot') format('embedded-opentype'),
+    url('../font/BMHANNA11yrsold.woff2') format('woff2'),
+    url('../font/BMHANNA11yrsold.woff') format('woff'),
+    url('../font/BMHANNA11yrsold.svg') format('svg'),
+    url('../font/imcm_book.ttf') format('truetype');
 }
 
 
@@ -19,7 +20,7 @@ body {
     padding: 10px;
     margin: 0;
     padding-top: 75px;
-    font-family: IMCM_Origin;
+    font-family: 'Jeju Gothic';
     background-image: url("../img2/minimap_imgs/jilgam.png");
     /*font-size: 2.5vw;*/
     max-width: 100%;
