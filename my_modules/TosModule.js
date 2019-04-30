@@ -258,19 +258,19 @@ class TosModule {
         if (questData!=undefined){
             switch(questData.QuestMode){
                 case "MAIN":
-                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_main.png" />';
+                output += '<img class="item-material-icon" src="../img2/minimap_icons/minimap_1_main.png" />';
                 break;
                 case "SUB":
-                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_sub.png" />';
+                output += '<img class="item-material-icon" src="../img2/minimap_icons/minimap_1_sub.png" />';
                 break;
                 case "REPEAT":
-                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_repeat.png" />';
+                output += '<img class="item-material-icon" src="../img2/minimap_icons/minimap_1_repeat.png" />';
                 break;
                 case "PARTY":
-                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_party.png" />';
+                output += '<img class="item-material-icon" src="../img2/minimap_icons/minimap_1_party.png" />';
                 break;
                 case "KEYITEM":
-                output += '<img class="item-material-icon" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+                output += '<img class="item-material-icon" src="../img2/minimap_icons/minimap_1_keyquest.png" />';
                 break;
             }
         }

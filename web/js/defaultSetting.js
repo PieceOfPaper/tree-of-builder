@@ -3,7 +3,7 @@ var topMenuButtons = [];
 
 topMenuButtons['home'] = [];
 topMenuButtons['home']["Path"] = ".";
-topMenuButtons['home']["Img"] = "../img/minimap_icons/questinfo_return.png";
+topMenuButtons['home']["Img"] = "../img2/minimap_icons/questinfo_return.png";
 topMenuButtons['home']["Name"] = "HOME";
 
 // topMenuButtons['category_board'] = [];
@@ -23,17 +23,17 @@ topMenuButtons['category_tool']["Name"] = "TOOL";
 
 topMenuButtons['builder'] = [];
 topMenuButtons['builder']["Path"] = "Builder";
-topMenuButtons['builder']["Img"] = "../img/hud_status_icon/skillpower_icon.png";
+topMenuButtons['builder']["Img"] = "../img2/menu_icon/skillpower_icon.png";
 topMenuButtons['builder']["Name"] = "Builder";
 
 topMenuButtons['tool_questcalc'] = [];
 topMenuButtons['tool_questcalc']["Path"] = "QuestCalculator";
-topMenuButtons['tool_questcalc']["Img"] = "../img/minimap_icons/minimap_1_main.png";
+topMenuButtons['tool_questcalc']["Img"] = "../img2/minimap_icons/minimap_1_main.png";
 topMenuButtons['tool_questcalc']["Name"] = "Quest Calc";
 
 topMenuButtons['tool_foodcalc'] = [];
 topMenuButtons['tool_foodcalc']["Path"] = "FoodCalculator";
-topMenuButtons['tool_foodcalc']["Img"] = "../img/icon/itemicon/icon_item_bbq.png";
+topMenuButtons['tool_foodcalc']["Img"] = "../img2/menu_icon/icon_item_bbq.png";
 topMenuButtons['tool_foodcalc']["Name"] = "Food Calc";
 
 topMenuButtons['category_database'] = [];
@@ -43,57 +43,57 @@ topMenuButtons['category_database']["Name"] = "DATABASE";
 
 topMenuButtons['item'] = [];
 topMenuButtons['item']["Path"] = "ItemPage";
-topMenuButtons['item']["Img"] = "../img/icon/itemicon/accessory_hat_poporion.png";
+topMenuButtons['item']["Img"] = "../img2/menu_icon/accessory_hat_poporion.png";
 topMenuButtons['item']["Name"] = "Item";
 
 topMenuButtons['class'] = [];
 topMenuButtons['class']["Path"] = "ClassPage";
-topMenuButtons['class']["Img"] = "../img/icon/classicon/c_warrior_centurion.png";
+topMenuButtons['class']["Img"] = "../img2/menu_icon/c_warrior_centurion.png";
 topMenuButtons['class']["Name"] = "Class";
 
 topMenuButtons['skill'] = [];
 topMenuButtons['skill']["Path"] = "SkillPage";
-topMenuButtons['skill']["Img"] = "../img/icon/skillicon/icon_warri_tercioformation.png";
+topMenuButtons['skill']["Img"] = "../img2/menu_icon/icon_warri_tercioformation.png";
 topMenuButtons['skill']["Name"] = "Skill";
 
 topMenuButtons['ability'] = [];
 topMenuButtons['ability']["Path"] = "AbilityPage";
-topMenuButtons['ability']["Img"] = "../img/icon/skillicon/ability_warrior_centurion2.png";
+topMenuButtons['ability']["Img"] = "../img2/menu_icon/ability_warrior_centurion2.png";
 topMenuButtons['ability']["Name"] = "Ability";
 
 topMenuButtons['buff'] = [];
 topMenuButtons['buff']["Path"] = "BuffPage";
-topMenuButtons['buff']["Img"] = "../img/bufficon/icon_attack_blessing_up.png";
+topMenuButtons['buff']["Img"] = "../img2/menu_icon/icon_attack_blessing_up.png";
 topMenuButtons['buff']["Name"] = "Buff";
 
 topMenuButtons['monster'] = [];
 topMenuButtons['monster']["Path"] = "MonsterPage";
-topMenuButtons['monster']["Img"] = "../img/icon/monillust/mon_popolion_blue.png";
+topMenuButtons['monster']["Img"] = "../img2/menu_icon/mon_popolion_blue.png";
 topMenuButtons['monster']["Name"] = "Monster";
 
 topMenuButtons['quest'] = [];
 topMenuButtons['quest']["Path"] = "QuestPage";
-topMenuButtons['quest']["Img"] = "../img/minimap_icons/minimap_1_sub.png";
+topMenuButtons['quest']["Img"] = "../img2/minimap_icons/minimap_1_sub.png";
 topMenuButtons['quest']["Name"] = "Quest";
 
 topMenuButtons['map'] = [];
 topMenuButtons['map']["Path"] = "MapPage";
-topMenuButtons['map']["Img"] = "../img/minimap_icons/minimap_complete.png";
+topMenuButtons['map']["Img"] = "../img2/minimap_icons/minimap_complete.png";
 topMenuButtons['map']["Name"] = "Map";
 
 topMenuButtons['indun'] = [];
 topMenuButtons['indun']["Path"] = "IndunPage";
-topMenuButtons['indun']["Img"] = "../img/icon/itemicon/icon_item_cube2.png";
+topMenuButtons['indun']["Img"] = "../img2/menu_icon/icon_item_cube2.png";
 topMenuButtons['indun']["Name"] = "Indun";
 
 topMenuButtons['dialog'] = [];
 topMenuButtons['dialog']["Path"] = "DialogPage";
-topMenuButtons['dialog']["Img"] = "../img/icon/itemicon/icon_item_collection_03blue.png";
+topMenuButtons['dialog']["Img"] = "../img2/menu_icon/icon_item_collection_03blue.png";
 topMenuButtons['dialog']["Name"] = "Dialog";
 
 topMenuButtons['collection'] = [];
 topMenuButtons['collection']["Path"] = "CollectionPage";
-topMenuButtons['collection']["Img"] = "../img/icon/itemicon/icon_item_box.png";
+topMenuButtons['collection']["Img"] = "../img2/menu_icon/icon_item_box.png";
 topMenuButtons['collection']["Name"] = "Collection";
 
 topMenuButtons['category_miscdata'] = [];
@@ -103,27 +103,27 @@ topMenuButtons['category_miscdata']["Name"] = "MISC DATA";
 
 topMenuButtons['misc_guildevent'] = [];
 topMenuButtons['misc_guildevent']["Path"] = "GuildEvent";
-topMenuButtons['misc_guildevent']["Img"] = "../img/icon/itemicon/icon_item_indunonemoreenter.png";
+topMenuButtons['misc_guildevent']["Img"] = "../img2/menu_icon/icon_item_indunonemoreenter.png";
 topMenuButtons['misc_guildevent']["Name"] = "Guild Event";
 
 topMenuButtons['misc_companion'] = [];
 topMenuButtons['misc_companion']["Path"] = "Companion";
-topMenuButtons['misc_companion']["Img"] = "../img/icon/itemicon/icon_item_egg_toucan.png";
+topMenuButtons['misc_companion']["Img"] = "../img2/menu_icon/icon_item_egg_toucan.png";
 topMenuButtons['misc_companion']["Name"] = "Companion";
 
 topMenuButtons['misc_eventbanner'] = [];
 topMenuButtons['misc_eventbanner']["Path"] = "EventBanner";
-topMenuButtons['misc_eventbanner']["Img"] = "../img/testje_image/event_btn.png";
+topMenuButtons['misc_eventbanner']["Img"] = "../img2/menu_icon/event_btn.png";
 topMenuButtons['misc_eventbanner']["Name"] = "Event Banner";
 
 topMenuButtons['misc_shop'] = [];
 topMenuButtons['misc_shop']["Path"] = "Shop";
-topMenuButtons['misc_shop']["Img"] = "../img/icon/itemicon/icon_item_silver.png";
+topMenuButtons['misc_shop']["Img"] = "../img2/menu_icon/icon_item_silver.png";
 topMenuButtons['misc_shop']["Name"] = "Shop";
 
 topMenuButtons['misc_ballenceReward'] = [];
 topMenuButtons['misc_ballenceReward']["Path"] = "BallenceReward";
-topMenuButtons['misc_ballenceReward']["Img"] = "../img/icon/itemicon/icon_item_rankreset_paper.png";
+topMenuButtons['misc_ballenceReward']["Img"] = "../img2/menu_icon/icon_item_rankreset_paper.png";
 topMenuButtons['misc_ballenceReward']["Name"] = "B.R.";
 
 
@@ -143,9 +143,11 @@ function onInitTopMenu(isHome){
         if (topMenuButtons[param].Path != undefined){
             nodeDiv.classList.add("node-item");
             //img
-            var nodeButtonImg = document.createElement("img");
-            nodeButtonImg.src=topMenuButtons[param].Img;
-            nodeButton.appendChild(nodeButtonImg);
+            if (topMenuButtons[param]["Img"] != undefined){
+                var nodeButtonImg = document.createElement("img");
+                nodeButtonImg.src=topMenuButtons[param].Img;
+                nodeButton.appendChild(nodeButtonImg);
+            }
             //path
             if (isHome) nodeButton.href=topMenuButtons[param].Path;
             else nodeButton.href="../"+topMenuButtons[param].Path;
@@ -167,7 +169,7 @@ function onInitTopMenu(isHome){
     leftMenuButtonA.onclick=onclick_leftMenuOpen;
     //leftMenuButton.classList.add("open-button");
     leftMenuButton.id = "left-menu-open-button";
-    leftMenuButtonImg.src="../img/book/nextbtn.png";
+    leftMenuButtonImg.src="../img2/book/nextbtn.png";
     leftMenuButtonText.innerHTML="MENU";
     leftMenuButtonText.style.margin="0";
     leftMenuButtonA.appendChild(leftMenuButtonImg);

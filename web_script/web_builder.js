@@ -75,7 +75,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         output +=   '<head>';
         output +=     '<title>Builder Page</title>';
         output +=     '<link rel="stylesheet" type="text/css" href="../style.css">';
-        output +=     '<link rel="icon" href="../img/minimap_icons/questinfo_return.png">';
+        output +=     '<link rel="icon" href="../img2/minimap_icons/questinfo_return.png">';
         output +=     '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />';
         output +=     '<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>';
         output +=     '<script>(adsbygoogle = window.adsbygoogle || []).push({ google_ad_client: "ca-pub-2172243042066207", enable_page_level_ads: true }) </script>';
@@ -202,8 +202,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     output +=       tos.ImagePathToHTML(imagePath['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 0.5, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
-                    output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button plus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',1)"><img src="../img2/button/btn_plus_cursoron.png" /></button>';
                     //output +=       '<p><a href="../Skill/?id=' + skillTable[skillTableIndex].ClassID  + '">' + skillTable[skillTableIndex].Name + '</a>(<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span>/' + skillLvMax + ')</p>';
                     // output +=       '<div align="center" class="skill-desc" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     // output +=           '<p>' + tos.parseCaption(skillTable[skillTableIndex].Caption) + '</p>';
@@ -255,8 +255,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     output +=       tos.ImagePathToHTML(imagePath[abilityTable[j].Icon.toLowerCase()], 0.5, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
-                    output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img/button/btn_minus_cursoron.png" /></button>';
-                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img/button/btn_plus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
+                    output +=       '<button class="lv-add-button plus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',1)"><img src="../img2/button/btn_plus_cursoron.png" /></button>';
                     // output +=       '<div align="center" class="ability-desc" id="' + abilityTable[j].ClassID + '" >';
                     // output +=           '<p>' + abil_job.UnlockDesc + '</p>';
                     // output +=           '<p>' + tos.parseCaption(abilityTable[j].Desc) + '</p>';

@@ -20,7 +20,7 @@ body {
     margin: 0;
     padding-top: 75px;
     font-family: IMCM_Origin;
-    background-image: url("../img/minimap_imgs/jilgam.png");
+    background-image: url("../img2/minimap_imgs/jilgam.png");
     /*font-size: 2.5vw;*/
     max-width: 100%;
     overflow-x: hidden;
@@ -152,7 +152,7 @@ table, td, th {
     height: 40px;
 }
 #left-menu-open-button.opened img {
-    content: url("../img/book/prevbtn.png");
+    content: url("../img2/book/prevbtn.png");
 }
 #left-menu-open-button a:hover img{
     transform:scale(1.1);
@@ -225,7 +225,7 @@ table, td, th {
     height: 80px;
     left: calc((100% - 112.857142857142857px)/2);
     top: calc((100% - 80px)/2);
-    background: url('img/barrack/loading_bube.png') left center;
+    background: url('img2/loading_bube.png') left center;
     z-index: 1001;
     animation: req-loading-indicator .8s steps(7) infinite;
 }
@@ -251,22 +251,22 @@ table, td, th {
     height: calc(19px * 1.5);
 }
 .lv-add-button.plus img {
-    content: url("../img/button/btn_plus.png");
+    content: url("../img2/button/btn_plus.png");
 }
 .lv-add-button.plus:hover img {
-    content: url("../img/button/btn_plus_cursoron.png");
+    content: url("../img2/button/btn_plus_cursoron.png");
 }
 .lv-add-button.plus:active img {
-    content: url("../img/button/btn_plus_clicked.png");
+    content: url("../img2/button/btn_plus_clicked.png");
 }
 .lv-add-button.minus img {
-    content: url("../img/button/btn_minus.png");
+    content: url("../img2/button/btn_minus.png");
 }
 .lv-add-button.minus:hover img {
-    content: url("../img/button/btn_minus_cursoron.png");
+    content: url("../img2/button/btn_minus_cursoron.png");
 }
 .lv-add-button.minus:active img {
-    content: url("../img/button/btn_minus_clicked.png");
+    content: url("../img2/button/btn_minus_clicked.png");
 }
 
 .div-center {
@@ -626,7 +626,7 @@ footer img{
     margin:0;
     width:1740px;
     height:3620px;
-    background-image: url('../img/worldmap_imgs/worldmap_s_bg.jpg');
+    background-image: url('https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/ui.ipf/skin/worldmap_overall_bg.jpg');
 }
 
 .worldmap-item {

@@ -796,10 +796,10 @@ app.use('/BallenceReward', miscBallenceReward);
 var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Builder', builderPage);
 
-var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, tableData, scriptData);
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/QuestCalculator', toolQuestCalcPage);
 
-var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData);
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
 // var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
