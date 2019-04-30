@@ -89,15 +89,15 @@ console.log('argument loaded');
 
 console.log('### DB Connect Request');
 serverSetting['dbconfig'] = [];
-// if (serverSetting['isLocalServer']){
-//   serverSetting['dbconfig'] = {
-//     host     : '127.0.0.1',
-//     user     : 'root',
-//     password : 'localhost',
-//     database : 'tree-of-builder',
-//     onerror: err=>console.log(err.message),
-//   };
-// } else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
+if (serverSetting['isLocalServer']){
+  serverSetting['dbconfig'] = {
+    host     : '127.0.0.1',
+    user     : 'root',
+    password : 'localhost',
+    database : 'tree-of-builder',
+    onerror: err=>console.log(err.message),
+  };
+} else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
   serverSetting['dbconfig'] = {
     host     : 'remotemysql.com',
     user     : '8dsGgaueIQ',
@@ -105,7 +105,7 @@ serverSetting['dbconfig'] = [];
     database : '8dsGgaueIQ',
     onerror: err=>console.log(err.message),
   };
-//}
+}
 // var dbimporter = mysql_import.config(serverSetting['dbconfig']);
 // dbimporter.import('table_structure_dump.sql').then(()=> {
 // 	console.log('### DB Setting Success.')
