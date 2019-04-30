@@ -142,6 +142,7 @@ table, td, th {
     border: 0;
     border-radius: 0.5em;
     background-color: whitesmoke;
+    z-index: 1000;
 }
 #left-menu-open-button.opened {
     left: 210px;
