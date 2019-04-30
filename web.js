@@ -418,7 +418,7 @@ function importImage(srcPath, callback){
   var file = fs.createWriteStream('./web/data/' + srcPath);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + srcPath, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('download ' + srcPath);
+      //console.log('download ' + srcPath);
       //fs.createReadStream('./web/data/' + srcPath).on('data', function (data) {
       fs.readFile('./web/data/' + srcPath, function(error, data){
         //console.log(data.toString());
@@ -563,7 +563,9 @@ function generateLuaScript(array, index, callback){
 
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
-  console.log('language table ' + tableData['language'].length);
+  var count = 0;
+  for (param in tableData['language']) count ++;
+  console.log('language table ' + count);
 });
 function loadTableLanguage(name, path, callback){
   if (tableData[name] === undefined) tableData[name] = [];
