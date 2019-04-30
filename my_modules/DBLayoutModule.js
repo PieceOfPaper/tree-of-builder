@@ -70,9 +70,9 @@ class DBLayoutModule {
                 output +=  '<p style="margin:2px; float:right;">';
                 if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
                     if (results[i].userno==userdata.userno)
-                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img/button/button_chat_w_exit.png"></a>';
+                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
                     if (results[i].userno!=userdata.userno)
-                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img/dungeon_msg/notice_dm_!.png"></a>';
+                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img2/dungeon_msg/notice_dm_!.png"></a>';
                 }
                 output +=  '</p>';
                 
