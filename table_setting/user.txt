@@ -4,4 +4,5 @@ pwd VARCHAR(100) NOT NULL
 pwd_salt VARCHAR(10) NOT NULL
 nickname VARCHAR(45)
 mail_auth VARCHAR(100)
+permission INT(5) unsigned DEFAULT 1
 PRIMARY KEY (userno)

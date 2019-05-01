@@ -57,7 +57,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                 var dataSetScriptString = '<script>';
                 for (param in results[0]){
                     if (param=='pwd') continue;
-                    if (param=='email'){
+                    if (param=='email' || param=='permission'){
                         dataSetScriptString += 'if(document.getElementById("'+param+'")!=undefined) document.getElementById("'+param+'").innerText="'+results[0][param]+'";\n';
                         continue;
                     }

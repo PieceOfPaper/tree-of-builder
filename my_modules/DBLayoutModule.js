@@ -1,5 +1,7 @@
 class DBLayoutModule {
 
+    static BOARD_SHORT_WRITE_PERMISSION() { return 1; }
+
     static CommentTextFilter(text) {
         if (text==undefined) return '';
         var output = text.toString();
@@ -48,7 +50,7 @@ class DBLayoutModule {
     static Layout_ShortBoard(userdata, results) {
         var output = '';
         output += '<div style="margin:0; padding:5px; width:calc(100vw - 30px); display:inline-block; border: 1px solid black;">';
-        if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
+        if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A" && userdata.permission > 0){
             output += '<form action="/BoardShort/ReqWrite" method="POST" >';
             output +=  '<input type="hidden" name="userno" value="'+userdata.userno+'" style="margin:2px; width:calc(100% - 4px);" >';
             output +=  '<textarea id="shortboard-value" name="value" onkeyup="onChangeTextLimit(\'shortboard-value\',\'shortboard-number\',100)" style="margin:2px; width:calc(100vw - 40px);" ></textarea>';

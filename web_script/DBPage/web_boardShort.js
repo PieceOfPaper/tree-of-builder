@@ -7,6 +7,9 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     var moment = require('moment');
     var nodemailer = require('nodemailer');
 
+    var dbLayout = require('../../my_modules/DBLayoutModule');
+
+
     var smtpTransport = nodemailer.createTransport({  
         service: 'Gmail',
         auth: { user: 'tree.of.builder', pass: '2009#*&&dltjdgml' }
@@ -29,20 +32,41 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var userno = req.body.userno;
         var value = req.body.value;
 
-        if (value.length > 100){
-            value = value.substring(0,100);
-        }
+        var connSync = mysql.createConnection(serverSetting['dbconfig']);
+        connSync.on('error', function() {});
+        connSync.connect();
+        connSync.query('SELECT * FROM user WHERE userno="'+userno+'";', function (error, results, fields) {
+            if (error) {
+                console.log('error ' + error);
+                return;
+            }
+            connSync.end();
 
-        var connection = new mysqls(serverSetting['dbconfig']);
-        var index = 0;
+            if (results == undefined || results.length == 0){
+                res.send('<script> alert("Not Exist User"); window.location = document.referrer; </script>');
+                return;
+            }
 
-        var shortboard_results = connection.query('SELECT * FROM board_short;');
-        if (shortboard_results!=undefined && shortboard_results.length>0){
-            index = shortboard_results[shortboard_results.length-1].idx + 1;
-        }
-        var mysqlTimestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-        var insert_results = connection.query('INSERT INTO board_short (idx,userno,time,state,value) VALUES ('+index+','+userno+',"'+mysqlTimestamp+'",'+0+',"'+value+'");');
-        res.send('<script> window.location = document.referrer; </script>');
+            if (results[0].permission < dbLayout.BOARD_SHORT_WRITE_PERMISSION()){
+                res.send('<script> alert("not enough permissions"); window.location = document.referrer; </script>');
+                return;
+            }
+
+            if (value.length > 100){
+                value = value.substring(0,100);
+            }
+
+            var connection = new mysqls(serverSetting['dbconfig']);
+            var index = 0;
+
+            var shortboard_results = connection.query('SELECT * FROM board_short;');
+            if (shortboard_results!=undefined && shortboard_results.length>0){
+                index = shortboard_results[shortboard_results.length-1].idx + 1;
+            }
+            var mysqlTimestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+            var insert_results = connection.query('INSERT INTO board_short (idx,userno,time,state,value) VALUES ('+index+','+userno+',"'+mysqlTimestamp+'",'+0+',"'+value+'");');
+            res.send('<script> window.location = document.referrer; </script>');
+        });
     });
 
     route.post('/ReqDelete', function (req, res) {
