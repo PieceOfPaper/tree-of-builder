@@ -74,7 +74,8 @@
     <br/>
     <br/>
     
-    %RawScripts%
+    <button onclick="var div=document.getElementById('rawScript-div'); if(div!=undefined){ div.style.display=(div.style.display=='none')?'block':'none'; }">Show RawScripts</button>
+    <div id="rawScript-div" style="display: none;">%RawScripts%</div>
 
     <script>
     </script>

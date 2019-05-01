@@ -79,7 +79,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon.toLowerCase()], 0.5, 'class="ability-icon"') + '</td>';
+      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon.toLowerCase()], 64, 'class="ability-icon"') + '</td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){
@@ -257,7 +257,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'Gem_'+skillTable[index].ClassName);
     if (skillGemData == undefined) skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'GEM_'+skillTable[index].ClassName);
     if (skillGemData!=undefined){
-      skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
+      //skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
+      skillGemString += tos.GetItemResultString(tableData, skillGemData, imagePath);
     }
 
     var output = layout_detail.toString();
