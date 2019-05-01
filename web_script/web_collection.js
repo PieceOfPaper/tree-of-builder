@@ -32,16 +32,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     function detailPage(index, request, response) {
       var baseTable = tableData['collection'];
 
-      var iconPath = 'icon/itemicon/icon_item_box.png';
+      var iconPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/ui.ipf/icon/item/icon_item_box.png';
       var itemData = tos.FindDataClassName(tableData,'item',baseTable[index].ClassName);
       if (itemData!=undefined){
-        if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-        } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            iconPath = '../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png';
-        } else if(itemData.Icon != undefined){
-            iconPath = '../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png';
-        } else if(itemData.Illust != undefined){
-            iconPath = '../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png';
+        var imgPathData = imagePath[itemData.Icon.toLowerCase()];
+        if (imgPathData != undefined){
+          iconPath = imgPathData.path;
         }
       }
       
@@ -76,7 +72,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   
       var output = layout_detail.toString();
       output = output.replace(/style.css/g, '../style.css');
-      output = output.replace(/%ImagePath%/g, 'http://'+request.headers.host+'/img/'+iconPath);
+      output = output.replace(/%ImagePath%/g, iconPath);
       output = output.replace(/%Name%/g, baseTable[index].Name);
       output = output.replace(/%ClassName%/g, baseTable[index].ClassName);
       output = output.replace(/%ClassID%/g, baseTable[index].ClassID);
