@@ -2,7 +2,11 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
+  var mysql = require('mysql');
+  var mysqls = require('sync-mysql');
+
   var tos = require('../my_modules/TosModule');
+  var dbLayout = require('../my_modules/DBLayoutModule');
   
   var route = express.Router();
 
@@ -76,7 +80,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       } else {
         abilityString += '<td align="center" style="width:calc(18px * 1.6666 * 2 + 10px);">';
         abilityString +=  '<input class="lv-add-input" type="number" id="Ability_' + skillAbility[i].ClassName + '" min="0" max="' + skillAbilityJob[i].MaxLevel + '" value="0" onchange="onChangeSkillLevel()"><br>';
-        abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img/button/btn_minus.png" /></button></div>';
+        abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img2/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img2/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
       abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon.toLowerCase()], 64, 'class="ability-icon"') + '</td>';
@@ -310,6 +314,25 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/%RawScripts%/g, rawScript);
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+
+    
+    var connection = new mysqls(serverSetting['dbconfig']);
+    var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Skill" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC LIMIT 100;');
+    if (comment_results != undefined){
+      for (param in comment_results){
+        var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
+        if (nickname_results!=undefined && nickname_results.length>0){
+          comment_results[param]["nickname"]=nickname_results[0].nickname;
+        }
+      }
+    }
+    if (request.session.login_userno == undefined){
+      output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(undefined,'Skill','',request.query.id,comment_results));
+    } else {
+      var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
+      output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(user_results[0],'Skill','',request.query.id,comment_results));
+    }
+
 
     response.send(output);
   }

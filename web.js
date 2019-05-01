@@ -894,6 +894,9 @@ app.use('/Account', db_accountPage);
 var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, tableData, scriptData);
 app.use('/BoardShort', db_boardShortPage);
 
+var db_commentPage = require('./web_script/DBPage/web_comment')(app, serverSetting, tableData, scriptData);
+app.use('/Comment', db_commentPage);
+
 // var testPage = require('./web_script/web_test')(app, tableData);
 // app.use('/Test', testPage);
 

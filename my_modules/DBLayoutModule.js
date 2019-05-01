@@ -1,6 +1,7 @@
 class DBLayoutModule {
 
     static BOARD_SHORT_WRITE_PERMISSION() { return 1; }
+    static COMMENT_WRITE_PERMISSION() { return 1; }
 
     static CommentTextFilter(text) {
         if (text==undefined) return '';
@@ -50,9 +51,59 @@ class DBLayoutModule {
     static Layout_ShortBoard(userdata, results) {
         var output = '';
         output += '<div style="margin:0; padding:5px; width:calc(100vw - 30px); display:inline-block; border: 1px solid black;">';
-        if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A" && userdata.permission > 0){
+        if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A" && userdata.permission >= this.BOARD_SHORT_WRITE_PERMISSION()){
             output += '<form action="/BoardShort/ReqWrite" method="POST" >';
             output +=  '<input type="hidden" name="userno" value="'+userdata.userno+'" style="margin:2px; width:calc(100% - 4px);" >';
+            output +=  '<textarea id="shortboard-value" name="value" onkeyup="onChangeTextLimit(\'shortboard-value\',\'shortboard-number\',100)" style="margin:2px; width:calc(100vw - 40px);" ></textarea>';
+            output +=  '<button type="submit" style="float:right;">Submit</button>';
+            output +=  '<p id="shortboard-number" style="margin:0; float:right;">(0/100)</p>';
+            output += '</form>';
+            output += '<br>';
+        }
+        if (results != undefined){
+            //console.log(JSON.stringify(results));
+            for (var i=0;i<results.length;i++){
+                var date = new Date(results[i].time);
+                output += '<div style="margin-top:10px; margin-bottom:5px; text-align:left;">';
+                output +=  '<p style="margin:2px;"><b>['+results[i].nickname+']</b><span style="float:right; font-size:0.5em;">'+date.toLocaleString()+'</span></p>';
+
+                if (results[i].value!=undefined && results[i].value.length>0)
+                    output +=  '<p style="margin:2px;">'+this.CommentTextFilter(results[i].value)+'</p>';
+
+                output +=  '<p style="margin:2px; float:right;">';
+                if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
+                    if (results[i].userno==userdata.userno)
+                        output +=  '<a href="#" title="Delete" onclick="Comment_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
+                    if (results[i].userno!=userdata.userno)
+                        output +=  '<a href="#" title="Report" onclick="Comment_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img2/dungeon_msg/notice_dm_!.png"></a>';
+                }
+                output +=  '</p>';
+                
+                output += '</div>';
+                output += '<br>';
+            }
+        }
+        output += '</div>';
+        output += '<script>';
+        output += 'function Comment_ReqDelete(idx){';
+        output +=   'post_to_url("/BoardShort/ReqDelete",{ index:idx },"post");';
+        output += '}';
+        output += 'function Comment_ReqReport(idx){';
+        output +=   'post_to_url("/BoardShort/ReqReport",{ index:idx },"post");';
+        output += '}';
+        output += '</script>';
+        return output;
+    }
+
+    static Layout_Comment(userdata, page, arg1, arg2, results) {
+        var output = '';
+        output += '<div style="margin:0; padding:5px; width:calc(100vw - 30px); display:inline-block; border: 1px solid black;">';
+        if (userdata != undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A" && userdata.permission >= this.COMMENT_WRITE_PERMISSION()){
+            output += '<form action="/Comment/ReqWrite" method="POST" >';
+            output +=  '<input type="hidden" name="userno" value="'+userdata.userno+'" >';
+            output +=  '<input type="hidden" name="page" value="'+page+'" >';
+            output +=  '<input type="hidden" name="page_arg1" value="'+arg1+'" >';
+            output +=  '<input type="hidden" name="page_arg2" value="'+arg2+'" >';
             output +=  '<textarea id="shortboard-value" name="value" onkeyup="onChangeTextLimit(\'shortboard-value\',\'shortboard-number\',100)" style="margin:2px; width:calc(100vw - 40px);" ></textarea>';
             output +=  '<button type="submit" style="float:right;">Submit</button>';
             output +=  '<p id="shortboard-number" style="margin:0; float:right;">(0/100)</p>';
@@ -85,10 +136,10 @@ class DBLayoutModule {
         output += '</div>';
         output += '<script>';
         output += 'function ShortBoard_ReqDelete(idx){';
-        output +=   'post_to_url("/BoardShort/ReqDelete",{ index:idx },"post");';
+        output +=   'post_to_url("/Comment/ReqDelete",{ index:idx },"post");';
         output += '}';
         output += 'function ShortBoard_ReqReport(idx){';
-        output +=   'post_to_url("/BoardShort/ReqReport",{ index:idx },"post");';
+        output +=   'post_to_url("/Comment/ReqReport",{ index:idx },"post");';
         output += '}';
         output += '</script>';
         return output;
