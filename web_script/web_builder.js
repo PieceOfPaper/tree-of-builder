@@ -96,7 +96,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
                 //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 0.5);
+                output +=       tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
@@ -110,7 +110,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 if (jobTable[i].Rank > 1) continue;
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
                 //output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobTable[i].Icon.toLowerCase()], 0.5);
+                output +=       tos.ImagePathToHTML(imagePath[jobTable[i].Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -141,7 +141,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
             for (var i = 0; i < jobList.length; i ++){
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
                 //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobList[i].Icon.toLowerCase()], 0.5);
+                output +=       tos.ImagePathToHTML(imagePath[jobList[i].Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -199,7 +199,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     //output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
-                    output +=       tos.ImagePathToHTML(imagePath['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 0.5, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
+                    output +=       tos.ImagePathToHTML(imagePath['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 64, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
@@ -252,7 +252,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
                     //output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
-                    output +=       tos.ImagePathToHTML(imagePath[abilityTable[j].Icon.toLowerCase()], 0.5, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
+                    output +=       tos.ImagePathToHTML(imagePath[abilityTable[j].Icon.toLowerCase()], 64, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
