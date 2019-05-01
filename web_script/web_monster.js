@@ -183,10 +183,10 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         output = output.replace(/%Desc%/g, monsterTable[index].Desc);
 
         output = output.replace(/%Level%/g, monsterTable[index].Level);
-        output = output.replace(/%Attribute%/g, monsterTable[index].Attribute);
-        output = output.replace(/%RaceType%/g, monsterTable[index].RaceType);
-        output = output.replace(/%ArmorMaterial%/g, monsterTable[index].ArmorMaterial);
-        output = output.replace(/%MoveType%/g, monsterTable[index].MoveType);
+        output = output.replace(/%Attribute%/g, tos.AttributeToName(tableData, monsterTable[index].Attribute));
+        output = output.replace(/%RaceType%/g, tos.ClassName2Lang(tableData, monsterTable[index].RaceType));
+        output = output.replace(/%ArmorMaterial%/g, tos.ClassName2Lang(tableData, monsterTable[index].ArmorMaterial));
+        output = output.replace(/%MoveType%/g, tos.ClassName2Lang(tableData, monsterTable[index].MoveType));
         output = output.replace(/%Size%/g, monsterTable[index].Size);
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
         output = output.replace(/%StatType%/g, monsterTable[index].StatType);
