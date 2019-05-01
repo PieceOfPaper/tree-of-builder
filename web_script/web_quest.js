@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData){
+module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -73,17 +73,17 @@ module.exports = function(app, serverSetting, tableData, scriptData){
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',questAutoData['Success_ItemName' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',questAutoData['Success_ItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = '<p>';
-                if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                  itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                    materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                } else if(itemData.Icon != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                } else if(itemData.Illust != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                }
+                var materialIcon = tos.GetItemImgString(tableData, questAutoData['Success_ItemName' + i], imagePath);
+                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Icon != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Illust != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+                // }
                 rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
                 rewardString += ' x' + questAutoData['Success_ItemCount' + i] + '</p>';
               }
@@ -102,17 +102,17 @@ module.exports = function(app, serverSetting, tableData, scriptData){
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',questAutoData['Success_SelectItemName' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',questAutoData['Success_SelectItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = '<p>';
-                if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                  itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                    materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                } else if(itemData.Icon != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                } else if(itemData.Illust != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                }
+                var materialIcon = tos.GetItemImgString(tableData, questAutoData['Success_SelectItemName' + i], imagePath);
+                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Icon != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Illust != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+                // }
                 rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
                 rewardString += ' x' + questAutoData['Success_SelectItemCount' + i] + '</p>';
               }
@@ -131,17 +131,17 @@ module.exports = function(app, serverSetting, tableData, scriptData){
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',questAutoData['Success_JobItem_Name' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',questAutoData['Success_JobItem_Name' + i]);
               if (itemData != undefined){
-                var materialIcon = '<p>';
-                if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                  itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                    materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                } else if(itemData.Icon != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                } else if(itemData.Illust != undefined){
-                  materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                }
+                var materialIcon = tos.GetItemImgString(tableData, questAutoData['Success_JobItem_Name' + i], imagePath);
+                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
+                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Icon != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+                // } else if(itemData.Illust != undefined){
+                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+                // }
                 rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
                 rewardString += ' x' + questAutoData['Success_JobItem_Count' + i] + '</p>';
               }
@@ -152,19 +152,19 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var questModeIconPath = '';
         switch(questData.QuestMode){
           case "MAIN":
-          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_main.png';
+          questModeIconPath = 'http://'+request.headers.host+'/img2/minimap_icons/minimap_1_main.png';
           break;
           case "SUB":
-          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_sub.png';
+          questModeIconPath = 'http://'+request.headers.host+'/img2/minimap_icons/minimap_1_sub.png';
           break;
           case "REPEAT":
-          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_repeat.png';
+          questModeIconPath = 'http://'+request.headers.host+'/img2/minimap_icons/minimap_1_repeat.png';
           break;
           case "PARTY":
-          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_party.png';
+          questModeIconPath = 'http://'+request.headers.host+'/img2/minimap_icons/minimap_1_party.png';
           break;
           case "KEYITEM":
-          questModeIconPath = 'http://'+request.headers.host+'/img/minimap_icons/minimap_1_keyquest.png';
+          questModeIconPath = 'http://'+request.headers.host+'/img2/minimap_icons/minimap_1_keyquest.png';
           break;
         }
 

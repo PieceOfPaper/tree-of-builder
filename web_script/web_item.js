@@ -315,7 +315,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         if (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0) continue;
         var skillData = tos.FindDataClassName(tableData,'skill',legendSetList[i]['SetItemSkill_' + j]);
         if (skillData == null) continue;
-        var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
+        //var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
+        var materialIcon = tos.ImagePathToHTML(imagePath[skillData.Icon.toLowerCase()], 32);
         legendSetDataString += '<a href="../Skill/?id=' + skillData.ClassID + '">' + materialIcon  + ' ' + skillData.Name + '</a>';
         legendSetDataString += '<br/>';
       }
@@ -784,13 +785,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/style.css/g, '../style.css');
     output = output.replace(/%Icon%/g, icon);
     output = output.replace(/%IconPath%/g, iconPath);
-    if (itemTable[index].TooltipImage == undefined){
-      output = output.replace(/%TooltipImage%/g, '');
-    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card'){
-      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/bosscard2/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
-    } else {
-      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="../img/icon/itemicon/' + itemTable[index].TooltipImage.toLowerCase() + '.png" />');
-    }
+    output = output.replace(/%TooltipImage%/g, tooltipImg);
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
@@ -919,19 +914,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         var imgstr = '';
         switch(quest.QuestMode){
           case "MAIN":
-          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_main.png" />';
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img2/minimap_icons/minimap_1_main.png" />';
           break;
           case "SUB":
-          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_sub.png" />';
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img2/minimap_icons/minimap_1_sub.png" />';
           break;
           case "REPEAT":
-          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_repeat.png" />';
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img2/minimap_icons/minimap_1_repeat.png" />';
           break;
           case "PARTY":
-          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_party.png" />';
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img2/minimap_icons/minimap_1_party.png" />';
           break;
           case "KEYITEM":
-          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img/minimap_icons/minimap_1_keyquest.png" />';
+          imgstr += '<img style="width:21px;height:21px;vertical-align:middle;" src="../img2/minimap_icons/minimap_1_keyquest.png" />';
           break;
         }
         output += '<p><a href="../Quest?id='+quest.ClassID+'">'+imgstr+quest.Name+'</a></p>';
