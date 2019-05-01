@@ -208,10 +208,14 @@ var imagePath = [];
 // ---------- 테이블 데이터 불러오기
 loadTable('job', 'ies.ipf/job.ies', function(){
   loadTable('ability', 'ies_ability.ipf/ability.ies', function(){
-    loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
+    //loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
     for (var i = 0; i < tableData['job'].length; i ++){
-      if (tableData['job'][i].EngName === 'Warrior') continue;
-      loadTable('ability_job', 'ies_ability.ipf/ability_' + tableData['job'][i].EngName + '.ies');
+      //if (tableData['job'][i].EngName === 'Warrior') continue;
+      loadTable('ability_job', 'ies_ability.ipf/ability_' + tableData['job'][i].EngName + '.ies', function(name, path){
+        if (tableData[name] == undefined || tableData[name].langth == 0){
+          loadTable(name, path.toLowerCase());
+        }
+      });
     }
     tableData['job'].sort(function(a,b){
         if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
