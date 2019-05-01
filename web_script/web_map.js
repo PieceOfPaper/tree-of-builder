@@ -3,11 +3,14 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var http = require('http');
   var https = require('https');
   var fs = require('fs');
+  var mysql = require('mysql');
+  var mysqls = require('sync-mysql');
 
   var csv = require('csv-parser');
   var xml = require('xml-parser');
   
     var tos = require('../my_modules/TosModule');
+    var dbLayout = require('../my_modules/DBLayoutModule');
     
     var route = express.Router();
   
@@ -152,6 +155,24 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       output = output.replace(/%DropItemString%/g, dropItemString);
       output = output.replace(/%QuestString%/g, questString);
       output = output.replace(/%MongenString%/g, mongetString);
+
+
+      var connection = new mysqls(serverSetting['dbconfig']);
+      var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Map" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC LIMIT 100;');
+      if (comment_results != undefined){
+        for (param in comment_results){
+          var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
+          if (nickname_results!=undefined && nickname_results.length>0){
+            comment_results[param]["nickname"]=nickname_results[0].nickname;
+          }
+        }
+      }
+      if (request.session.login_userno == undefined){
+        output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(undefined,'Map','',request.query.id,comment_results));
+      } else {
+        var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
+        output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(user_results[0],'Map','',request.query.id,comment_results));
+      }
 
       response.send(output);
     }

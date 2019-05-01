@@ -2,7 +2,11 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
+  var mysql = require('mysql');
+  var mysqls = require('sync-mysql');
+
   var tos = require('../my_modules/TosModule');
+  var dbLayout = require('../my_modules/DBLayoutModule');
   
   var route = express.Router();
 
@@ -77,6 +81,24 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
+
+
+    var connection = new mysqls(serverSetting['dbconfig']);
+    var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Buff" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC LIMIT 100;');
+    if (comment_results != undefined){
+      for (param in comment_results){
+        var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
+        if (nickname_results!=undefined && nickname_results.length>0){
+          comment_results[param]["nickname"]=nickname_results[0].nickname;
+        }
+      }
+    }
+    if (request.session.login_userno == undefined){
+      output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(undefined,'Buff','',request.query.id,comment_results));
+    } else {
+      var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
+      output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(user_results[0],'Buff','',request.query.id,comment_results));
+    }
 
     response.send(output);
   }
