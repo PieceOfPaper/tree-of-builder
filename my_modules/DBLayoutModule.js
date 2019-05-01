@@ -15,6 +15,15 @@ class DBLayoutModule {
         return output;
     }
 
+    static CommentTextMin(text) {
+        if (text==undefined) return '';
+        var output = text.toString();
+        output = output.replace(/\n/g,' ');
+        output = output.replace(/\t/g,' ');
+        output = output.replace(/\r/g,' ');
+        return output;
+    }
+
     static Layout_LoginForm() {
         var output = '';
         output += '<form action="/Account/Login" method="POST" style="margin:0; padding:5px; width:fit-content; display:inline-block; border: 1px solid black;">';
@@ -113,8 +122,10 @@ class DBLayoutModule {
             output += '<br>';
         }
         if (results != undefined){
-            //console.log(JSON.stringify(results));
-            for (var i=0;i<results.length;i++){
+            var showMax = 10;
+            output += '<div id="comments-recent" style="padding:0; margin:0;">';
+            for (var i=0;i<showMax;i++){
+                if (i >= results.length) break;
                 var date = new Date(results[i].time);
                 output += '<div style="margin-top:10px; margin-bottom:5px; text-align:left;">';
                 output +=  '<p style="margin:2px;"><b>['+results[i].nickname+']</b><span style="float:right; font-size:0.5em;">'+date.toLocaleString()+'</span></p>';
@@ -125,23 +136,49 @@ class DBLayoutModule {
                 output +=  '<p style="margin:2px; float:right;">';
                 if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
                     if (results[i].userno==userdata.userno || userdata.permission >= this.MASTER_PERMISSION())
-                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
+                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
                     if (results[i].userno!=userdata.userno)
-                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img2/button/button_chat_system_cursoron.png"></a>';
+                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1.5em; vertical-align:middle;" src="img2/button/button_chat_system_cursoron.png"></a>';
                 }
                 output +=  '</p>';
                 
                 output += '</div>';
                 output += '<br>';
             }
+            output += '</div>';
+            if (results.length > showMax){
+                output += '<button id="show-comments-old" onclick="document.getElementById(\'comments-old\').style.display=\'block\'; document.getElementById(\'show-comments-old\').style.display=\'none\';">Old Comments</button>';
+                output += '<div id="comments-old" style="padding:0; margin:0; display:none;">';
+                for (var i=showMax;i<results.length;i++){
+                    var date = new Date(results[i].time);
+                    output += '<div style="margin-top:10px; margin-bottom:5px; text-align:left;">';
+                    output +=  '<p style="margin:2px;"><b>['+results[i].nickname+']</b><span style="float:right; font-size:0.5em;">'+date.toLocaleString()+'</span></p>';
+    
+                    if (results[i].value!=undefined && results[i].value.length>0)
+                        output +=  '<p style="margin:2px;">'+this.CommentTextFilter(results[i].value)+'</p>';
+    
+                    output +=  '<p style="margin:2px; float:right;">';
+                    if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
+                        if (results[i].userno==userdata.userno || userdata.permission >= this.MASTER_PERMISSION())
+                            output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
+                        if (results[i].userno!=userdata.userno)
+                            output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1.5em; vertical-align:middle;" src="img2/button/button_chat_system_cursoron.png"></a>';
+                    }
+                    output +=  '</p>';
+                    
+                    output += '</div>';
+                    output += '<br>';
+                }
+                output += '</div>';
+            }
         }
         output += '</div>';
         output += '<script>';
-        output += 'function ShortBoard_ReqDelete(idx){';
-        output +=   'post_to_url("/Comment/ReqDelete",{ index:idx },"post");';
+        output += 'function ShortBoard_ReqDelete(idx, value){';
+        output +=   'if(confirm("Are you sure you want to delete this comment? message:"+value)) post_to_url("/Comment/ReqDelete",{ index:idx },"post");';
         output += '}';
-        output += 'function ShortBoard_ReqReport(idx){';
-        output +=   'post_to_url("/Comment/ReqReport",{ index:idx },"post");';
+        output += 'function ShortBoard_ReqReport(idx, value){';
+        output +=   'if(confirm("Are you sure you want to report this comment? message:"+value)) post_to_url("/Comment/ReqReport",{ index:idx },"post");';
         output += '}';
         output += '</script>';
         return output;
@@ -168,9 +205,9 @@ class DBLayoutModule {
                 output +=  '<p style="margin:2px; float:right;">';
                 if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){
                     if (results[i].userno==userdata.userno || userdata.permission >= this.MASTER_PERMISSION())
-                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
+                        output +=  '<a href="#" title="Delete" onclick="ShortBoard_ReqDelete('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1em; vertical-align:middle;" src="img2/button/button_chat_w_exit.png"></a>';
                     if (results[i].userno!=userdata.userno)
-                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+');"><img style="height:1.5em; vertical-align:middle;" src="img2/button/button_chat_system_cursoron.png"></a>';
+                        output +=  '<a href="#" title="Report" onclick="ShortBoard_ReqReport('+results[i].idx+',\''+this.CommentTextMin(results[i].value)+'\');"><img style="height:1.5em; vertical-align:middle;" src="img2/button/button_chat_system_cursoron.png"></a>';
                 }
                 output +=  '</p>';
                 
@@ -180,11 +217,11 @@ class DBLayoutModule {
         }
         output += '</div>';
         output += '<script>';
-        output += 'function ShortBoard_ReqDelete(idx){';
-        output +=   'post_to_url("/Comment/ReqDelete",{ index:idx },"post");';
+        output += 'function ShortBoard_ReqDelete(idx, value){';
+        output +=   'if(confirm("Are you sure you want to delete this comment? message:"+value)) post_to_url("/Comment/ReqDelete",{ index:idx },"post");';
         output += '}';
-        output += 'function ShortBoard_ReqReport(idx){';
-        output +=   'post_to_url("/Comment/ReqReport",{ index:idx },"post");';
+        output += 'function ShortBoard_ReqReport(idx, value){';
+        output +=   'if(confirm("Are you sure you want to report this comment? message:"+value)) post_to_url("/Comment/ReqReport",{ index:idx },"post");';
         output += '}';
         output += '</script>';
         return output;

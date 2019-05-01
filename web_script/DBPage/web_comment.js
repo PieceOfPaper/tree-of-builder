@@ -78,7 +78,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var connection = new mysqls(serverSetting['dbconfig']);
         var target_results = connection.query('SELECT * FROM comment WHERE idx='+index+';');
         var updated_results = connection.query('UPDATE comment SET state=1 WHERE idx='+index+';');
-        res.send('<script> alert("Delete Success. message:'+target_results[0].value+'"); window.location = document.referrer; </script>');
+        res.send('<script> alert("Delete Success. message:'+dbLayout.CommentTextMin(target_results[0].value)+'"); window.location = document.referrer; </script>');
     });
 
     route.post('/ReqReport', function (req, res) {
@@ -113,7 +113,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             smtpTransport.close();
         });
 
-        res.send('<script> alert("Report Success. message:'+target_results[0].value+'"); window.location = document.referrer; </script>');
+        res.send('<script> alert("Report Success. message:'+dbLayout.CommentTextMin(target_results[0].value)+'"); window.location = document.referrer; </script>');
     });
 
     return route;
