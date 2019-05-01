@@ -757,22 +757,22 @@ app.get('/', function (req, response) {
       output = output.replace(/%LoginData%/g, '');
       output = output.replace(/%ShortBoard%/g, '');
     } else {
-      var shortboard_results = connection.query('SELECT * FROM board_short WHERE state=0 ORDER BY time DESC LIMIT 10;');
-      if (shortboard_results != undefined){
-        for (param in shortboard_results){
-          var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+shortboard_results[param].userno+'";');
+      var comment_results = connection.query('SELECT * FROM comment WHERE state=0 ORDER BY time DESC LIMIT 10;');
+      if (comment_results != undefined){
+        for (param in comment_results){
+          var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
           if (nickname_results!=undefined && nickname_results.length>0){
-            shortboard_results[param]["nickname"]=nickname_results[0].nickname;
+            comment_results[param]["nickname"]=nickname_results[0].nickname;
           }
         }
       }
       if (req.session.login_userno == undefined){
         output = output.replace(/%LoginData%/g, dbLayout.Layout_LoginForm());
-        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_ShortBoard(undefined,shortboard_results));
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(undefined,comment_results));
       } else {
         var user_results = connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";');
         output = output.replace(/%LoginData%/g, dbLayout.Layout_LogedIn(user_results[0]));
-        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_ShortBoard(user_results[0],shortboard_results));
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(user_results[0],comment_results));
       }
     }
 

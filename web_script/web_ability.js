@@ -213,7 +213,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
     var connection = new mysqls(serverSetting['dbconfig']);
-    var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Ability" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC LIMIT 100;');
+    var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Ability" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC;');
     if (comment_results != undefined){
       for (param in comment_results){
         var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
