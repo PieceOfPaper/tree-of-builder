@@ -34,6 +34,9 @@
         <select id="filter_Job" class="selectFilter settedFilter">
             <option value="Default">Job</option>
         </select>
+        <br>
+        <input type="checkbox" id="filter_AlwaysActive" class="checkboxFilter">Always Active<br>
+        <input type="checkbox" id="filter_IsEquipItemAbil" class="checkboxFilter">Equip Item Abil<br>
     </div>
     <div class="order-area">
         <p>Order</p>
@@ -83,6 +86,8 @@
         var url = window.location.href.split('?')[0];
 
         baseTable="ability";
+        checkboxFilterSetting["filter_AlwaysActive"]="YES";
+        checkboxFilterSetting["filter_IsEquipItemAbil"]="YES";
         searchModule_init();
 
         requestGetData("job", undefined, function(arr){
