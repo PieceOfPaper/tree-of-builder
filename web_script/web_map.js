@@ -177,6 +177,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
       output = output.replace(/%QuestString%/g, questString);
       output = output.replace(/%MongenString%/g, mongetString);
 
+      output = output.replace(/%BgmPlayList%/g, mapData['BgmPlayList'] == undefined ? '' : mapData['BgmPlayList']);
       output = output.replace(/%BGMString%/g, bgmString);
 
 
