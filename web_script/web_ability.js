@@ -157,12 +157,13 @@ module.exports = function(app, serverSetting, serverData){
 
     var skillString = '';
     if (abilityTable[index].SkillCategory != undefined){
-      for (var i = 0; i < skillTable.length; i ++){
-        if (skillTable[i].ClassName === abilityTable[index].SkillCategory){
-          skillString = '<a href="../Skill/?id=' + skillTable[i].ClassID + '">' + skillTable[i].Name + '</a>';
-          break;
-        }
-      }
+      // for (var i = 0; i < skillTable.length; i ++){
+      //   if (skillTable[i].ClassName === abilityTable[index].SkillCategory){
+      //     skillString = '<a href="../Skill/?id=' + skillTable[i].ClassID + '">' + skillTable[i].Name + '</a>';
+      //     break;
+      //   }
+      // }
+      skillString = tos.GetSkillString(serverData, abilityTable[index].SkillCategory);
     }
 
     var spendString = '';

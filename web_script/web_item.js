@@ -742,15 +742,15 @@ module.exports = function(app, serverSetting, serverData){
       tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
       icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
       tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
       icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
       tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
       icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
+      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
     }
@@ -759,7 +759,8 @@ module.exports = function(app, serverSetting, serverData){
     for(param in skillTable){
       if (('Gem_'+skillTable[param].ClassName)==itemTable[index].ClassName ||
         ('GEM_'+skillTable[param].ClassName)==itemTable[index].ClassName){
-        baseSkillString += '<p><a href="../Skill?id='+skillTable[param].ClassID+'">'+skillTable[param].Name+'</a></p>';
+        //baseSkillString += '<p><a href="../Skill?id='+skillTable[param].ClassID+'">'+skillTable[param].Name+'</a></p>';
+        baseSkillString += tos.GetSkillString(serverData, skillTable[param].ClassName);
       }
     }
 
