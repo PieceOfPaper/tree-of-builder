@@ -174,7 +174,7 @@ module.exports = function(app, serverSetting, serverData){
             }
           }
           if (has){
-            genmapString += '<p>'+tos.GetMapString(serverData['tableData'], serverData['tableData']['map2'][param].ClassName)+'</p>';
+            genmapString += '<p>'+tos.GetMapString(serverData, serverData['tableData']['map2'][param].ClassName)+'</p>';
           }
         }
 
@@ -187,10 +187,10 @@ module.exports = function(app, serverSetting, serverData){
         output = output.replace(/%Desc%/g, monsterTable[index].Desc);
 
         output = output.replace(/%Level%/g, monsterTable[index].Level);
-        output = output.replace(/%Attribute%/g, tos.AttributeToName(serverData['tableData'], monsterTable[index].Attribute));
-        output = output.replace(/%RaceType%/g, tos.ClassName2Lang(serverData['tableData'], monsterTable[index].RaceType));
-        output = output.replace(/%ArmorMaterial%/g, tos.ClassName2Lang(serverData['tableData'], monsterTable[index].ArmorMaterial));
-        output = output.replace(/%MoveType%/g, tos.ClassName2Lang(serverData['tableData'], monsterTable[index].MoveType));
+        output = output.replace(/%Attribute%/g, tos.AttributeToName(serverData, monsterTable[index].Attribute));
+        output = output.replace(/%RaceType%/g, tos.ClassName2Lang(serverData, monsterTable[index].RaceType));
+        output = output.replace(/%ArmorMaterial%/g, tos.ClassName2Lang(serverData, monsterTable[index].ArmorMaterial));
+        output = output.replace(/%MoveType%/g, tos.ClassName2Lang(serverData, monsterTable[index].MoveType));
         output = output.replace(/%Size%/g, monsterTable[index].Size);
         output = output.replace(/%MonRank%/g, monsterTable[index].MonRank);
         output = output.replace(/%StatType%/g, monsterTable[index].StatType);

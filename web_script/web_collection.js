@@ -33,7 +33,7 @@ module.exports = function(app, serverSetting, serverData){
       var baseTable = serverData['tableData']['collection'];
 
       var iconPath = 'https://raw.githubusercontent.com/PieceOfPaper/Tree-of-IPF/master/kr/ui.ipf/icon/item/icon_item_box.png';
-      var itemData = tos.FindDataClassName(serverData['tableData'],'item',baseTable[index].ClassName);
+      var itemData = tos.FindDataClassName(serverData,'item',baseTable[index].ClassName);
       if (itemData!=undefined){
         var imgPathData = serverData['imagePath'][itemData.Icon.toLowerCase()];
         if (imgPathData != undefined){
@@ -41,32 +41,32 @@ module.exports = function(app, serverSetting, serverData){
         }
       }
       
-      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(serverData['tableData'],baseTable[index].ClassName,serverData['imagePath'])+'</p>';
+      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(serverData,baseTable[index].ClassName,serverData['imagePath'])+'</p>';
 
       var itemString = '<h3>Items</h3>';
       for (var i=1;i<=9;i++){
           if (baseTable[index]['ItemName_'+i]==undefined) continue;
           if (baseTable[index]['ItemName_'+i].length==0) continue;
-          itemString += '<p>'+tos.GetItemResultString(serverData['tableData'],baseTable[index]['ItemName_'+i], serverData['imagePath'])+'</p>';
+          itemString += '<p>'+tos.GetItemResultString(serverData,baseTable[index]['ItemName_'+i], serverData['imagePath'])+'</p>';
       }
 
       var rewardString = '<h3>Rewards</h3>';
       if (baseTable[index]['PropList']!=undefined && baseTable[index]['PropList'].length>0){
         var probsplited = baseTable[index]['PropList'].split('/');
         for (var i=0;i<probsplited.length;i+=2){
-            rewardString += '<p>'+tos.ClassName2Lang(serverData['tableData'],probsplited[i])+' +'+probsplited[i+1]+'</p>';
+            rewardString += '<p>'+tos.ClassName2Lang(serverData,probsplited[i])+' +'+probsplited[i+1]+'</p>';
         }
       }
       if (baseTable[index]['AccPropList']!=undefined && baseTable[index]['AccPropList'].length>0){
         var probsplited = baseTable[index]['AccPropList'].split('/');
         for (var i=0;i<probsplited.length;i+=2){
-            rewardString += '<p>'+tos.ClassName2Lang(serverData['tableData'],probsplited[i])+' +'+probsplited[i+1]+'</p>';
+            rewardString += '<p>'+tos.ClassName2Lang(serverData,probsplited[i])+' +'+probsplited[i+1]+'</p>';
         }
       }
       if (baseTable[index]['AccGiveItemList']!=undefined && baseTable[index]['AccGiveItemList'].length>0){
         var probsplited = baseTable[index]['AccGiveItemList'].split('/');
         for (var i=0;i<probsplited.length;i+=2){
-            rewardString += '<p>'+tos.GetItemResultString(serverData['tableData'],probsplited[i],probsplited[i+1], serverData['imagePath'])+'</p>';
+            rewardString += '<p>'+tos.GetItemResultString(serverData,probsplited[i],probsplited[i+1], serverData['imagePath'])+'</p>';
         }
       }
   

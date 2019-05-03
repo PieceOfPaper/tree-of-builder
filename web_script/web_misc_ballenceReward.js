@@ -20,7 +20,7 @@ module.exports = function(app, serverSetting, serverData){
         for (param in brTable){
             if (brTable[param].ClassID <= 1) continue;
             if (brTable[param].JobChangePoint == 0 && (brTable[param]['RewardItem_1']==undefined || brTable[param]['RewardItem_1'].length==0)) continue;
-            var jobData = tos.FindDataClassName(serverData['tableData'],'job',brTable[param].ClassName);
+            var jobData = tos.FindDataClassName(serverData,'job',brTable[param].ClassName);
             if (jobData == undefined) continue;
             resultString += '<tr>';
             resultString += '<td>';
@@ -39,7 +39,7 @@ module.exports = function(app, serverSetting, serverData){
                 if (splited == undefined || splited.length == 0) continue;
                 var itemcount = 1;
                 if (splited.length > 1) itemcount = splited[1];
-                resultString += tos.GetItemResultString(serverData['tableData'],splited[0],serverData['imagePath'],itemcount);
+                resultString += tos.GetItemResultString(serverData,splited[0],serverData['imagePath'],itemcount);
             }
             resultString += '</td>';
             resultString += '</tr>';

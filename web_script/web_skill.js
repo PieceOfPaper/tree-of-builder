@@ -232,7 +232,7 @@ module.exports = function(app, serverSetting, serverData){
     if (skillTable[index].ReqStance != undefined){
       var splited = skillTable[index].ReqStance.split(';');
       for (var i = 0; i < splited.length; i ++){
-        stanceString += tos.StanceToName(serverData['tableData'], splited[i]);
+        stanceString += tos.StanceToName(serverData, splited[i]);
         if ((i+1) < splited.length) stanceString += ', ';
       }
     }
@@ -258,11 +258,11 @@ module.exports = function(app, serverSetting, serverData){
     if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && serverData['scriptData'][skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].SpendItemCount] + '</td></tr>';
 
     var skillGemString = '';
-    var skillGemData = tos.FindDataClassName(serverData['tableData'], 'item_gem', 'Gem_'+skillTable[index].ClassName);
-    if (skillGemData == undefined) skillGemData = tos.FindDataClassName(serverData['tableData'], 'item_gem', 'GEM_'+skillTable[index].ClassName);
+    var skillGemData = tos.FindDataClassName(serverData, 'item_gem', 'Gem_'+skillTable[index].ClassName);
+    if (skillGemData == undefined) skillGemData = tos.FindDataClassName(serverData, 'item_gem', 'GEM_'+skillTable[index].ClassName);
     if (skillGemData!=undefined){
       //skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
-      skillGemString += tos.GetItemResultString(serverData['tableData'], skillGemData, serverData['imagePath']);
+      skillGemString += tos.GetItemResultString(serverData, skillGemData, serverData['imagePath']);
     }
 
     var output = layout_detail.toString();
@@ -275,11 +275,11 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
     output = output.replace(/%ClassID%/g, skillTable[index].ClassID);
     output = output.replace(/%Rank%/g, skillTable[index].Rank);
-    output = output.replace(/%JobName%/g, tos.JobToJobName(serverData['tableData'], skillTable[index].Job));
+    output = output.replace(/%JobName%/g, tos.JobToJobName(serverData, skillTable[index].Job));
     output = output.replace(/%ClassType%/g, skillTable[index].ClassType);
     output = output.replace(/%ValueType%/g, skillTable[index].ValueType);
-    output = output.replace(/%Attribute%/g, tos.AttributeToName(serverData['tableData'], skillTable[index].Attribute));
-    output = output.replace(/%AttackType%/g, tos.AttributeToName(serverData['tableData'], skillTable[index].AttackType));
+    output = output.replace(/%Attribute%/g, tos.AttributeToName(serverData, skillTable[index].Attribute));
+    output = output.replace(/%AttackType%/g, tos.AttributeToName(serverData, skillTable[index].AttackType));
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
     output = output.replace(/%EnableCompanion%/g, skillTable[index].EnableCompanion);
     output = output.replace(/%ReqStance%/g, stanceString);

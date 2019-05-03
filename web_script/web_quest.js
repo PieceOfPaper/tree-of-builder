@@ -31,12 +31,12 @@ module.exports = function(app, serverSetting, serverData){
     var layout_detail = fs.readFileSync('./web/QuestPage/detail.html');
     function monsterDetailPage(index, request, response) {
         var className = serverData['tableData']['questprogresscheck'][index].ClassName;
-        var questData = tos.FindDataClassName(serverData['tableData'], 'questprogresscheck', className);
-        var questAutoData = tos.FindDataClassName(serverData['tableData'], 'questprogresscheck_auto', className);
+        var questData = tos.FindDataClassName(serverData, 'questprogresscheck', className);
+        var questAutoData = tos.FindDataClassName(serverData, 'questprogresscheck_auto', className);
 
         var nextQuestString = '-';
         if (questAutoData.Success_NextQuestName1 != undefined && questAutoData.Success_NextQuestName1.length > 0){
-          var nextQuestData = tos.FindDataClassName(serverData['tableData'], 'questprogresscheck', questAutoData.Success_NextQuestName1);
+          var nextQuestData = tos.FindDataClassName(serverData, 'questprogresscheck', questAutoData.Success_NextQuestName1);
           if (nextQuestData != undefined){
             nextQuestString = '<p><a href="?id=' + nextQuestData.ClassID + '">' + nextQuestData.Name + '</a></p>';
           }
@@ -46,7 +46,7 @@ module.exports = function(app, serverSetting, serverData){
         for (var i=1;i<=4;i++){
           if (questData['QuestName'+i] == undefined || questData['QuestName'+i].length == 0) continue;
           if (i > 1) requireQuestString += questData.Quest_Condition + ' ';
-          var reqQuestData = tos.FindDataClassName(serverData['tableData'], 'questprogresscheck', questData['QuestName'+i]);
+          var reqQuestData = tos.FindDataClassName(serverData, 'questprogresscheck', questData['QuestName'+i]);
           if (reqQuestData == undefined) continue;
           requireQuestString += '<a href="?id=' + reqQuestData.ClassID + '">' + reqQuestData.Name + '</a> ';
         }
@@ -66,14 +66,14 @@ module.exports = function(app, serverSetting, serverData){
               if (questAutoData['Success_ItemName' + i] == undefined) continue;
               if (questAutoData['Success_ItemCount' + i] == undefined || questAutoData['Success_ItemCount' + i] == 0) continue;
               var itemData = undefined;
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',questAutoData['Success_ItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',questAutoData['Success_ItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',questAutoData['Success_ItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',questAutoData['Success_ItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',questAutoData['Success_ItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_ItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_ItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData['tableData'], questAutoData['Success_ItemName' + i], serverData['imagePath']);
+                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_ItemName' + i], serverData['imagePath']);
                 // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
                 //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
                 //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
@@ -95,14 +95,14 @@ module.exports = function(app, serverSetting, serverData){
               if (questAutoData['Success_SelectItemName' + i] == undefined) continue;
               if (questAutoData['Success_SelectItemCount' + i] == undefined || questAutoData['Success_SelectItemCount' + i] == 0) continue;
               var itemData = undefined;
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',questAutoData['Success_SelectItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',questAutoData['Success_SelectItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',questAutoData['Success_SelectItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',questAutoData['Success_SelectItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',questAutoData['Success_SelectItemName' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_SelectItemName' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_SelectItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData['tableData'], questAutoData['Success_SelectItemName' + i], serverData['imagePath']);
+                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_SelectItemName' + i], serverData['imagePath']);
                 // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
                 //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
                 //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
@@ -124,14 +124,14 @@ module.exports = function(app, serverSetting, serverData){
               if (questAutoData['Success_JobItem_Name' + i] == undefined) continue;
               if (questAutoData['Success_JobItem_Count' + i] == undefined || questAutoData['Success_ItemCount' + i] == 0) continue;
               var itemData = undefined;
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',questAutoData['Success_JobItem_Name' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',questAutoData['Success_JobItem_Name' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',questAutoData['Success_JobItem_Name' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',questAutoData['Success_JobItem_Name' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',questAutoData['Success_JobItem_Name' + i]);
-              if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_JobItem_Name' + i]);
+              if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_JobItem_Name' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData['tableData'], questAutoData['Success_JobItem_Name' + i], serverData['imagePath']);
+                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_JobItem_Name' + i], serverData['imagePath']);
                 // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
                 //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
                 //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
@@ -172,7 +172,7 @@ module.exports = function(app, serverSetting, serverData){
         if (true){
           //possibleString += '<h2>Start Dialog</h2>';
           if (questAutoData['Possible_SelectDialog1'] != undefined && questAutoData['Possible_SelectDialog1'].length > 0){
-            possibleString += '<p>'+tos.GetDialogString(serverData['tableData'],questAutoData['Possible_SelectDialog1'])+' [ '+questAutoData['Possible_AnswerAgree']+' / '+questAutoData['Possible_AnswerAgree']+' ]</p>';
+            possibleString += '<p>'+tos.GetDialogString(serverData,questAutoData['Possible_SelectDialog1'])+' [ '+questAutoData['Possible_AnswerAgree']+' / '+questAutoData['Possible_AnswerAgree']+' ]</p>';
           }
           for (var i=1;i<=10;i++){
             if (questAutoData['Possible_AgreeDialog'+i] == undefined) continue;
@@ -181,7 +181,7 @@ module.exports = function(app, serverSetting, serverData){
               possibleString += '<p> ('+i+') '+questAutoData['Possible_AgreeDialog'+i]+'</p>';
               continue;
             }
-            var agreeDialog = tos.GetDialogString(serverData['tableData'],questAutoData['Possible_AgreeDialog'+i]);
+            var agreeDialog = tos.GetDialogString(serverData,questAutoData['Possible_AgreeDialog'+i]);
             if (agreeDialog == undefined || agreeDialog.length == 0) continue;
             possibleString += '<p> ('+i+') '+agreeDialog+'</p>';
           }
@@ -194,7 +194,7 @@ module.exports = function(app, serverSetting, serverData){
             if (questAutoData['Progress_StartNPCDialog1'].indexOf('Notice') > -1){
               progressString += '<p>'+questAutoData['Progress_StartNPCDialog1']+'</p>';
             } else {
-              progressString += '<p>'+tos.GetDialogString(serverData['tableData'],questAutoData['Progress_StartNPCDialog1'])+'</p>';
+              progressString += '<p>'+tos.GetDialogString(serverData,questAutoData['Progress_StartNPCDialog1'])+'</p>';
             }
           }
           for (var i=1;i<=10;i++){
@@ -204,7 +204,7 @@ module.exports = function(app, serverSetting, serverData){
               progressString += '<p> ('+i+') '+questAutoData['Progress_Dialog'+i]+'</p>';
               continue;
             }
-            var agreeDialog = tos.GetDialogString(serverData['tableData'],questAutoData['Progress_Dialog'+i]);
+            var agreeDialog = tos.GetDialogString(serverData,questAutoData['Progress_Dialog'+i]);
             if (agreeDialog == undefined || agreeDialog.length == 0) continue;
             progressString += '<p> ('+i+') '+agreeDialog+'</p>';
           }
@@ -217,7 +217,7 @@ module.exports = function(app, serverSetting, serverData){
             if (questAutoData['Success_StartNPCDialog1'].indexOf('Notice') > -1){
               endString += '<p>'+questAutoData['Success_StartNPCDialog1']+'</p>';
             } else {
-              endString += '<p>'+tos.GetDialogString(serverData['tableData'],questAutoData['Success_StartNPCDialog1'])+'</p>';
+              endString += '<p>'+tos.GetDialogString(serverData,questAutoData['Success_StartNPCDialog1'])+'</p>';
             }
           }
           for (var i=1;i<=10;i++){
@@ -227,7 +227,7 @@ module.exports = function(app, serverSetting, serverData){
               endString += '<p> ('+i+') '+questAutoData['Success_Dialog'+i]+'</p>';
               continue;
             }
-            var agreeDialog = tos.GetDialogString(serverData['tableData'],questAutoData['Success_Dialog'+i]);
+            var agreeDialog = tos.GetDialogString(serverData,questAutoData['Success_Dialog'+i]);
             if (agreeDialog == undefined || agreeDialog.length == 0) continue;
             endString += '<p> ('+i+') '+agreeDialog+'</p>';
           }
@@ -246,17 +246,17 @@ module.exports = function(app, serverSetting, serverData){
         output = output.replace(/%StartDesc%/g, questData.StartDesc);
         output = output.replace(/%StartStory%/g, questData.StartStory);
         output = output.replace(/%StartMapListUI%/g, questData.StartMapListUI==undefined?'':questData.StartMapListUI);
-        output = output.replace(/%StartMap%/g, tos.GetMapString(serverData['tableData'],questData.StartMap));
+        output = output.replace(/%StartMap%/g, tos.GetMapString(serverData,questData.StartMap));
 
         output = output.replace(/%ProgDesc%/g, questData.ProgDesc);
         output = output.replace(/%ProgStory%/g, questData.ProgStory);
         output = output.replace(/%ProgMapListUI%/g, questData.ProgMapListUI==undefined?'':questData.ProgMapListUI);
-        output = output.replace(/%ProgMap%/g, tos.GetMapString(serverData['tableData'],questData.ProgMap));
+        output = output.replace(/%ProgMap%/g, tos.GetMapString(serverData,questData.ProgMap));
 
         output = output.replace(/%EndDesc%/g, questData.EndDesc);
         output = output.replace(/%EndStory%/g, questData.EndStory);
         output = output.replace(/%EndMapListUI%/g, questData.EndMapListUI==undefined?'':questData.EndMapListUI);
-        output = output.replace(/%EndMap%/g, tos.GetMapString(serverData['tableData'],questData.EndMap));
+        output = output.replace(/%EndMap%/g, tos.GetMapString(serverData,questData.EndMap));
 
 
         output = output.replace(/%NextQuestString%/g, nextQuestString);

@@ -95,11 +95,11 @@ module.exports = function(app, serverSetting, serverData){
 
     var dialogString = undefined;
     if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
-      // var dialogData = tos.FindDataClassName(serverData['tableData'], 'dialogtext', itemTable[index].ClassName);
+      // var dialogData = tos.FindDataClassName(serverData, 'dialogtext', itemTable[index].ClassName);
       // if (dialogData != undefined) {
       //   dialogString = tos.parseCaption(dialogData.Text);
       // }
-      dialogString = tos.GetDialogString(serverData['tableData'],itemTable[index].ClassName);
+      dialogString = tos.GetDialogString(serverData,itemTable[index].ClassName);
     }
 
     var output = layout_item_detail.toString();
@@ -120,7 +120,7 @@ module.exports = function(app, serverSetting, serverData){
 
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
     if (itemTable[index].CardGroupName == undefined){
@@ -176,8 +176,8 @@ module.exports = function(app, serverSetting, serverData){
 
   function itemEquipDetailPage(tableName, index, request, response) {
     var itemTable = serverData['tableData'][tableName];
-    var sealOption = tos.FindDataClassName(serverData['tableData'], 'item_seal_option', itemTable[index].ClassName)
-    var myGrade = tos.GetCurrentGrade(serverData['tableData'], itemTable[index].ItemGrade);
+    var sealOption = tos.FindDataClassName(serverData, 'item_seal_option', itemTable[index].ClassName)
+    var myGrade = tos.GetCurrentGrade(serverData, itemTable[index].ItemGrade);
 
     //set data
     var setItemTable = serverData['tableData']['setitem'];
@@ -227,7 +227,7 @@ module.exports = function(app, serverSetting, serverData){
     var statListString = '';
     for (var i = 0; i < equipStatList.length; i ++){
       if (itemTable[index][equipStatList[i]] == undefined || Math.abs(itemTable[index][equipStatList[i]]) == 0) continue;
-      statListString += '- ' + tos.ClassName2Lang(serverData['tableData'], equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
+      statListString += '- ' + tos.ClassName2Lang(serverData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
     if (sealOption != undefined){
@@ -241,7 +241,7 @@ module.exports = function(app, serverSetting, serverData){
           statListString += i +' Step. ??? <br/>';
           continue;
         }
-        var statStr = tos.parseCaption(tos.ClassName2Lang(serverData['tableData'], sealOption['SealOption_'+i]));
+        var statStr = tos.parseCaption(tos.ClassName2Lang(serverData, sealOption['SealOption_'+i]));
         if (statStr.indexOf('{value}') > -1){
           var value = Number(sealOption['SealOptionValue_'+i]);
           if (sealOption['SealOption_'+i].indexOf('Rate') > -1) value *= 0.1;
@@ -270,12 +270,12 @@ module.exports = function(app, serverSetting, serverData){
       for(var i=1;i<=7;i++){
         if (setList[setIndex]['ItemName_' + i] == undefined || setList[setIndex]['ItemName_' + i ].length == 0) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',setList[setIndex]['ItemName_' + i]);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
@@ -313,7 +313,7 @@ module.exports = function(app, serverSetting, serverData){
       //skill
       for(var j=1;j<=5;j++){
         if (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0) continue;
-        var skillData = tos.FindDataClassName(serverData['tableData'],'skill',legendSetList[i]['SetItemSkill_' + j]);
+        var skillData = tos.FindDataClassName(serverData,'skill',legendSetList[i]['SetItemSkill_' + j]);
         if (skillData == null) continue;
         //var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
         var materialIcon = tos.ImagePathToHTML(serverData['imagePath'][skillData.Icon.toLowerCase()], 32);
@@ -505,16 +505,16 @@ module.exports = function(app, serverSetting, serverData){
     //captionScript +=  'console.log(itemData);';
     captionScript +=  'if (basicValue != undefined){';
     captionScript +=    'var valueStr="";';
-    captionScript +=    'if (itemData.MAXATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'PATK') + ' " + itemData.MINATK + " - " + itemData.MAXATK + "</h2>";';
-    captionScript +=    'if (itemData.MATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MATK') + ' " + itemData.MATK + "</h2>";';
-    captionScript +=    'if (itemData.DEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DEF') + ' " + itemData.DEF + "</h2>";';
-    captionScript +=    'if (itemData.MDEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MDEF') + ' " + itemData.MDEF + "</h2>";';
-    captionScript +=    'if (itemData.HR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'HR') + ' " + itemData.HR + "</h2>";';
-    captionScript +=    'if (itemData.DR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DR') + ' " + itemData.DR + "</h2>";';
-    captionScript +=    'if (itemData.DefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DefRatio') + ' " + itemData.DefRatio + "</h2>";';
-    captionScript +=    'if (itemData.MDefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MDefRatio') + ' " + itemData.MDefRatio + "</h2>";';
-    captionScript +=    'if (itemData.MHR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MHR') + ' " + itemData.MHR + "</h2>";';
-    captionScript +=    'if (itemData.ADD_FIRE > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'ADD_FIRE') + ' " + itemData.ADD_FIRE + "</h2>";';
+    captionScript +=    'if (itemData.MAXATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'PATK') + ' " + itemData.MINATK + " - " + itemData.MAXATK + "</h2>";';
+    captionScript +=    'if (itemData.MATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'MATK') + ' " + itemData.MATK + "</h2>";';
+    captionScript +=    'if (itemData.DEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'DEF') + ' " + itemData.DEF + "</h2>";';
+    captionScript +=    'if (itemData.MDEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'MDEF') + ' " + itemData.MDEF + "</h2>";';
+    captionScript +=    'if (itemData.HR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'HR') + ' " + itemData.HR + "</h2>";';
+    captionScript +=    'if (itemData.DR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'DR') + ' " + itemData.DR + "</h2>";';
+    captionScript +=    'if (itemData.DefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'DefRatio') + ' " + itemData.DefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MDefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'MDefRatio') + ' " + itemData.MDefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MHR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'MHR') + ' " + itemData.MHR + "</h2>";';
+    captionScript +=    'if (itemData.ADD_FIRE > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData, 'ADD_FIRE') + ' " + itemData.ADD_FIRE + "</h2>";';
     captionScript +=    'basicValue.innerHTML=valueStr';
     captionScript +=  '}';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) document.getElementById("ReinforceLevel").value=itemData.Reinforce_2;';
@@ -552,10 +552,10 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += '</script>';
 
     var reinforceSilverItemString = '';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData['tableData'],'Moru_W_01', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData['tableData'],'Vis', serverData['imagePath'])+'<span id="reinforceSilver">0</span></p>';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData['tableData'],'Moru_Diamond', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData['tableData'],'Vis', serverData['imagePath'])+'<span id="reinforceSilverDia">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_W_01', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData,'Vis', serverData['imagePath'])+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_Diamond', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData,'Vis', serverData['imagePath'])+'<span id="reinforceSilverDia">0</span></p>';
 
-    var transcendMaterialItemString = tos.GetItemResultString(serverData['tableData'], 'Premium_item_transcendence_Stone', serverData['imagePath'], '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+    var transcendMaterialItemString = tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', serverData['imagePath'], '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 
@@ -572,20 +572,20 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
 
-    output = output.replace(/%ItemType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ItemType));
+    output = output.replace(/%ItemType%/g, tos.ClassName2Lang(serverData, itemTable[index].ItemType));
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
 
-    output = output.replace(/%ItemGrade%/g, tos.GradeToName(serverData['tableData'], itemTable[index].ItemGrade));
+    output = output.replace(/%ItemGrade%/g, tos.GradeToName(serverData, itemTable[index].ItemGrade));
     output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
     output = output.replace(/%Dur%/g, itemTable[index].Dur);
     output = output.replace(/%MaxDur%/g, itemTable[index].MaxDur);
     output = output.replace(/%ReqToolTip%/g, itemTable[index].ReqToolTip);
-    output = output.replace(/%ClassType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ClassType));
-    output = output.replace(/%ClassType2%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ClassType2));
-    output = output.replace(/%AttachType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].AttachType));
+    output = output.replace(/%ClassType%/g, tos.ClassName2Lang(serverData, itemTable[index].ClassType));
+    output = output.replace(/%ClassType2%/g, tos.ClassName2Lang(serverData, itemTable[index].ClassType2));
+    output = output.replace(/%AttachType%/g, tos.ClassName2Lang(serverData, itemTable[index].AttachType));
     output = output.replace(/%UseJob%/g, itemTable[index].UseJob);
     output = output.replace(/%UseGender%/g, itemTable[index].UseGender);
     output = output.replace(/%MaxSocket_COUNT%/g, itemTable[index].MaxSocket_COUNT);
@@ -621,7 +621,7 @@ module.exports = function(app, serverSetting, serverData){
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
     var itemTable = serverData['tableData'][tableName];
-    var recipeData = tos.FindDataClassName(serverData['tableData'],'recipe',itemTable[index].ClassName);
+    var recipeData = tos.FindDataClassName(serverData,'recipe',itemTable[index].ClassName);
 
     var icon = '';
     var iconPath = '';
@@ -649,12 +649,12 @@ module.exports = function(app, serverSetting, serverData){
     var targetString = '';
     if (recipeData != undefined){
       var itemData = undefined;
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',recipeData.TargetItem);
       if (itemData != undefined){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
@@ -677,12 +677,12 @@ module.exports = function(app, serverSetting, serverData){
       for(var i=2;i<=5;i++){
         if (recipeData['Item_' + i + '_1'] == undefined) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',recipeData['Item_' + i + '_1']);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
@@ -714,7 +714,7 @@ module.exports = function(app, serverSetting, serverData){
   
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
   
@@ -792,7 +792,7 @@ module.exports = function(app, serverSetting, serverData){
 
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
     if (itemTable[index].CardGroupName == undefined){
@@ -833,7 +833,7 @@ module.exports = function(app, serverSetting, serverData){
 
   function getCanRecipeString(tableName, index){
     var itemTable = serverData['tableData'][tableName];
-    var recipeData = tos.FindDataClassName(serverData['tableData'],'recipe',itemTable[index].ClassName);
+    var recipeData = tos.FindDataClassName(serverData,'recipe',itemTable[index].ClassName);
 
     var itemList = [];
     for (param in serverData['tableData']['recipe']){
@@ -856,7 +856,7 @@ module.exports = function(app, serverSetting, serverData){
       for(var i=0;i<=itemList.length;i++){
         if (itemList[i] == undefined) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',itemList[i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',itemList[i]);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
@@ -909,7 +909,7 @@ module.exports = function(app, serverSetting, serverData){
     if (questList.length>0){
       output += '<h3>Quest Rewards</h3>';
       for (var i=0;i<questList.length;i++){
-        var quest=tos.FindDataClassName(serverData['tableData'],'questprogresscheck',questList[i]);
+        var quest=tos.FindDataClassName(serverData,'questprogresscheck',questList[i]);
         if (quest==undefined) continue;
         var imgstr = '';
         switch(quest.QuestMode){
@@ -981,11 +981,11 @@ module.exports = function(app, serverSetting, serverData){
     output += '<h3>Collection</h3>';
     for (param in collectionTable){
       if (collectionTable[param].ClassName==itemData.ClassName){
-        output += '<p>Base. '+tos.GetCollectionString(serverData['tableData'],collectionTable[param].ClassName)+'</p>';
+        output += '<p>Base. '+tos.GetCollectionString(serverData,collectionTable[param].ClassName)+'</p>';
       }
     }
     for (param in collectionArray){
-      output += '<p>'+tos.GetCollectionString(serverData['tableData'],collectionArray[param])+'</p>';
+      output += '<p>'+tos.GetCollectionString(serverData,collectionArray[param])+'</p>';
     }
 
     return output;

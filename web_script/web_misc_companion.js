@@ -18,12 +18,12 @@ module.exports = function(app, serverSetting, serverData){
         resultString += '<tr><td>Icon</td><td>Name</td><td>Job</td><td>Ride Speed</td><td>Is Ride</td></tr>';
         for (param in companionTable){
             resultString += '<tr>';
-            var nameStr = tos.GetMonsterString(serverData['tableData'], companionTable[param].ClassName.trim());
+            var nameStr = tos.GetMonsterString(serverData, companionTable[param].ClassName.trim());
             if (nameStr == undefined || nameStr.length == 0) nameStr = companionTable[param].ClassName.replace(/_/g,' ');
             var monData = undefined;
             var iconString = '';
             if (companionTable[param].ClassName != undefined && companionTable[param].ClassName.length>0){
-                monData = tos.FindDataClassName(serverData['tableData'], 'monster', companionTable[param].ClassName);
+                monData = tos.FindDataClassName(serverData, 'monster', companionTable[param].ClassName);
                 if (monData != undefined && monData.Icon != undefined){
                     //iconString = '<img style="width: 64px; height: 64px;" src="../img/icon/monillust/'+monData.Icon.toLowerCase()+'.png" />';
                     iconString = tos.ImagePathToHTML(serverData['imagePath'][monData.Icon.toLowerCase()], 64);
@@ -32,7 +32,7 @@ module.exports = function(app, serverSetting, serverData){
             var jobData = undefined;
             var jobNameString = '';
             if (companionTable[param].JobID != undefined && companionTable[param].JobID>0){
-                jobData = tos.FindDataClassID(serverData['tableData'], 'job', companionTable[param].JobID);
+                jobData = tos.FindDataClassID(serverData, 'job', companionTable[param].JobID);
                 if (jobData != undefined) {
                     jobNameString = jobData.Name;
                 }

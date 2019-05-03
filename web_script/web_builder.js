@@ -92,7 +92,7 @@ module.exports = function(app, serverSetting, serverData){
             output +=   '<h1 style="width:calc(100vw-20px); text-align:center;">Select Class</h1>';
         } else {
            for (var i = 1; i < classArray.length; i ++){
-                var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[i]);
+                var jobData = tos.GetJobData(serverData, classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
                 //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
@@ -129,7 +129,7 @@ module.exports = function(app, serverSetting, serverData){
                 //if (jobTable[i].MaxCircle <= classCount[i]) continue;
                 var isHas = false;
                 for (var j = 1; j < classArray.length; j ++){
-                    var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[j]);
+                    var jobData = tos.GetJobData(serverData, classArray[0], classArray[j]);
                     if (jobData != undefined && jobData.ClassID == jobTable[i].ClassID){
                         isHas = true;
                         break;
@@ -156,7 +156,7 @@ module.exports = function(app, serverSetting, serverData){
         for (var i = 1; i < classArray.length; i ++){
             // if (classCount[i] <= 0)
             //     continue;
-            var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[i]);
+            var jobData = tos.GetJobData(serverData, classArray[0], classArray[i]);
             if (jobData == null || jobData.hasOwnProperty('Name') == false) continue;
             output +=       '<div class="class">';
             //output +=       '<h3>' + jobData.Name + ' ' + classCount[i] + ' Circle</h3>';

@@ -87,16 +87,16 @@ class TosModule {
         return output;
     }
 
-    static ClassName2Lang(tableData, className){
-        if (className == undefined || className.length == 0 || tableData['language'] == undefined || tableData['language'][className] == undefined)
+    static ClassName2Lang(serverData, className){
+        if (className == undefined || className.length == 0 || serverData['tableData']['language'] == undefined || serverData['tableData']['language'][className] == undefined)
             return className;
-        return tableData['language'][className];
+        return serverData['tableData']['language'][className];
     }
 
-    static GetJobData(tableData, num1, num2){
-        for (var i = 0; i < tableData['job'].length; i ++){
-            if (tableData['job'][i].ClassName === 'Char' + num1 + '_' + num2)
-                return tableData['job'][i];
+    static GetJobData(serverData, num1, num2){
+        for (var i = 0; i < serverData['tableData']['job'].length; i ++){
+            if (serverData['tableData']['job'][i].ClassName === 'Char' + num1 + '_' + num2)
+                return serverData['tableData']['job'][i];
         }
         return undefined;
     }
@@ -115,96 +115,96 @@ class TosModule {
     }
 
 
-    static JobClassNameToJobName(tableData, job){
-        for (var i = 0; i < tableData['job'].length; i ++){
-          if (tableData['job'][i].ClassName === job) return tableData['job'][i].Name;
+    static JobClassNameToJobName(serverData, job){
+        for (var i = 0; i < serverData['tableData']['job'].length; i ++){
+          if (serverData['tableData']['job'][i].ClassName === job) return serverData['tableData']['job'][i].Name;
         }
         return job;
     }
 
-    static JobToJobName(tableData, job){
-      for (var i = 0; i < tableData['job'].length; i ++){
-        if (tableData['job'][i].EngName === job) return tableData['job'][i].Name;
+    static JobToJobName(serverData, job){
+      for (var i = 0; i < serverData['tableData']['job'].length; i ++){
+        if (serverData['tableData']['job'][i].EngName === job) return serverData['tableData']['job'][i].Name;
       }
       return job;
     }
 
-    static SkillClassNameToSkillName(tableData, skill){
-        for (var i = 0; i < tableData['skill'].length; i ++){
-          if (tableData['skill'][i].ClassName === skill) return tableData['skill'][i].Name;
+    static SkillClassNameToSkillName(serverData, skill){
+        for (var i = 0; i < serverData['tableData']['skill'].length; i ++){
+          if (serverData['tableData']['skill'][i].ClassName === skill) return serverData['tableData']['skill'][i].Name;
         }
         return job;
     }
     
-    static AttributeToName(tableData, attribute){
-      for (var i = 0; i < tableData['skill_attribute'].length; i ++){
-        if (tableData['skill_attribute'][i].ClassName === attribute) return tableData['skill_attribute'][i].TextEffectMsg;
+    static AttributeToName(serverData, attribute){
+      for (var i = 0; i < serverData['tableData']['skill_attribute'].length; i ++){
+        if (serverData['tableData']['skill_attribute'][i].ClassName === attribute) return serverData['tableData']['skill_attribute'][i].TextEffectMsg;
       }
       return attribute;
     }
 
-    static StanceToName(tableData, stance){
-        for (var i = 0; i < tableData['stance'].length; i ++){
-          if (tableData['stance'][i].ClassName === stance) return tableData['stance'][i].Name;
+    static StanceToName(serverData, stance){
+        for (var i = 0; i < serverData['tableData']['stance'].length; i ++){
+          if (serverData['tableData']['stance'][i].ClassName === stance) return serverData['tableData']['stance'][i].Name;
         }
         return stance;
     }
-    static StanceToIcon(tableData, stance){
-        for (var i = 0; i < tableData['stance'].length; i ++){
-          if (tableData['stance'][i].ClassName === stance) return tableData['stance'][i].Icon;
+    static StanceToIcon(serverData, stance){
+        for (var i = 0; i < serverData['tableData']['stance'].length; i ++){
+          if (serverData['tableData']['stance'][i].ClassName === stance) return serverData['tableData']['stance'][i].Icon;
         }
         return stance;
     }
 
-    static GradeToName(tableData, grade){
-        for (var i = 0; i < tableData['item_grade'].length; i ++){
-          if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i].Name;
+    static GradeToName(serverData, grade){
+        for (var i = 0; i < serverData['tableData']['item_grade'].length; i ++){
+          if (serverData['tableData']['item_grade'][i].Grade === grade) return serverData['tableData']['item_grade'][i].Name;
         }
         return grade;
     }
 
-    static ClassIDToClassName(tableData, tableName, classID){
-        for (var i = 0; i < tableData[tableName].length; i ++){
-          if (tableData[tableName][i].ClassID === Number(classID)) return tableData[tableName][i].ClassName;
+    static ClassIDToClassName(serverData, tableName, classID){
+        for (var i = 0; i < serverData['tableData'][tableName].length; i ++){
+          if (serverData['tableData'][tableName][i].ClassID === Number(classID)) return serverData['tableData'][tableName][i].ClassName;
         }
         return undefined;
     }
 
-    static GetCurrentGrade(tableData, grade){
-        for (var i = 0; i < tableData['item_grade'].length; i ++){
-          if (tableData['item_grade'][i].Grade === grade) return tableData['item_grade'][i];
+    static GetCurrentGrade(serverData, grade){
+        for (var i = 0; i < serverData['tableData']['item_grade'].length; i ++){
+          if (serverData['tableData']['item_grade'][i].Grade === grade) return serverData['tableData']['item_grade'][i];
         }
         return undefined;
     }
 
-    static FindDataClassName(tableData, tableName, className){
-        if (tableData[tableName] == undefined) return undefined;
-        for (var i = 0; i < tableData[tableName].length; i ++){
-          if (tableData[tableName][i].ClassName === className) return tableData[tableName][i];
+    static FindDataClassName(serverData, tableName, className){
+        if (serverData['tableData'][tableName] == undefined) return undefined;
+        for (var i = 0; i < serverData['tableData'][tableName].length; i ++){
+          if (serverData['tableData'][tableName][i].ClassName === className) return serverData['tableData'][tableName][i];
         }
         return undefined;
     }
-    static FindDataClassID(tableData, tableName, classID){
-        if (tableData[tableName] == undefined) return undefined;
-        for (var i = 0; i < tableData[tableName].length; i ++){
-          if (Number(tableData[tableName][i].ClassID) === Number(classID)) return tableData[tableName][i];
+    static FindDataClassID(serverData, tableName, classID){
+        if (serverData['tableData'][tableName] == undefined) return undefined;
+        for (var i = 0; i < serverData['tableData'][tableName].length; i ++){
+          if (Number(serverData['tableData'][tableName][i].ClassID) === Number(classID)) return serverData['tableData'][tableName][i];
         }
         return undefined;
     }
 
-    static Skilltree2Job(tableData, className){
-        return this.FindDataClassName(tableData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
+    static Skilltree2Job(serverData, className){
+        return this.FindDataClassName(serverData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
     }
 
-    static GetItemImgString(tableData, className, imagePath){
+    static GetItemImgString(serverData, className, imagePath){
         var itemData = undefined;
         var icon = '';
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Equip',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Quest',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_gem',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_premium',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_Equip',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_Quest',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_gem',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_premium',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_recipe',className);
         if (itemData == undefined) return icon;
         if (imagePath == undefined){
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
@@ -230,18 +230,18 @@ class TosModule {
         return icon;
     }
 
-    static GetItemResultString(tableData, className, imagePath, itemcount){
+    static GetItemResultString(serverData, className, imagePath, itemcount){
         var itemData = undefined;
         var output = '';
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Equip',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_Quest',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_gem',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_premium',className);
-        if (itemData == undefined) itemData=this.FindDataClassName(tableData,'item_recipe',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_Equip',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_Quest',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_gem',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_premium',className);
+        if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_recipe',className);
         if (itemData != undefined){
             output += '<p>';
-            var icon = this.GetItemImgString(tableData, className, imagePath);
+            var icon = this.GetItemImgString(serverData, className, imagePath);
           output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
           if (itemcount != undefined){
             output += ' x '+itemcount;
@@ -251,10 +251,10 @@ class TosModule {
         return output;
     }
 
-    static GetQuestModeImgString(tableData, className){
+    static GetQuestModeImgString(serverData, className){
         var output = '';
 
-        var questData=this.FindDataClassName(tableData,'questprogresscheck',className);
+        var questData=this.FindDataClassName(serverData,'questprogresscheck',className);
         if (questData!=undefined){
             switch(questData.QuestMode){
                 case "MAIN":
@@ -278,37 +278,37 @@ class TosModule {
         return output;
     }
 
-    static GetMapString(tableData, className){
+    static GetMapString(serverData, className){
         var output = '';
-        var mapData=this.FindDataClassName(tableData, 'map2', className);
+        var mapData=this.FindDataClassName(serverData, 'map2', className);
         if (mapData!=undefined){
             output += '<a href="../Map?id='+mapData.ClassID+'">['+mapData.Grimreaper+'] '+mapData.Name+' (Lv.'+mapData.QuestLevel+')</a>';
         }
         return output;
     }
 
-    static GetMonsterString(tableData, className){
+    static GetMonsterString(serverData, className){
         var output = '';
-        var monData=this.FindDataClassName(tableData, 'monster', className);
+        var monData=this.FindDataClassName(serverData, 'monster', className);
         if (monData!=undefined){
             output += '<a href="../Monster?id='+monData.ClassID+'">'+monData.Name+' (Lv.'+monData.Level+')</a>';
         }
         return output;
     }
 
-    static GetQuestString(tableData, className){
+    static GetQuestString(serverData, className){
         var output = '';
-        var questData=this.FindDataClassName(tableData, 'questprogresscheck', className);
+        var questData=this.FindDataClassName(serverData, 'questprogresscheck', className);
         if (questData!=undefined){
-            output += this.GetQuestModeImgString(tableData,className)+'<a href="../Quest?id='+questData.ClassID+'">'+questData.Name+'</a>';
+            output += this.GetQuestModeImgString(serverData,className)+'<a href="../Quest?id='+questData.ClassID+'">'+questData.Name+'</a>';
         }
         return output;
     }
 
-    static GetDialogString(tableData, className, readText){
+    static GetDialogString(serverData, className, readText){
         if (readText == undefined) readText='Read Dialog';
         var output = '';
-        var dialogData=this.FindDataClassName(tableData, 'dialogtext', className);
+        var dialogData=this.FindDataClassName(serverData, 'dialogtext', className);
         if (dialogData!=undefined){
             output += '<a href="../Dialog?id='+dialogData.ClassID+'">'+readText+'</a>';
         }
@@ -322,9 +322,9 @@ class TosModule {
         return output;
     }
 
-    static GetCollectionString(tableData, className){
+    static GetCollectionString(serverData, className){
         var output = '';
-        var data=this.FindDataClassName(tableData, 'collection', className);
+        var data=this.FindDataClassName(serverData, 'collection', className);
         if (data!=undefined){
             output += '<a href="../Collection?id='+data.ClassID+'">'+data.Name+'</a>';
         }

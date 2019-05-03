@@ -150,7 +150,7 @@ module.exports = function(app, serverSetting, serverData){
     if (abilityTable[index].Job != undefined){
       var splited = abilityTable[index].Job.split(';');
       for (var i = 0; i < splited.length; i ++){
-        jobsString += tos.JobClassNameToJobName(serverData['tableData'], splited[i]);
+        jobsString += tos.JobClassNameToJobName(serverData, splited[i]);
         if ((i+1) < splited.length) jobsString += ', ';
       }
     }

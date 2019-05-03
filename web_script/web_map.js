@@ -56,7 +56,7 @@ module.exports = function(app, serverSetting, serverData){
       var hasDropItem = false;
       for (var i=1;i<=10;i++){
         if(mapData['DropItemClassName'+i] == undefined || mapData['DropItemClassName'+i].length == 0) continue;
-        dropItemString += tos.GetItemResultString(serverData['tableData'],mapData['DropItemClassName'+i],serverData['imagePath']);
+        dropItemString += tos.GetItemResultString(serverData,mapData['DropItemClassName'+i],serverData['imagePath']);
         hasDropItem = true;
       }
       if (hasDropItem) dropItemString = '<h3>Drop Items</h3>' + dropItemString;
@@ -67,7 +67,7 @@ module.exports = function(app, serverSetting, serverData){
         if (serverData['tableData']['questprogresscheck'][param]==undefined) continue;
         if (serverData['tableData']['questprogresscheck'][param].StartMap==undefined) continue;
         if (serverData['tableData']['questprogresscheck'][param].StartMap!=mapTable[index].ClassName) continue;
-        questString += '<p><a href="../Quest?id='+serverData['tableData']['questprogresscheck'][param].ClassID+'">'+tos.GetQuestModeImgString(serverData['tableData'],serverData['tableData']['questprogresscheck'][param].ClassName)+serverData['tableData']['questprogresscheck'][param].Name+'</a></p>';
+        questString += '<p><a href="../Quest?id='+serverData['tableData']['questprogresscheck'][param].ClassID+'">'+tos.GetQuestModeImgString(serverData,serverData['tableData']['questprogresscheck'][param].ClassName)+serverData['tableData']['questprogresscheck'][param].Name+'</a></p>';
         hasQuest = true;
       }
       if (hasQuest) questString = '<h3>Quest</h3>' + questString;
@@ -77,7 +77,7 @@ module.exports = function(app, serverSetting, serverData){
         var splited = mapData.PhysicalLinkZone.split('/');
         physicalLinkZoneString += '<h3>Physical Link Zone</h3>';
         for (param in splited){
-          physicalLinkZoneString += '<p>'+tos.GetMapString(serverData['tableData'],splited[param])+'</p>';
+          physicalLinkZoneString += '<p>'+tos.GetMapString(serverData,splited[param])+'</p>';
         }
       }
 
@@ -92,7 +92,7 @@ module.exports = function(app, serverSetting, serverData){
       var warpQuestString = '';
       if (campWarpData!=undefined){
         canWarp = true;
-        warpQuestString = tos.GetQuestString(serverData['tableData'],campWarpData.WarpOpenQuest);
+        warpQuestString = tos.GetQuestString(serverData,campWarpData.WarpOpenQuest);
       }
 
       var mongetString = '';
@@ -103,9 +103,9 @@ module.exports = function(app, serverSetting, serverData){
           if (genTypeTable[param]==undefined) continue;
           mongetString += '<p>';
           if (genTypeTable[param].Name!=undefined && genTypeTable[param].Name.length>0){
-            mongetString += genTypeTable[param].Name+' ('+tos.GetMonsterString(serverData['tableData'],genTypeTable[param].ClassType)+')';
+            mongetString += genTypeTable[param].Name+' ('+tos.GetMonsterString(serverData,genTypeTable[param].ClassType)+')';
           } else {
-            mongetString += tos.GetMonsterString(serverData['tableData'],genTypeTable[param].ClassType);
+            mongetString += tos.GetMonsterString(serverData,genTypeTable[param].ClassType);
           }
           if (genTypeTable[param].Dialog!=undefined && genTypeTable[param].Dialog.length>0){
             //mongetString += ' ' + tos.GetDialogString(serverData['tableData'],genTypeTable[param].Dialog,'Read Dialog');
@@ -117,7 +117,7 @@ module.exports = function(app, serverSetting, serverData){
               }
             }
             for (var i=0;i<dialoglist.length;i++){
-              mongetString += ' ' + tos.GetDialogString(serverData['tableData'],dialoglist[i],'Dialog'+(i+1));
+              mongetString += ' ' + tos.GetDialogString(serverData,dialoglist[i],'Dialog'+(i+1));
             }
           }
           mongetString += '</p>';
@@ -170,7 +170,7 @@ module.exports = function(app, serverSetting, serverData){
       output = output.replace(/%CanWarp%/g, canWarp?'TRUE':'FALSE');
       output = output.replace(/%WarpQuest%/g, warpQuestString);
 
-      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(serverData['tableData'],mapData.MapRatingRewardItem1,serverData['imagePath']));
+      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(serverData,mapData.MapRatingRewardItem1,serverData['imagePath']));
 
       output = output.replace(/%PhysicalLinkZoneString%/g, physicalLinkZoneString);
       output = output.replace(/%DropItemString%/g, dropItemString);

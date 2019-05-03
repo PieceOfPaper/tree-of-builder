@@ -17,13 +17,13 @@ module.exports = function(app, serverSetting, serverData){
 
         var questList = [];
         var questLvTemp = 0;
-        var questDataTemp = tos.FindDataClassID(serverData['tableData'],'questprogresscheck',targetId);
+        var questDataTemp = tos.FindDataClassID(serverData,'questprogresscheck',targetId);
         while(questDataTemp!=undefined){
             questLvTemp = questDataTemp.Level;
             if (questList.includes(questDataTemp)==true) break;
             questList.push(questDataTemp);
 
-            questDataTemp = tos.FindDataClassName(serverData['tableData'],'questprogresscheck',questDataTemp['QuestName'+1]);
+            questDataTemp = tos.FindDataClassName(serverData,'questprogresscheck',questDataTemp['QuestName'+1]);
             if (questDataTemp==undefined) break;
             if (Math.abs(questDataTemp.Level-questLvTemp)>10) break;
         }
@@ -32,7 +32,7 @@ module.exports = function(app, serverSetting, serverData){
         var expSum = 0;
         for (var i=0;i<questList.length;i++){
             if (questList[i] == undefined) continue;
-            var questAutoData = tos.FindDataClassName(serverData['tableData'],'questprogresscheck_auto',questList[i].ClassName);
+            var questAutoData = tos.FindDataClassName(serverData,'questprogresscheck_auto',questList[i].ClassName);
             for(var j=1;j<=4;j++){
                 if (questAutoData['Success_ItemName'+j] == undefined) continue;
                 if (questAutoData['Success_ItemCount'+j] == undefined || questAutoData['Success_ItemCount'+j] == 0) continue;
@@ -49,14 +49,14 @@ module.exports = function(app, serverSetting, serverData){
             resultString += '<tr><td>EXP</td><td>'+expSum.toLocaleString()+'</td></tr>';
             for (param in itemSum){
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(serverData['tableData'], param, serverData['imagePath'])+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(serverData, param, serverData['imagePath'])+'</td>';
                 resultString += '<td>'+itemSum[param].toLocaleString()+'</td>';
                 resultString += '</tr>';
             }
             resultString += '</tbody></table>';
             resultString += '<br/>';
             for (param in questList){
-                resultString += ' '+tos.GetQuestString(serverData['tableData'],questList[param].ClassName);
+                resultString += ' '+tos.GetQuestString(serverData,questList[param].ClassName);
             }
         }
 

@@ -21,7 +21,7 @@ module.exports = function(app, serverSetting, serverData){
             resultString += '<tr><td>Type</td><td colspan="3">'+guildEventTable[param].EventType+'</td></tr>';
             resultString += '<tr><td>Max Player</td><td colspan="3">'+guildEventTable[param].MaxPlayerCnt+'</td></tr>';
             resultString += '<tr><td>Time Limit</td><td>'+guildEventTable[param].TimeLimit+'</td><td>Recruiting Sec</td><td>'+guildEventTable[param].RecruitingSec+'</td></tr>';
-            resultString += '<tr><td>Start Map</td><td>'+tos.GetMapString(serverData['tableData'],guildEventTable[param].StartMap)+'</td><td>Boss</td><td>'+tos.GetMonsterString(serverData['tableData'],guildEventTable[param].BossName)+'</td></tr>';
+            resultString += '<tr><td>Start Map</td><td>'+tos.GetMapString(serverData,guildEventTable[param].StartMap)+'</td><td>Boss</td><td>'+tos.GetMonsterString(serverData,guildEventTable[param].BossName)+'</td></tr>';
             resultString += '<tr><td colspan="4">'+guildEventTable[param].SummaryInfo+'<br/>'+tos.parseCaption(guildEventTable[param].DetailInfo)+'</td></tr>';
             resultString += '<tr><td>Game Detail</td><td colspan="3">'+tos.GetMinigameString(guildEventTable[param].MGame)+'</td></tr>';
             resultString += '</tbody></table><br/><br/>';

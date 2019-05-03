@@ -32,14 +32,14 @@ module.exports = function(app, serverSetting, serverData){
             resultString += '<td>Price</td>';
             resultString += '</tr>';
             for (param in array[shopname]){
-                var itemdata = tos.FindDataClassName(serverData['tableData'],'item',array[shopname][param]['ItemName']);
+                var itemdata = tos.FindDataClassName(serverData,'item',array[shopname][param]['ItemName']);
                 if (itemdata == undefined) continue;
                 var price = -1;
                 if (itemdata['Price'] != undefined) price = Number(itemdata['Price']);
 
                 
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(serverData['tableData'],array[shopname][param]['ItemName'],serverData['imagePath'])+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(serverData,array[shopname][param]['ItemName'],serverData['imagePath'])+'</td>';
                 resultString += '<td>'+price.toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

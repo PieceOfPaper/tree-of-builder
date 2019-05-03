@@ -51,7 +51,7 @@ module.exports = function(app, serverSetting, serverData){
             flowString += '<h1>Game. '+(i+1)+'</h1>';
             flowString += '<p>'+missionData.root.children[i].attributes['Name']+'</p>';
             flowString += '<p>Lv.'+missionData.root.children[i].attributes['minLv']+'~'+missionData.root.children[i].attributes['maxLv']+'</p>';
-            flowString += '<p>'+tos.GetMapString(serverData['tableData'],missionData.root.children[i].attributes['mapName'])+'</p>';
+            flowString += '<p>'+tos.GetMapString(serverData,missionData.root.children[i].attributes['mapName'])+'</p>';
             if (missionData.root.children[i].children!=undefined && 
                 missionData.root.children[i].children.length>0 && 
                 missionData.root.children[i].children[0].name=="StageList"){
@@ -88,12 +88,12 @@ module.exports = function(app, serverSetting, serverData){
                                         }
                                         flowString += '<p>';
                                         if (problist['Name']!=undefined){
-                                            flowString += problist['Name']+' ('+tos.GetMonsterString(serverData['tableData'],tos.ClassIDToClassName(serverData['tableData'],'monster',objlist[l].attributes['MonType']))+')';
+                                            flowString += problist['Name']+' ('+tos.GetMonsterString(serverData,tos.ClassIDToClassName(serverData,'monster',objlist[l].attributes['MonType']))+')';
                                         } else {
-                                            flowString += tos.GetMonsterString(serverData['tableData'],tos.ClassIDToClassName(serverData['tableData'],'monster',objlist[l].attributes['MonType']));
+                                            flowString += tos.GetMonsterString(serverData,tos.ClassIDToClassName(serverData,'monster',objlist[l].attributes['MonType']));
                                         }
                                         if (problist['Dialog']!= undefined){
-                                            flowString += ' '+tos.GetDialogString(serverData['tableData'],problist['Dialog'],'Dialog')
+                                            flowString += ' '+tos.GetDialogString(serverData,problist['Dialog'],'Dialog')
                                         }
                                         flowString += '</p>';
                                     }

@@ -335,7 +335,7 @@ loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
 loadTable('map2', 'ies.ipf/map.ies', function(){
   loadTable('camp_warp', 'ies.ipf/camp_warp.ies', function(){
     for (param in serverData['tableData']['camp_warp']){
-      var mapdata = tos.FindDataClassName(serverData['tableData'],'map2',serverData['tableData']['camp_warp'][param].Zone);
+      var mapdata = tos.FindDataClassName(serverData,'map2',serverData['tableData']['camp_warp'][param].Zone);
       if (mapdata != undefined){
         mapdata['CanCampWarp']=true;
       }
