@@ -437,7 +437,11 @@ function loadXMLData(name, path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     // import
     fs.readFile('./web/data/' + path, function(error, data){
-      xmlData[name] = xml(data.toString());
+      var fullstr = data.toString('utf8');
+      if (fullstr.indexOf('<?xml') < 0){
+        fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
+      }
+      xmlData[name] = xml(fullstr);
       console.log('import xml [' + name + '] ' + path);
     });
     return;
@@ -452,7 +456,12 @@ function loadXMLData(name, path, callback){
       }
       //import
       fs.readFile('./web/data/' + path, function(error, data){
-        xmlData[name] = xml(data.toString());
+        var fullstr = data.toString('utf8');
+        fullstr = fullstr.replace(/\r?\n|\r/g, " ");
+        if (fullstr.indexOf('<?xml') < 0){
+          fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
+        }
+        xmlData[name] = xml(fullstr);
         console.log('import xml [' + name + '] ' + path);
       });
 

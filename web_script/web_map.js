@@ -131,13 +131,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
         if (playlist != undefined && playlist.root != undefined){
           for (var i=0;i<playlist.root.children.length;i++){
             if (playlist.root.children[i].attributes['PlayListName']==mapData['BgmPlayList']){
-              var playlist = [];
+              var playlistPaths = [];
               for (var j=1;j<10;j++){
-                if (playlist.root.children[i].attributes['FileName'+i]!=undefined){
-                  playlist.push(serverSetting['dataServerPath']+serverSetting['serverCode']+'/bgm/'+playlist.root.children[i].attributes['FileName'+i]);
+                if (playlist.root.children[i].attributes['FileName'+j]!=undefined){
+                  playlistPaths.push(serverSetting['dataServerPath']+serverSetting['serverCode']+'/bgm/'+playlist.root.children[i].attributes['FileName'+j]);
                 }
               }
-              bgmString += '<script> audioPlayList_setPlayList("map_bgm",'+JSON.stringify(playlist)+');</script>';
+              bgmString += '<script> audioPlayList_setPlayList("map_bgm",'+JSON.stringify(playlistPaths)+');</script>';
               break;
             }
           }
