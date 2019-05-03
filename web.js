@@ -432,6 +432,7 @@ function loadTable(name, path, callback){
 
 // ---------- XML 데이터 불러오기
 //loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
+loadXMLData('xml.ipf/playlist', 'xml.ipf/playlist.xml');
 function loadXMLData(name, path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     // import
@@ -454,6 +455,7 @@ function loadXMLData(name, path, callback){
         xmlData[name] = xml(data.toString());
         console.log('import xml [' + name + '] ' + path);
       });
+
     });
   }).on('error', (e) => {
     console.log('download error xml [' + name + '] ' + path + ' ' + e);
@@ -834,7 +836,7 @@ app.use('/Monster', monsterPage);
 var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData, imagePath);
 app.use('/Quest', questPage);
 
-var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData, imagePath);
+var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData, xmlData, imagePath);
 app.use('/Map', mapPage);
 
 var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData, imagePath);

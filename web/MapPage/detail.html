@@ -15,12 +15,25 @@
     <script src="../js/defaultSetting.js"></script>
     <script src="../js/requestMethod.js"></script>
     <script src="../js/tga.js"></script>
+    <script src="../js/audioPlayList.js"></script>
 </head>
 
 <body>
     <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
 
     <h1>%Name%</h1>
+
+    <audio id="map_bgm" preload="auto" tabindex="0" controls="" type="audio/mpeg">
+        <source type="audio/mp3" src="">
+        Sorry, your browser does not support HTML5 audio.
+    </audio>
+    <div id="map_bgm_playlist">
+
+    </div>
+    %BGMString%
+
+    <br/>
+
     <table>
         <tr>
             <td>ClassID</td>

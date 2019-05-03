@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, tableData, scriptData, xmlData, imagePath){
   var express = require('express');
   var http = require('http');
   var https = require('https');
@@ -124,6 +124,27 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         }
       }
 
+
+      var bgmString = '';
+      if (mapData['BgmPlayList'] != undefined && mapData['BgmPlayList'].length > 0){
+        var playlist = xmlData['xml.ipf/playlist'];
+        if (playlist != undefined && playlist.root != undefined){
+          for (var i=0;i<playlist.root.children.length;i++){
+            if (playlist.root.children[i].attributes['PlayListName']==mapData['BgmPlayList']){
+              var playlist = [];
+              for (var j=1;j<10;j++){
+                if (playlist.root.children[i].attributes['FileName'+i]!=undefined){
+                  playlist.push(serverSetting['dataServerPath']+serverSetting['serverCode']+'/bgm/'+playlist.root.children[i].attributes['FileName'+i]);
+                }
+              }
+              bgmString += '<script> audioPlayList_setPlayList("map_bgm",'+JSON.stringify(playlist)+');</script>';
+              break;
+            }
+          }
+        }
+      }
+
+
       var output = layout_detail.toString();
 
       output = output.replace(/%ClassID%/g, mapData.ClassID);
@@ -155,6 +176,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       output = output.replace(/%DropItemString%/g, dropItemString);
       output = output.replace(/%QuestString%/g, questString);
       output = output.replace(/%MongenString%/g, mongetString);
+
+      output = output.replace(/%BGMString%/g, bgmString);
 
 
       var connection = new mysqls(serverSetting['dbconfig']);
