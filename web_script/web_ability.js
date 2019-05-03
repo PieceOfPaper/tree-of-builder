@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -14,14 +14,14 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
 
   //var search_box = fs.readFileSync('./web/Skill/search_box.html');
-  // var jobTable = tableData['job'];
-  // var skillTable = tableData['skill'];
-  // var skillTreeTable = tableData['skilltree'];
+  // var jobTable = serverData['tableData']['job'];
+  // var skillTable = serverData['tableData']['skill'];
+  // var skillTreeTable = serverData['tableData']['skilltree'];
 
   route.get('/', function (request, response) {
     tos.RequestLog(request);
     
-    var abilityTable = tableData['ability'];
+    var abilityTable = serverData['tableData']['ability'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (abilityTable != undefined && request.query.id != undefined && request.query.id != ''){
@@ -39,15 +39,15 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_detail = fs.readFileSync('./web/Layout/index-abilitydetail.html');
 
   function abilityDetailPage(index, request, response) {
-    var skillTable = tableData['skill'];
-    var abilityTable = tableData['ability'];
-    //var skillTreeTable = tableData['skilltree'];
-    //var jobTable = tableData['job'];
+    var skillTable = serverData['tableData']['skill'];
+    var abilityTable = serverData['tableData']['ability'];
+    //var skillTreeTable = serverData['tableData']['skilltree'];
+    //var jobTable = serverData['tableData']['job'];
 
     var abilityJob;
-    for (var i = 0; i < tableData['ability_job'].length; i ++){
-      if (tableData['ability_job'][i].ClassName === abilityTable[index].ClassName){
-        abilityJob = tableData['ability_job'][i];
+    for (var i = 0; i < serverData['tableData']['ability_job'].length; i ++){
+      if (serverData['tableData']['ability_job'][i].ClassName === abilityTable[index].ClassName){
+        abilityJob = serverData['tableData']['ability_job'][i];
         break;
       }
     }
@@ -139,9 +139,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     captionScript += '}';
 
     if (abilityJob != undefined){
-      captionScript += tos.Lua2JS(scriptData[abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
+      captionScript += tos.Lua2JS(serverData['scriptData'][abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
     }
-    captionScript += tos.Lua2JS(scriptData['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
+    captionScript += tos.Lua2JS(serverData['scriptData']['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
     
     captionScript += '</script>';
 
@@ -150,7 +150,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     if (abilityTable[index].Job != undefined){
       var splited = abilityTable[index].Job.split(';');
       for (var i = 0; i < splited.length; i ++){
-        jobsString += tos.JobClassNameToJobName(tableData, splited[i]);
+        jobsString += tos.JobClassNameToJobName(serverData['tableData'], splited[i]);
         if ((i+1) < splited.length) jobsString += ', ';
       }
     }
@@ -187,8 +187,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var output = layout_detail.toString();
     output = output.replace(/style.css/g, '../style.css');
     //output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + abilityTable[index].Icon + '.png" />');
-    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath[abilityTable[index].Icon.toLowerCase()]));
-    output = output.replace(/%IconPath%/g, imagePath[abilityTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath[abilityTable[index].Icon.toLowerCase()].path);
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(serverData['imagePath'][abilityTable[index].Icon.toLowerCase()]));
+    output = output.replace(/%IconPath%/g, serverData['imagePath'][abilityTable[index].Icon.toLowerCase()] == undefined ? '' : serverData['imagePath'][abilityTable[index].Icon.toLowerCase()].path);
     output = output.replace(/%Name%/g, abilityTable[index].Name);
     output = output.replace(/%ClassName%/g, abilityTable[index].ClassName);
     output = output.replace(/%ClassID%/g, abilityTable[index].ClassID);

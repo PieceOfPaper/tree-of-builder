@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -21,9 +21,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (request.query.table != undefined && request.query.id != undefined){
-      if (request.query.table == 'item_Equip' && tableData[request.query.table] != undefined) {
-        for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+      if (request.query.table == 'item_Equip' && serverData['tableData'][request.query.table] != undefined) {
+        for (var i = 0; i < serverData['tableData'][request.query.table].length; i ++){
+          if (serverData['tableData'][request.query.table][i].ClassID === Number(request.query.id)){
             itemEquipDetailPage(request.query.table, i, request, response);
             return;
           }
@@ -33,23 +33,23 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
       // } else if (request.query.table == 'item_Quest') {
 
-      } else if (request.query.table == 'item_gem' && tableData[request.query.table] != undefined) {
-        for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+      } else if (request.query.table == 'item_gem' && serverData['tableData'][request.query.table] != undefined) {
+        for (var i = 0; i < serverData['tableData'][request.query.table].length; i ++){
+          if (serverData['tableData'][request.query.table][i].ClassID === Number(request.query.id)){
             itemGemDetailPage(request.query.table, i, request, response);
             return;
           }
         }
-      } else if (request.query.table == 'item_recipe' && tableData[request.query.table] != undefined) {
-        for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+      } else if (request.query.table == 'item_recipe' && serverData['tableData'][request.query.table] != undefined) {
+        for (var i = 0; i < serverData['tableData'][request.query.table].length; i ++){
+          if (serverData['tableData'][request.query.table][i].ClassID === Number(request.query.id)){
             itemRecipeDetailPage(request.query.table, i, request, response);
             return;
           }
         }
-      } else if (tableData[request.query.table] != undefined) {
-        for (var i = 0; i < tableData[request.query.table].length; i ++){
-          if (tableData[request.query.table][i].ClassID === Number(request.query.id)){
+      } else if (serverData['tableData'][request.query.table] != undefined) {
+        for (var i = 0; i < serverData['tableData'][request.query.table].length; i ++){
+          if (serverData['tableData'][request.query.table][i].ClassID === Number(request.query.id)){
             itemDetailPage(request.query.table, i, request, response);
             return;
           }
@@ -68,38 +68,38 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_itemRecipe_detail = fs.readFileSync('./web/Layout/index-itemdetail-recipe.html');
 
   function itemDetailPage(tableName, index, request, response) {
-    var itemTable = tableData[tableName];
+    var itemTable = serverData['tableData'][tableName];
 
     var icon = '';
     var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f']);
-      iconPath = imagePath[itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f']);
+      iconPath = serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
     }
 
     var dialogString = undefined;
     if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'book'){
-      // var dialogData = tos.FindDataClassName(tableData, 'dialogtext', itemTable[index].ClassName);
+      // var dialogData = tos.FindDataClassName(serverData['tableData'], 'dialogtext', itemTable[index].ClassName);
       // if (dialogData != undefined) {
       //   dialogString = tos.parseCaption(dialogData.Text);
       // }
-      dialogString = tos.GetDialogString(tableData,itemTable[index].ClassName);
+      dialogString = tos.GetDialogString(serverData['tableData'],itemTable[index].ClassName);
     }
 
     var output = layout_item_detail.toString();
@@ -107,9 +107,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/%Icon%/g, icon);
     if (itemTable[index].TooltipImage == undefined){
       output = output.replace(/%TooltipImage%/g, '');
-    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card' && imagePath[itemTable[index].TooltipImage.toLowerCase()] != undefined){
-      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="' + imagePath[itemTable[index].TooltipImage.toLowerCase()].path + '" />');
-      iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
+    } else if (itemTable[index].GroupName != undefined && itemTable[index].GroupName.toLowerCase() == 'card' && serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()] != undefined){
+      output = output.replace(/%TooltipImage%/g, '<img style="max-width:calc(100vw - 20px);" src="' + serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path + '" />');
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
     } else {
       output = output.replace(/%TooltipImage%/g, tooltipImg);
     }
@@ -120,7 +120,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
     if (itemTable[index].CardGroupName == undefined){
@@ -175,12 +175,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function itemEquipDetailPage(tableName, index, request, response) {
-    var itemTable = tableData[tableName];
-    var sealOption = tos.FindDataClassName(tableData, 'item_seal_option', itemTable[index].ClassName)
-    var myGrade = tos.GetCurrentGrade(tableData, itemTable[index].ItemGrade);
+    var itemTable = serverData['tableData'][tableName];
+    var sealOption = tos.FindDataClassName(serverData['tableData'], 'item_seal_option', itemTable[index].ClassName)
+    var myGrade = tos.GetCurrentGrade(serverData['tableData'], itemTable[index].ItemGrade);
 
     //set data
-    var setItemTable = tableData['setitem'];
+    var setItemTable = serverData['tableData']['setitem'];
     var setList = [];
     for (var i = 0; i < setItemTable.length; i ++){
       for (var j = 1; j <= 7; j ++){
@@ -193,9 +193,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
     //legend set data
     var legendSetList = [];
-    for(var i = 0; i < tableData['legend_setitem'].length; i ++){
-      if (tableData['legend_setitem'][i].LegendGroup == itemTable[index].LegendGroup){
-        legendSetList.push(tableData['legend_setitem'][i]);
+    for(var i = 0; i < serverData['tableData']['legend_setitem'].length; i ++){
+      if (serverData['tableData']['legend_setitem'][i].LegendGroup == itemTable[index].LegendGroup){
+        legendSetList.push(serverData['tableData']['legend_setitem'][i]);
       }
     }
 
@@ -204,20 +204,20 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
     }
@@ -227,7 +227,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var statListString = '';
     for (var i = 0; i < equipStatList.length; i ++){
       if (itemTable[index][equipStatList[i]] == undefined || Math.abs(itemTable[index][equipStatList[i]]) == 0) continue;
-      statListString += '- ' + tos.ClassName2Lang(tableData, equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
+      statListString += '- ' + tos.ClassName2Lang(serverData['tableData'], equipStatList[i]) + (Number(itemTable[index][equipStatList[i]]) > 0 ? '▲' : '▼') + itemTable[index][equipStatList[i]] + '<br/>';
     }
     if (itemTable[index].OptDesc != undefined && itemTable[index].OptDesc.length > 0)  statListString += tos.parseCaption(itemTable[index].OptDesc);
     if (sealOption != undefined){
@@ -241,7 +241,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
           statListString += i +' Step. ??? <br/>';
           continue;
         }
-        var statStr = tos.parseCaption(tos.ClassName2Lang(tableData, sealOption['SealOption_'+i]));
+        var statStr = tos.parseCaption(tos.ClassName2Lang(serverData['tableData'], sealOption['SealOption_'+i]));
         if (statStr.indexOf('{value}') > -1){
           var value = Number(sealOption['SealOptionValue_'+i]);
           if (sealOption['SealOption_'+i].indexOf('Rate') > -1) value *= 0.1;
@@ -270,23 +270,23 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       for(var i=1;i<=7;i++){
         if (setList[setIndex]['ItemName_' + i] == undefined || setList[setIndex]['ItemName_' + i ].length == 0) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',setList[setIndex]['ItemName_' + i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',setList[setIndex]['ItemName_' + i]);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f']);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f']);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()]);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.TooltipImage.toLowerCase()]);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()]);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()]);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()]);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Illust.toLowerCase()]);
           }
           setDataString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           setDataString += '<br/>';
@@ -313,10 +313,10 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       //skill
       for(var j=1;j<=5;j++){
         if (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0) continue;
-        var skillData = tos.FindDataClassName(tableData,'skill',legendSetList[i]['SetItemSkill_' + j]);
+        var skillData = tos.FindDataClassName(serverData['tableData'],'skill',legendSetList[i]['SetItemSkill_' + j]);
         if (skillData == null) continue;
         //var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
-        var materialIcon = tos.ImagePathToHTML(imagePath[skillData.Icon.toLowerCase()], 32);
+        var materialIcon = tos.ImagePathToHTML(serverData['imagePath'][skillData.Icon.toLowerCase()], 32);
         legendSetDataString += '<a href="../Skill/?id=' + skillData.ClassID + '">' + materialIcon  + ' ' + skillData.Name + '</a>';
         legendSetDataString += '<br/>';
       }
@@ -417,7 +417,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     captionScript += '}';
     
     captionScript += 'function GetClassList(tablename){ ';
-    captionScript +=  'if (tablename === "item_grade") return ' + JSON.stringify(tableData['item_grade']) + ';'; 
+    captionScript +=  'if (tablename === "item_grade") return ' + JSON.stringify(serverData['tableData']['item_grade']) + ';'; 
     captionScript +=  'return undefined;'; 
     captionScript += '}';
     
@@ -505,16 +505,16 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     //captionScript +=  'console.log(itemData);';
     captionScript +=  'if (basicValue != undefined){';
     captionScript +=    'var valueStr="";';
-    captionScript +=    'if (itemData.MAXATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'PATK') + ' " + itemData.MINATK + " - " + itemData.MAXATK + "</h2>";';
-    captionScript +=    'if (itemData.MATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MATK') + ' " + itemData.MATK + "</h2>";';
-    captionScript +=    'if (itemData.DEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DEF') + ' " + itemData.DEF + "</h2>";';
-    captionScript +=    'if (itemData.MDEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MDEF') + ' " + itemData.MDEF + "</h2>";';
-    captionScript +=    'if (itemData.HR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'HR') + ' " + itemData.HR + "</h2>";';
-    captionScript +=    'if (itemData.DR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DR') + ' " + itemData.DR + "</h2>";';
-    captionScript +=    'if (itemData.DefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'DefRatio') + ' " + itemData.DefRatio + "</h2>";';
-    captionScript +=    'if (itemData.MDefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MDefRatio') + ' " + itemData.MDefRatio + "</h2>";';
-    captionScript +=    'if (itemData.MHR > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'MHR') + ' " + itemData.MHR + "</h2>";';
-    captionScript +=    'if (itemData.ADD_FIRE > 0) valueStr+="<h2>' + tos.ClassName2Lang(tableData, 'ADD_FIRE') + ' " + itemData.ADD_FIRE + "</h2>";';
+    captionScript +=    'if (itemData.MAXATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'PATK') + ' " + itemData.MINATK + " - " + itemData.MAXATK + "</h2>";';
+    captionScript +=    'if (itemData.MATK > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MATK') + ' " + itemData.MATK + "</h2>";';
+    captionScript +=    'if (itemData.DEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DEF') + ' " + itemData.DEF + "</h2>";';
+    captionScript +=    'if (itemData.MDEF > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MDEF') + ' " + itemData.MDEF + "</h2>";';
+    captionScript +=    'if (itemData.HR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'HR') + ' " + itemData.HR + "</h2>";';
+    captionScript +=    'if (itemData.DR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DR') + ' " + itemData.DR + "</h2>";';
+    captionScript +=    'if (itemData.DefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'DefRatio') + ' " + itemData.DefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MDefRatio > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MDefRatio') + ' " + itemData.MDefRatio + "</h2>";';
+    captionScript +=    'if (itemData.MHR > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'MHR') + ' " + itemData.MHR + "</h2>";';
+    captionScript +=    'if (itemData.ADD_FIRE > 0) valueStr+="<h2>' + tos.ClassName2Lang(serverData['tableData'], 'ADD_FIRE') + ' " + itemData.ADD_FIRE + "</h2>";';
     captionScript +=    'basicValue.innerHTML=valueStr';
     captionScript +=  '}';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) document.getElementById("ReinforceLevel").value=itemData.Reinforce_2;';
@@ -535,27 +535,27 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     captionScript +=  'document.getElementById("reinforceSilverDia").innerText=GET_REINFORCE_PRICE(itemData,dummyMoruDia,undefined).toLocaleString();';
     captionScript += '}';
 
-    captionScript += tos.Lua2JS(scriptData['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
-    captionScript += tos.Lua2JS(scriptData['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
-    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
-    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ARMOR']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
-    captionScript += tos.Lua2JS(scriptData['SCR_REFRESH_ACC']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('{"ADD_FIRE"}','["ADD_FIRE"]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','').replace('var equipMaterial = TryGetProp(item, "Material")','var equipMaterial = "None"');
-    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_ATK_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
-    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_DEF_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
-    captionScript += tos.Lua2JS(scriptData['GET_UPGRADE_ADD_MDEF_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
-    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE']).replace('lv, grade, reinforceValue = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue);', '');
-    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
-    //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
-    //captionScript += tos.Lua2JS(scriptData['SCR_PVP_ITEM_TRANSCEND_SET']);
-    captionScript += tos.Lua2JS(scriptData['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
-    captionScript += tos.Lua2JS(scriptData['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REFRESH_ARMOR']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REFRESH_ACC']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('{"ADD_FIRE"}','["ADD_FIRE"]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','').replace('var equipMaterial = TryGetProp(item, "Material")','var equipMaterial = "None"');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_UPGRADE_ADD_ATK_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_UPGRADE_ADD_DEF_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_UPGRADE_ADD_MDEF_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_ADD_VALUE']).replace('lv, grade, reinforceValue = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue);', '');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
+    //captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
+    //captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_TRANSCEND_SET']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
     captionScript += '</script>';
 
     var reinforceSilverItemString = '';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_W_01', imagePath)+'  '+tos.GetItemImgString(tableData,'Vis', imagePath)+'<span id="reinforceSilver">0</span></p>';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(tableData,'Moru_Diamond', imagePath)+'  '+tos.GetItemImgString(tableData,'Vis', imagePath)+'<span id="reinforceSilverDia">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData['tableData'],'Moru_W_01', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData['tableData'],'Vis', serverData['imagePath'])+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData['tableData'],'Moru_Diamond', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData['tableData'],'Vis', serverData['imagePath'])+'<span id="reinforceSilverDia">0</span></p>';
 
-    var transcendMaterialItemString = tos.GetItemResultString(tableData, 'Premium_item_transcendence_Stone', imagePath, '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+    var transcendMaterialItemString = tos.GetItemResultString(serverData['tableData'], 'Premium_item_transcendence_Stone', serverData['imagePath'], '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 
@@ -572,20 +572,20 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
     output = output.replace(/%ClassID%/g, itemTable[index].ClassID);
 
-    output = output.replace(/%ItemType%/g, tos.ClassName2Lang(tableData, itemTable[index].ItemType));
+    output = output.replace(/%ItemType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ItemType));
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
 
-    output = output.replace(/%ItemGrade%/g, tos.GradeToName(tableData, itemTable[index].ItemGrade));
+    output = output.replace(/%ItemGrade%/g, tos.GradeToName(serverData['tableData'], itemTable[index].ItemGrade));
     output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
     output = output.replace(/%Dur%/g, itemTable[index].Dur);
     output = output.replace(/%MaxDur%/g, itemTable[index].MaxDur);
     output = output.replace(/%ReqToolTip%/g, itemTable[index].ReqToolTip);
-    output = output.replace(/%ClassType%/g, tos.ClassName2Lang(tableData, itemTable[index].ClassType));
-    output = output.replace(/%ClassType2%/g, tos.ClassName2Lang(tableData, itemTable[index].ClassType2));
-    output = output.replace(/%AttachType%/g, tos.ClassName2Lang(tableData, itemTable[index].AttachType));
+    output = output.replace(/%ClassType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ClassType));
+    output = output.replace(/%ClassType2%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].ClassType2));
+    output = output.replace(/%AttachType%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].AttachType));
     output = output.replace(/%UseJob%/g, itemTable[index].UseJob);
     output = output.replace(/%UseGender%/g, itemTable[index].UseGender);
     output = output.replace(/%MaxSocket_COUNT%/g, itemTable[index].MaxSocket_COUNT);
@@ -620,28 +620,28 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     response.send(output);
   }
   function itemRecipeDetailPage(tableName, index, request, response) {
-    var itemTable = tableData[tableName];
-    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
+    var itemTable = serverData['tableData'][tableName];
+    var recipeData = tos.FindDataClassName(serverData['tableData'],'recipe',itemTable[index].ClassName);
 
     var icon = '';
     var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = imagePath[itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
+      iconPath = serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
     }
@@ -649,23 +649,23 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var targetString = '';
     if (recipeData != undefined){
       var itemData = undefined;
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',recipeData.TargetItem);
-      if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',recipeData.TargetItem);
+      if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',recipeData.TargetItem);
       if (itemData != undefined){
         var materialIcon = '';
         if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
           itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
+          materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f'], 32);
         } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
+          materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.TooltipImage.toLowerCase()], 32);
         } else if(itemData.Icon != undefined){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
+          materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()], 32);
         } else if(itemData.Illust != undefined){
-          materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
+          materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Illust.toLowerCase()], 32);
         }
         targetString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
         targetString += ' x' + recipeData.TargetItemCnt + '<br/>';
@@ -677,23 +677,23 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       for(var i=2;i<=5;i++){
         if (recipeData['Item_' + i + '_1'] == undefined) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Equip',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_Quest',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_gem',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_premium',recipeData['Item_' + i + '_1']);
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Equip',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_Quest',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_gem',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_premium',recipeData['Item_' + i + '_1']);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',recipeData['Item_' + i + '_1']);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f'], 32);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.TooltipImage.toLowerCase()], 32);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()], 32);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Illust.toLowerCase()], 32);
           }
           materialString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
           materialString += ' x' + recipeData['Item_' + i + '_1_Cnt'] + '<br/>';
@@ -714,7 +714,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
   
@@ -747,28 +747,28 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function itemGemDetailPage(tableName, index, request, response) {
-    var itemTable = tableData[tableName];
-    var skillTable = tableData['skill'];
+    var itemTable = serverData['tableData'][tableName];
+    var skillTable = serverData['tableData']['skill'];
 
     var icon = '';
     var iconPath = '';
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage+'_f']);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_f']);
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Icon.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(imagePath[itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
+      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(imagePath[itemTable[index].Illust.toLowerCase()]);
-      iconPath = imagePath[itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
+      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
     } else {
       icon = 'No Img';
     }
@@ -792,7 +792,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
     output = output.replace(/%ItemType%/g, itemTable[index].ItemType);
     output = output.replace(/%Journal%/g, itemTable[index].Journal);
-    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(tableData, itemTable[index].GroupName));
+    output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData['tableData'], itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
     if (itemTable[index].CardGroupName == undefined){
@@ -832,19 +832,19 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function getCanRecipeString(tableName, index){
-    var itemTable = tableData[tableName];
-    var recipeData = tos.FindDataClassName(tableData,'recipe',itemTable[index].ClassName);
+    var itemTable = serverData['tableData'][tableName];
+    var recipeData = tos.FindDataClassName(serverData['tableData'],'recipe',itemTable[index].ClassName);
 
     var itemList = [];
-    for (param in tableData['recipe']){
-      if (tableData['recipe'][param].TargetItem == itemTable[index].ClassName){
-        itemList.push(tableData['recipe'][param].ClassName);
+    for (param in serverData['tableData']['recipe']){
+      if (serverData['tableData']['recipe'][param].TargetItem == itemTable[index].ClassName){
+        itemList.push(serverData['tableData']['recipe'][param].ClassName);
         continue;
       }
       for(var i=2;i<=5;i++){
-        if (tableData['recipe'][param]['Item_' + i + '_1'] == undefined) continue;
-        if (tableData['recipe'][param]['Item_' + i + '_1'] == itemTable[index].ClassName){
-          itemList.push(tableData['recipe'][param].ClassName);
+        if (serverData['tableData']['recipe'][param]['Item_' + i + '_1'] == undefined) continue;
+        if (serverData['tableData']['recipe'][param]['Item_' + i + '_1'] == itemTable[index].ClassName){
+          itemList.push(serverData['tableData']['recipe'][param].ClassName);
           break;
         }
       }
@@ -856,18 +856,18 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       for(var i=0;i<=itemList.length;i++){
         if (itemList[i] == undefined) continue;
         var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(tableData,'item_recipe',itemList[i]);
+        if (itemData == undefined) itemData=tos.FindDataClassName(serverData['tableData'],'item_recipe',itemList[i]);
         if (itemData != undefined){
           var materialIcon = '';
           if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
             itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'], 32)+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f'], 32);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.TooltipImage.toLowerCase()], 32);
           } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()], 32);
           } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
+            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Illust.toLowerCase()], 32);
           }
           resultString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a><br/>';
         }
@@ -879,27 +879,27 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function getCanQuestRewardString(tableName, index){
-    var itemTable = tableData[tableName];
-    var questTable = tableData['questprogresscheck'];
-    var questAutoTable = tableData['questprogresscheck_auto'];
+    var itemTable = serverData['tableData'][tableName];
+    var questTable = serverData['tableData']['questprogresscheck'];
+    var questAutoTable = serverData['tableData']['questprogresscheck_auto'];
 
     var questList = [];
     for (param in questAutoTable){
       for(var i=1;i<=4;i++){
         if (questAutoTable[param]['Success_ItemName' + i] == undefined) continue;
-        if (questAutoTable[param]['Success_ItemName' + i]==tableData[tableName][index].ClassName){
+        if (questAutoTable[param]['Success_ItemName' + i]==serverData['tableData'][tableName][index].ClassName){
           if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
         }
       }
       for(var i=1;i<=4;i++){
         if (questAutoTable[param]['Success_SelectItemName' + i] == undefined) continue;
-        if (questAutoTable[param]['Success_SelectItemName' + i]==tableData[tableName][index].ClassName){
+        if (questAutoTable[param]['Success_SelectItemName' + i]==serverData['tableData'][tableName][index].ClassName){
           if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
         }
       }
       for(var i=1;i<=4;i++){
         if (questAutoTable[param]['Success_JobItem_Name' + i] == undefined) continue;
-        if (questAutoTable[param]['Success_JobItem_Name' + i]==tableData[tableName][index].ClassName){
+        if (questAutoTable[param]['Success_JobItem_Name' + i]==serverData['tableData'][tableName][index].ClassName){
           if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
         }
       }
@@ -909,7 +909,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     if (questList.length>0){
       output += '<h3>Quest Rewards</h3>';
       for (var i=0;i<questList.length;i++){
-        var quest=tos.FindDataClassName(tableData,'questprogresscheck',questList[i]);
+        var quest=tos.FindDataClassName(serverData['tableData'],'questprogresscheck',questList[i]);
         if (quest==undefined) continue;
         var imgstr = '';
         switch(quest.QuestMode){
@@ -937,8 +937,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function getShopString(tableName, index){
-    var itemData = tableData[tableName][index];
-    var shopTable = tableData['shop'];
+    var itemData = serverData['tableData'][tableName][index];
+    var shopTable = serverData['tableData']['shop'];
 
     if (itemData==undefined) return '';
 
@@ -962,8 +962,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   }
 
   function getCollectionString(tableName, index){
-    var itemData = tableData[tableName][index];
-    var collectionTable = tableData['collection'];
+    var itemData = serverData['tableData'][tableName][index];
+    var collectionTable = serverData['tableData']['collection'];
     if (itemData==undefined) return '';
 
     var collectionArray = [];
@@ -981,11 +981,11 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output += '<h3>Collection</h3>';
     for (param in collectionTable){
       if (collectionTable[param].ClassName==itemData.ClassName){
-        output += '<p>Base. '+tos.GetCollectionString(tableData,collectionTable[param].ClassName)+'</p>';
+        output += '<p>Base. '+tos.GetCollectionString(serverData['tableData'],collectionTable[param].ClassName)+'</p>';
       }
     }
     for (param in collectionArray){
-      output += '<p>'+tos.GetCollectionString(tableData,collectionArray[param])+'</p>';
+      output += '<p>'+tos.GetCollectionString(serverData['tableData'],collectionArray[param])+'</p>';
     }
 
     return output;

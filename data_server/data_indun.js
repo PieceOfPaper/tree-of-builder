@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, serverData){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -6,7 +6,7 @@ module.exports = function(app, tableData){
     var route = express.Router();
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
-        var output = dataModule.DefaultQueryFilter(tableData['indun'], req.query);
+        var output = dataModule.DefaultQueryFilter(serverData['tableData']['indun'], req.query);
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));
@@ -17,13 +17,13 @@ module.exports = function(app, tableData){
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined || (lastTableLength != tableData['indun'].length)){
-            lastTableLength = tableData['indun'].length;
+        if (typeList[typeKey] == undefined || (lastTableLength != serverData['tableData']['indun'].length)){
+            lastTableLength = serverData['tableData']['indun'].length;
             typeList[typeKey] = [];
-            for (var i=0;i<tableData['indun'].length;i++){
-                if (tableData['indun'][i][typeKey] == undefined) continue;
-                if (typeList[typeKey].includes(tableData['indun'][i][typeKey]) == false){
-                    typeList[typeKey].push(tableData['indun'][i][typeKey]);
+            for (var i=0;i<serverData['tableData']['indun'].length;i++){
+                if (serverData['tableData']['indun'][i][typeKey] == undefined) continue;
+                if (typeList[typeKey].includes(serverData['tableData']['indun'][i][typeKey]) == false){
+                    typeList[typeKey].push(serverData['tableData']['indun'][i][typeKey]);
                 }
             }
             typeList[typeKey].sort(function(a,b){

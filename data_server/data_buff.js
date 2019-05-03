@@ -1,4 +1,4 @@
-module.exports = function(app, tableData, imagePath){
+module.exports = function(app, serverData){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -6,11 +6,11 @@ module.exports = function(app, tableData, imagePath){
     var route = express.Router();
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
-        var output = dataModule.DefaultQueryFilter(tableData['buff'], req.query);
+        var output = dataModule.DefaultQueryFilter(serverData['tableData']['buff'], req.query);
 
         for (var i=0;i<output["datalist"].length;i++){
             if (output["datalist"][i]['Icon'] != undefined && output["datalist"][i]['IconPath'] == undefined){
-                var pathdata = imagePath['icon_'+output["datalist"][i]['Icon'].toLowerCase()];
+                var pathdata = serverData['imagePath']['icon_'+output["datalist"][i]['Icon'].toLowerCase()];
                 if (pathdata != null) {
                     output["datalist"][i]['IconPath'] = pathdata['path'];
                     output["datalist"][i]['IconRect'] = pathdata['imgrect'];
@@ -27,13 +27,13 @@ module.exports = function(app, tableData, imagePath){
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined || (lastTableLength != tableData['buff'].length)){
-            lastTableLength = tableData['buff'].length;
+        if (typeList[typeKey] == undefined || (lastTableLength != serverData['tableData']['buff'].length)){
+            lastTableLength = serverData['tableData']['buff'].length;
             typeList[typeKey] = [];
-            for (var i=0;i<tableData['buff'].length;i++){
-                if (tableData['buff'][i][typeKey] == undefined) continue;
-                if (typeList[typeKey].includes(tableData['buff'][i][typeKey]) == false){
-                    typeList[typeKey].push(tableData['buff'][i][typeKey]);
+            for (var i=0;i<serverData['tableData']['buff'].length;i++){
+                if (serverData['tableData']['buff'][i][typeKey] == undefined) continue;
+                if (typeList[typeKey].includes(serverData['tableData']['buff'][i][typeKey]) == false){
+                    typeList[typeKey].push(serverData['tableData']['buff'][i][typeKey]);
                 }
             }
             typeList[typeKey].sort(function(a,b){

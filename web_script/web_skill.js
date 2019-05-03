@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -14,13 +14,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
 
   //var search_box = fs.readFileSync('./web/Skill/search_box.html');
-  // var jobTable = tableData['job'];
-  // var skillTable = tableData['skill'];
-  // var skillTreeTable = tableData['skilltree'];
+  // var jobTable = serverData['tableData']['job'];
+  // var skillTable = serverData['tableData']['skill'];
+  // var skillTreeTable = serverData['tableData']['skilltree'];
 
   route.get('/', function (request, response) {
     tos.RequestLog(request);
-    var skillTable = tableData['skill'];
+    var skillTable = serverData['tableData']['skill'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (skillTable != undefined && request.query.id != undefined && request.query.id != ''){
@@ -38,9 +38,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_detail = fs.readFileSync('./web/Layout/index-skilldetail.html');
 
   function skillDetailPage(index, request, response) {
-    var skillTable = tableData['skill'];
-    var skillTreeTable = tableData['skilltree'];
-    var cooldownTable = tableData['cooldown'];
+    var skillTable = serverData['tableData']['skill'];
+    var skillTreeTable = serverData['tableData']['skilltree'];
+    var cooldownTable = serverData['tableData']['cooldown'];
 
     var skillMaxLevel = 1;
     for (var i = 0; i < skillTreeTable.length; i ++){
@@ -51,17 +51,17 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     }
 
     var skillAbility = [];
-    for (var i = 0; i < tableData['ability'].length; i ++) {
-      if (tableData['ability'][i].SkillCategory === skillTable[index].ClassName){
-        skillAbility.push(tableData['ability'][i]);
+    for (var i = 0; i < serverData['tableData']['ability'].length; i ++) {
+      if (serverData['tableData']['ability'][i].SkillCategory === skillTable[index].ClassName){
+        skillAbility.push(serverData['tableData']['ability'][i]);
       }
     }
     var skillAbilityJob = [];
     for (var i = 0; i < skillAbility.length; i ++){
       var hasJob = false;
-      for (var j = 0; j < tableData['ability_job'].length; j ++){
-        if (skillAbility[i].ClassName === tableData['ability_job'][j].ClassName){
-          skillAbilityJob.push(tableData['ability_job'][j]);
+      for (var j = 0; j < serverData['tableData']['ability_job'].length; j ++){
+        if (skillAbility[i].ClassName === serverData['tableData']['ability_job'][j].ClassName){
+          skillAbilityJob.push(serverData['tableData']['ability_job'][j]);
           hasJob = true;
           break;
         }
@@ -83,7 +83,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         abilityString +=  '<div><button class="lv-add-button plus" onclick="onClickLevelUpAbility_' + skillAbility[i].ClassName + '()"><img src="../img2/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDownAbility_' + skillAbility[i].ClassName + '()"><img src="../img2/button/btn_minus.png" /></button></div>';
         abilityString += '</td>';
       }
-      abilityString += '<td align="center">' + tos.ImagePathToHTML(imagePath[skillAbility[i].Icon.toLowerCase()], 64, 'class="ability-icon"') + '</td>';
+      abilityString += '<td align="center">' + tos.ImagePathToHTML(serverData['imagePath'][skillAbility[i].Icon.toLowerCase()], 64, 'class="ability-icon"') + '</td>';
       abilityString += '<td>';
       abilityString +=   '<p><a href="../Ability/?id=' + skillAbility[i].ClassID + '">' + skillAbility[i].Name + '</a></p>';
       if (skillAbilityJob[i] !== undefined){
@@ -215,24 +215,24 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       captionScript += '}';
     }
 
-    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillFactor]);
-    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SkillSR]);
-    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionTime]);
-    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio]);
-    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio2]);
-    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].CaptionRatio3]);
-    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0) captionScript += tos.Lua2JS(scriptData[skillTable[index].SpendItemCount]);
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillFactor]);
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillSR]);
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionTime]);
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionRatio]);
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionRatio2]);
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionRatio3]);
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SpendItemCount]);
 
-    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR']);
-    captionScript += tos.Lua2JS(scriptData['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
-    captionScript += tos.Lua2JS(scriptData['SCR_REINFORCEABILITY_TOOLTIP']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_ABIL_ADD_SKILLFACTOR']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REINFORCEABILITY_TOOLTIP']);
     captionScript += '</script>';
 
     var stanceString = '';
     if (skillTable[index].ReqStance != undefined){
       var splited = skillTable[index].ReqStance.split(';');
       for (var i = 0; i < splited.length; i ++){
-        stanceString += tos.StanceToName(tableData, splited[i]);
+        stanceString += tos.StanceToName(serverData['tableData'], splited[i]);
         if ((i+1) < splited.length) stanceString += ', ';
       }
     }
@@ -249,37 +249,37 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     }
 
     var rawScript = '';
-    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0 && scriptData[skillTable[index].SkillFactor] != undefined) rawScript += '<tr><td>SkillFactor</td></tr><tr><td class="script">' + scriptData[skillTable[index].SkillFactor] + '</td></tr>';
-    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0 && scriptData[skillTable[index].SkillSR] != undefined) rawScript += '<tr><td>SkillSR</td></tr><tr><td class="script">' + scriptData[skillTable[index].SkillSR] + '</td></tr>';
-    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0 && scriptData[skillTable[index].CaptionTime] != undefined) rawScript += '<tr><td>CaptionTime</td></tr><tr><td class="script">' + scriptData[skillTable[index].CaptionTime] + '</td></tr>';
-    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0 && scriptData[skillTable[index].CaptionRatio] != undefined) rawScript += '<tr><td>CaptionRatio</td></tr><tr><td class="script">' + scriptData[skillTable[index].CaptionRatio] + '</td></tr>';
-    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0 && scriptData[skillTable[index].CaptionRatio2] != undefined) rawScript += '<tr><td>CaptionRatio2</td></tr><tr><td class="script">' + scriptData[skillTable[index].CaptionRatio2] + '</td></tr>';
-    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0 && scriptData[skillTable[index].CaptionRatio3] != undefined) rawScript += '<tr><td>CaptionRatio3</td></tr><tr><td class="script">' + scriptData[skillTable[index].CaptionRatio3] + '</td></tr>';
-    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && scriptData[skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td></tr><tr><td class="script">' + scriptData[skillTable[index].SpendItemCount] + '</td></tr>';
+    if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0 && serverData['scriptData'][skillTable[index].SkillFactor] != undefined) rawScript += '<tr><td>SkillFactor</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].SkillFactor] + '</td></tr>';
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0 && serverData['scriptData'][skillTable[index].SkillSR] != undefined) rawScript += '<tr><td>SkillSR</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].SkillSR] + '</td></tr>';
+    if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0 && serverData['scriptData'][skillTable[index].CaptionTime] != undefined) rawScript += '<tr><td>CaptionTime</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].CaptionTime] + '</td></tr>';
+    if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0 && serverData['scriptData'][skillTable[index].CaptionRatio] != undefined) rawScript += '<tr><td>CaptionRatio</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].CaptionRatio] + '</td></tr>';
+    if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0 && serverData['scriptData'][skillTable[index].CaptionRatio2] != undefined) rawScript += '<tr><td>CaptionRatio2</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].CaptionRatio2] + '</td></tr>';
+    if (skillTable[index].CaptionRatio3 != undefined && skillTable[index].CaptionRatio3.length > 0 && serverData['scriptData'][skillTable[index].CaptionRatio3] != undefined) rawScript += '<tr><td>CaptionRatio3</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].CaptionRatio3] + '</td></tr>';
+    if (skillTable[index].SpendItemCount != undefined && skillTable[index].SpendItemCount.length > 0 && serverData['scriptData'][skillTable[index].SpendItemCount] != undefined) rawScript += '<tr><td>SpendItemCount</td></tr><tr><td class="script">' + serverData['scriptData'][skillTable[index].SpendItemCount] + '</td></tr>';
 
     var skillGemString = '';
-    var skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'Gem_'+skillTable[index].ClassName);
-    if (skillGemData == undefined) skillGemData = tos.FindDataClassName(tableData, 'item_gem', 'GEM_'+skillTable[index].ClassName);
+    var skillGemData = tos.FindDataClassName(serverData['tableData'], 'item_gem', 'Gem_'+skillTable[index].ClassName);
+    if (skillGemData == undefined) skillGemData = tos.FindDataClassName(serverData['tableData'], 'item_gem', 'GEM_'+skillTable[index].ClassName);
     if (skillGemData!=undefined){
       //skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
-      skillGemString += tos.GetItemResultString(tableData, skillGemData, imagePath);
+      skillGemString += tos.GetItemResultString(serverData['tableData'], skillGemData, serverData['imagePath']);
     }
 
     var output = layout_detail.toString();
     //output = output.replace(/style.css/g, '../Layout/style.css');
     //output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/icon_' + skillTable[index].Icon.toLowerCase() + '.png" />');
-    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+skillTable[index].Icon.toLowerCase()]));
-    output = output.replace(/%IconPath%/g, imagePath['icon_'+skillTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath['icon_'+skillTable[index].Icon.toLowerCase()].path);
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(serverData['imagePath']['icon_'+skillTable[index].Icon.toLowerCase()]));
+    output = output.replace(/%IconPath%/g, serverData['imagePath']['icon_'+skillTable[index].Icon.toLowerCase()] == undefined ? '' : serverData['imagePath']['icon_'+skillTable[index].Icon.toLowerCase()].path);
     output = output.replace(/%Name%/g, skillTable[index].Name);
     output = output.replace(/%EngName%/g, skillTable[index].EngName);
     output = output.replace(/%ClassName%/g, skillTable[index].ClassName);
     output = output.replace(/%ClassID%/g, skillTable[index].ClassID);
     output = output.replace(/%Rank%/g, skillTable[index].Rank);
-    output = output.replace(/%JobName%/g, tos.JobToJobName(tableData, skillTable[index].Job));
+    output = output.replace(/%JobName%/g, tos.JobToJobName(serverData['tableData'], skillTable[index].Job));
     output = output.replace(/%ClassType%/g, skillTable[index].ClassType);
     output = output.replace(/%ValueType%/g, skillTable[index].ValueType);
-    output = output.replace(/%Attribute%/g, tos.AttributeToName(tableData, skillTable[index].Attribute));
-    output = output.replace(/%AttackType%/g, tos.AttributeToName(tableData, skillTable[index].AttackType));
+    output = output.replace(/%Attribute%/g, tos.AttributeToName(serverData['tableData'], skillTable[index].Attribute));
+    output = output.replace(/%AttackType%/g, tos.AttributeToName(serverData['tableData'], skillTable[index].AttackType));
     output = output.replace(/%HitType%/g, skillTable[index].HitType);
     output = output.replace(/%EnableCompanion%/g, skillTable[index].EnableCompanion);
     output = output.replace(/%ReqStance%/g, stanceString);

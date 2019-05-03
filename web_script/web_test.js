@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var fs = require('fs');
   var csv = require('csv-parser');

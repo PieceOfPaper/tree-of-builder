@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, serverData){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -6,7 +6,7 @@ module.exports = function(app, tableData){
     var route = express.Router();
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
-        var output = dataModule.DefaultQueryFilter(tableData['questprogresscheck'], req.query);
+        var output = dataModule.DefaultQueryFilter(serverData['tableData']['questprogresscheck'], req.query);
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));
@@ -17,13 +17,13 @@ module.exports = function(app, tableData){
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined || (lastTableLength != tableData['questprogresscheck'].length)){
-            lastTableLength = tableData['questprogresscheck'].length;
+        if (typeList[typeKey] == undefined || (lastTableLength != serverData['tableData']['questprogresscheck'].length)){
+            lastTableLength = serverData['tableData']['questprogresscheck'].length;
             typeList[typeKey] = [];
-            for (var i=0;i<tableData['questprogresscheck'].length;i++){
-                if (tableData['questprogresscheck'][i][typeKey] == undefined) continue;
-                if (typeList[typeKey].includes(tableData['questprogresscheck'][i][typeKey]) == false){
-                    typeList[typeKey].push(tableData['questprogresscheck'][i][typeKey]);
+            for (var i=0;i<serverData['tableData']['questprogresscheck'].length;i++){
+                if (serverData['tableData']['questprogresscheck'][i][typeKey] == undefined) continue;
+                if (typeList[typeKey].includes(serverData['tableData']['questprogresscheck'][i][typeKey]) == false){
+                    typeList[typeKey].push(serverData['tableData']['questprogresscheck'][i][typeKey]);
                 }
             }
             typeList[typeKey].sort(function(a,b){

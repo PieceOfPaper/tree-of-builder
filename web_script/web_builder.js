@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     var url = require('url');
@@ -11,12 +11,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   
     route.get('/', function (request, response) {
         tos.RequestLog(request);
-        var jobTable = tableData['job'];
-        var skillTable = tableData['skill'];
-        var skilltreeTable = tableData['skilltree'];
-        var skillAttributeTable = tableData['skill_attribute'];
-        var abilityTable = tableData['ability'];
-        var abilityJobTable = tableData['ability_job'];
+        var jobTable = serverData['tableData']['job'];
+        var skillTable = serverData['tableData']['skill'];
+        var skilltreeTable = serverData['tableData']['skilltree'];
+        var skillAttributeTable = serverData['tableData']['skill_attribute'];
+        var abilityTable = serverData['tableData']['ability'];
+        var abilityJobTable = serverData['tableData']['ability_job'];
 
         var usedScrName = [ "SkillFactor", "SkillSR", "CaptionTime", "CaptionRatio", "CaptionRatio2", "CaptionRatio3", "SpendItemCount" ];
         var CLASS_MAX = 4;
@@ -92,11 +92,11 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
             output +=   '<h1 style="width:calc(100vw-20px); text-align:center;">Select Class</h1>';
         } else {
            for (var i = 1; i < classArray.length; i ++){
-                var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
+                var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[i]);
                 if (jobData === undefined) continue;
                 output +=   '<btn class="builder-class-btn" onclick="onClickClassDelete(' + i + ')">';
                 //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 50);
+                output +=       tos.ImagePathToHTML(serverData['imagePath'][jobData.Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobData.Name + '</div>';
                 output +=   '</btn>';
            } 
@@ -110,12 +110,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 if (jobTable[i].Rank > 1) continue;
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + GetJobNumber1(jobTable[i].ClassName) + ',1)">';
                 //output +=       '<img class="class-icon"src="../img/icon/classicon/' + jobTable[i].Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobTable[i].Icon.toLowerCase()], 50);
+                output +=       tos.ImagePathToHTML(serverData['imagePath'][jobTable[i].Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobTable[i].Name + '</div>';
                 output +=   '</div>';
             }
             // for (var i = 1; i <= 4; i ++){
-            //     var jobData = tos.GetJobData(tableData, i, 1);
+            //     var jobData = tos.GetJobData(serverData['tableData'], i, 1);
             //     if (jobData === undefined) continue;
             //     output +=   '<btn class="builder-class-btn" onclick="onClickClass(' + i + ',1)">';
             //     output +=       '<img src="../img/icon/classicon/' + jobData.Icon.toLowerCase() + '.png" />';
@@ -129,7 +129,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 //if (jobTable[i].MaxCircle <= classCount[i]) continue;
                 var isHas = false;
                 for (var j = 1; j < classArray.length; j ++){
-                    var jobData = tos.GetJobData(tableData, classArray[0], classArray[j]);
+                    var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[j]);
                     if (jobData != undefined && jobData.ClassID == jobTable[i].ClassID){
                         isHas = true;
                         break;
@@ -141,7 +141,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
             for (var i = 0; i < jobList.length; i ++){
                 output +=   '<div class="builder-class-btn" onclick="onClickClass(' + classArray[0] + ',' + GetJobNumber2(jobList[i].ClassName) + ')">';
                 //output +=       '<img class="class-icon" src="../img/icon/classicon/' + jobList[i].Icon.toLowerCase() + '.png" />';
-                output +=       tos.ImagePathToHTML(imagePath[jobList[i].Icon.toLowerCase()], 50);
+                output +=       tos.ImagePathToHTML(serverData['imagePath'][jobList[i].Icon.toLowerCase()], 50);
                 output +=       '<div class="class-name">' + jobList[i].Name + '</div>';
                 output +=   '</div>';
             }
@@ -156,7 +156,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         for (var i = 1; i < classArray.length; i ++){
             // if (classCount[i] <= 0)
             //     continue;
-            var jobData = tos.GetJobData(tableData, classArray[0], classArray[i]);
+            var jobData = tos.GetJobData(serverData['tableData'], classArray[0], classArray[i]);
             if (jobData == null || jobData.hasOwnProperty('Name') == false) continue;
             output +=       '<div class="class">';
             //output +=       '<h3>' + jobData.Name + ' ' + classCount[i] + ' Circle</h3>';
@@ -199,7 +199,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     var skillLvMax = skilltreeTable[j].MaxLevel;
                     output +=   '<div align="center" class="skill" id="' + skillTable[skillTableIndex].ClassID + '" >';
                     //output +=       '<img class="skill-icon" src="../img/icon/skillicon/icon_' + skillTable[skillTableIndex].Icon.toLowerCase()  + '.png" onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"/>';
-                    output +=       tos.ImagePathToHTML(imagePath['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 64, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
+                    output +=       tos.ImagePathToHTML(serverData['imagePath']['icon_'+skillTable[skillTableIndex].Icon.toLowerCase()], 64, 'onclick="onClickSkillIcon(' + jobNum2 + ',' + skillIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;">Lv.<span id="' + jobNum2 + ',' + skillIndex + '" class="skillLv">' + skillLv + '</span> / ' + skillLvMax + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addSkillLevel(' + jobNum2 + ',' + 1 + ',' + skillIndex+ ',' + skillLvMax + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
@@ -252,7 +252,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                     }
                     output +=   '<div align="center" class="ability" id="' + abilityTable[j].ClassID + '" >';
                     //output +=       '<img class="ability-icon" src="../img/icon/skillicon/' + abilityTable[j].Icon.toLowerCase()  + '.png" onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"/>';
-                    output +=       tos.ImagePathToHTML(imagePath[abilityTable[j].Icon.toLowerCase()], 64, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
+                    output +=       tos.ImagePathToHTML(serverData['imagePath'][abilityTable[j].Icon.toLowerCase()], 64, 'onclick="onClickAbilityIcon(' + jobNum2 + ',' + abilIndex+ ')"');
                     output +=       '<br>';
                     output +=       '<p style="font-size:0.8em;"><span id="' + jobNum2 + ',' + abilIndex + '" class="abilityLv">' + abilLv + '</span> / ' + abil_job.MaxLevel + '</p>';
                     output +=       '<button class="lv-add-button minus" onclick="addAbilLevel(' + jobNum2 + ',' + abilIndex + ',' + abil_job.MaxLevel + ',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
@@ -326,11 +326,11 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         luaMethodList.push('SCR_REINFORCEABILITY_TOOLTIP');
         luaMethodList.push('ABIL_COMMON_PRICE');
         for (var i=0;i<luaMethodList.length;i++){ 
-            if (scriptData[luaMethodList[i]] == undefined) continue;
+            if (serverData['scriptData'][luaMethodList[i]] == undefined) continue;
             if (luaMethodList[i] == 'ABIL_REINFORCE_PRICE' || luaMethodList[i] == 'ABIL_COMMON_PRICE'){
-                output += tos.Lua2JS(scriptData[luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
+                output += tos.Lua2JS(serverData['scriptData'][luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
             } else {
-                output += tos.Lua2JS(scriptData[luaMethodList[i]]);
+                output += tos.Lua2JS(serverData['scriptData'][luaMethodList[i]]);
             }
             output += 'methods["'+luaMethodList[i]+'"]='+luaMethodList[i]+';';
         }

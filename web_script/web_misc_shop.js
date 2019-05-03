@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -9,7 +9,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var layout = fs.readFileSync('./web/Layout/misc_shop.html');
     route.get('/', function (request, response) {
         tos.RequestLog(request);
-        var shopTable = tableData['shop'];
+        var shopTable = serverData['tableData']['shop'];
 
         var output = layout.toString();
         var resultString = '';
@@ -32,14 +32,14 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
             resultString += '<td>Price</td>';
             resultString += '</tr>';
             for (param in array[shopname]){
-                var itemdata = tos.FindDataClassName(tableData,'item',array[shopname][param]['ItemName']);
+                var itemdata = tos.FindDataClassName(serverData['tableData'],'item',array[shopname][param]['ItemName']);
                 if (itemdata == undefined) continue;
                 var price = -1;
                 if (itemdata['Price'] != undefined) price = Number(itemdata['Price']);
 
                 
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(tableData,array[shopname][param]['ItemName'],imagePath)+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(serverData['tableData'],array[shopname][param]['ItemName'],serverData['imagePath'])+'</td>';
                 resultString += '<td>'+price.toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

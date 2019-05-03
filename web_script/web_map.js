@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, xmlData, imagePath){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var http = require('http');
   var https = require('https');
@@ -17,17 +17,17 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
     var layout_worldmap = fs.readFileSync('./web/MapPage/worldmap.html');
     route.get('/', function (request, response) {
       tos.RequestLog(request);
-        var mapTable = tableData['map2'];
+        var mapTable = serverData['tableData']['map2'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동
         if (request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < mapTable.length; i ++){
             if (mapTable[i].ClassID === Number(request.query.id)){
-              // if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
+              // if (serverData['tableData']['GenType_'+mapTable[i].ClassName]!=undefined && serverData['tableData']['GenType_'+mapTable[i].ClassName].length>0){
               //   mapDetailPage(i, request, response);
               // } else {
               //   loadTable('GenType_'+mapTable[i].ClassName, 'ies_mongen.ipf/GenType_'+mapTable[i].ClassName+'.ies', function(){
-              //     if (tableData['GenType_'+mapTable[i].ClassName]!=undefined && tableData['GenType_'+mapTable[i].ClassName].length>0){
+              //     if (serverData['tableData']['GenType_'+mapTable[i].ClassName]!=undefined && serverData['tableData']['GenType_'+mapTable[i].ClassName].length>0){
               //       mapDetailPage(i, request, response);
               //       return;
               //     }
@@ -49,25 +49,25 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
 
     var layout_detail = fs.readFileSync('./web/MapPage/detail.html');
     function mapDetailPage(index, request, response) {
-      var mapTable = tableData['map2'];
+      var mapTable = serverData['tableData']['map2'];
       var mapData = mapTable[index];
 
       var dropItemString = '';
       var hasDropItem = false;
       for (var i=1;i<=10;i++){
         if(mapData['DropItemClassName'+i] == undefined || mapData['DropItemClassName'+i].length == 0) continue;
-        dropItemString += tos.GetItemResultString(tableData,mapData['DropItemClassName'+i],imagePath);
+        dropItemString += tos.GetItemResultString(serverData['tableData'],mapData['DropItemClassName'+i],serverData['imagePath']);
         hasDropItem = true;
       }
       if (hasDropItem) dropItemString = '<h3>Drop Items</h3>' + dropItemString;
 
       var questString = '';
       var hasQuest = false;
-      for (param in tableData['questprogresscheck']){
-        if (tableData['questprogresscheck'][param]==undefined) continue;
-        if (tableData['questprogresscheck'][param].StartMap==undefined) continue;
-        if (tableData['questprogresscheck'][param].StartMap!=mapTable[index].ClassName) continue;
-        questString += '<p><a href="../Quest?id='+tableData['questprogresscheck'][param].ClassID+'">'+tos.GetQuestModeImgString(tableData,tableData['questprogresscheck'][param].ClassName)+tableData['questprogresscheck'][param].Name+'</a></p>';
+      for (param in serverData['tableData']['questprogresscheck']){
+        if (serverData['tableData']['questprogresscheck'][param]==undefined) continue;
+        if (serverData['tableData']['questprogresscheck'][param].StartMap==undefined) continue;
+        if (serverData['tableData']['questprogresscheck'][param].StartMap!=mapTable[index].ClassName) continue;
+        questString += '<p><a href="../Quest?id='+serverData['tableData']['questprogresscheck'][param].ClassID+'">'+tos.GetQuestModeImgString(serverData['tableData'],serverData['tableData']['questprogresscheck'][param].ClassName)+serverData['tableData']['questprogresscheck'][param].Name+'</a></p>';
         hasQuest = true;
       }
       if (hasQuest) questString = '<h3>Quest</h3>' + questString;
@@ -77,47 +77,47 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
         var splited = mapData.PhysicalLinkZone.split('/');
         physicalLinkZoneString += '<h3>Physical Link Zone</h3>';
         for (param in splited){
-          physicalLinkZoneString += '<p>'+tos.GetMapString(tableData,splited[param])+'</p>';
+          physicalLinkZoneString += '<p>'+tos.GetMapString(serverData['tableData'],splited[param])+'</p>';
         }
       }
 
       var canWarp = false;
       var campWarpData = undefined;
-      for (param in tableData['camp_warp']){
-        if (tableData['camp_warp'][param].Zone == mapData.ClassName){
-          campWarpData = tableData['camp_warp'][param];
+      for (param in serverData['tableData']['camp_warp']){
+        if (serverData['tableData']['camp_warp'][param].Zone == mapData.ClassName){
+          campWarpData = serverData['tableData']['camp_warp'][param];
           break;
         }
       }
       var warpQuestString = '';
       if (campWarpData!=undefined){
         canWarp = true;
-        warpQuestString = tos.GetQuestString(tableData,campWarpData.WarpOpenQuest);
+        warpQuestString = tos.GetQuestString(serverData['tableData'],campWarpData.WarpOpenQuest);
       }
 
       var mongetString = '';
-      var genTypeTable = tableData['GenType_'+mapData.ClassName];
+      var genTypeTable = serverData['tableData']['GenType_'+mapData.ClassName];
       if (genTypeTable != undefined){
         mongetString += '<h3>Objects</h3>';
         for (param in genTypeTable){
           if (genTypeTable[param]==undefined) continue;
           mongetString += '<p>';
           if (genTypeTable[param].Name!=undefined && genTypeTable[param].Name.length>0){
-            mongetString += genTypeTable[param].Name+' ('+tos.GetMonsterString(tableData,genTypeTable[param].ClassType)+')';
+            mongetString += genTypeTable[param].Name+' ('+tos.GetMonsterString(serverData['tableData'],genTypeTable[param].ClassType)+')';
           } else {
-            mongetString += tos.GetMonsterString(tableData,genTypeTable[param].ClassType);
+            mongetString += tos.GetMonsterString(serverData['tableData'],genTypeTable[param].ClassType);
           }
           if (genTypeTable[param].Dialog!=undefined && genTypeTable[param].Dialog.length>0){
-            //mongetString += ' ' + tos.GetDialogString(tableData,genTypeTable[param].Dialog,'Read Dialog');
+            //mongetString += ' ' + tos.GetDialogString(serverData['tableData'],genTypeTable[param].Dialog,'Read Dialog');
             var dialoglist = [];
-            for (param2 in tableData['dialogtext']){
-              if (tableData['dialogtext'][param2].ClassName==undefined) continue;
-              if (tableData['dialogtext'][param2].ClassName.indexOf(genTypeTable[param].Dialog+'_') > -1){
-                dialoglist.push(tableData['dialogtext'][param2].ClassName);
+            for (param2 in serverData['tableData']['dialogtext']){
+              if (serverData['tableData']['dialogtext'][param2].ClassName==undefined) continue;
+              if (serverData['tableData']['dialogtext'][param2].ClassName.indexOf(genTypeTable[param].Dialog+'_') > -1){
+                dialoglist.push(serverData['tableData']['dialogtext'][param2].ClassName);
               }
             }
             for (var i=0;i<dialoglist.length;i++){
-              mongetString += ' ' + tos.GetDialogString(tableData,dialoglist[i],'Dialog'+(i+1));
+              mongetString += ' ' + tos.GetDialogString(serverData['tableData'],dialoglist[i],'Dialog'+(i+1));
             }
           }
           mongetString += '</p>';
@@ -127,7 +127,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
 
       var bgmString = '';
       if (mapData['BgmPlayList'] != undefined && mapData['BgmPlayList'].length > 0){
-        var playlist = xmlData['xml.ipf/playlist'];
+        var playlist = serverData['xmlData']['xml.ipf/playlist'];
         if (playlist != undefined && playlist.root != undefined){
           for (var i=0;i<playlist.root.children.length;i++){
             if (playlist.root.children[i].attributes['PlayListName']==mapData['BgmPlayList']){
@@ -170,7 +170,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
       output = output.replace(/%CanWarp%/g, canWarp?'TRUE':'FALSE');
       output = output.replace(/%WarpQuest%/g, warpQuestString);
 
-      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(tableData,mapData.MapRatingRewardItem1,imagePath));
+      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(serverData['tableData'],mapData.MapRatingRewardItem1,serverData['imagePath']));
 
       output = output.replace(/%PhysicalLinkZoneString%/g, physicalLinkZoneString);
       output = output.replace(/%DropItemString%/g, dropItemString);
@@ -202,7 +202,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
     }
 
     function loadTable(name, path, callback){
-      if (tableData[name] === undefined) tableData[name] = [];
+      if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
       var file = fs.createWriteStream('./web/data/' + path);
       //console.log('request download table [' + name + '] ' + path);
       var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
@@ -223,9 +223,9 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData, im
                 data[param] = Number(data[param]);
               }
             }
-            tableData[name].push(data);
+            serverData['tableData'][name].push(data);
           }).on('end', function(){
-            console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+            console.log('import table [' + name + ']' + serverData['tableData'][name].length + ' ' + path);
             if (callback != undefined) callback();
           });
         });

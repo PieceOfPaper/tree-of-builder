@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -12,7 +12,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   
     route.get('/', function (request, response) {
       tos.RequestLog(request);
-      var indunTable = tableData['indun'];
+      var indunTable = serverData['tableData']['indun'];
   
       // id값이 존재하는 경우, 상세 페이지로 이동
       if (indunTable != undefined && request.query.id != undefined && request.query.id != ''){
@@ -30,12 +30,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var layout_detail = fs.readFileSync('./web/IndunPage/detail.html');
   
     function detailPage(index, request, response) {
-      var indunTable = tableData['indun'];
+      var indunTable = serverData['tableData']['indun'];
 
       var iconpath = '';
       var iconhtml = '';
       if (indunTable[index].MapImage!=undefined){
-        imgPathData = imagePath[indunTable[index].MapImage.toLowerCase()];
+        imgPathData = serverData['imagePath'][indunTable[index].MapImage.toLowerCase()];
         if (imgPathData!=undefined){
           iconpath = imgPathData.path;
           iconhtml = tos.ImagePathToHTML(imgPathData);
@@ -59,25 +59,25 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       output = output.replace(/%Reward_Contribution%/g, indunTable[index].Reward_Contribution);
       output = output.replace(/%Reward_Exp%/g, indunTable[index].Reward_Exp);
 
-      output = output.replace(/%Reward_Item%/g, tos.GetItemResultString(tableData,indunTable[index].Reward_Item,imagePath));
-      output = output.replace(/%AdmissionItemName%/g, tos.GetItemResultString(tableData,indunTable[index].AdmissionItemName,imagePath));
+      output = output.replace(/%Reward_Item%/g, tos.GetItemResultString(serverData['tableData'],indunTable[index].Reward_Item,serverData['imagePath']));
+      output = output.replace(/%AdmissionItemName%/g, tos.GetItemResultString(serverData['tableData'],indunTable[index].AdmissionItemName,serverData['imagePath']));
 
-      var indunRewardItem = tos.FindDataClassName(tableData,'indun_reward_item',indunTable[index].ClassName);
+      var indunRewardItem = tos.FindDataClassName(serverData['tableData'],'indun_reward_item',indunTable[index].ClassName);
       if (indunRewardItem!=undefined){
         var indunRewardItemString = '';
-        var itemData = tos.FindDataClassName(tableData,'item',indunRewardItem.Reward_Item);
-        indunRewardItemString += '<h3>'+tos.GetItemResultString(tableData,indunRewardItem.Reward_Item,imagePath)+'</h3>';
+        var itemData = tos.FindDataClassName(serverData['tableData'],'item',indunRewardItem.Reward_Item);
+        indunRewardItemString += '<h3>'+tos.GetItemResultString(serverData['tableData'],indunRewardItem.Reward_Item,serverData['imagePath'])+'</h3>';
         var indunRewardItemList = [];
         if (itemData!=undefined && itemData.StringArg!=undefined){
-            for (var j=0;j<tableData['reward_indun'].length;j++){
-                if(tableData['reward_indun'][j].Group==itemData.StringArg){
-                    indunRewardItemList.push(tableData['reward_indun'][j].ItemName);
+            for (var j=0;j<serverData['tableData']['reward_indun'].length;j++){
+                if(serverData['tableData']['reward_indun'][j].Group==itemData.StringArg){
+                    indunRewardItemList.push(serverData['tableData']['reward_indun'][j].ItemName);
                 }
             }
         }
         indunRewardItemString += '<div style="margin-left:20px;">';
         for (var j=0;j<indunRewardItemList.length;j++){
-            indunRewardItemString += '<p>'+tos.GetItemResultString(tableData,indunRewardItemList[j],imagePath)+'</p>';
+            indunRewardItemString += '<p>'+tos.GetItemResultString(serverData['tableData'],indunRewardItemList[j],serverData['imagePath'])+'</p>';
         }
         indunRewardItemString += '</div>';
         output = output.replace(/%IndunRewardItem%/g, indunRewardItemString);
@@ -86,24 +86,24 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       }
 
       var startString = '';
-      startString += '<p>'+tos.GetMapString(tableData,indunTable[index].StartMap)+'</p>';
-      //startString += '<p>'+tos.GetDialogString(tableData,indunTable[index].StartNPCDialog,'Start NPC Dialog')+'</p>';
+      startString += '<p>'+tos.GetMapString(serverData['tableData'],indunTable[index].StartMap)+'</p>';
+      //startString += '<p>'+tos.GetDialogString(serverData['tableData'],indunTable[index].StartNPCDialog,'Start NPC Dialog')+'</p>';
       var startDialogs = [];
-      for (var i=0;i<tableData['dialogtext'].length;i++){
-          if (tableData['dialogtext'][i].ClassName.indexOf(indunTable[index].StartNPCDialog+'_')>-1){
-            startDialogs.push(tableData['dialogtext'][i].ClassName);
+      for (var i=0;i<serverData['tableData']['dialogtext'].length;i++){
+          if (serverData['tableData']['dialogtext'][i].ClassName.indexOf(indunTable[index].StartNPCDialog+'_')>-1){
+            startDialogs.push(serverData['tableData']['dialogtext'][i].ClassName);
           }
       }
       startString += '<p>';
       for (var i=0;i<startDialogs.length;i++){
         if (i>0) startString += ', ';
-        startString += tos.GetDialogString(tableData,startDialogs[i],'Dialog'+(i+1));
+        startString += tos.GetDialogString(serverData['tableData'],startDialogs[i],'Dialog'+(i+1));
       }
       startString += '</p>';
       output = output.replace(/%StartString%/g, startString);
 
       var minigameString = '';
-      minigameString += '<p>'+tos.GetMapString(tableData,indunTable[index].MapName)+'</p>';
+      minigameString += '<p>'+tos.GetMapString(serverData['tableData'],indunTable[index].MapName)+'</p>';
       minigameString += '<p>'+tos.GetMinigameString(indunTable[index].MGame)+'</p>';
       output = output.replace(/%MinigameString%/g, minigameString);
       
@@ -112,7 +112,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
           var clearItemString = '';
           for (var i=0;i<splited.length;i++){
             if (i>0) clearItemString += ', ';
-            clearItemString += tos.GetItemResultString(tableData,splited[i].trim(),imagePath);
+            clearItemString += tos.GetItemResultString(serverData['tableData'],splited[i].trim(),serverData['imagePath']);
           }
           output = output.replace(/%UseClearItemName%/g, clearItemString);
       } else {
@@ -123,7 +123,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       if (indunTable[index].BossList!=undefined && indunTable[index].BossList.length>0){
         var splited = indunTable[index].BossList.split('/');
         for (var i=0;i<splited.length;i++){
-            bossString += '<p>'+tos.GetMonsterString(tableData,splited[i])+'</p>';
+            bossString += '<p>'+tos.GetMonsterString(serverData['tableData'],splited[i])+'</p>';
         }
       }
       output = output.replace(/%BossListString%/g, bossString);
@@ -132,7 +132,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       if (indunTable[index].ItemList!=undefined && indunTable[index].ItemList.length>0){
         var splited = indunTable[index].ItemList.split('/');
         for (var i=0;i<splited.length;i++){
-            itemString += '<p>'+tos.GetItemResultString(tableData,splited[i],imagePath)+'</p>';
+            itemString += '<p>'+tos.GetItemResultString(serverData['tableData'],splited[i],serverData['imagePath'])+'</p>';
         }
       }
       output = output.replace(/%ItemListString%/g, itemString);

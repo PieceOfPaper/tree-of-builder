@@ -1,4 +1,4 @@
-module.exports = function(app, tableData){
+module.exports = function(app, serverData){
     var express = require('express');
 
     var dataModule = require('../my_modules/DataServerModule.js');
@@ -6,7 +6,7 @@ module.exports = function(app, tableData){
     var route = express.Router();
     route.get('/', function (req, res) {
         dataModule.RequestLog(req);
-        var output = dataModule.DefaultQueryFilter(tableData['collection'], req.query);
+        var output = dataModule.DefaultQueryFilter(serverData['tableData']['collection'], req.query);
 
         res.setHeader('Content-Type', 'application/json');
         res.send(JSON.stringify(output));
@@ -17,13 +17,13 @@ module.exports = function(app, tableData){
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined || (lastTableLength != tableData['collection'].length)){
-            lastTableLength = tableData['collection'].length;
+        if (typeList[typeKey] == undefined || (lastTableLength != serverData['tableData']['collection'].length)){
+            lastTableLength = serverData['tableData']['collection'].length;
             typeList[typeKey] = [];
-            for (var i=0;i<tableData['collection'].length;i++){
-                if (tableData['collection'][i][typeKey] == undefined) continue;
-                if (typeList[typeKey].includes(tableData['collection'][i][typeKey]) == false){
-                    typeList[typeKey].push(tableData['collection'][i][typeKey]);
+            for (var i=0;i<serverData['tableData']['collection'].length;i++){
+                if (serverData['tableData']['collection'][i][typeKey] == undefined) continue;
+                if (typeList[typeKey].includes(serverData['tableData']['collection'][i][typeKey]) == false){
+                    typeList[typeKey].push(serverData['tableData']['collection'][i][typeKey]);
                 }
             }
             typeList[typeKey].sort(function(a,b){

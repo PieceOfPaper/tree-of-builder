@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -9,7 +9,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var layout = fs.readFileSync('./web/Layout/misc_shop.html');
     route.get('/', function (request, response) {
         tos.RequestLog(request);
-        var brTable = tableData['job_ballenceReward'];
+        var brTable = serverData['tableData']['job_ballenceReward'];
 
         var output = layout.toString();
         var resultString = '';
@@ -20,13 +20,13 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         for (param in brTable){
             if (brTable[param].ClassID <= 1) continue;
             if (brTable[param].JobChangePoint == 0 && (brTable[param]['RewardItem_1']==undefined || brTable[param]['RewardItem_1'].length==0)) continue;
-            var jobData = tos.FindDataClassName(tableData,'job',brTable[param].ClassName);
+            var jobData = tos.FindDataClassName(serverData['tableData'],'job',brTable[param].ClassName);
             if (jobData == undefined) continue;
             resultString += '<tr>';
             resultString += '<td>';
             if (jobData.Icon != undefined ){
                 //resultString += '<img style="width:64px; height:64px;" src="../img/icon/classicon/'+jobData.Icon.toLowerCase()+'.png" />';
-                resultString += tos.ImagePathToHTML(imagePath[jobData.Icon.toLowerCase()], 64);
+                resultString += tos.ImagePathToHTML(serverData['imagePath'][jobData.Icon.toLowerCase()], 64);
             }
             resultString += '<p>'+jobData.Name+'</p>';
             resultString += '</td>';
@@ -39,7 +39,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
                 if (splited == undefined || splited.length == 0) continue;
                 var itemcount = 1;
                 if (splited.length > 1) itemcount = splited[1];
-                resultString += tos.GetItemResultString(tableData,splited[0],imagePath,itemcount);
+                resultString += tos.GetItemResultString(serverData['tableData'],splited[0],serverData['imagePath'],itemcount);
             }
             resultString += '</td>';
             resultString += '</tr>';

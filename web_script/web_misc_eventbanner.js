@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -9,7 +9,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     var layout = fs.readFileSync('./web/Layout/misc_eventbanner.html');
     route.get('/', function (request, response) {
         tos.RequestLog(request);
-        var eventbannerTable = tableData['event_banner'];
+        var eventbannerTable = serverData['tableData']['event_banner'];
 
         var output = layout.toString();
         var resultString = '';
@@ -17,7 +17,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
         for (param in eventbannerTable){
             var imgPath = '';
             if (eventbannerTable[param].ImagePath!=undefined){
-                var imgPathData = imagePath[eventbannerTable[param].ImagePath.toLowerCase()];
+                var imgPathData = serverData['imagePath'][eventbannerTable[param].ImagePath.toLowerCase()];
                 if (imgPathData != undefined) {
                     imgPath = imgPathData.path;
                 }

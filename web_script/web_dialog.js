@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var fs = require('fs');
     //var url = require('url');
@@ -12,7 +12,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   
     route.get('/', function (request, response) {
       tos.RequestLog(request);
-        var dialogTable = tableData['dialogtext'];
+        var dialogTable = serverData['tableData']['dialogtext'];
 
         // id값이 존재하는 경우, 상세 페이지로 이동
         if (dialogTable !=undefined && request.query.id != undefined && request.query.id != ''){
@@ -30,7 +30,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
     var layout_detail = fs.readFileSync('./web/DialogPage/detail.html');
     function dialogDetailPage(index, request, response) {
-      var dialogData = tableData['dialogtext'][index];
+      var dialogData = serverData['tableData']['dialogtext'][index];
 
       var textString = dialogData['Text'];
       if (textString != undefined){
@@ -43,7 +43,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
       var imgString = '';
       var imgPath = '';
       if (dialogData['ImgName'] != undefined){
-        var imgPathData = imagePath[dialogData['ImgName'].toLowerCase()];
+        var imgPathData = serverData['imagePath'][dialogData['ImgName'].toLowerCase()];
         if (imgPathData != undefined){
           imgString += '<img style="max-width:calc(100% - 20px);" src="'+imgPathData.path+'" />';
           imgPath = imgPathData.path;

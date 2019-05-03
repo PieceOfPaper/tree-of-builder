@@ -200,24 +200,25 @@ if (!fs.existsSync('./web/data/xml_minigame.ipf')) fs.mkdirSync('./web/data/xml_
 if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
 
 
-var tableData = [];
-var xmlData = [];
-var scriptData = [];
-var imagePath = [];
+var serverData = [];
+serverData['tableData'] = [];
+serverData['xmlData'] = [];
+serverData['scriptData'] = [];
+serverData['imagePath'] = [];
 
 // ---------- 테이블 데이터 불러오기
 loadTable('job', 'ies.ipf/job.ies', function(){
   loadTable('ability', 'ies_ability.ipf/ability.ies', function(){
     //loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
-    for (var i = 0; i < tableData['job'].length; i ++){
-      //if (tableData['job'][i].EngName === 'Warrior') continue;
-      loadTable('ability_job', 'ies_ability.ipf/ability_' + tableData['job'][i].EngName + '.ies', function(name, path){
-        if (tableData[name] == undefined || tableData[name].langth == 0){
+    for (var i = 0; i < serverData['tableData']['job'].length; i ++){
+      //if (serverData['tableData']['job'][i].EngName === 'Warrior') continue;
+      loadTable('ability_job', 'ies_ability.ipf/ability_' + serverData['tableData']['job'][i].EngName + '.ies', function(name, path){
+        if (serverData['tableData'][name] == undefined || serverData['tableData'][name].langth == 0){
           loadTable(name, path.toLowerCase());
         }
       });
     }
-    tableData['job'].sort(function(a,b){
+    serverData['tableData']['job'].sort(function(a,b){
         if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
         else if (tos.GetJobNumber1(a.ClassName) < tos.GetJobNumber1(b.ClassName)) return -1;
         else {
@@ -234,16 +235,16 @@ loadTable('job', 'ies.ipf/job.ies', function(){
 });
 loadTable('skill', 'ies.ipf/skill.ies', function(){
   loadTable('skill_mon', 'ies.ipf/skill_mon.ies', function(){
-    for(var i=0;i<tableData['skill_mon'].length;i++){
-      tableData['skill'].push(tableData['skill_mon'][i]);
+    for(var i=0;i<serverData['tableData']['skill_mon'].length;i++){
+      serverData['tableData']['skill'].push(serverData['tableData']['skill_mon'][i]);
     }
     console.log('merge skill+skill_mon');
   });
   loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies', function(){
-    for(var i=0;i<tableData['skill_Simony'].length;i++){
-      for(var j=0;j<tableData['skill'].length;j++){
-        if(tableData['skill'][j].ClassID==tableData['skill_Simony'][i].ClassID){
-          tableData['skill'][j]['CanMakeSimony'] = tableData['skill_Simony'][i].CanMake;
+    for(var i=0;i<serverData['tableData']['skill_Simony'].length;i++){
+      for(var j=0;j<serverData['tableData']['skill'].length;j++){
+        if(serverData['tableData']['skill'][j].ClassID==serverData['tableData']['skill_Simony'][i].ClassID){
+          serverData['tableData']['skill'][j]['CanMakeSimony'] = serverData['tableData']['skill_Simony'][i].CanMake;
           break;
         }
       }
@@ -251,10 +252,10 @@ loadTable('skill', 'ies.ipf/skill.ies', function(){
     console.log('merge skill+simony');
   });
   loadTable('skilltree', 'ies.ipf/skilltree.ies', function(){
-    for(var i=0;i<tableData['skilltree'].length;i++){
-      for(var j=0;j<tableData['skill'].length;j++){
-        if(tableData['skill'][j].ClassName==tableData['skilltree'][i].SkillName){
-          tableData['skill'][j]['SkillTree'] = tableData['skilltree'][i].ClassName;
+    for(var i=0;i<serverData['tableData']['skilltree'].length;i++){
+      for(var j=0;j<serverData['tableData']['skill'].length;j++){
+        if(serverData['tableData']['skill'][j].ClassName==serverData['tableData']['skilltree'][i].SkillName){
+          serverData['tableData']['skill'][j]['SkillTree'] = serverData['tableData']['skilltree'][i].ClassName;
           break;
         }
       }
@@ -270,7 +271,7 @@ loadTable('buff', 'ies.ipf/buff.ies', function(){
     loadTable('buff', 'ies.ipf/buff_hardskill.ies', function(){
       loadTable('buff', 'ies.ipf/buff_mgame.ies', function(){
         loadTable('buff', 'ies.ipf/buff_monster.ies', function(){
-          // tableData['buff'].sort(function(a,b){
+          // serverData['tableData']['buff'].sort(function(a,b){
           //   if (Number(a.ClassID) > Number(b.ClassID)) return 1;
           //   else if (Number(a.ClassID) < Number(b.ClassID)) return -1;
           //   else return 0;
@@ -285,15 +286,15 @@ loadTable('cooldown', 'ies.ipf/cooldown.ies');
 loadTable('item_grade', 'ies.ipf/item_grade.ies');
 loadTable('item', 'ies.ipf/item.ies', function(){
   loadTable('item_Equip', 'ies.ipf/item_Equip.ies', function(){
-    for (param in tableData['item_Equip']) tableData['item'].push(tableData['item_Equip'][param]);
+    for (param in serverData['tableData']['item_Equip']) serverData['tableData']['item'].push(serverData['tableData']['item_Equip'][param]);
     loadTable('item_Quest', 'ies.ipf/item_Quest.ies', function(){
-      for (param in tableData['item_Quest']) tableData['item'].push(tableData['item_Quest'][param]);
+      for (param in serverData['tableData']['item_Quest']) serverData['tableData']['item'].push(serverData['tableData']['item_Quest'][param]);
       loadTable('item_gem', 'ies.ipf/item_gem.ies', function(){ 
-        for (param in tableData['item_gem']) tableData['item'].push(tableData['item_gem'][param]);
+        for (param in serverData['tableData']['item_gem']) serverData['tableData']['item'].push(serverData['tableData']['item_gem'][param]);
         loadTable('item_premium', 'ies.ipf/item_premium.ies', function(){  
-          for (param in tableData['item_premium']) tableData['item'].push(tableData['item_premium'][param]);
+          for (param in serverData['tableData']['item_premium']) serverData['tableData']['item'].push(serverData['tableData']['item_premium'][param]);
           loadTable('item_recipe', 'ies.ipf/wiki_recipe.ies', function(){  
-            for (param in tableData['item_recipe']) tableData['item'].push(tableData['item_recipe'][param]);
+            for (param in serverData['tableData']['item_recipe']) serverData['tableData']['item'].push(serverData['tableData']['item_recipe'][param]);
           });
         });
       });
@@ -333,23 +334,23 @@ loadTable('questprogresscheck_auto', 'ies.ipf/questprogresscheck_auto.ies');
 loadTable('questprogressnpc', 'ies.ipf/questprogressnpc.ies');
 loadTable('map2', 'ies.ipf/map.ies', function(){
   loadTable('camp_warp', 'ies.ipf/camp_warp.ies', function(){
-    for (param in tableData['camp_warp']){
-      var mapdata = tos.FindDataClassName(tableData,'map2',tableData['camp_warp'][param].Zone);
+    for (param in serverData['tableData']['camp_warp']){
+      var mapdata = tos.FindDataClassName(serverData['tableData'],'map2',serverData['tableData']['camp_warp'][param].Zone);
       if (mapdata != undefined){
         mapdata['CanCampWarp']=true;
       }
     }
   });
-  for (param in tableData['map2']){
-    // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+tableData['map2'][param].ClassName+'.ies');
-    // loadTable('Anchor_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+tableData['map2'][param].ClassName+'.ies');
-    loadTable('GenType_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+tableData['map2'][param].ClassName+'.ies', function(name, path){
-      if (tableData[name] == undefined || tableData[name].langth == 0){
+  for (param in serverData['tableData']['map2']){
+    // loadTable('Anchor_'+serverData['tableData']['map2'][param].ClassName, 'ies_mongen.ipf/Anchor_'+serverData['tableData']['map2'][param].ClassName+'.ies');
+    // loadTable('Anchor_'+serverData['tableData']['map2'][param].ClassName, 'ies_mongen.ipf/anchor_'+serverData['tableData']['map2'][param].ClassName+'.ies');
+    loadTable('GenType_'+serverData['tableData']['map2'][param].ClassName, 'ies_mongen.ipf/GenType_'+serverData['tableData']['map2'][param].ClassName+'.ies', function(name, path){
+      if (serverData['tableData'][name] == undefined || serverData['tableData'][name].langth == 0){
         loadTable(name, path.replace('GenType_','gentype_'));
       }
     });
-    // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+tableData['map2'][param].ClassName+'.ies');
-    // loadTable('smartgen_'+tableData['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+tableData['map2'][param].ClassName+'.ies');
+    // loadTable('smartgen_'+serverData['tableData']['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/Smartgen_'+serverData['tableData']['map2'][param].ClassName+'.ies');
+    // loadTable('smartgen_'+serverData['tableData']['map2'][param].ClassName, 'ies_mongen.ipf/SmartGen/smartgen_'+serverData['tableData']['map2'][param].ClassName+'.ies');
   }
 });
 loadTable('guild_event', 'ies.ipf/guild_event.ies');
@@ -362,23 +363,23 @@ loadTable('shop', 'ies.ipf/shop.ies');
 loadTable('event_banner', 'ies_client.ipf/event_banner.ies');
 loadTable('job_ballenceReward', 'ies.ipf/job_ballenceReward.ies');
 loadTable('collection', 'ies.ipf/collection.ies', function(name, path){
-  for (param in tableData['collection']){
-    if (tableData['collection'][param]['PropList']!=undefined && tableData['collection'][param]['PropList'].length>0){
-      var probsplited = tableData['collection'][param]['PropList'].split('/');
+  for (param in serverData['tableData']['collection']){
+    if (serverData['tableData']['collection'][param]['PropList']!=undefined && serverData['tableData']['collection'][param]['PropList'].length>0){
+      var probsplited = serverData['tableData']['collection'][param]['PropList'].split('/');
       for (var i=0;i<probsplited.length;i+=2){
-        tableData['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
+        serverData['tableData']['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
       }
     }
-    if (tableData['collection'][param]['AccPropList']!=undefined && tableData['collection'][param]['AccPropList'].length>0){
-      var probsplited = tableData['collection'][param]['AccPropList'].split('/');
+    if (serverData['tableData']['collection'][param]['AccPropList']!=undefined && serverData['tableData']['collection'][param]['AccPropList'].length>0){
+      var probsplited = serverData['tableData']['collection'][param]['AccPropList'].split('/');
       for (var i=0;i<probsplited.length;i+=2){
-        tableData['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
+        serverData['tableData']['collection'][param][probsplited[i]] = Number(probsplited[i+1]);
       }
     }
   }
 });
 function loadTable(name, path, callback){
-  if (tableData[name] === undefined) tableData[name] = [];
+  if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
       data['TableName'] = name;
@@ -390,9 +391,9 @@ function loadTable(name, path, callback){
           data[param] = Number(data[param]);
         }
       }
-      tableData[name].push(data);
+      serverData['tableData'][name].push(data);
     }).on('end', function(){
-      //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+      //console.log('import table [' + name + ']' + serverData['tableData'][name].length + ' ' + path);
       if (callback != undefined) callback(name, path);
     });
     return;
@@ -417,9 +418,9 @@ function loadTable(name, path, callback){
             data[param] = Number(data[param]);
           }
         }
-        tableData[name].push(data);
+        serverData['tableData'][name].push(data);
       }).on('end', function(){
-        //console.log('import table [' + name + ']' + tableData[name].length + ' ' + path);
+        //console.log('import table [' + name + ']' + serverData['tableData'][name].length + ' ' + path);
         if (callback != undefined) callback(name, path);
       });
     });
@@ -441,7 +442,7 @@ function loadXMLData(name, path, callback){
       if (fullstr.indexOf('<?xml') < 0){
         fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
       }
-      xmlData[name] = xml(fullstr);
+      serverData['xmlData'][name] = xml(fullstr);
       console.log('import xml [' + name + '] ' + path);
     });
     return;
@@ -461,7 +462,7 @@ function loadXMLData(name, path, callback){
         if (fullstr.indexOf('<?xml') < 0){
           fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
         }
-        xmlData[name] = xml(fullstr);
+        serverData['xmlData'][name] = xml(fullstr);
         console.log('import xml [' + name + '] ' + path);
       });
 
@@ -480,8 +481,8 @@ importImage('ui.ipf/baseskinset/classicon.xml', function(){
             importImage('ui.ipf/baseskinset/helpimage.xml', function(){
               importImage('ui.ipf/baseskinset/baseskinset.xml', function(){
                 var count = 0;
-                for (param in imagePath){ count ++; }
-                console.log('imagePath Count ' + count);
+                for (param in serverData['imagePath']){ count ++; }
+                console.log('imagePath ' + count);
               });
             });
           });
@@ -499,28 +500,28 @@ function importImage(srcPath, callback){
       //fs.createReadStream('./web/data/' + srcPath).on('data', function (data) {
       fs.readFile('./web/data/' + srcPath, function(error, data){
         //console.log(data.toString());
-        var xmlData = xml(data.toString());
+        var xmlTemp = xml(data.toString());
         
-        if (xmlData.root === undefined || xmlData.root.children === undefined)
+        if (xmlTemp.root === undefined || xmlTemp.root.children === undefined)
           return;
         
-        for (var i = 0; i < xmlData.root.children.length; i ++){
-          for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
-            if (xmlData.root.children[i].name.indexOf('skinlist') > -1){
+        for (var i = 0; i < xmlTemp.root.children.length; i ++){
+          for (var j = 0; j < xmlTemp.root.children[i].children.length; j ++){
+            if (xmlTemp.root.children[i].name.indexOf('skinlist') > -1){
               continue;
             } else {
               var data = [];
-              if (xmlData.root.children[i].attributes['category'] != undefined){
-                data['category'] = xmlData.root.children[i].attributes['category'];
+              if (xmlTemp.root.children[i].attributes['category'] != undefined){
+                data['category'] = xmlTemp.root.children[i].attributes['category'];
               }
-              if (xmlData.root.children[i].children[j].attributes['name'] === undefined) continue;
-              if (xmlData.root.children[i].children[j].attributes['file'] === undefined) continue;
+              if (xmlTemp.root.children[i].children[j].attributes['name'] === undefined) continue;
+              if (xmlTemp.root.children[i].children[j].attributes['file'] === undefined) continue;
               data['path'] = serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/ui.ipf';
-              var path = xmlData.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
+              var path = xmlTemp.root.children[i].children[j].attributes['file'].replace(/\\/g,'/');
               if (path.startsWith('/') == false) data['path'] += '/';
               data['path'] += path;
-              data['imgrect'] = xmlData.root.children[i].children[j].attributes['imgrect'];
-              imagePath[xmlData.root.children[i].children[j].attributes['name'].toString().toLowerCase()] = data;
+              data['imgrect'] = xmlTemp.root.children[i].children[j].attributes['imgrect'];
+              serverData['imagePath'][xmlTemp.root.children[i].children[j].attributes['name'].toString().toLowerCase()] = data;
             }
           }
         }
@@ -579,7 +580,7 @@ generateLuaScript(scriptArray, 0, function(result){
   var luaFuncSplit = clearedResult.split('function');
   for (var i = 0; i < luaFuncSplit.length; i ++){
     var methodName = luaFuncSplit[i].split('(')[0].trim();
-    scriptData[methodName] = 'function' + luaFuncSplit[i];
+    serverData['scriptData'][methodName] = 'function' + luaFuncSplit[i];
   }
   // 파일로 저장
   fs.writeFile('./web/js/generated_lua.lua', clearedResultTrim, function(err) {
@@ -641,21 +642,21 @@ function generateLuaScript(array, index, callback){
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
   var count = 0;
-  for (param in tableData['language']) count ++;
+  for (param in serverData['tableData']['language']) count ++;
   console.log('language table ' + count);
 });
 function loadTableLanguage(name, path, callback){
-  if (tableData[name] === undefined) tableData[name] = [];
+  if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     fs.readFile('./web/data/' + path, function(error, data){
       if (error) sendSlack(err.toString());
-      var xmlData = xml(data.toString());
-      if (xmlData.root === undefined || xmlData.root.children === undefined)
+      var xmlTemp = xml(data.toString());
+      if (xmlTemp.root === undefined || xmlTemp.root.children === undefined)
         return;
-      for (var i = 0; i < xmlData.root.children.length; i ++){
-        for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
-          if (xmlData.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
-          tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
+      for (var i = 0; i < xmlTemp.root.children.length; i ++){
+        for (var j = 0; j < xmlTemp.root.children[i].children.length; j ++){
+          if (xmlTemp.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
+          serverData['tableData'][name][xmlTemp.root.children[i].children[j].attributes['ClassName']] = xmlTemp.root.children[i].children[j].attributes['Data'];
         }
       }
       //console.log('import table [' + name + '] ' + path);
@@ -671,13 +672,13 @@ function loadTableLanguage(name, path, callback){
       //console.log('download table [' + name + '] ' + path);
       fs.readFile('./web/data/' + path, function(error, data){
         if (error) sendSlack(err.toString());
-        var xmlData = xml(data.toString());
-        if (xmlData.root === undefined || xmlData.root.children === undefined)
+        var xmlTemp = xml(data.toString());
+        if (xmlTemp.root === undefined || xmlTemp.root.children === undefined)
           return;
-        for (var i = 0; i < xmlData.root.children.length; i ++){
-          for (var j = 0; j < xmlData.root.children[i].children.length; j ++){
-            if (xmlData.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
-            tableData[name][xmlData.root.children[i].children[j].attributes['ClassName']] = xmlData.root.children[i].children[j].attributes['Data'];
+        for (var i = 0; i < xmlTemp.root.children.length; i ++){
+          for (var j = 0; j < xmlTemp.root.children[i].children.length; j ++){
+            if (xmlTemp.root.children[i].children[j].attributes['ClassName'] == undefined) continue;
+            serverData['tableData'][name][xmlTemp.root.children[i].children[j].attributes['ClassName']] = xmlTemp.root.children[i].children[j].attributes['Data'];
           }
         }
         if (callback != undefined){
@@ -714,7 +715,7 @@ app.get('/', function (req, response) {
 
     // var randomIndex = Math.floor(Math.random()*files.length);
     // var imgname = files[randomIndex].split('.')[0].toLowerCase();
-    // var dialogTable = tableData['dialogtext'];
+    // var dialogTable = serverData['tableData']['dialogtext'];
     // var captionList = [];
     // for (var i = 0; i < dialogTable.length; i++){
     //   if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
@@ -818,97 +819,97 @@ app.get('/', function (req, response) {
 //   res.send(result);
 // });
 
-var debugPage = require('./web_script/web_debug')(app, serverSetting, tableData, scriptData, imagePath);
+var debugPage = require('./web_script/web_debug')(app, serverSetting, serverData);
 app.use('/%EC%97%B4%EB%A0%A4%EB%9D%BC%EC%B0%B8%EA%B9%A8', debugPage);
 
-var dataServer = require('./data_server/data_server')(app, serverSetting, tableData, imagePath);
+var dataServer = require('./data_server/data_server')(app, serverSetting, serverData);
 app.use('/data', dataServer);
 
 var boardFree = require('./board_server/board_free')(app, serverSetting);
 app.use('/BoardFree', boardFree);
 
-var skillPage = require('./web_script/web_skill')(app, serverSetting, tableData, scriptData, imagePath);
+var skillPage = require('./web_script/web_skill')(app, serverSetting, serverData);
 app.use('/Skill', skillPage);
 
-var abilityPage = require('./web_script/web_ability')(app, serverSetting, tableData, scriptData, imagePath);
+var abilityPage = require('./web_script/web_ability')(app, serverSetting, serverData);
 app.use('/Ability', abilityPage);
 
-var buffPage = require('./web_script/web_buff')(app, serverSetting, tableData, scriptData, imagePath);
+var buffPage = require('./web_script/web_buff')(app, serverSetting, serverData);
 app.use('/Buff', buffPage);
 
-var itemPage = require('./web_script/web_item')(app, serverSetting, tableData, scriptData, imagePath);
+var itemPage = require('./web_script/web_item')(app, serverSetting, serverData);
 app.use('/Item', itemPage);
 
-var monsterPage = require('./web_script/web_monster')(app, serverSetting, tableData, scriptData, imagePath);
+var monsterPage = require('./web_script/web_monster')(app, serverSetting, serverData);
 app.use('/Monster', monsterPage);
 
-var questPage = require('./web_script/web_quest')(app, serverSetting, tableData, scriptData, imagePath);
+var questPage = require('./web_script/web_quest')(app, serverSetting, serverData);
 app.use('/Quest', questPage);
 
-var mapPage = require('./web_script/web_map')(app, serverSetting, tableData, scriptData, xmlData, imagePath);
+var mapPage = require('./web_script/web_map')(app, serverSetting, serverData);
 app.use('/Map', mapPage);
 
-var dialogPage = require('./web_script/web_dialog')(app, serverSetting, tableData, scriptData, imagePath);
+var dialogPage = require('./web_script/web_dialog')(app, serverSetting, serverData);
 app.use('/Dialog', dialogPage);
 
-var indunPage = require('./web_script/web_indun')(app, serverSetting, tableData, scriptData, imagePath);
+var indunPage = require('./web_script/web_indun')(app, serverSetting, serverData);
 app.use('/Indun', indunPage);
 
-var collectionPage = require('./web_script/web_collection')(app, serverSetting, tableData, scriptData, imagePath);
+var collectionPage = require('./web_script/web_collection')(app, serverSetting, serverData);
 app.use('/Collection', collectionPage);
 
-var minigamePage = require('./web_script/web_minigame')(app, serverSetting, tableData, scriptData, xmlData, imagePath);
+var minigamePage = require('./web_script/web_minigame')(app, serverSetting, serverData);
 app.use('/Minigame', minigamePage);
 
-var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, tableData, scriptData, imagePath);
+var miscGuildEventPage = require('./web_script/web_misc_guildevent')(app, serverSetting, serverData);
 app.use('/GuildEvent', miscGuildEventPage);
 
-var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, tableData, scriptData, imagePath);
+var miscCompanionPage = require('./web_script/web_misc_companion')(app, serverSetting, serverData);
 app.use('/Companion', miscCompanionPage);
 
-var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, tableData, scriptData, imagePath);
+var miscEventbannerPage = require('./web_script/web_misc_eventbanner')(app, serverSetting, serverData);
 app.use('/EventBanner', miscEventbannerPage);
 
-var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, tableData, scriptData, imagePath);
+var miscShopPage = require('./web_script/web_misc_shop')(app, serverSetting, serverData);
 app.use('/Shop', miscShopPage);
 
-var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, tableData, scriptData, imagePath);
+var miscBallenceReward = require('./web_script/web_misc_ballenceReward')(app, serverSetting, serverData);
 app.use('/BallenceReward', miscBallenceReward);
 
-var builderPage = require('./web_script/web_builder')(app, serverSetting, tableData, scriptData, imagePath);
+var builderPage = require('./web_script/web_builder')(app, serverSetting, serverData);
 app.use('/Builder', builderPage);
 
-var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, tableData, scriptData, imagePath);
+var toolQuestCalcPage = require('./web_script/web_tool_questcalculator')(app, serverSetting, serverData);
 app.use('/QuestCalculator', toolQuestCalcPage);
 
-var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, tableData, scriptData, imagePath);
+var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, serverData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
-// var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, tableData, scriptData);
+// var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, serverData['tableData'], serverData['scriptData']);
 // app.use('/Login', db_loginPage);
 
-// var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, tableData, scriptData);
+// var db_logoutPage = require('./web_script/DBPage/web_logout')(app, serverSetting, serverData['tableData'], serverData['scriptData']);
 // app.use('/Logout', db_logoutPage);
 
-// var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, tableData, scriptData);
+// var db_joinPage = require('./web_script/DBPage/web_join')(app, serverSetting, serverData['tableData'], serverData['scriptData']);
 // app.use('/Join', db_joinPage);
 
-var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, serverSetting, tableData, scriptData);
+var db_reqJoinMailPage = require('./web_script/DBPage/web_reqJoinMail')(app, serverSetting, serverData);
 app.use('/ReqJoinMail', db_reqJoinMailPage);
 
-// var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, tableData, scriptData);
+// var db_emailAuthPage = require('./web_script/DBPage/web_emailAuth')(app, serverSetting, serverData['tableData'], serverData['scriptData']);
 // app.use('/EmailAuth', db_emailAuthPage);
 
-var db_accountPage = require('./web_script/DBPage/web_account')(app, serverSetting, tableData, scriptData);
+var db_accountPage = require('./web_script/DBPage/web_account')(app, serverSetting, serverData);
 app.use('/Account', db_accountPage);
 
-var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, tableData, scriptData);
+var db_boardShortPage = require('./web_script/DBPage/web_boardShort')(app, serverSetting, serverData);
 app.use('/BoardShort', db_boardShortPage);
 
-var db_commentPage = require('./web_script/DBPage/web_comment')(app, serverSetting, tableData, scriptData);
+var db_commentPage = require('./web_script/DBPage/web_comment')(app, serverSetting, serverData);
 app.use('/Comment', db_commentPage);
 
-// var testPage = require('./web_script/web_test')(app, tableData);
+// var testPage = require('./web_script/web_test')(app, serverData['tableData']);
 // app.use('/Test', testPage);
 
 

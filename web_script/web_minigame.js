@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
+module.exports = function(app, serverSetting, serverData){
     var express = require('express');
     var http = require('http');
     var https = require('https');
@@ -15,16 +15,16 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
     var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
   
     //var search_box = fs.readFileSync('./web/Skill/search_box.html');
-    // var jobTable = tableData['job'];
-    // var skillTable = tableData['skill'];
-    // var skillTreeTable = tableData['skilltree'];
+    // var jobTable = serverData['tableData']['job'];
+    // var skillTable = serverData['tableData']['skill'];
+    // var skillTreeTable = serverData['tableData']['skilltree'];
   
     route.get('/', function (request, response) {
       tos.RequestLog(request);
 
       // id값이 존재하는 경우, 상세 페이지로 이동
       if (request.query.id != undefined && request.query.id != ''){
-          if (xmlData['xml_minigame.ipf/'+request.query.id]!=undefined) {
+          if (serverData['xmlData']['xml_minigame.ipf/'+request.query.id]!=undefined) {
               detailPage('xml_minigame.ipf/'+request.query.id, request, response);
           } else {
             loadXMLData('xml_minigame.ipf/'+request.query.id, 'xml_minigame.ipf/'+request.query.id+'.xml', function(){
@@ -40,7 +40,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
     var layout_detail = fs.readFileSync('./web/MinigamePage/detail.html');
   
     function detailPage(id, request, response) {
-        var missionData = xmlData[id];
+        var missionData = serverData['xmlData'][id];
         if (missionData == undefined || missionData.root == undefined || missionData.root.children == undefined) {
             response.send('no data');
             return;
@@ -51,7 +51,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
             flowString += '<h1>Game. '+(i+1)+'</h1>';
             flowString += '<p>'+missionData.root.children[i].attributes['Name']+'</p>';
             flowString += '<p>Lv.'+missionData.root.children[i].attributes['minLv']+'~'+missionData.root.children[i].attributes['maxLv']+'</p>';
-            flowString += '<p>'+tos.GetMapString(tableData,missionData.root.children[i].attributes['mapName'])+'</p>';
+            flowString += '<p>'+tos.GetMapString(serverData['tableData'],missionData.root.children[i].attributes['mapName'])+'</p>';
             if (missionData.root.children[i].children!=undefined && 
                 missionData.root.children[i].children.length>0 && 
                 missionData.root.children[i].children[0].name=="StageList"){
@@ -88,12 +88,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
                                         }
                                         flowString += '<p>';
                                         if (problist['Name']!=undefined){
-                                            flowString += problist['Name']+' ('+tos.GetMonsterString(tableData,tos.ClassIDToClassName(tableData,'monster',objlist[l].attributes['MonType']))+')';
+                                            flowString += problist['Name']+' ('+tos.GetMonsterString(serverData['tableData'],tos.ClassIDToClassName(serverData['tableData'],'monster',objlist[l].attributes['MonType']))+')';
                                         } else {
-                                            flowString += tos.GetMonsterString(tableData,tos.ClassIDToClassName(tableData,'monster',objlist[l].attributes['MonType']));
+                                            flowString += tos.GetMonsterString(serverData['tableData'],tos.ClassIDToClassName(serverData['tableData'],'monster',objlist[l].attributes['MonType']));
                                         }
                                         if (problist['Dialog']!= undefined){
-                                            flowString += ' '+tos.GetDialogString(tableData,problist['Dialog'],'Dialog')
+                                            flowString += ' '+tos.GetDialogString(serverData['tableData'],problist['Dialog'],'Dialog')
                                         }
                                         flowString += '</p>';
                                     }
@@ -138,7 +138,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
         // if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
         //   // import
         //   fs.readFile('./web/data/' + path, function(error, data){
-        //     xmlData[name] = xml(data.toString());
+        //     serverData['xmlData'][name] = xml(data.toString());
         //     console.log('import xml [' + name + '] ' + path);
         //   });
         //   return;
@@ -154,7 +154,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
             }
             //import
             fs.readFile('./web/data/' + path, function(error, data){
-              xmlData[name] = xml(data.toString());
+              serverData['xmlData'][name] = xml(data.toString());
               console.log('import xml [' + name + '] ' + path);
               if (callback != undefined) callback();
             });
@@ -187,7 +187,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, xmlData){
         output += '<table><tbody>';
         output += '<tr><td>'+data.attributes['Scp']+'</td></tr>';
         output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+argstr+'</td></tr>';
-        output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+scriptData[data.attributes['Scp']]+'</td></tr>';
+        output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+serverData['scriptData'][data.attributes['Scp']]+'</td></tr>';
         output += '</tbody></table>';
 
         return output;

@@ -1,4 +1,4 @@
-module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
+module.exports = function(app, serverSetting, serverData){
   var express = require('express');
   var fs = require('fs');
   //var url = require('url');
@@ -15,7 +15,7 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
 
   route.get('/', function (request, response) {
     tos.RequestLog(request);
-    var buffTable = tableData['buff'];
+    var buffTable = serverData['tableData']['buff'];
 
     // id값이 존재하는 경우, 상세 페이지로 이동
     if (buffTable != undefined && request.query.id != undefined && request.query.id != ''){
@@ -33,12 +33,12 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
   var layout_detail = fs.readFileSync('./web/Layout/index-buffdetail.html');
 
   function buffDetailPage(index, request, response) {
-    var buffTable = tableData['buff'];
+    var buffTable = serverData['tableData']['buff'];
 
     var rawScripts = '';
-    for(param in scriptData){
+    for(param in serverData['scriptData']){
       if (param.indexOf(buffTable[index].ClassName)>-1){
-        rawScripts += '<tr><td>'+param+'</td></tr><tr><td class="script">'+scriptData[param]+'</td></tr>';
+        rawScripts += '<tr><td>'+param+'</td></tr><tr><td class="script">'+serverData['scriptData'][param]+'</td></tr>';
       }
     }
 
@@ -53,8 +53,8 @@ module.exports = function(app, serverSetting, tableData, scriptData, imagePath){
     output = output.replace(/style.css/g, '../style.css');
     // output = output.replace(/%Icon%/g, '<img src="../img/icon/skillicon/' + iconName + '.png" />');
     // output = output.replace(/%IconPath%/g, 'http://'+request.headers.host+'/img/icon/skillicon/' + iconName + '.png');
-    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(imagePath['icon_'+buffTable[index].Icon.toLowerCase()]));
-    output = output.replace(/%IconPath%/g, imagePath['icon_'+buffTable[index].Icon.toLowerCase()] == undefined ? '' : imagePath['icon_'+buffTable[index].Icon.toLowerCase()].path);
+    output = output.replace(/%Icon%/g, tos.ImagePathToHTML(serverData['imagePath']['icon_'+buffTable[index].Icon.toLowerCase()]));
+    output = output.replace(/%IconPath%/g, serverData['imagePath']['icon_'+buffTable[index].Icon.toLowerCase()] == undefined ? '' : serverData['imagePath']['icon_'+buffTable[index].Icon.toLowerCase()].path);
     output = output.replace(/%Name%/g, buffTable[index].Name);
     output = output.replace(/%ClassName%/g, buffTable[index].ClassName);
     output = output.replace(/%ClassID%/g, buffTable[index].ClassID);
