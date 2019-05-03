@@ -196,7 +196,7 @@ class TosModule {
         return this.FindDataClassName(serverData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
     }
 
-    static GetItemImgString(serverData, className, imagePath){
+    static GetItemImgString(serverData, className){
         var itemData = undefined;
         var icon = '';
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item',className);
@@ -206,31 +206,20 @@ class TosModule {
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_premium',className);
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_recipe',className);
         if (itemData == undefined) return icon;
-        if (imagePath == undefined){
-          if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
+        
+        if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
+            icon = this.GetImageStringByImageName(serverData, itemData.Icon+'_m', 32)+this.GetImageStringByImageName(serverData, itemData.Icon+'_f', 32);
           } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            icon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
+              icon = this.GetImageStringByImageName(serverData, itemData.TooltipImage, 32);
           } else if(itemData.Icon != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
+              icon = this.GetImageStringByImageName(serverData, itemData.Icon, 32);
           } else if(itemData.Illust != undefined){
-            icon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
+              icon = this.GetImageStringByImageName(serverData, itemData.Illust, 32);
           }
-        } else {
-            if (itemData.EqpType != undefined && itemData.UseGender != undefined && itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-              icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_m'], 32) + this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()+'_f'], 32);
-            } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                icon = this.ImagePathToHTML(imagePath[itemData.TooltipImage.toLowerCase()], 32);
-            } else if(itemData.Icon != undefined){
-                icon = this.ImagePathToHTML(imagePath[itemData.Icon.toLowerCase()], 32);
-            } else if(itemData.Illust != undefined){
-                icon = this.ImagePathToHTML(imagePath[itemData.Illust.toLowerCase()], 32);
-            } 
-        }
         return icon;
     }
 
-    static GetItemResultString(serverData, className, imagePath, itemcount){
+    static GetItemResultString(serverData, className, itemcount){
         var itemData = undefined;
         var output = '';
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item',className);
@@ -241,7 +230,7 @@ class TosModule {
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_recipe',className);
         if (itemData != undefined){
             output += '<p>';
-            var icon = this.GetItemImgString(serverData, className, imagePath);
+            var icon = this.GetItemImgString(serverData, className);
           output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
           if (itemcount != undefined){
             output += ' x '+itemcount;
@@ -291,7 +280,7 @@ class TosModule {
         var output = '';
         var monData=this.FindDataClassName(serverData, 'monster', className);
         if (monData!=undefined){
-            output += '<a href="../Monster?id='+monData.ClassID+'">'+monData.Name+' (Lv.'+monData.Level+')</a>';
+            output += '<a href="../Monster?id='+monData.ClassID+'">'+this.GetImageStringByImageName(serverData,monData.Icon,32)+''+monData.Name+' (Lv.'+monData.Level+')</a>';
         }
         return output;
     }
@@ -329,6 +318,32 @@ class TosModule {
             output += '<a href="../Collection?id='+data.ClassID+'">'+data.Name+'</a>';
         }
         return output;
+    }
+
+    static GetSkillString(serverData, className){
+        var output = '';
+        var skillData=this.FindDataClassName(serverData, 'skill', className);
+        if (skillData!=undefined){
+            output += '<a href="../Skill?id='+skillData.ClassID+'">'+this.GetImageStringByImageName(serverData,'icon_'+skillData.Icon,32)+''+skillData.Name+'</a>';
+        }
+        return output;
+    }
+
+    static GetImageStringByClassName(serverData, tableName, className, arg, height, addParameter){
+        var data=this.FindDataClassName(serverData, tableName, className);
+        if (data != undefined) {
+            return this.GetImageStringByImageName(serverData, data[arg], height, addParameter);
+        }
+        return '';
+    }
+
+    static GetImageStringByImageName(serverData, imageName, height, addParameter){
+        if (imageName == undefined) return '';
+        var data=serverData['imagePath'][imageName.toString().toLowerCase()];
+        if (data != undefined){
+            return this.ImagePathToHTML(data, height, addParameter);
+        }
+        return '';
     }
 
     static ImagePathToHTML(imagePathData, height, addParameter){

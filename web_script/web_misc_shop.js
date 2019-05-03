@@ -39,7 +39,7 @@ module.exports = function(app, serverSetting, serverData){
 
                 
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(serverData,array[shopname][param]['ItemName'],serverData['imagePath'])+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(serverData,array[shopname][param]['ItemName'])+'</td>';
                 resultString += '<td>'+price.toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

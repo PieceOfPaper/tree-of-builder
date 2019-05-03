@@ -269,28 +269,8 @@ module.exports = function(app, serverSetting, serverData){
       //material
       for(var i=1;i<=7;i++){
         if (setList[setIndex]['ItemName_' + i] == undefined || setList[setIndex]['ItemName_' + i ].length == 0) continue;
-        var itemData = undefined;
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Equip',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_Quest',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_gem',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',setList[setIndex]['ItemName_' + i]);
-        if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',setList[setIndex]['ItemName_' + i]);
-        if (itemData != undefined){
-          var materialIcon = '';
-          if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-            itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f']);
-          } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.TooltipImage.toLowerCase()]);
-          } else if(itemData.Icon != undefined){
-            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()]);
-          } else if(itemData.Illust != undefined){
-            materialIcon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Illust.toLowerCase()]);
-          }
-          setDataString += '<a href="?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
-          setDataString += '<br/>';
-        }
+        setDataString += tos.GetItemResultString(serverData, setList[setIndex]['ItemName_' + i]);
+        setDataString += '<br/>';
       }
       setDataString += '</div>';
       setDataString += '<hr>';
@@ -307,17 +287,19 @@ module.exports = function(app, serverSetting, serverData){
       legendSetDataString += '<h3>' + legendSetList[i].Name + '</h3>';
       //desc
       for(var j=1;j<=5;j++){
-        if (legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) continue;
-        legendSetDataString += '<p><b>' + j + ' Set.</b><br>' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
-      }
-      //skill
-      for(var j=1;j<=5;j++){
-        if (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0) continue;
-        var skillData = tos.FindDataClassName(serverData,'skill',legendSetList[i]['SetItemSkill_' + j]);
-        if (skillData == null) continue;
-        //var materialIcon = '<img class="item-material-icon" src="../img/icon/skillicon/icon_' + skillData.Icon.toLowerCase()  + '.png"/>';
-        var materialIcon = tos.ImagePathToHTML(serverData['imagePath'][skillData.Icon.toLowerCase()], 32);
-        legendSetDataString += '<a href="../Skill/?id=' + skillData.ClassID + '">' + materialIcon  + ' ' + skillData.Name + '</a>';
+        if ((legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) &&
+          (legendSetList[i]['SetItemSkill_' + j] == undefined || legendSetList[i]['SetItemSkill_' + j].length == 0)) {
+            continue;
+        }
+
+        legendSetDataString += '<p style="margin-top:0px; margin-bottom:0px;"><b>' + j + ' Set.</b></p>';
+        if (legendSetList[i]['EffectDesc_' + j] != undefined && legendSetList[i]['EffectDesc_' + j].length > 0) {
+          legendSetDataString += '<p style="margin-top:0px; margin-bottom:0px;">' + tos.parseCaption(legendSetList[i]['EffectDesc_' + j]) + '</p>';
+        }
+        if (legendSetList[i]['SetItemSkill_' + j] != undefined && legendSetList[i]['SetItemSkill_' + j].length > 0) {
+          legendSetDataString += tos.GetSkillString(serverData, legendSetList[i]['SetItemSkill_' + j]);
+          legendSetDataString += '<br/>';
+        }
         legendSetDataString += '<br/>';
       }
       legendSetDataString += '</div>';
@@ -552,10 +534,10 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += '</script>';
 
     var reinforceSilverItemString = '';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_W_01', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData,'Vis', serverData['imagePath'])+'<span id="reinforceSilver">0</span></p>';
-    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_Diamond', serverData['imagePath'])+'  '+tos.GetItemImgString(serverData,'Vis', serverData['imagePath'])+'<span id="reinforceSilverDia">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_W_01')+'  '+tos.GetItemImgString(serverData,'Vis')+'<span id="reinforceSilver">0</span></p>';
+    reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_Diamond')+'  '+tos.GetItemImgString(serverData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
 
-    var transcendMaterialItemString = tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', serverData['imagePath'], '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+    var transcendMaterialItemString = tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
 
     var output = layout_itemEquip_detail.toString();
 

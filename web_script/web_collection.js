@@ -41,13 +41,13 @@ module.exports = function(app, serverSetting, serverData){
         }
       }
       
-      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(serverData,baseTable[index].ClassName,serverData['imagePath'])+'</p>';
+      var baseItemString = '<h3>Base Item</h3><p>'+tos.GetItemResultString(serverData,baseTable[index].ClassName)+'</p>';
 
       var itemString = '<h3>Items</h3>';
       for (var i=1;i<=9;i++){
           if (baseTable[index]['ItemName_'+i]==undefined) continue;
           if (baseTable[index]['ItemName_'+i].length==0) continue;
-          itemString += '<p>'+tos.GetItemResultString(serverData,baseTable[index]['ItemName_'+i], serverData['imagePath'])+'</p>';
+          itemString += '<p>'+tos.GetItemResultString(serverData,baseTable[index]['ItemName_'+i])+'</p>';
       }
 
       var rewardString = '<h3>Rewards</h3>';
@@ -66,7 +66,7 @@ module.exports = function(app, serverSetting, serverData){
       if (baseTable[index]['AccGiveItemList']!=undefined && baseTable[index]['AccGiveItemList'].length>0){
         var probsplited = baseTable[index]['AccGiveItemList'].split('/');
         for (var i=0;i<probsplited.length;i+=2){
-            rewardString += '<p>'+tos.GetItemResultString(serverData,probsplited[i],probsplited[i+1], serverData['imagePath'])+'</p>';
+            rewardString += '<p>'+tos.GetItemResultString(serverData,probsplited[i],probsplited[i+1])+'</p>';
         }
       }
   

@@ -73,19 +73,7 @@ module.exports = function(app, serverSetting, serverData){
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_ItemName' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_ItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_ItemName' + i], serverData['imagePath']);
-                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Icon != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Illust != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                // }
-                rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
-                rewardString += ' x' + questAutoData['Success_ItemCount' + i] + '</p>';
+                rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_ItemCount' + i]);
               }
             }
           }
@@ -102,19 +90,7 @@ module.exports = function(app, serverSetting, serverData){
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_SelectItemName' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_SelectItemName' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_SelectItemName' + i], serverData['imagePath']);
-                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Icon != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Illust != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                // }
-                rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
-                rewardString += ' x' + questAutoData['Success_SelectItemCount' + i] + '</p>';
+                rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_SelectItemCount' + i]);
               }
             }
           }
@@ -131,19 +107,7 @@ module.exports = function(app, serverSetting, serverData){
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_premium',questAutoData['Success_JobItem_Name' + i]);
               if (itemData == undefined) itemData=tos.FindDataClassName(serverData,'item_recipe',questAutoData['Success_JobItem_Name' + i]);
               if (itemData != undefined){
-                var materialIcon = tos.GetItemImgString(serverData, questAutoData['Success_JobItem_Name' + i], serverData['imagePath']);
-                // if (itemData.EqpType != undefined && itemData.UseGender != undefined && 
-                //   itemData.EqpType.toLowerCase() == 'outer' && itemData.UseGender.toLowerCase() == 'both'){
-                //     materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_m.png"/><img src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '_f.png"/>';
-                // } else if(itemData.EquipXpGroup != undefined && itemData.EquipXpGroup.toLowerCase() == 'gem_skill') {
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/mongem/' + itemData.TooltipImage.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Icon != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Icon.toLowerCase()  + '.png"/>';
-                // } else if(itemData.Illust != undefined){
-                //   materialIcon = '<img class="item-material-icon" src="../img/icon/itemicon/' + itemData.Illust.toLowerCase()  + '.png"/>';
-                // }
-                rewardString += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + materialIcon + ' ' + itemData.Name + '</a>';
-                rewardString += ' x' + questAutoData['Success_JobItem_Count' + i] + '</p>';
+                rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_JobItem_Count' + i]);
               }
             }
           }

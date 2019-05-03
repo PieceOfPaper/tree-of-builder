@@ -262,7 +262,7 @@ module.exports = function(app, serverSetting, serverData){
     if (skillGemData == undefined) skillGemData = tos.FindDataClassName(serverData, 'item_gem', 'GEM_'+skillTable[index].ClassName);
     if (skillGemData!=undefined){
       //skillGemString += '<p><a href="../Item?table='+skillGemData.TableName+'&id='+skillGemData.ClassID+'"><img class="item-material-icon" src="../img/icon/mongem/'+skillGemData.Icon.toLowerCase()+'.png"/>'+skillGemData.Name+'</a></p>';
-      skillGemString += tos.GetItemResultString(serverData, skillGemData, serverData['imagePath']);
+      skillGemString += tos.GetItemResultString(serverData, skillGemData.ClassName);
     }
 
     var output = layout_detail.toString();

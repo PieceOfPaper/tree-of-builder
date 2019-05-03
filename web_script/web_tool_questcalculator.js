@@ -49,7 +49,7 @@ module.exports = function(app, serverSetting, serverData){
             resultString += '<tr><td>EXP</td><td>'+expSum.toLocaleString()+'</td></tr>';
             for (param in itemSum){
                 resultString += '<tr>';
-                resultString += '<td>'+tos.GetItemResultString(serverData, param, serverData['imagePath'])+'</td>';
+                resultString += '<td>'+tos.GetItemResultString(serverData, param)+'</td>';
                 resultString += '<td>'+itemSum[param].toLocaleString()+'</td>';
                 resultString += '</tr>';
             }

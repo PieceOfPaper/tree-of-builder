@@ -39,7 +39,7 @@ module.exports = function(app, serverSetting, serverData){
                 if (splited == undefined || splited.length == 0) continue;
                 var itemcount = 1;
                 if (splited.length > 1) itemcount = splited[1];
-                resultString += tos.GetItemResultString(serverData,splited[0],serverData['imagePath'],itemcount);
+                resultString += tos.GetItemResultString(serverData,splited[0],itemcount);
             }
             resultString += '</td>';
             resultString += '</tr>';

@@ -56,7 +56,7 @@ module.exports = function(app, serverSetting, serverData){
       var hasDropItem = false;
       for (var i=1;i<=10;i++){
         if(mapData['DropItemClassName'+i] == undefined || mapData['DropItemClassName'+i].length == 0) continue;
-        dropItemString += tos.GetItemResultString(serverData,mapData['DropItemClassName'+i],serverData['imagePath']);
+        dropItemString += tos.GetItemResultString(serverData,mapData['DropItemClassName'+i]);
         hasDropItem = true;
       }
       if (hasDropItem) dropItemString = '<h3>Drop Items</h3>' + dropItemString;
@@ -170,7 +170,7 @@ module.exports = function(app, serverSetting, serverData){
       output = output.replace(/%CanWarp%/g, canWarp?'TRUE':'FALSE');
       output = output.replace(/%WarpQuest%/g, warpQuestString);
 
-      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(serverData,mapData.MapRatingRewardItem1,serverData['imagePath']));
+      output = output.replace(/%MapRatingRewardItem1%/g, tos.GetItemResultString(serverData,mapData.MapRatingRewardItem1));
 
       output = output.replace(/%PhysicalLinkZoneString%/g, physicalLinkZoneString);
       output = output.replace(/%DropItemString%/g, dropItemString);
