@@ -195,6 +195,8 @@ if (!fs.existsSync('./web/data/ies_client.ipf')) fs.mkdirSync('./web/data/ies_cl
 if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_ability.ipf');
 if (!fs.existsSync('./web/data/ies_mongen.ipf')) fs.mkdirSync('./web/data/ies_mongen.ipf');
 if (!fs.existsSync('./web/data/ies_mongen.ipf/SmartGen')) fs.mkdirSync('./web/data/ies_mongen.ipf/SmartGen');
+if (!fs.existsSync('./web/data/xml.ipf')) fs.mkdirSync('./web/data/xml.ipf');
+if (!fs.existsSync('./web/data/xml.ipf/skill_bytool')) fs.mkdirSync('./web/data/xml.ipf/skill_bytool');
 if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
 if (!fs.existsSync('./web/data/xml_minigame.ipf')) fs.mkdirSync('./web/data/xml_minigame.ipf');
 if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
@@ -217,6 +219,7 @@ loadTable('job', 'ies.ipf/job.ies', function(){
           loadTable(name, path.toLowerCase());
         }
       });
+      //loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool/'+serverData['tableData']['job'][i].EngName.toLowerCase()+'.xml');
     }
     serverData['tableData']['job'].sort(function(a,b){
         if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
@@ -437,6 +440,8 @@ function loadTable(name, path, callback){
 // ---------- XML 데이터 불러오기
 //loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
 loadXMLData('xml.ipf/playlist', 'xml.ipf/playlist.xml');
+//loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool.xml');
+//loadXMLData('xml.ipf/pad_skill_list', 'xml.ipf/pad_skill_list.xml');
 function loadXMLData(name, path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     // import
@@ -445,7 +450,18 @@ function loadXMLData(name, path, callback){
       if (fullstr.indexOf('<?xml') < 0){
         fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
       }
-      serverData['xmlData'][name] = xml(fullstr);
+
+      var newXML = xml(fullstr);
+      if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].children!=undefined){
+        if (newXML.root!=undefined&&newXML.root.children!=undefined){
+          for (var i=0;i<newXML.root.children.length;i++){
+            serverData['xmlData'][name].children.push(newXML.root.children[i]);
+          }
+        }
+      }
+      else {
+        serverData['xmlData'][name] = newXML;
+      }
       console.log('import xml [' + name + '] ' + path);
     });
     return;
@@ -465,7 +481,18 @@ function loadXMLData(name, path, callback){
         if (fullstr.indexOf('<?xml') < 0){
           fullstr = '<?xml version="1.0" encoding="UTF-8"?>' + fullstr;
         }
-        serverData['xmlData'][name] = xml(fullstr);
+
+        var newXML = xml(fullstr);
+        if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].children!=undefined){
+          if (newXML.root!=undefined&&newXML.root.children!=undefined){
+            for (var i=0;i<newXML.root.children.length;i++){
+              serverData['xmlData'][name].children.push(newXML.root.children[i]);
+            }
+          }
+        }
+        else {
+          serverData['xmlData'][name] = newXML;
+        }
         console.log('import xml [' + name + '] ' + path);
       });
 
