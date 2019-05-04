@@ -208,19 +208,59 @@ serverData['xmlData'] = [];
 serverData['scriptData'] = [];
 serverData['imagePath'] = [];
 
+// ---------- 파일리스트 데이터 불러오기
+loadFilelist('ies_ability.ipf/filelist.txt', function(filelist){
+  if (filelist==undefined) return;
+  for (var i=0;i<filelist.length;i++){
+    if (filelist[i]=='ies_ability.ipf/ability.ies') {
+      filelist.splice(i, 1);
+    } else if (filelist[i]=='ies_ability.ipf/filelist.txt') {
+      filelist.splice(i, 1);
+    }
+  }
+  loadTableList('ability_job',filelist);
+});
+function loadFilelist(path, callback){
+  if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
+    return;
+  }
+  var file = fs.createWriteStream('./web/data/' + path);
+  console.log('request download ' + path);
+  var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
+    response.pipe(file).on('close', function(){
+      console.log('downloaded ' + path);
+      if (fs.existsSync('./web/data/' + path) == false){
+        console.log('not exist ' + path);
+        if (callback != undefined) callback(undefined);
+        return;
+      }
+      fs.readFile('./web/data/' + path, function(err, data){
+        var filelist = data.toString().replace(/\\/g,'/').replace(/\r?\n|\r/g, '\n').split('\n');
+        for (var i=0;i<filelist.length;i++){
+          filelist[i]=filelist[i].split('Tree-of-IPF/'+serverSetting['serverCode']+'/')[1];
+        }
+        if (callback != undefined) callback(filelist);
+      });
+    });
+  }).on('error', (e) => {
+    console.log('download error '+path+' ' + e);
+    if (callback != undefined) callback(undefined);
+  });
+}
+
 // ---------- 테이블 데이터 불러오기
 loadTable('job', 'ies.ipf/job.ies', function(){
   loadTable('ability', 'ies_ability.ipf/ability.ies', function(){
     //loadTable('ability_job', 'ies_ability.ipf/ability_warrior.ies'); //Warrior만 소문자라 하드코딩;;
-    for (var i = 0; i < serverData['tableData']['job'].length; i ++){
-      //if (serverData['tableData']['job'][i].EngName === 'Warrior') continue;
-      loadTable('ability_job', 'ies_ability.ipf/ability_' + serverData['tableData']['job'][i].EngName + '.ies', function(name, path){
-        if (serverData['tableData'][name] == undefined || serverData['tableData'][name].langth == 0){
-          loadTable(name, path.toLowerCase());
-        }
-      });
-      //loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool/'+serverData['tableData']['job'][i].EngName.toLowerCase()+'.xml');
-    }
+    // for (var i = 0; i < serverData['tableData']['job'].length; i ++){
+    //   //if (serverData['tableData']['job'][i].EngName === 'Warrior') continue;
+    //   loadTable('ability_job', 'ies_ability.ipf/ability_' + serverData['tableData']['job'][i].EngName + '.ies', function(name, path){
+    //     if (serverData['tableData'][name] == undefined || serverData['tableData'][name].langth == 0){
+    //       loadTable(name, path.toLowerCase());
+    //     }
+    //   });
+    //   //loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool/'+serverData['tableData']['job'][i].EngName.toLowerCase()+'.xml');
+    // }
     serverData['tableData']['job'].sort(function(a,b){
         if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
         else if (tos.GetJobNumber1(a.ClassName) < tos.GetJobNumber1(b.ClassName)) return -1;
@@ -384,7 +424,8 @@ loadTable('collection', 'ies.ipf/collection.ies', function(name, path){
 loadTable('gacha_detail', 'ies.ipf/gacha_detail.ies');
 loadTable('Package_Item_List', 'ies.ipf/Package_Item_List.ies');
 loadTable('reward_property', 'ies.ipf/reward_property.ies');
-function loadTable(name, path, callback){
+function loadTable(name, path, callback, tryCnt){
+  if (tryCnt == undefined) tryCnt = 1;
   if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     fs.createReadStream('./web/data/' + path).pipe(csv()).on('data', function (data) {
@@ -431,8 +472,25 @@ function loadTable(name, path, callback){
       });
     });
   }).on('error', (e) => {
-    console.log('download error table [' + name + '] ' + path + ' ' + e);
-    if (callback != undefined) callback(name, path);
+    if (tryCnt<3){
+      console.warn('retry download table ('+tryCnt+') [' + name + '] ' + path);
+      loadTable(name,path,callback, tryCnt+1);
+    } else {
+      console.error('download error table [' + name + '] ' + path + ' ' + e);
+      if (callback != undefined) callback(name, path);
+    }
+  });
+}
+function loadTableList(name, pathlist, callback, index){
+  if (pathlist==undefined) return;
+  if (index==undefined) index=0;
+  if (index>=pathlist.length) {
+    if (callback!=undefined) callback();
+    return;
+  }
+  //onsole.log(index+'/'+pathlist.length+' '+pathlist[index]);
+  loadTable(name,pathlist[index],function(name,path){
+    loadTableList(name,pathlist,callback,index+1);
   });
 }
 
@@ -469,9 +527,9 @@ function loadXMLData(name, path, callback){
   var file = fs.createWriteStream('./web/data/' + path);
   var request = https.get(serverSetting['dataServerPath'] + serverSetting['serverCode'] + '/' + path, function(response) {
     response.pipe(file).on('close', function(){
-      console.log('downloaded xml [' + name + '] ' + path);
+      //console.log('downloaded xml [' + name + '] ' + path);
       if (fs.existsSync('./web/data/' + path) == false){
-        console.log('not exist xml [' + name + '] ' + path);
+        console.error('not exist xml [' + name + '] ' + path);
         return;
       }
       //import
@@ -498,7 +556,7 @@ function loadXMLData(name, path, callback){
 
     });
   }).on('error', (e) => {
-    console.log('download error xml [' + name + '] ' + path + ' ' + e);
+    console.error('download error xml [' + name + '] ' + path + ' ' + e);
   });
 }
 
@@ -510,9 +568,9 @@ importImage('ui.ipf/baseskinset/classicon.xml', function(){
           importImage('ui.ipf/baseskinset/eventbanner.xml', function(){
             importImage('ui.ipf/baseskinset/helpimage.xml', function(){
               importImage('ui.ipf/baseskinset/baseskinset.xml', function(){
-                var count = 0;
-                for (param in serverData['imagePath']){ count ++; }
-                console.log('imagePath ' + count);
+                // var count = 0;
+                // for (param in serverData['imagePath']){ count ++; }
+                // console.log('imagePath ' + count);
               });
             });
           });
@@ -671,9 +729,9 @@ function generateLuaScript(array, index, callback){
 
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
-  var count = 0;
-  for (param in serverData['tableData']['language']) count ++;
-  console.log('language table ' + count);
+  // var count = 0;
+  // for (param in serverData['tableData']['language']) count ++;
+  // console.log('language table ' + count);
 });
 function loadTableLanguage(name, path, callback){
   if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
