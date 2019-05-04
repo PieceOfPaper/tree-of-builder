@@ -15,6 +15,34 @@ class DBLayoutModule {
         return output;
     }
 
+    static GetPageLinkString(serverData, page, page_arg1, page_arg2){
+        var tableName = '';
+        switch(page)
+        {
+            case 'Class':
+                tableName = 'job';
+                break;
+            case 'Item':
+                tableName = page_arg1;
+                break;
+            default: tableName = page.toString().toLowerCase();
+        }
+        var linkName = page + ' Page';
+        if (serverData['tableData'][tableName]!=undefined){
+            for(var i=0;i<serverData['tableData'][tableName].length;i++){
+                if (serverData['tableData'][tableName][i]['ClassID']==Number(page_arg2)){
+                    linkName = serverData['tableData'][tableName][i]['Name'];
+                    break;
+                }
+            }
+        }
+
+        var pageQuery = '';
+        if (page == 'Item') pageQuery = 'table='+page_arg1+'&id='+page_arg2;
+        else pageQuery = 'id='+page_arg2;
+        return '<a href="/'+page+'?'+pageQuery+'">['+page+'] '+linkName+'</a>';
+    }
+
     static CommentTextMin(text) {
         if (text==undefined) return '';
         var output = text.toString();
@@ -184,7 +212,7 @@ class DBLayoutModule {
         return output;
     }
 
-    static Layout_CommentAll(userdata, results) {
+    static Layout_CommentAll(serverData, userdata, results) {
         var output = '';
         output += '<div style="margin:0; padding:5px; width:calc(100vw - 30px); display:inline-block; border: 1px solid black;">';
         if (results != undefined){
@@ -197,10 +225,11 @@ class DBLayoutModule {
                 if (results[i].value!=undefined && results[i].value.length>0)
                     output +=  '<p style="margin:2px;">'+this.CommentTextFilter(results[i].value)+'</p>';
 
-                var pageQuery = '';
-                if (results[i].page == 'Item') pageQuery = 'table='+results[i].page_arg1+'&id='+results[i].page_arg2;
-                else pageQuery = 'id='+results[i].page_arg2;
-                output +=  '<p style="margin:2px; padding-left:1em;"><a href="/'+results[i].page+'?'+pageQuery+'">'+results[i].page+' Page</a></p>';
+                // var pageQuery = '';
+                // if (results[i].page == 'Item') pageQuery = 'table='+results[i].page_arg1+'&id='+results[i].page_arg2;
+                // else pageQuery = 'id='+results[i].page_arg2;
+                // output +=  '<p style="margin:2px; padding-left:1em;"><a href="/'+results[i].page+'?'+pageQuery+'">'+results[i].page+' Page</a></p>';
+                output +=  '<p style="margin:2px; padding-left:1em;">'+this.GetPageLinkString(serverData,results[i].page,results[i].page_arg1,results[i].page_arg2)+'</p>';
     
                 output +=  '<p style="margin:2px; float:right;">';
                 if (userdata!=undefined && userdata.mail_auth != undefined && userdata.mail_auth == "A"){

@@ -783,11 +783,11 @@ app.get('/', function (req, response) {
       }
       if (req.session.login_userno == undefined){
         output = output.replace(/%LoginData%/g, dbLayout.Layout_LoginForm());
-        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(undefined,comment_results));
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(serverData,undefined,comment_results));
       } else {
         var user_results = connection.query('SELECT * FROM user WHERE userno="'+req.session.login_userno+'";');
         output = output.replace(/%LoginData%/g, dbLayout.Layout_LogedIn(user_results[0]));
-        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(user_results[0],comment_results));
+        output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(serverData,user_results[0],comment_results));
       }
     }
 
