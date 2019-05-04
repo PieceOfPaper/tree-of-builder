@@ -302,6 +302,7 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%AniTime%/g, Number(skillTable[index].AniTime)/1000 + 's');
 
     output = output.replace(/%SkillGem%/g, skillGemString);
+    output = output.replace(/%SpendItem%/g, tos.GetItemResultString(serverData, skillTable[index]['SpendItem']));
 
     output = output.replace(/%Keyword%/g, skillTable[index].Keyword==undefined?'':skillTable[index].Keyword.replace(/;/g,', '));
 
