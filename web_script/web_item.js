@@ -894,6 +894,26 @@ module.exports = function(app, serverSetting, serverData){
           if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
         }
       }
+
+      var propertyRewardData = tos.FindDataClassName(serverData,'reward_property',questAutoTable[param].ClassName);
+      if (propertyRewardData!=undefined){
+        for (var i=1;i<10;i++){
+          if (propertyRewardData['RewardItem'+i]==undefined || propertyRewardData['RewardItem'+i].length==0) continue;
+          if (propertyRewardData['RewardItem'+i]==serverData['tableData'][tableName][index].ClassName){
+            if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+          }
+        }
+      }
+  
+      var jsQuestRewardData = tos.FindDataClassName(serverData,'reward_property','JS_Quest_Reward_'+questAutoTable[param].ClassName);
+      if (jsQuestRewardData!=undefined){
+        for (var i=1;i<10;i++){
+          if (jsQuestRewardData['RewardItem'+i]==undefined || jsQuestRewardData['RewardItem'+i].length==0) continue;
+          if (jsQuestRewardData['RewardItem'+i]==serverData['tableData'][tableName][index].ClassName){
+            if (questList.includes(questAutoTable[param].ClassName)==false) questList.push(questAutoTable[param].ClassName);
+          }
+        }
+      }
     }
 
     var output = '';

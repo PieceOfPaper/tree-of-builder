@@ -18,7 +18,7 @@ module.exports = function(app, serverSetting, serverData){
         if (questTable != undefined && request.query.id != undefined && request.query.id != ''){
           for (var i = 0; i < questTable.length; i ++){
             if (questTable[i].ClassID === Number(request.query.id)){
-                monsterDetailPage(i, request, response);
+                questDetailPage(i, request, response);
               return;
             }
           }
@@ -29,7 +29,7 @@ module.exports = function(app, serverSetting, serverData){
   
 
     var layout_detail = fs.readFileSync('./web/QuestPage/detail.html');
-    function monsterDetailPage(index, request, response) {
+    function questDetailPage(index, request, response) {
         var className = serverData['tableData']['questprogresscheck'][index].ClassName;
         var questData = tos.FindDataClassName(serverData, 'questprogresscheck', className);
         var questAutoData = tos.FindDataClassName(serverData, 'questprogresscheck_auto', className);
@@ -54,11 +54,14 @@ module.exports = function(app, serverSetting, serverData){
 
         var rewardString = '';
         if (questAutoData != undefined){
+          var hasReward = false;
           if (questAutoData.Success_Exp != undefined && questAutoData.Success_Exp > 0){
             rewardString += '<p>EXP ' + questAutoData.Success_Exp + '</p>';
+            hasReward = true;
           }
           if (questAutoData.Success_StatByBonus != undefined && questAutoData.Success_StatByBonus > 0){
             rewardString += '<p>Bonus Stat ' + questAutoData.Success_StatByBonus + '</p>';
+            hasReward = true;
           }
           if (questAutoData['Success_ItemName' + 1] != undefined && questAutoData['Success_ItemName' + 1].length > 0){
             rewardString += '<h3>Default Reward</h3>';
@@ -76,6 +79,7 @@ module.exports = function(app, serverSetting, serverData){
                 rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_ItemCount' + i]);
               }
             }
+            hasReward = true;
           }
           if (questAutoData['Success_SelectItemName' + 1] != undefined && questAutoData['Success_SelectItemName' + 1].length > 0){
             rewardString += '<h3>Select Reward</h3>';
@@ -93,6 +97,7 @@ module.exports = function(app, serverSetting, serverData){
                 rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_SelectItemCount' + i]);
               }
             }
+            hasReward = true;
           }
           if (questAutoData['Success_JobItem_Name' + 1] != undefined && questAutoData['Success_JobItem_Name' + 1].length > 0) {
             rewardString += '<h3>Job Reward</h3>';
@@ -110,7 +115,45 @@ module.exports = function(app, serverSetting, serverData){
                 rewardString += tos.GetItemResultString(serverData, itemData.ClassName, questAutoData['Success_JobItem_Count' + i]);
               }
             }
+            hasReward = true;
           }
+          if(hasReward) rewardString = '<h2>Rewards</h2>'+rewardString;
+        }
+
+        var propertyRewardString = '';
+        var propertyRewardData = tos.FindDataClassName(serverData,'reward_property',questData.ClassName);
+        if (propertyRewardData!=undefined){
+          var hasReward = false;
+          if (propertyRewardData['Property']!=undefined && propertyRewardData['Property'].length>0 &&
+            propertyRewardData['Value']!=undefined && propertyRewardData['Value']>0){
+              propertyRewardString += '<p>'+tos.ClassName2Lang(serverData,propertyRewardData['Property'])+' +'+propertyRewardData['Value']+'</p>';
+              hasReward = true;
+          }
+          for (var i=1;i<10;i++){
+            if (propertyRewardData['RewardItem'+i]==undefined || propertyRewardData['RewardItem'+i].length==0) continue;
+            if (propertyRewardData['RewardCount'+i]==undefined || propertyRewardData['RewardCount'+i]==0) continue;
+            propertyRewardString += tos.GetItemResultString(serverData,propertyRewardData['RewardItem'+i],propertyRewardData['RewardCount'+i]);
+            hasReward = true;
+          }
+          if(hasReward) propertyRewardString = '<h2>Property Rewards</h2>'+propertyRewardString;
+        }
+
+        var jsQuestRewardString = '';
+        var jsQuestRewardData = tos.FindDataClassName(serverData,'reward_property','JS_Quest_Reward_'+questData.ClassName);
+        if (jsQuestRewardData!=undefined){
+          var hasReward = false;
+          if (jsQuestRewardData['Property']!=undefined && jsQuestRewardData['Property'].length>0 &&
+            jsQuestRewardData['Value']!=undefined && jsQuestRewardData['Value']>0){
+              jsQuestRewardString += '<p>'+tos.ClassName2Lang(serverData,jsQuestRewardData['Property'])+' +'+jsQuestRewardData['Value']+'</p>';
+              hasReward = true;
+          }
+          for (var i=1;i<10;i++){
+            if (jsQuestRewardData['RewardItem'+i]==undefined || jsQuestRewardData['RewardItem'+i].length==0) continue;
+            if (jsQuestRewardData['RewardCount'+i]==undefined || jsQuestRewardData['RewardCount'+i]==0) continue;
+            jsQuestRewardString += tos.GetItemResultString(serverData,jsQuestRewardData['RewardItem'+i],jsQuestRewardData['RewardCount'+i]);
+            hasReward = true;
+          }
+          if(hasReward) jsQuestRewardString = '<h2>JS Quest Rewards</h2>'+jsQuestRewardString;
         }
 
         var questModeIconPath = '';
@@ -227,6 +270,8 @@ module.exports = function(app, serverSetting, serverData){
         output = output.replace(/%RequireQuestString%/g, requireQuestString);
 
         output = output.replace(/%RewardString%/g, rewardString);
+        output = output.replace(/%PropertyRewardString%/g, propertyRewardString);
+        output = output.replace(/%JSQuestRewardString%/g, jsQuestRewardString);
 
         output = output.replace(/%PossibleDialogString%/g, possibleString);
         output = output.replace(/%ProgressDialogString%/g, progressString);

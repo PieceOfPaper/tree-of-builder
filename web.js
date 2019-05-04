@@ -380,6 +380,7 @@ loadTable('collection', 'ies.ipf/collection.ies', function(name, path){
 });
 loadTable('gacha_detail', 'ies.ipf/gacha_detail.ies');
 loadTable('Package_Item_List', 'ies.ipf/Package_Item_List.ies');
+loadTable('reward_property', 'ies.ipf/reward_property.ies');
 function loadTable(name, path, callback){
   if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
