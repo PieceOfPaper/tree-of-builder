@@ -142,6 +142,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'function IsBuffApplied(pc, buff){ return false; }';
     captionScript += 'function IGetSumOfEquipItem(pc, equip){ return 0; }';
     captionScript += 'function IsPVPServer(pc){ return 0; }';
+    captionScript += 'function IsPVPField(pc){ return 0; }';
     captionScript += 'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
     captionScript += 'function GetZoneName(pc){ return 0; }';
 
