@@ -66,20 +66,20 @@ module.exports = function(app, serverSetting, serverData){
       if (indunRewardItem!=undefined){
         var indunRewardItemString = '';
         var itemData = tos.FindDataClassName(serverData,'item',indunRewardItem.Reward_Item);
-        indunRewardItemString += '<h3>'+tos.GetItemResultString(serverData,indunRewardItem.Reward_Item)+'</h3>';
-        var indunRewardItemList = [];
-        if (itemData!=undefined && itemData.StringArg!=undefined){
-            for (var j=0;j<serverData['tableData']['reward_indun'].length;j++){
-                if(serverData['tableData']['reward_indun'][j].Group==itemData.StringArg){
-                    indunRewardItemList.push(serverData['tableData']['reward_indun'][j].ItemName);
-                }
-            }
-        }
-        indunRewardItemString += '<div style="margin-left:20px;">';
-        for (var j=0;j<indunRewardItemList.length;j++){
-            indunRewardItemString += '<p>'+tos.GetItemResultString(serverData,indunRewardItemList[j])+'</p>';
-        }
-        indunRewardItemString += '</div>';
+        indunRewardItemString += '<p>'+tos.GetItemResultString(serverData,indunRewardItem.Reward_Item)+'</p>';
+        // var indunRewardItemList = [];
+        // if (itemData!=undefined && itemData.StringArg!=undefined){
+        //     for (var j=0;j<serverData['tableData']['reward_indun'].length;j++){
+        //         if(serverData['tableData']['reward_indun'][j].Group==itemData.StringArg){
+        //             indunRewardItemList.push(serverData['tableData']['reward_indun'][j].ItemName);
+        //         }
+        //     }
+        // }
+        // indunRewardItemString += '<div style="margin-left:20px;">';
+        // for (var j=0;j<indunRewardItemList.length;j++){
+        //     indunRewardItemString += '<p>'+tos.GetItemResultString(serverData,indunRewardItemList[j])+'</p>';
+        // }
+        // indunRewardItemString += '</div>';
         output = output.replace(/%IndunRewardItem%/g, indunRewardItemString);
       } else {
         output = output.replace(/%IndunRewardItem%/g, '');

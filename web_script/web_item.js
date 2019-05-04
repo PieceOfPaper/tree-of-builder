@@ -166,6 +166,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
     output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
+    output = output.replace(/%IndunRewards%/g, getIndunRewardString(tableName,index));
+    output = output.replace(/%GachaDetail%/g, getGachaDetailString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
@@ -596,6 +598,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
     output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
+    output = output.replace(/%IndunRewards%/g, getIndunRewardString(tableName,index));
+    output = output.replace(/%GachaDetail%/g, getGachaDetailString(tableName,index));
 
     output = output.replace(/%Comment%/g, getCommentString(request));
 
@@ -720,6 +724,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
     output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
+    output = output.replace(/%IndunRewards%/g, getIndunRewardString(tableName,index));
+    output = output.replace(/%GachaDetail%/g, getGachaDetailString(tableName,index));
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
@@ -808,6 +814,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%QuestRewards%/g, getCanQuestRewardString(tableName,index));
     output = output.replace(/%Shops%/g, getShopString(tableName,index));
     output = output.replace(/%Collections%/g, getCollectionString(tableName,index));
+    output = output.replace(/%IndunRewards%/g, getIndunRewardString(tableName,index));
+    output = output.replace(/%GachaDetail%/g, getGachaDetailString(tableName,index));
 
     output = output.replace(/%Comment%/g, getCommentString(request));
 
@@ -961,16 +969,70 @@ module.exports = function(app, serverSetting, serverData){
     }
 
     var output = '';
-    output += '<h3>Collection</h3>';
+    //output += '<h3>Collection</h3>';
+    var hasStr = false;
     for (param in collectionTable){
       if (collectionTable[param].ClassName==itemData.ClassName){
         output += '<p>Base. '+tos.GetCollectionString(serverData,collectionTable[param].ClassName)+'</p>';
+        hasStr = true;
       }
     }
     for (param in collectionArray){
       output += '<p>'+tos.GetCollectionString(serverData,collectionArray[param])+'</p>';
+      hasStr = true;
     }
+    if (hasStr)
+      output = '<h3>Collection</h3>' + output;
 
+    return output;
+  }
+
+  function getIndunRewardString(tableName, index){
+    var output = '';
+    var itemData = serverData['tableData'][tableName][index];
+    var indunRewardItemList = [];
+    if (itemData!=undefined && itemData.StringArg!=undefined){
+        for (var j=0;j<serverData['tableData']['reward_indun'].length;j++){
+            if(serverData['tableData']['reward_indun'][j].Group==itemData.StringArg){
+                indunRewardItemList.push(serverData['tableData']['reward_indun'][j].ItemName);
+            }
+        }
+    }
+    if (indunRewardItemList.length > 0) output += '<h3>Indun Rewards</h3>';
+    for (var j=0;j<indunRewardItemList.length;j++){
+        output += '<p>'+tos.GetItemResultString(serverData,indunRewardItemList[j]);
+    }
+    return output;
+  }
+
+  function getGachaDetailString(tableName, index){
+    var output = '';
+    var itemData = serverData['tableData'][tableName][index];
+    if (itemData!=undefined){
+      var gachaData = undefined;
+      for (var i=0;i<serverData['tableData']['gacha_detail'].length;i++){
+        if (serverData['tableData']['gacha_detail'][i]['ItemClassName']!=undefined &&
+          serverData['tableData']['gacha_detail'][i]['ItemClassName']==itemData.ClassName){
+            gachaData = serverData['tableData']['gacha_detail'][i].RewardGroup;
+            break;
+          }
+      }
+      var itemList = [];
+      if (gachaData!=undefined){
+        for (var i=0;i<serverData['tableData']['Package_Item_List'].length;i++){
+          if (serverData['tableData']['Package_Item_List'][i]['Group']!=undefined &&
+            serverData['tableData']['Package_Item_List'][i]['Group'].toLowerCase().trim()==gachaData.toLowerCase().trim()){
+              itemList.push(serverData['tableData']['Package_Item_List'][i]['ItemName']);
+            }
+        }
+      }
+      if (itemList.length > 0) {
+        output += '<h3>Gacha Details</h3><p>Group: '+gachaData+'</p>';
+      }
+      for (var i=0;i<itemList.length;i++){
+        output += tos.GetItemResultString(serverData,itemList[i]);
+      }
+    }
     return output;
   }
 
