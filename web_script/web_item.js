@@ -355,6 +355,13 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'itemData["BuffValue"]=0;';
     captionScript += 'itemData["MAXATK_AC"]=0;';
     captionScript += 'itemData["MINATK_AC"]=0;';
+    captionScript += 'document.getElementById("UseLv").value=itemData.UseLv;';
+    captionScript += 'document.getElementById("UseLv").onchange=function(){';
+    captionScript +=  'itemData.UseLv=Number(document.getElementById("UseLv").value);';
+    captionScript +=  'updateBasicValue();';
+    captionScript +=  'updateReinforceSilverCount();';
+    captionScript +=  'updateTranscendMaterialCount();';
+    captionScript += '}\n';
 
     captionScript += 'var dummyMoru = {';
     captionScript +=  'StringArg:"",';
@@ -563,7 +570,7 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
 
     output = output.replace(/%ItemGrade%/g, tos.GradeToName(serverData, itemTable[index].ItemGrade));
-    output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
+    //output = output.replace(/%UseLv%/g, itemTable[index].UseLv);
     output = output.replace(/%Dur%/g, itemTable[index].Dur);
     output = output.replace(/%MaxDur%/g, itemTable[index].MaxDur);
     output = output.replace(/%ReqToolTip%/g, itemTable[index].ReqToolTip);
