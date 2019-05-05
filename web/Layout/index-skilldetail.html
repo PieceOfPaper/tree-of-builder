@@ -159,6 +159,10 @@
     </table>
 
     <br/>
+
+    %SkillXML%
+
+    <br/>
     
     <input class="lv-add-input" type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()"><br>
     <div><button class="lv-add-button plus" onclick="onClickLevelUp()"><img src="../img2/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDown()"><img src="../img2/button/btn_minus.png" /></button></div>
@@ -172,6 +176,7 @@
 
     <br/>
     <br/>
+
     <button onclick="var div=document.getElementById('rawScript-div'); if(div!=undefined){ div.style.display=(div.style.display=='none')?'block':'none'; }">Show RawScripts</button>
     <div id="rawScript-div" style="display: none;">
         <table class="script-details">

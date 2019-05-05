@@ -314,6 +314,7 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%AddCaptionScript%/g, captionScript);
 
     output = output.replace(/%RawScripts%/g, rawScript);
+    output = output.replace(/%SkillXML%/g, '<p><a href="SkillXML?id='+request.query.id+'">Skill Detail (XML)</a></p>');
 
     //output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 

@@ -220,8 +220,25 @@ loadFilelist('ies_ability.ipf/filelist.txt', function(filelist){
   }
   loadTableList('ability_job',filelist);
 });
+loadFilelist('xml.ipf/skill_bytool/filelist.txt', function(filelist){
+  if (filelist==undefined) return;
+  for (var i=0;i<filelist.length;i++){
+    if (filelist[i]=='ies_ability.ipf/filelist.txt') {
+      filelist.splice(i, 1);
+    }
+  }
+  loadXMLDataList('xml.ipf/skill_bytool',filelist);
+});
 function loadFilelist(path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
+    fs.readFile('./web/data/' + path, function(err, data){
+      var filelist = data.toString().replace(/\\/g,'/').replace(/\r?\n|\r/g, '\n').split('\n');
+      for (var i=0;i<filelist.length;i++){
+        filelist[i]=filelist[i].split('Tree-of-IPF/'+serverSetting['serverCode']+'/')[1];
+        if (filelist[i]==undefined||filelist[i].length==0) filelist.splice(i, 1);
+      }
+      if (callback != undefined) callback(filelist);
+    });
     return;
   }
   var file = fs.createWriteStream('./web/data/' + path);
@@ -238,6 +255,7 @@ function loadFilelist(path, callback){
         var filelist = data.toString().replace(/\\/g,'/').replace(/\r?\n|\r/g, '\n').split('\n');
         for (var i=0;i<filelist.length;i++){
           filelist[i]=filelist[i].split('Tree-of-IPF/'+serverSetting['serverCode']+'/')[1];
+          if (filelist[i]==undefined||filelist[i].length==0) filelist.splice(i, 1);
         }
         if (callback != undefined) callback(filelist);
       });
@@ -500,7 +518,8 @@ function loadTableList(name, pathlist, callback, index){
 loadXMLData('xml.ipf/playlist', 'xml.ipf/playlist.xml');
 //loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool.xml');
 //loadXMLData('xml.ipf/pad_skill_list', 'xml.ipf/pad_skill_list.xml');
-function loadXMLData(name, path, callback){
+function loadXMLData(name, path, callback, tryCnt){
+  if (tryCnt == undefined) tryCnt = 1;
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
     // import
     fs.readFile('./web/data/' + path, function(error, data){
@@ -510,17 +529,18 @@ function loadXMLData(name, path, callback){
       }
 
       var newXML = xml(fullstr);
-      if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].children!=undefined){
+      if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].root.children!=undefined){
         if (newXML.root!=undefined&&newXML.root.children!=undefined){
           for (var i=0;i<newXML.root.children.length;i++){
-            serverData['xmlData'][name].children.push(newXML.root.children[i]);
+            serverData['xmlData'][name].root.children.push(newXML.root.children[i]);
           }
         }
       }
       else {
         serverData['xmlData'][name] = newXML;
       }
-      console.log('import xml [' + name + '] ' + path);
+      //console.log('import xml [' + name + '] ' + path);
+      if (callback!=undefined) callback(name,path);
     });
     return;
   }
@@ -541,22 +561,39 @@ function loadXMLData(name, path, callback){
         }
 
         var newXML = xml(fullstr);
-        if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].children!=undefined){
+        if (serverData['xmlData'][name]!=undefined&&serverData['xmlData'][name].root!=undefined&&serverData['xmlData'][name].root.children!=undefined){
           if (newXML.root!=undefined&&newXML.root.children!=undefined){
             for (var i=0;i<newXML.root.children.length;i++){
-              serverData['xmlData'][name].children.push(newXML.root.children[i]);
+              serverData['xmlData'][name].root.children.push(newXML.root.children[i]);
             }
           }
         }
         else {
           serverData['xmlData'][name] = newXML;
         }
-        console.log('import xml [' + name + '] ' + path);
+        //console.log('import xml [' + name + '] ' + path);
+        if (callback!=undefined) callback(name,path);
       });
-
     });
   }).on('error', (e) => {
-    console.error('download error xml [' + name + '] ' + path + ' ' + e);
+    if (tryCnt<3){
+      console.warn('retry download xml ('+tryCnt+') [' + name + '] ' + path);
+      loadXMLData(name,path,callback, tryCnt+1);
+    } else {
+      console.error('download error xml [' + name + '] ' + path + ' ' + e);
+      if (callback != undefined) callback(name, path);
+    }
+  });
+}
+function loadXMLDataList(name, pathlist, callback, index){
+  if (pathlist==undefined) return;
+  if (index==undefined) index=0;
+  if (index>=pathlist.length) {
+    if (callback!=undefined) callback();
+    return;
+  }
+  loadXMLData(name,pathlist[index],function(name,path){
+    loadXMLDataList(name,pathlist,callback,index+1);
   });
 }
 
@@ -648,7 +685,13 @@ scriptArray.push('script.ipf/buff/skill_buff_pc.lua');
 scriptArray.push('script.ipf/buff/skill_buff_ratetable.lua');
 scriptArray.push('script.ipf/buff/skill_buff_takedamage.lua');
 scriptArray.push('script.ipf/buff/skill_buff_useskill.lua');
+scriptArray.push('script.ipf/skill/monskl_enable.lua');
+scriptArray.push('script.ipf/skill/monskl_custom_hard.lua');
+scriptArray.push('script.ipf/skill/monskl_custom.lua');
+scriptArray.push('script.ipf/skill/monskl_result.lua');
+scriptArray.push('script.ipf/skill/skill_select_by_cond.lua');
 scriptArray.push('script.ipf/mgame/mgame.lua');
+scriptArray.push('script_client.ipf/reaction/reaction.lua');
 scriptArray.push('ui.ipf/uiscp/mgame_action.lua');
 //for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
 generateLuaScript(scriptArray, 0, function(result){
@@ -919,6 +962,9 @@ app.use('/BoardFree', boardFree);
 var skillPage = require('./web_script/web_skill')(app, serverSetting, serverData);
 app.use('/Skill', skillPage);
 
+var skillXMLPage = require('./web_script/web_skillxml')(app, serverSetting, serverData);
+app.use('/SkillXML', skillXMLPage);
+
 var abilityPage = require('./web_script/web_ability')(app, serverSetting, serverData);
 app.use('/Ability', abilityPage);
 
@@ -945,6 +991,9 @@ app.use('/Indun', indunPage);
 
 var collectionPage = require('./web_script/web_collection')(app, serverSetting, serverData);
 app.use('/Collection', collectionPage);
+
+var minigamePage = require('./web_script/web_minigame')(app, serverSetting, serverData);
+app.use('/Minigame', minigamePage);
 
 var minigamePage = require('./web_script/web_minigame')(app, serverSetting, serverData);
 app.use('/Minigame', minigamePage);

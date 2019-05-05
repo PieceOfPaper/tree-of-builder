@@ -177,6 +177,9 @@ module.exports = function(app, serverSetting, serverData){
                 case 'Str':
                 arglist.push('"'+data.children[m].attributes['Str']+'"');
                 break;
+                case 'MonProp':
+                arglist.push('"['+data.children[m].attributes['List']+']"');
+                break;
             }
         }
         var argstr = '';
@@ -184,10 +187,14 @@ module.exports = function(app, serverSetting, serverData){
             if (m>0) argstr += ', ';
             argstr += arglist[m];
         }
+
+        var script = serverData['scriptData'][data.attributes['Scp']];
+        if (script == undefined) script = 'not found script.'
+
         output += '<table><tbody>';
         output += '<tr><td>'+data.attributes['Scp']+'</td></tr>';
         output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+argstr+'</td></tr>';
-        output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+serverData['scriptData'][data.attributes['Scp']]+'</td></tr>';
+        output += '<tr><td style="font-family: Arial, Helvetica, sans-serif; font-size:0.75em; white-space: pre-wrap;">'+script+'</td></tr>';
         output += '</tbody></table>';
 
         return output;
