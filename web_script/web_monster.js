@@ -151,7 +151,8 @@ module.exports = function(app, serverSetting, serverData){
         if (skillList.length > 0){
           for (var i=0;i<skillList.length;i++){
             skillString += '<tr>';
-            skillString += '<td><a href="../Skill?id='+skillList[i].ClassID+'">'+skillList[i].Name+'</a></td>';
+            //skillString += '<td><a href="../Skill?id='+skillList[i].ClassID+'">'+skillList[i].Name+'</a></td>';
+            skillString += '<td>'+tos.GetSkillString(serverData,skillList[i].ClassName)+'</td>';
             skillString += '<td>'+skillList[i].SklFactor+'%</td>';
             skillString += '<td>'+skillList[i].SklSR+'</td>';
             skillString += '<td>'+(skillList[i].BasicCoolDown/1000)+'s</td>';
