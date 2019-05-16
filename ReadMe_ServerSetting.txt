@@ -21,3 +21,4 @@ npm install psl
 // Bitnami 터미널 접근 - ktest
 chmod 600 /Users/the_paper/Projects/tree-of-builder-others/amazon-bitnami-ktest.pem
 ssh /Users/the_paper/Projects/tree-of-builder-others/amazon-bitnami-ktest.pem@52.79.204.252
+ssh -i /Users/the_paper/Projects/tree-of-builder-others/amazon-bitnami-ktest.pem bitnami@52.79.204.252
