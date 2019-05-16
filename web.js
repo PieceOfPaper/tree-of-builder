@@ -140,7 +140,10 @@ function DBImport(dbconfig){
     import_db(0);
     //for (var i=0;i<files.length;i++){
     function import_db(i){
-      if (i >= filelist.length) return;
+      if (i >= filelist.length) {
+        if (conns!=undefined) conns.dispose();
+        return;
+      }
       var table_setting_file = fs.readFileSync('./table_setting/'+filelist[i]);
       var column_setting = table_setting_file.toString().split('\n');
       var tablename = filelist[i].split('.')[0];
@@ -918,6 +921,7 @@ app.get('/', function (req, response) {
         output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(serverData,user_results[0],comment_results));
       }
     }
+    connection.dispose();
 
     response.send(output);
   //})

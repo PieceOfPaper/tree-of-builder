@@ -1081,6 +1081,8 @@ module.exports = function(app, serverSetting, serverData){
       var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
       output = dbLayout.Layout_Comment(user_results[0],'Item',request.query.table,request.query.id,comment_results);
     }
+    connection.dispose();
+    
     return output;
   }
 

@@ -68,6 +68,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             }
             var mysqlTimestamp = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
             var insert_results = connection.query('INSERT INTO comment (idx,userno,time,state,value,page,page_arg1,page_arg2) VALUES ('+index+','+userno+',"'+mysqlTimestamp+'",'+0+',"'+value+'","'+page+'","'+page_arg1+'",'+page_arg2+');');
+            connection.dispose();
+
             res.send('<script> window.location = document.referrer; </script>');
         });
     });
@@ -78,6 +80,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         var connection = new mysqls(serverSetting['dbconfig']);
         var target_results = connection.query('SELECT * FROM comment WHERE idx='+index+';');
         var updated_results = connection.query('UPDATE comment SET state=1 WHERE idx='+index+';');
+        connection.dispose();
+
         res.send('<script> alert("Delete Success. message:'+dbLayout.CommentTextMin(target_results[0].value)+'"); window.location = document.referrer; </script>');
     });
 
@@ -88,6 +92,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
         var user_results = connection.query('SELECT * FROM user WHERE userno='+req.session.login_userno+';');
         var target_results = connection.query('SELECT * FROM comment WHERE idx='+index+';');
+        connection.dispose();
 
         var mailbody = '';
         if (user_results!=undefined && user_results.length>0){
