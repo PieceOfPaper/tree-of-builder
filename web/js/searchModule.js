@@ -87,7 +87,7 @@ function searchModule_init(){
         if (checkboxFilters[param].classList.contains("customFilter") == true) continue;
         if (checkboxFilters[param].classList.contains("settedFilter") == true) continue;
         //if (checkboxFilters[param].checked == false) continue;
-        if (filterSetting[checkboxFilters[param].id]!=undefined) checkboxFilters[param].checked=filterSetting[checkboxFilters[param].id];
+        checkboxFilters[param].checked=filterSetting[checkboxFilters[param].id]==checkboxFilterSetting[checkboxFilters[param].id];
     }
 
     //set order event
