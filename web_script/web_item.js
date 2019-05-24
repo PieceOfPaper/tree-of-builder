@@ -75,20 +75,20 @@ module.exports = function(app, serverSetting, serverData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemData.Icon.toLowerCase()+'_f']);
-      iconPath = serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_f'));
+      iconPath = tos.getImagePath(serverData,itemData.Icon.toLowerCase()+'_m');
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_f'));
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].TooltipImage.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Icon.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Icon.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Illust.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Illust.toLowerCase());
     } else {
       icon = 'No Img';
     }
@@ -206,20 +206,20 @@ module.exports = function(app, serverSetting, serverData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_f'));
+      iconPath = tos.getImagePath(serverData,itemData.Icon.toLowerCase()+'_m');
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_f'));
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].TooltipImage.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Icon.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Icon.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Illust.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Illust.toLowerCase());
     } else {
       icon = 'No Img';
     }
@@ -621,20 +621,20 @@ module.exports = function(app, serverSetting, serverData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = serverData['imagePath'][itemData.Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()+'_f']);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_f'));
+      iconPath = tos.getImagePath(serverData,itemData.Icon.toLowerCase()+'_m');
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_f'));
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].TooltipImage.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Icon.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Icon.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Illust.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Illust.toLowerCase());
     } else {
       icon = 'No Img';
     }
@@ -750,20 +750,20 @@ module.exports = function(app, serverSetting, serverData){
     var tooltipImg = '';
     if (itemTable[index].EqpType != undefined && itemTable[index].UseGender != undefined && 
       itemTable[index].EqpType.toLowerCase() == 'outer' && itemTable[index].UseGender.toLowerCase() == 'both'){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_f']);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()+'_m'].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_m'])+tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage+'_f']);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemData.Icon.toLowerCase()+'_f'));
+      iconPath = tos.getImagePath(serverData,itemData.Icon.toLowerCase()+'_m');
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_m'))+tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()+'_f'));
     } else if(itemTable[index].EquipXpGroup != undefined && itemTable[index].EquipXpGroup.toLowerCase() == 'gem_skill') {
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].TooltipImage.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Icon != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Icon.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Icon.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].Icon.toLowerCase()].path;
-      tooltipImg = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].TooltipImage.toLowerCase()]);
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Icon.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Icon.toLowerCase());
+      tooltipImg = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].TooltipImage.toLowerCase()));
     } else if(itemTable[index].Illust != undefined){
-      icon = tos.ImagePathToHTML(serverData['imagePath'][itemTable[index].Illust.toLowerCase()]);
-      iconPath = serverData['imagePath'][itemTable[index].Illust.toLowerCase()] == undefined ? '' : serverData['imagePath'][itemTable[index].Illust.toLowerCase()].path;
+      icon = tos.ImagePathToHTML(tos.getImageData(serverData,itemTable[index].Illust.toLowerCase()));
+      iconPath = tos.getImagePath(serverData,itemTable[index].Illust.toLowerCase());
     } else {
       icon = 'No Img';
     }

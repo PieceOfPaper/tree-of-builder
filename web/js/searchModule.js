@@ -493,8 +493,7 @@ function searchModule_onchange_order() {
 
 
 function ImagePathToHTML(data, imgpath, imgrect, height){
-    if (data == undefined) return '';
-    if (imgpath == undefined) return '';
+    if (data == undefined || imgpath == undefined) return '<div style="height:'+height+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ></div>';
 
     var rect = [];
     if (imgrect != undefined){

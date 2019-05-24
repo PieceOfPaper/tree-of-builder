@@ -347,7 +347,7 @@ class TosModule {
     }
 
     static ImagePathToHTML(imagePathData, height, addParameter){
-        if (imagePathData == undefined) return '';
+        if (imagePathData == undefined) return '<div style="height:'+height+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ></div>';
 
         var rect = [];
         if (imagePathData.imgrect != undefined){
@@ -396,7 +396,7 @@ class TosModule {
     }
 
     static ImagePathToHTML_KeepWidth(imagePathData, height, addParameter){
-        if (imagePathData == undefined) return '';
+        if (imagePathData == undefined) return '<div style="height:'+height+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ></div>';
 
         var rect = [];
         if (imagePathData.imgrect != undefined){
@@ -433,6 +433,21 @@ class TosModule {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
         return text;
+    }
+
+    static getImageData(serverData, imageName){
+        if (imageName == undefined) return undefined;
+        var data=serverData['imagePath'][imageName.toString().toLowerCase()];
+        if (data != undefined){
+            return serverData['imagePath'][imageName.toString().toLowerCase()];
+        }
+        return undefined;
+    }
+
+    static getImagePath(serverData, imageName){
+        var data = this.getImageData(serverData, imageName);
+        if (data == undefined) return '';
+        return data.path;
     }
 }
 module.exports = TosModule;
