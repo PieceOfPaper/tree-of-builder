@@ -137,6 +137,7 @@ module.exports = function(app, serverSetting, serverData){
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_REINFORCE_ARMOR_CALC']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTHR']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTDR']);
+        statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_STAT_RATE']);
         statScript += '</script>';
 
         var skillList = [];
