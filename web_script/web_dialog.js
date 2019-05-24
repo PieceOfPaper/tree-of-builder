@@ -46,7 +46,7 @@ module.exports = function(app, serverSetting, serverData){
         var imgPathData = serverData['imagePath'][dialogData['ImgName'].toLowerCase()];
         if (imgPathData != undefined){
           //imgString += '<img style="max-width:calc(100% - 20px);" src="'+imgPathData.path+'" />';
-          imgString = tos.ImagePathToHTML(imgPathData);
+          imgString = tos.ImagePathToHTML_KeepWidth(imgPathData);
           imgPath = imgPathData.path;
         }
       }

@@ -363,7 +363,7 @@ class TosModule {
         var scale = height / rect[3];
         var extention = this.getExtention(imagePathData.path).toLowerCase();
         
-        var output = '<div style="width:'+(rect[2]*scale)+'px; height:'+(rect[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
+        var output = '<div style="width:'+(rect[2]*scale)+'px; height:'+(rect[3]*scale)+'px; max-width:calc(100% - 20px); padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
         if (addParameter != undefined){
             output += addParameter;
             output += ' ';
@@ -393,6 +393,28 @@ class TosModule {
         }
 
         return output;
+    }
+
+    static ImagePathToHTML_KeepWidth(imagePathData, height, addParameter){
+        if (imagePathData == undefined) return '';
+
+        var rect = [];
+        if (imagePathData.imgrect != undefined){
+            var splited = imagePathData.imgrect.split(' ');
+            if (splited != undefined){
+                for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+            }
+        }
+
+        if (height == undefined) height = rect[3];
+        var scale = height / rect[3];
+        var extention = this.getExtention(imagePathData.path).toLowerCase();
+
+        if (extention == 'tga'){
+            return this.ImagePathToHTML(imagePathData, height, addParameter);
+        }
+
+        return '<img style="width:'+(rect[2]*scale)+'; max-width:calc(100% - 20px);" src="'+imagePathData.path+'" />';
     }
 
     static getExtention(filepath){
