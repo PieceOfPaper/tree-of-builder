@@ -35,7 +35,7 @@ module.exports = function(app, serverSetting, serverData){
       var textString = dialogData['Text'];
       if (textString != undefined){
         textString = textString.replace(/{nl}/g,'<br>');
-        textString = textString.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
+        textString = textString.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">---</p><br>');
       } else {
         textString = '';
       }
