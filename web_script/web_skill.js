@@ -159,7 +159,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'var currentSkill=' + JSON.stringify(skillTable[index]) + ';';
     captionScript += 'currentSkill["Level"]=Number(1);';
 
-    captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
+    captionScript += 'document.getElementById("SkillLevel").max=' + 20 + ';';
     captionScript += 'onChangeSkillLevel();';
 
     captionScript += 'function onChangeSkillLevel(){';
@@ -292,6 +292,7 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%LvUpSpendSp%/g, Number(skillTable[index].LvUpSpendSp));
     output = output.replace(/%BasicCoolDown%/g, Number(skillTable[index].BasicCoolDown)/1000 + 's');
     output = output.replace(/%OverHeat%/g, overHeat);
+    output = output.replace(/%SkillLevelMax%/g, skillMaxLevel);
 
     output = output.replace(/%DefaultHitDelay%/g, Number(skillTable[index].DefaultHitDelay)/1000 + 's');
     output = output.replace(/%ShootTime%/g, Number(skillTable[index].ShootTime)/1000 + 's');
