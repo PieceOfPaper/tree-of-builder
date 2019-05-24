@@ -59,7 +59,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
                     }
                     smtpTransport.close();
                 });
-                res.send(layout_message.toString().replace(/%Message%/g, 'Sent Mail. Check your email'));
+                res.send(layout_message.toString().replace(/%Message%/g, 'Sent Mail. Check your email<br>If you not received mail, Check junk mail.<br><br>메일을 보냈습니다. 받은메일함을 확인하세요.<br>만약 메일이 오지 않는 경우, 정크메일을 확인하세요.'));
                 return;
             });
         }
