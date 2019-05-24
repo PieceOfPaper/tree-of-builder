@@ -15,20 +15,11 @@ module.exports = function(app, serverSetting, serverData){
         var resultString = '';
         
         resultString += '<table class="search-result-table"><tbody>';
-        resultString += '<tr><td>Icon</td><td>Name</td><td>Job</td><td>Ride Speed</td><td>Is Ride</td></tr>';
+        resultString += '<tr><td>Monster</td><td>Job</td><td>Ride Speed</td><td>Is Ride</td></tr>';
         for (param in companionTable){
             resultString += '<tr>';
             var nameStr = tos.GetMonsterString(serverData, companionTable[param].ClassName.trim());
             if (nameStr == undefined || nameStr.length == 0) nameStr = companionTable[param].ClassName.replace(/_/g,' ');
-            var monData = undefined;
-            var iconString = '';
-            if (companionTable[param].ClassName != undefined && companionTable[param].ClassName.length>0){
-                monData = tos.FindDataClassName(serverData, 'monster', companionTable[param].ClassName);
-                if (monData != undefined && monData.Icon != undefined){
-                    //iconString = '<img style="width: 64px; height: 64px;" src="../img/icon/monillust/'+monData.Icon.toLowerCase()+'.png" />';
-                    iconString = tos.ImagePathToHTML(serverData['imagePath'][monData.Icon.toLowerCase()], 64);
-                }
-            }
             var jobData = undefined;
             var jobNameString = '';
             if (companionTable[param].JobID != undefined && companionTable[param].JobID>0){
@@ -37,7 +28,6 @@ module.exports = function(app, serverSetting, serverData){
                     jobNameString = jobData.Name;
                 }
             }
-            resultString += '<td>'+iconString+'</td>';
             resultString += '<td>'+nameStr+'</td>';
             resultString += '<td>'+jobNameString+'</td>';
             //resultString += '<td>'+companionTable[param].AddSpeed+'</td>';
