@@ -363,7 +363,7 @@ class TosModule {
         var scale = height / rect[3];
         var extention = this.getExtention(imagePathData.path).toLowerCase();
         
-        var output = '<div style="width:'+(rect[2]*scale)+'px; height:'+(rect[3]*scale)+'px; max-width:calc(100% - 20px); padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
+        var output = '<div style="width:'+(rect[2]*scale)+'px; height:'+(rect[3]*scale)+'px; max-width:calc(100vw - 20px); padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" ';
         if (addParameter != undefined){
             output += addParameter;
             output += ' ';
@@ -414,7 +414,7 @@ class TosModule {
             return this.ImagePathToHTML(imagePathData, height, addParameter);
         }
 
-        return '<img style="width:'+(rect[2]*scale)+'; max-width:calc(100% - 20px);" src="'+imagePathData.path+'" />';
+        return '<img style="width:'+(rect[2]*scale)+'; max-width:calc(100vw - 20px);" src="'+imagePathData.path+'" />';
     }
 
     static getExtention(filepath){
