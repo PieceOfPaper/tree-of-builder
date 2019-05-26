@@ -35,12 +35,22 @@
         <select id="filter_ItemType" class="selectFilter">
             <option value="Default">Item Type</option>
         </select>
+        <!--
         <select id="filter_ItemGrade" class="selectFilter">
             <option value="Default">ItemGrade</option>
         </select>
+        -->
         <select id="filter_GroupName" class="selectFilter useLanguageJS">
             <option value="Default">Group Name</option>
         </select>
+        <div style="font-size: 1.5em;">
+            <input type="checkbox" id="gradeFilter_0" style="vertical-align: middle;"><span style="color: gray">■</span></input>
+            <input type="checkbox" id="gradeFilter_1" style="vertical-align: middle;"><span style="color: white">■</span></input>
+            <input type="checkbox" id="gradeFilter_2" style="vertical-align: middle;"><span style="color: blue">■</span></input>
+            <input type="checkbox" id="gradeFilter_3" style="vertical-align: middle;"><span style="color: purple">■</span></input>
+            <input type="checkbox" id="gradeFilter_4" style="vertical-align: middle;"><span style="color: red">■</span></input>
+            <input type="checkbox" id="gradeFilter_5" style="vertical-align: middle;"><span style="color: yellow">■</span></input>
+        </div>
         <p>Filter - Card</p>
         <select id="filter_CardGroupName" class="selectFilter">
             <option value="Default">Card Group</option>
@@ -128,11 +138,23 @@
 
         baseTable="item";
         customFilterSettingMethods.push(setCustom_useLv);
+        customFilterSettingMethods.push(setCustom_itemGrade);
         searchModule_init();
 
         if (filterSetting["filter_UseLv"] != undefined){
             document.getElementById("useLvMinFilter").value = Number(filterSetting["filter_UseLv"].split(',')[0].replace('[',''));
             document.getElementById("useLvMaxFilter").value = Number(filterSetting["filter_UseLv"].split(',')[1].replace(']',''));
+        }
+
+        if (filterSetting["filter_ItemGrade"] != undefined){
+            var splited = filterSetting["filter_ItemGrade"].split(';');
+            for (var i=0;i<splited.length;i++){
+                document.getElementById('gradeFilter_'+splited[i]).checked=true;
+            }
+        } else {
+            for (var i=0;i<=5;i++){
+                document.getElementById('gradeFilter_'+i).checked = true;
+            }
         }
 
         function setCustom_useLv(filterSetting){
@@ -141,6 +163,23 @@
                 return;
             }
             filterSetting["filter_UseLv"] = '['+document.getElementById("useLvMinFilter").value+','+document.getElementById("useLvMaxFilter").value+']';
+        }
+
+        function setCustom_itemGrade(filterSetting){
+            var hasAll = true;
+            var filterStr = '';
+            for (var i=0;i<=5;i++){
+                if (document.getElementById('gradeFilter_'+i).checked == true){
+                    if (filterStr.length > 0) filterStr += ';';
+                    filterStr += i;
+                } else {
+                    hasAll = false;
+                }
+            }
+            if (hasAll)
+                filterSetting["filter_ItemGrade"] = undefined;
+            else
+                filterSetting["filter_ItemGrade"] = filterStr;
         }
 
     </script>
