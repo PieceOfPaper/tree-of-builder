@@ -88,7 +88,7 @@ console.log('argument loaded');
 
 
 console.log('### DB Connect Request');
-serverSetting['dbconfig'] = [];
+serverSetting['dbconfig'] = undefined;
 if (serverSetting['isLocalServer']){
   serverSetting['dbconfig'] = {
     host     : '127.0.0.1',
@@ -97,7 +97,7 @@ if (serverSetting['isLocalServer']){
     database : 'tree-of-builder',
     onerror: err=>console.log(err.message),
   };
-} else if(serverSetting['serverCode'] == 'kr' || serverSetting['serverCode'] == 'ktest') {
+} else if(serverSetting['serverCode'] == 'kr') {
   serverSetting['dbconfig'] = {
     host     : 'remotemysql.com',
     user     : '8dsGgaueIQ',
@@ -112,19 +112,21 @@ if (serverSetting['isLocalServer']){
 // });
 
 serverSetting['db-testConnect'] = false;
-var testConnection = mysql.createConnection(serverSetting['dbconfig']);
-testConnection.on('error', function() {});
-testConnection.connect(function(err) {
-  if (err) {
-    console.error('### DB Connect Error: ' + err.stack);
-    return;
-  }
-  console.log('### DB Connect Success. connected as id ' + testConnection.threadId);
-  serverSetting['db-testConnect'] = true;
-  testConnection.end();
-  DBImport(serverSetting['dbconfig']);
-});
-//connection.end();
+if (serverSetting['dbconfig'] != undefined){
+  var testConnection = mysql.createConnection(serverSetting['dbconfig']);
+  testConnection.on('error', function() {});
+  testConnection.connect(function(err) {
+    if (err) {
+      console.error('### DB Connect Error: ' + err.stack);
+      return;
+    }
+    console.log('### DB Connect Success. connected as id ' + testConnection.threadId);
+    serverSetting['db-testConnect'] = true;
+    testConnection.end();
+    DBImport(serverSetting['dbconfig']);
+  });
+  //connection.end();
+}
 
 function DBImport(dbconfig){
   var conns = new mysqls(dbconfig);
@@ -856,44 +858,6 @@ var layout = fs.readFileSync('./web/Layout/index-main.html');
 var layout_topMenu = fs.readFileSync('./web/Layout/topMenu.html');
  
 app.get('/', function (req, response) {
-  //fs.readdir('./web/img/Dlg_portrait', (err, files) => {
-    // if (err) sendSlack(err.toString());
-    // if (files === undefined){
-    //   response.send(layout.toString());
-    //   return;
-    // }
-
-    var connection = new mysqls(serverSetting['dbconfig']);
-
-    // var randomIndex = Math.floor(Math.random()*files.length);
-    // var imgname = files[randomIndex].split('.')[0].toLowerCase();
-    // var dialogTable = serverData['tableData']['dialogtext'];
-    // var captionList = [];
-    // for (var i = 0; i < dialogTable.length; i++){
-    //   if (dialogTable[i].ImgName != undefined && dialogTable[i].ImgName.toLowerCase().indexOf(imgname) > -1){
-    //     captionList.push(dialogTable[i]);
-    //   }
-    // }
-    // var illustNpcName = imgname;
-    // var illustNpcText = '';
-    // if (captionList.length > 0){
-    //   var caption = captionList[Math.floor(Math.random()*captionList.length)];
-    //   illustNpcName = caption.Caption;
-    //   //illustNpcText = caption.Text.split(/{np}|{nl}/g);
-    //   //illustNpcText = tos.parseCaption(caption.Text);
-    //   var illustNpcText = caption['Text'];
-    //   if (illustNpcText != undefined){
-    //     illustNpcText = illustNpcText.replace(/{nl}/g,'<br>');
-    //     illustNpcText = illustNpcText.replace(/{np}/g,'<br><p style="width:calc(100% - 20px); text-align:center;">◆◆◆</p><br>');
-    //   } else {
-    //     illustNpcText = '';
-    //   }
-    // }
-
-    // var illustNpcMention = '';
-    // for (var i = 0; i < illustNpcText.length; i ++){
-    //   illustNpcMention +=     illustNpcText[i] + '<br/>';
-    // }
 
     var serverName = '';
     switch(serverSetting['serverCode']){
@@ -916,11 +880,13 @@ app.get('/', function (req, response) {
 
     output = output.replace(/%AddTopMenu%/g, layout_topMenu.toString());
 
-    if (serverSetting['db-testConnect'] == false ||
-      (serverSetting['serverCode'] == 'ktest' && serverSetting['isLocalServer'] == false)) {
+
+
+    if (serverSetting['dbconfig'] == undefined) {
       output = output.replace(/%LoginData%/g, '');
       output = output.replace(/%ShortBoard%/g, '');
     } else {
+      var connection = new mysqls(serverSetting['dbconfig']);
       var comment_results = connection.query('SELECT * FROM comment WHERE state=0 ORDER BY time DESC LIMIT 10;');
       if (comment_results != undefined){
         for (param in comment_results){
@@ -938,8 +904,8 @@ app.get('/', function (req, response) {
         output = output.replace(/%LoginData%/g, dbLayout.Layout_LogedIn(user_results[0]));
         output = output.replace(/%ShortBoard%/g, dbLayout.Layout_CommentAll(serverData,user_results[0],comment_results));
       }
+      connection.dispose();
     }
-    connection.dispose();
 
     response.send(output);
   //})

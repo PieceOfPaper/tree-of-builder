@@ -8,6 +8,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     var route = express.Router();
     route.get('/', function (req, res) {
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
         if (req.query.id != undefined && req.query.id.length > 0){
             console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
             var connection = mysql.createConnection(serverSetting['dbconfig']);

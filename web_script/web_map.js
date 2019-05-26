@@ -181,23 +181,27 @@ module.exports = function(app, serverSetting, serverData){
       output = output.replace(/%BGMString%/g, bgmString);
 
 
-      var connection = new mysqls(serverSetting['dbconfig']);
-      var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Map" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC;');
-      if (comment_results != undefined){
-        for (param in comment_results){
-          var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
-          if (nickname_results!=undefined && nickname_results.length>0){
-            comment_results[param]["nickname"]=nickname_results[0].nickname;
+      if (serverSetting['dbconfig'] == undefined){
+        output = output.replace(/%Comment%/g, '');
+      } else {
+        var connection = new mysqls(serverSetting['dbconfig']);
+        var comment_results = connection.query('SELECT * FROM comment WHERE state=0 AND page="Map" AND page_arg1="'+''+'" AND page_arg2='+request.query.id+' ORDER BY time DESC;');
+        if (comment_results != undefined){
+          for (param in comment_results){
+            var nickname_results = connection.query('SELECT * FROM user WHERE userno="'+comment_results[param].userno+'";');
+            if (nickname_results!=undefined && nickname_results.length>0){
+              comment_results[param]["nickname"]=nickname_results[0].nickname;
+            }
           }
         }
+        if (request.session.login_userno == undefined){
+          output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(undefined,'Map','',request.query.id,comment_results));
+        } else {
+          var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
+          output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(user_results[0],'Map','',request.query.id,comment_results));
+        }
+        connection.dispose();
       }
-      if (request.session.login_userno == undefined){
-        output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(undefined,'Map','',request.query.id,comment_results));
-      } else {
-        var user_results = connection.query('SELECT * FROM user WHERE userno="'+request.session.login_userno+'";');
-        output = output.replace(/%Comment%/g, dbLayout.Layout_Comment(user_results[0],'Map','',request.query.id,comment_results));
-      }
-      connection.dispose();
 
       response.send(output);
     }

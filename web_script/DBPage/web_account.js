@@ -42,6 +42,12 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             res.send('<script> window.location.href=".."; </script>');
             return;
         }
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
+
         var userno = req.session.login_userno;
 
         var connection = mysql.createConnection(serverSetting['dbconfig']);
@@ -144,6 +150,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     });
 
     route.get('/EmailAuth', function (req, res) {
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
         if (req.query.id != undefined && req.query.id.length > 0){
             console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl);
             var connection = mysql.createConnection(serverSetting['dbconfig']);
@@ -221,6 +232,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         if (req.body.email == undefined){
             res.send('<script> alert("Pwd Reset Fail."); window.history.back(); </script>');
+            return;
+        }
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
             return;
         }
 

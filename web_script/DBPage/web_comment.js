@@ -28,6 +28,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     
     var route = express.Router();
     route.post('/ReqWrite', function (req, res) {
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var userno = req.body.userno;
         var value = req.body.value;
@@ -75,6 +80,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     });
 
     route.post('/ReqDelete', function (req, res) {
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var index = req.body.index;
         var connection = new mysqls(serverSetting['dbconfig']);
@@ -86,6 +96,11 @@ module.exports = function(app, serverSetting, tableData, scriptData){
     });
 
     route.post('/ReqReport', function (req, res) {
+        if (serverSetting['dbconfig'] == undefined){
+            res.send('<script> window.location.href=".."; </script>');
+            console.warn('db-config undefined.');
+            return;
+        }
         console.log((new Date()).toISOString()+' [ReqDBLog] '+req.ip+' '+req.originalUrl+' '+JSON.stringify(req.body));
         var index = req.body.index;
         var connection = new mysqls(serverSetting['dbconfig']);
