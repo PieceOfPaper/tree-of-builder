@@ -92,8 +92,12 @@ function searchModule_init(){
 
     //set order event
     if (document.getElementById("orderAttribute")!=undefined){
-        if (filterSetting["orderAttr"]!=undefined) document.getElementById("orderAttribute").value=filterSetting["orderAttr"];
-        //document.getElementById("orderAttribute").onchange=searchModule_onchange_order;
+        var filterParent = document.getElementById("orderAttribute");
+        for (var i=0;i<filterParent.childNodes.length; i++){
+            if (filterParent.childNodes[i] == undefined) continue;
+            filterParent.childNodes[i].innerText = getLanguageByClassName(filterParent.childNodes[i].value);
+        }
+        if (filterSetting["orderAttr"]!=undefined) filterParent.value=filterSetting["orderAttr"];
     }
     if (document.getElementById("orderType")!=undefined){
         if (filterSetting["orderType"]!=undefined) document.getElementById("orderType").value=filterSetting["orderType"];
@@ -452,7 +456,11 @@ function searchModule_settingSelectFilter(id){
         for(var i=0;i<arr.length;i++){
             var option=document.createElement("option");
             option.value=arr[i];
-            option.innerText=arr[i];
+            if (filter.classList.contains('useLanguageJS')){
+                option.innerText=getLanguageByClassName(arr[i]);
+            } else {
+                option.innerText=arr[i];
+            }
             filter.appendChild(option);
         }
         if (filterSetting[filter.id]!=undefined) {

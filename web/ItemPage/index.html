@@ -16,6 +16,7 @@
 
     <script src="../js/requestMethod.js"></script>
     <script src="../js/defaultSetting.js"></script>
+    <script src="../js/language.js"></script>
     <script src="../js/searchModule.js"></script>
 </head>
 
@@ -37,7 +38,7 @@
         <select id="filter_ItemGrade" class="selectFilter">
             <option value="Default">ItemGrade</option>
         </select>
-        <select id="filter_GroupName" class="selectFilter">
+        <select id="filter_GroupName" class="selectFilter useLanguageJS">
             <option value="Default">Group Name</option>
         </select>
         <p>Filter - Card</p>
@@ -45,7 +46,7 @@
             <option value="Default">Card Group</option>
         </select>
         <p>Filter - Equip</p>
-        <select id="filter_AttachType" class="selectFilter">
+        <select id="filter_AttachType" class="selectFilter useLanguageJS">
             <option value="Default">AttachType</option>
         </select>
         <select id="filter_Attribute" class="selectFilter">
@@ -112,8 +113,8 @@
         var orderAttri = document.getElementById('orderAttribute');
         for (var i=0;i<equipStatList.length;i++){
             var newOption  = document.createElement('option');
-            newOption.id = equipStatList[i];
-            newOption.innerText = equipStatList[i];
+            newOption.value = equipStatList[i];
+            //newOption.innerText = equipStatList[i];
             orderAttri.appendChild(newOption);
         }
 

@@ -775,9 +775,27 @@ function generateLuaScript(array, index, callback){
 
 // ---------- 언어데이터 불러와보기
 loadTableLanguage('language', 'xml_lang.ipf/clientmessage.xml', function(){
-  // var count = 0;
-  // for (param in serverData['tableData']['language']) count ++;
-  // console.log('language table ' + count);
+  var languageJs = '';
+
+  var data = {};
+  for (param in serverData['tableData']['language']){
+    data[param] = serverData['tableData']['language'][param];
+  }
+  
+  languageJs += 'var languageData='+JSON.stringify(data)+';\n';
+  languageJs += 'function getLanguageByClassName(className){'
+  languageJs +=   'if (className==undefined) return className;';
+  languageJs +=   'className=className.toString();';
+  languageJs +=   'if (className.trim().length==0) return className;';
+  languageJs +=   'if (languageData[className]==undefined) return className;';
+  languageJs +=   'if (languageData[className].length==0) return className;';
+  languageJs +=   'return languageData[className];';
+  languageJs += '}';
+
+  fs.writeFile('./web/js/language.js', languageJs, function(err) {
+    if (err) sendSlack(err.toString());
+    console.log('success write language.js file');
+  }); 
 });
 function loadTableLanguage(name, path, callback){
   if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
