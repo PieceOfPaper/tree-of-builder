@@ -33,7 +33,7 @@ module.exports = function(app, serverSetting, serverData){
           }
           return;
       } else {
-        response.send('no data');
+        response.send(fs.readFileSync('./web/Layout/message.html').toString().replace(/%Message%/g, 'No Data'));
       }
     });
   
@@ -42,7 +42,7 @@ module.exports = function(app, serverSetting, serverData){
     function detailPage(id, request, response) {
         var missionData = serverData['xmlData'][id];
         if (missionData == undefined || missionData.root == undefined || missionData.root.children == undefined) {
-            response.send('no data');
+            response.send(fs.readFileSync('./web/Layout/message.html').toString().replace(/%Message%/g, 'No Data'));
             return;
         }
      

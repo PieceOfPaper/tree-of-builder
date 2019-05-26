@@ -24,7 +24,7 @@ module.exports = function(app, serverSetting, serverData){
         }
       }
   
-      response.send('no data');
+      response.send(fs.readFileSync('./web/Layout/message.html').toString().replace(/%Message%/g, 'No Data'));
     });
   
     var layout_detail = fs.readFileSync('./web/IndunPage/detail.html');
