@@ -201,7 +201,7 @@ if (!fs.existsSync('./web/data/ies_ability.ipf')) fs.mkdirSync('./web/data/ies_a
 if (!fs.existsSync('./web/data/ies_mongen.ipf')) fs.mkdirSync('./web/data/ies_mongen.ipf');
 if (!fs.existsSync('./web/data/ies_mongen.ipf/SmartGen')) fs.mkdirSync('./web/data/ies_mongen.ipf/SmartGen');
 if (!fs.existsSync('./web/data/xml.ipf')) fs.mkdirSync('./web/data/xml.ipf');
-if (!fs.existsSync('./web/data/xml.ipf/skill_bytool')) fs.mkdirSync('./web/data/xml.ipf/skill_bytool');
+if (!fs.existsSync('./web/data/skill_bytool.ipf')) fs.mkdirSync('./web/data/skill_bytool.ipf');
 if (!fs.existsSync('./web/data/xml_lang.ipf')) fs.mkdirSync('./web/data/xml_lang.ipf');
 if (!fs.existsSync('./web/data/xml_minigame.ipf')) fs.mkdirSync('./web/data/xml_minigame.ipf');
 if (!fs.existsSync('./web/lua')) fs.mkdirSync('./web/lua');
@@ -225,14 +225,14 @@ loadFilelist('ies_ability.ipf/filelist.txt', function(filelist){
   }
   loadTableList('ability_job',filelist);
 });
-loadFilelist('xml.ipf/skill_bytool/filelist.txt', function(filelist){
+loadFilelist('skill_bytool.ipf/filelist.txt', function(filelist){
   if (filelist==undefined) return;
   for (var i=0;i<filelist.length;i++){
-    if (filelist[i]=='ies_ability.ipf/filelist.txt') {
+    if (filelist[i]=='skill_bytool.ipf/filelist.txt') {
       filelist.splice(i, 1);
     }
   }
-  loadXMLDataList('xml.ipf/skill_bytool',filelist);
+  loadXMLDataList('skill_bytool',filelist);
 });
 function loadFilelist(path, callback){
   if (serverSetting['noDownload'] && fs.existsSync('./web/data/' + path)){
@@ -282,7 +282,7 @@ loadTable('job', 'ies.ipf/job.ies', function(){
     //       loadTable(name, path.toLowerCase());
     //     }
     //   });
-    //   //loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool/'+serverData['tableData']['job'][i].EngName.toLowerCase()+'.xml');
+    //   //loadXMLData('skill_bytool', 'xml.ipf/skill_bytool/'+serverData['tableData']['job'][i].EngName.toLowerCase()+'.xml');
     // }
     serverData['tableData']['job'].sort(function(a,b){
         if (tos.GetJobNumber1(a.ClassName) > tos.GetJobNumber1(b.ClassName)) return 1;
@@ -521,7 +521,7 @@ function loadTableList(name, pathlist, callback, index){
 // ---------- XML 데이터 불러오기
 //loadXMLData('xml_minigame.ipf/GM_WHITETREES_56_1', 'xml_minigame.ipf/GM_WHITETREES_56_1.xml');
 loadXMLData('xml.ipf/playlist', 'xml.ipf/playlist.xml');
-//loadXMLData('xml.ipf/skill_bytool', 'xml.ipf/skill_bytool.xml');
+//loadXMLData('skill_bytool', 'xml.ipf/skill_bytool.xml');
 //loadXMLData('xml.ipf/pad_skill_list', 'xml.ipf/pad_skill_list.xml');
 function loadXMLData(name, path, callback, tryCnt){
   if (tryCnt == undefined) tryCnt = 1;

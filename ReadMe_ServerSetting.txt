@@ -1,23 +1,27 @@
 
 
+
+// Git 설치
+sudo apt-get install git
+git clone git@gitlab.com:PieceOfPaper/tree-of-builder.git
+git clone https://gitlab.com/PieceOfPaper/tree-of-builder.git
+
 // Server Reboot
 sudo reboot
 
 // 데몬 실행 (pm2)
 // https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-debian-8
+sudo npm install -g pm2
 
-
-// Git 설치
-sudo apt-get install git
-
-// 데몬 실행 (pm2) - ktest
+// 데몬 실행 (pm2)
+sudo pm2 start web.js -- server-kr
 sudo pm2 start web.js -- server-ktest
 
 // port 세팅
 sudo iptables -t nat -A PREROUTING -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 3000
 
 // git에 포함되지 않는 모듈 다시세팅
-npm install psl
+sudo npm install psl
 
 // Bitnami 터미널 접근
 // https://docs.bitnami.com/virtual-machine/faq/get-started/connect-ssh/

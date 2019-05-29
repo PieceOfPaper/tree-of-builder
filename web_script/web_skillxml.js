@@ -25,11 +25,12 @@ module.exports = function(app, serverSetting, serverData){
       // id값이 존재하는 경우, 상세 페이지로 이동
       if (request.query.id != undefined && request.query.id != ''){
           var skill_className = tos.ClassIDToClassName(serverData,'skill',request.query.id);
-          if (serverData['xmlData']['xml.ipf/skill_bytool']!=undefined&&serverData['xmlData']['xml.ipf/skill_bytool'].root!=undefined) {
-              for (var i=0;i<serverData['xmlData']['xml.ipf/skill_bytool'].root.children.length;i++){
-                  if (serverData['xmlData']['xml.ipf/skill_bytool'].root.children[i]==undefined) continue;
-                  if (serverData['xmlData']['xml.ipf/skill_bytool'].root.children[i].attributes['Name']==skill_className){
-                    detailPage(serverData['xmlData']['xml.ipf/skill_bytool'].root.children[i], request, response);
+          if (serverData['xmlData']['skill_bytool']!=undefined&&serverData['xmlData']['skill_bytool'].root!=undefined) {
+              console.log(serverData['xmlData']['skill_bytool'].root.children.length);
+              for (var i=0;i<serverData['xmlData']['skill_bytool'].root.children.length;i++){
+                  if (serverData['xmlData']['skill_bytool'].root.children[i]==undefined) continue;
+                  if (serverData['xmlData']['skill_bytool'].root.children[i].attributes['Name']==skill_className){
+                    detailPage(serverData['xmlData']['skill_bytool'].root.children[i], request, response);
                     return;
                   }
               }
