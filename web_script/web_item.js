@@ -136,6 +136,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%RepairPriceRatio%/g, itemTable[index].RepairPriceRatio);
     output = output.replace(/%Recipes%/g, getCanRecipeString(tableName, index));
 
+    output = output.replace(/%EnableEquipMap%/g, itemTable[index].EnableEquipMap);
+
     output = output.replace(/%Desc%/g, tos.parseCaption(itemTable[index].Desc));
     if (itemTable[index].Desc_Sub == undefined){
       output = output.replace(/%Desc_Sub%/g, '');
@@ -582,6 +584,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%MaxSocket_COUNT%/g, itemTable[index].MaxSocket_COUNT);
     output = output.replace(/%MaxPR%/g, itemTable[index].MaxPR);
 
+    output = output.replace(/%EnableEquipMap%/g, itemTable[index].EnableEquipMap);
+
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
     output = output.replace(/%PriceRatio%/g, itemTable[index].PriceRatio);
@@ -710,6 +714,8 @@ module.exports = function(app, serverSetting, serverData){
     output = output.replace(/%GroupName%/g, tos.ClassName2Lang(serverData, itemTable[index].GroupName));
     output = output.replace(/%Weight%/g, itemTable[index].Weight);
     output = output.replace(/%MaxStack%/g, itemTable[index].MaxStack);
+
+    output = output.replace(/%EnableEquipMap%/g, itemTable[index].EnableEquipMap);
   
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
@@ -796,6 +802,8 @@ module.exports = function(app, serverSetting, serverData){
     } else {
       output = output.replace(/%CardGroupName%/g, itemTable[index].CardGroupName);
     }
+
+    output = output.replace(/%EnableEquipMap%/g, itemTable[index].EnableEquipMap);
 
     output = output.replace(/%MaterialPrice%/g, itemTable[index].MaterialPrice);
     output = output.replace(/%Price%/g, itemTable[index].Price);
