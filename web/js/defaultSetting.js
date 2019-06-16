@@ -236,31 +236,39 @@ function onInitRightMenu(isHome){
 
 function onclick_leftMenuOpen(){
     var leftMenu = document.getElementById("left-menu");
+    var rightMenu = document.getElementById("right-menu");
     if (leftMenu.classList.contains("opened")){
         leftMenu.classList.remove("opened");
     } else {
         leftMenu.classList.add("opened");
+        rightMenu.classList.remove("opened");
     }
     var leftMenuButton = document.getElementById("left-menu-open-button");
+    var rightMenuButton = document.getElementById("right-menu-open-button");
     if (leftMenuButton.classList.contains("opened")){
         leftMenuButton.classList.remove("opened");
     } else {
         leftMenuButton.classList.add("opened");
+        rightMenuButton.classList.remove("opened");
     }
 }
 
 function onclick_rightMenuOpen(){
+    var leftMenu = document.getElementById("left-menu");
     var rightMenu = document.getElementById("right-menu");
     if (rightMenu.classList.contains("opened")){
         rightMenu.classList.remove("opened");
     } else {
         rightMenu.classList.add("opened");
+        leftMenu.classList.remove("opened");
     }
+    var leftMenuButton = document.getElementById("left-menu-open-button");
     var rightMenuButton = document.getElementById("right-menu-open-button");
     if (rightMenuButton.classList.contains("opened")){
         rightMenuButton.classList.remove("opened");
     } else {
         rightMenuButton.classList.add("opened");
+        leftMenuButton.classList.remove("opened");
     }
 }
 
