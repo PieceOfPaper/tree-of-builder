@@ -45,6 +45,14 @@ body {
 }
 
 
+table {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, tr, td {
+    border: 1px solid black;
+}
 
 
 /* ====== Level Up Button ====== */
