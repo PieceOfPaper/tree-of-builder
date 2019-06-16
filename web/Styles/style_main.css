@@ -1,0 +1,38 @@
+
+.main-login-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
+.main-illust-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
+.main-shortboard-container {
+    margin: 0;
+    width: calc(100vw - 20px);
+    text-align: center;
+}
+
+.main-illust {
+    /*width: 100%;*/
+    /*max-width: 100vh;*/
+    max-width: 95vw;
+    display: inline-block;
+}
+
+footer {
+    text-align: left;
+}
+
+footer p{
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+footer img{
+    margin-right: 1em;
+    vertical-align: middle;
+    height: 1.5em;
+}

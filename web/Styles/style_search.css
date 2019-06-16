@@ -1,0 +1,83 @@
+.search-area {
+    padding: 5px;
+    width: 100%;
+}
+.search-area select{
+    font-size: 1em;
+}
+.search-area input{
+    font-size: 1em;
+}
+
+.filler-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.filler-area select{
+    font-size: 1em;
+}
+
+.order-area {
+    padding: 5px;
+    width: calc(100vw - 2 * 10px);
+    height: fit-content;
+}
+.order-area select{
+    font-size: 1em;
+}
+
+.checkboxList {
+    padding: 0;
+    width: fit-content;
+}
+.checkboxList-head {
+    margin: 0;
+    font-size: 1em;
+    width: 100%;
+}
+.checkboxList-head.open {
+}
+.checkboxList-head span{
+}
+.checkboxList-head.close span{
+}
+.checkboxList-head.open span{
+    color: red;
+}
+.checkboxList-body {
+    margin: 0;
+    width: 100%;
+    border: 1px solid black;
+}
+
+#searchBtn {
+    float: right;
+    font-size: 1.5em;
+    font-family: IMCM_Book;
+}
+
+.search-result-table {
+    padding: 5px;
+    width:100%;
+}
+.search-result-table table {
+
+}
+
+
+
+.search-result-pagenum{
+
+}
+
+.search-result-pagenum button{
+    margin: 5px;
+    font-size: 2em;
+    border: 0;
+    border-radius: 0.25em;
+    background-color: whitesmoke;
+}
+.search-result-pagenum button.selected{
+    background-color: wheat;
+}

@@ -1,0 +1,154 @@
+.builder-class-area {
+}
+.builder-class-area img{
+    /*width:64px;*/
+    height:64px;
+}
+
+.builder-class-selected {
+}
+
+.builder-class-select {
+    white-space: pre-wrap;
+}
+
+.builder-class-btn {
+    width:50px;
+    display: inline-block;
+}
+.builder-class-btn .class-icon{
+    width:64px;
+    height:64px;
+}
+.builder-class-btn .class-name {
+    margin: 0;
+    padding: 0;
+    width: 50px;
+    font-size: 0.75em;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+#viewDetailBtn {
+    float: right;
+    font-size: 1em;
+    font-family: IMCM_Book;
+}
+#viewDetailBtn.acive {
+    color: red;
+}
+.builder-skill-area {
+    padding: 10px;
+}
+.builder-skill-area .class {
+    width: 100%;
+}
+
+.builder-skill-area .class .skill {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+    width: fit-content;
+    /*width: calc(100vw * 0.5 - 2 * 20px);*/
+    text-align: left;
+    padding: 5px;
+    margin: 2px;
+
+    border-radius: 10px;
+    background-color: antiquewhite;
+}
+
+.builder-skill-area .class .skill .skill-desc {
+    text-align: left;
+    white-space:normal;
+    word-break:normal;
+    display: none;
+}
+.builder-skill-area .class .skill .skill-desc.active {
+    display: block;
+}
+/* @media only screen and (max-device-width : 640px) {
+    .builder-skill-area .class .skill {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    .builder-skill-area .class .skill {
+        width: calc(100vw - 2 * 10px);
+    }
+} */
+.builder-skill-area .class .skill img {
+    /*width:64px;*/
+    /*height:64px;*/
+}
+.builder-skill-area .class .skill .skill-icon {
+    width:64px;
+    height:64px;
+}
+.builder-skill-area .class .skill p {
+    padding: 0;
+    margin: 0;
+}
+
+.builder-skill-area .class .ability {
+    display: inline-block;
+    white-space: nowrap;
+    vertical-align: top;
+    width: fit-content;
+    /*width: calc(100vw * 0.5 - 2 * 20px);*/
+    text-align: left;
+    padding: 5px;
+    margin: 2px;
+
+    border-radius: 10px;
+    background-color: wheat;
+}
+
+.builder-skill-area .class .ability .ability-desc {
+    text-align: left;
+    white-space:normal;
+    word-break:normal;
+    display: none;
+}
+.builder-skill-area .class .ability .ability-desc.active {
+    display: block;
+}
+/* @media only screen and (max-device-width : 640px) {
+    .builder-skill-area .class .ability {
+        width: calc(100vw - 2 * 10px);
+    }
+}
+@media only screen and (max-device-width: 768px) {
+    .builder-skill-area .class .ability {
+        width: calc(100vw - 2 * 10px);
+    }
+} */
+.builder-skill-area .class .ability img {
+    /*width:64px;*/
+    /*height:64px;*/
+}
+.builder-skill-area .class .ability .ability-icon {
+    width:64px;
+    height:64px;
+}
+.builder-skill-area .class .ability p {
+    padding: 0;
+    margin: 0;
+}
+
+.builder-desc-area {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    width: calc(100% - 10px);
+    height: fit-content;
+    border-radius: 10px 10px 0 0;
+    background-color: whitesmoke;
+}
+.builder-desc-area #desc-name {
+}
+.builder-desc-area #desc-desc {
+}

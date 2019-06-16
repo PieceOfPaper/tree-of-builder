@@ -1,0 +1,9 @@
+@import url(http://fonts.googleapis.com/earlyaccess/jejugothic.css);
+@font-face {
+    font-family: IMCM_Book;
+    src: url('../font/BMHANNA11yrsold.eot') format('embedded-opentype'),
+    url('../font/BMHANNA11yrsold.woff2') format('woff2'),
+    url('../font/BMHANNA11yrsold.woff') format('woff'),
+    url('../font/BMHANNA11yrsold.svg') format('svg'),
+    url('../font/imcm_book.ttf') format('truetype');
+}
