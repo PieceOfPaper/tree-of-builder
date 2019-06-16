@@ -319,6 +319,7 @@ module.exports = function(app, serverSetting, serverData){
         output +=       'function IsPVPServer(pc){ return 0; }';
         output +=       'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
         output +=       'function GetZoneName(pc){ return 0; }';
+        output +=       'function IsPVPField(pc){ return 0; }';
 
         output +=   'var methods=[];';
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR');
