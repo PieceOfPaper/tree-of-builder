@@ -132,6 +132,13 @@ topMenuButtons['misc_ballenceReward']["Name"] = "B.R.";
 function onInitTopMenu(isHome){
     var topMenuElement = document.getElementsByClassName("top-menu")[0];
 
+    onInitLeftMenu(isHome);
+    onInitRightMenu(isHome);
+
+    if (topMenuElement!=undefined) topMenuElement.outerHTML = "";
+}
+
+function onInitLeftMenu(isHome){
     var leftMenu = document.createElement("div");
     leftMenu.id = "left-menu";
     document.body.appendChild(leftMenu);
@@ -177,8 +184,54 @@ function onInitTopMenu(isHome){
     leftMenuButton.appendChild(leftMenuButtonA);
     //leftMenu.appendChild(leftMenuButton);
     document.body.appendChild(leftMenuButton);
+}
 
-    document.getElementsByClassName("top-menu")[0].outerHTML = "";
+function onInitRightMenu(isHome){
+    var rightMenu = document.createElement("div");
+    rightMenu.id = "right-menu";
+    document.body.appendChild(rightMenu);
+
+    for(var param in topMenuButtons){
+        var nodeDiv = document.createElement("div");
+        var nodeButton = document.createElement("a");
+        nodeDiv.append(nodeButton);
+        if (topMenuButtons[param].Path != undefined){
+            nodeDiv.classList.add("node-item");
+            //img
+            if (topMenuButtons[param]["Img"] != undefined){
+                var nodeButtonImg = document.createElement("img");
+                nodeButtonImg.src=topMenuButtons[param].Img;
+                nodeButton.appendChild(nodeButtonImg);
+            }
+            //path
+            if (isHome) nodeButton.href=topMenuButtons[param].Path;
+            else nodeButton.href="../"+topMenuButtons[param].Path;
+        } else {
+            nodeDiv.classList.add("node-category");
+        }
+        //text
+        var nodeButtonText = document.createElement("p");
+        nodeButton.id=param;
+        nodeButtonText.innerText=topMenuButtons[param].Name;
+        nodeButton.appendChild(nodeButtonText);
+        rightMenu.appendChild(nodeDiv);
+    }
+
+    var rightMenuButton = document.createElement("div");
+    var rightMenuButtonA = document.createElement("a");
+    var rightMenuButtonImg = document.createElement("img");
+    var rightMenuButtonText = document.createElement("p");
+    rightMenuButtonA.onclick=onclick_rightMenuOpen;
+    //rightMenuButton.classList.add("open-button");
+    rightMenuButton.id = "right-menu-open-button";
+    rightMenuButtonImg.src="../img2/book/prevbtn.png";
+    rightMenuButtonText.innerHTML="MENU";
+    rightMenuButtonText.style.margin="0";
+    rightMenuButtonA.appendChild(rightMenuButtonImg);
+    rightMenuButtonA.appendChild(rightMenuButtonText);
+    rightMenuButton.appendChild(rightMenuButtonA);
+    //rightMenu.appendChild(rightMenuButton);
+    document.body.appendChild(rightMenuButton);
 }
 
 function onclick_leftMenuOpen(){
@@ -193,6 +246,21 @@ function onclick_leftMenuOpen(){
         leftMenuButton.classList.remove("opened");
     } else {
         leftMenuButton.classList.add("opened");
+    }
+}
+
+function onclick_rightMenuOpen(){
+    var rightMenu = document.getElementById("right-menu");
+    if (rightMenu.classList.contains("opened")){
+        rightMenu.classList.remove("opened");
+    } else {
+        rightMenu.classList.add("opened");
+    }
+    var rightMenuButton = document.getElementById("right-menu-open-button");
+    if (rightMenuButton.classList.contains("opened")){
+        rightMenuButton.classList.remove("opened");
+    } else {
+        rightMenuButton.classList.add("opened");
     }
 }
 
