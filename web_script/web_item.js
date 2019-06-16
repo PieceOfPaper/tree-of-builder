@@ -538,8 +538,8 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_UPGRADE_ADD_MDEF_RATIO']).replace('value = SCR_PVP_ITEM_TRANSCEND_SET(item, value);','');
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_ADD_VALUE']).replace('lv, grade, reinforceValue = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue);', '');
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_ADD_VALUE_ATK']).replace('lv, grade, reinforceValue, reinforceRatio = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade, reinforceValue, reinforceRatio);', '');
-    //captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
-    //captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_TRANSCEND_SET']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_TRANSCEND_SET']);
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
     captionScript += '</script>';
