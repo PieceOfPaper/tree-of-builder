@@ -99,7 +99,6 @@ module.exports = function(app, serverSetting, serverData){
     var captionScript = '';
     captionScript += '<script>';
 
-    captionScript += 'function GetSkillOwner(skill){'
     captionScript += 'var playerSetting = {';
     captionScript +=  'Lv:Number(1),';
     captionScript +=  'Level:Number(1),';
@@ -114,7 +113,8 @@ module.exports = function(app, serverSetting, serverData){
     captionScript +=  'SP:Number(0),';
     captionScript +=  'MSP:Number(0),';
     captionScript += '};';
-    captionScript += 'return playerSetting; }';
+
+    captionScript += 'function GetSkillOwner(skill){ return playerSetting; }';
 
     captionScript += 'var info=undefined;';
 
@@ -159,7 +159,8 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'var currentSkill=' + JSON.stringify(skillTable[index]) + ';';
     captionScript += 'currentSkill["Level"]=Number(1);';
 
-    captionScript += 'document.getElementById("SkillLevel").max=' + 20 + ';';
+    //captionScript += 'document.getElementById("SkillLevel").max=' + 20 + ';';
+    captionScript += 'document.getElementById("SkillLevel").max=' + skillMaxLevel + ';';
     captionScript += 'onChangeSkillLevel();';
 
     captionScript += 'function onChangeSkillLevel(){';
@@ -215,6 +216,13 @@ module.exports = function(app, serverSetting, serverData){
       captionScript +=  'updateLuaScripts();';
       captionScript += '}';
     }
+
+    captionScript += 'function onChangeStat(statName){';
+    captionScript +=  'if (playerSetting[statName] == undefined) return;';
+    captionScript +=  'if (document.getElementById("pcStat_" + statName) == undefined) return;';
+    captionScript +=  'playerSetting[statName] = Number(document.getElementById("pcStat_" + statName).value);';
+    captionScript +=  'updateLuaScripts();';
+    captionScript += '}';
 
     if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillFactor]);
     if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillSR]);

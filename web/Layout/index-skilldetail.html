@@ -164,7 +164,35 @@
 
     <br/>
     
-    <input class="lv-add-input" type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()"><p>Max:%SkillLevelMax%</p><br>
+    <button onclick="var div=document.getElementById('pcStat-div'); if(div!=undefined){ div.style.display=(div.style.display=='none')?'block':'none'; }">Show Char Stat</button>
+    <div id="pcStat-div" style="display: none;">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Lv</td>
+                    <td>SR</td>
+                    <td>STR</td>
+                    <td>CON</td>
+                    <td>INT</td>
+                    <td>MNA</td>
+                    <td>DEX</td>
+                </tr>
+                <tr>
+                    <td><input id="pcStat_Lv" class="input-pc-stat" type="number" min="0" value = "3" onchange="onChangeStat('Lv')"></td>
+                    <td><input id="pcStat_SR" class="input-pc-stat" type="number" min="0" value = "3" onchange="onChangeStat('SR')"></td>
+                    <td><input id="pcStat_STR" class="input-pc-stat" type="number" min="0" value = "0" onchange="onChangeStat('STR')"></td>
+                    <td><input id="pcStat_CON" class="input-pc-stat" type="number" min="0" value = "0" onchange="onChangeStat('CON')"></td>
+                    <td><input id="pcStat_INT" class="input-pc-stat" type="number" min="0" value = "0" onchange="onChangeStat('INT')"></td>
+                    <td><input id="pcStat_MNA" class="input-pc-stat" type="number" min="0" value = "0" onchange="onChangeStat('MNA')"></td>
+                    <td><input id="pcStat_DEX" class="input-pc-stat" type="number" min="0" value = "0" onchange="onChangeStat('DEX')"></td>
+                </tr>
+            </table>
+            </tbody>
+        </table>
+    </div>
+    <br>
+    
+    <input class="lv-add-input" type="number" id="SkillLevel" min="1" max="5" value = "1" onchange="onChangeSkillLevel()"><!--<p>Max:%SkillLevelMax%</p>-->
     <div><button class="lv-add-button plus" onclick="onClickLevelUp()"><img src="../img2/button/btn_plus.png" /></button><button class="lv-add-button minus" onclick="onClickLevelDown()"><img src="../img2/button/btn_minus.png" /></button></div>
 
     <p>%Caption%</p>

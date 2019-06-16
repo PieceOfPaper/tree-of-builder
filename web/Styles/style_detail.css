@@ -19,3 +19,7 @@
     font-size: 0.75em;
     white-space: pre-wrap;
 }
+
+.input-pc-stat {
+    width: 100%;
+}
