@@ -23,14 +23,15 @@ module.exports = function(app, serverData){
     });
 
     var typeList = [];
-    var lastTableLength = 0;
+    var typeListCheckLength = [];
     route.get('/type/*', function (req, res) {
         var splited = req.url.split("/");
         var typeKey = splited[splited.length - 1];
-        if (typeList[typeKey] == undefined || (lastTableLength != serverData['tableData']['buff'].length)){
-            lastTableLength = serverData['tableData']['buff'].length;
+        var dataLength = dataModule.getCount(serverData['tableData']['buff']);
+        if (typeList[typeKey] == undefined || (typeListCheckLength[typeKey] != dataLength)){
+            typeListCheckLength[typeKey] = dataLength;
             typeList[typeKey] = [];
-            for (var i=0;i<serverData['tableData']['buff'].length;i++){
+            for (var i=0;i<dataLength;i++){
                 if (serverData['tableData']['buff'][i][typeKey] == undefined) continue;
                 if (typeList[typeKey].includes(serverData['tableData']['buff'][i][typeKey]) == false){
                     typeList[typeKey].push(serverData['tableData']['buff'][i][typeKey]);

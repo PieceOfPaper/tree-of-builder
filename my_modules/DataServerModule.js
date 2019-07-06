@@ -143,5 +143,47 @@ class DataServerModule {
         else return false;
     }
 
+    static getCount(datalist) {
+        if (datalist == undefined) return 0;
+        var count = 0;
+        for (param in datalist) count ++;
+        return count;
+    }
+
+    static updateTypeList(serverData, tableName, typelist, queryString){
+        var typeKey = '';
+        var dataLength = dataModule.getCount(serverData['tableData'][tableName]);
+        if (typeList[typeKey] == undefined || (lastTableLength != dataLength)){
+            lastTableLength = dataLength;
+            typeList[typeKey] = [];
+            for (var i=0;i<dataLength;i++){
+                if (serverData['tableData'][tableName][i][typeKey] == undefined) continue;
+                if (typeList[typeKey].includes(serverData['tableData'][tableName][i][typeKey]) == false){
+                    typeList[typeKey].push(serverData['tableData'][tableName][i][typeKey]);
+                }
+            }
+            typeList[typeKey].sort(function(a,b){
+                if (a != b){
+                    if (a == undefined) return -1;
+                    else if (b == undefined) return 1;
+                    else {
+                        if ((typeof a)=="number" && (typeof b)=="number"){
+                            if (a < b) return -1;
+                            else return 1;
+                        }
+                        else if ((typeof a)=="string" && (typeof b)=="string"){
+                            return a.localeCompare(b);
+                        }
+                        else if ((typeof a)=="boolean" && (typeof b)=="boolean"){
+                            if (a) return -1;
+                            else return 1;
+                        }
+                    }
+                }
+                return 0;
+            });
+        }
+    }
+
 }
 module.exports = DataServerModule;
