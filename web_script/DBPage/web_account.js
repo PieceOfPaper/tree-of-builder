@@ -9,7 +9,8 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     var smtpTransport = nodemailer.createTransport({  
         service: 'Gmail',
-        auth: { user: 'tree.of.builder', pass: 'atsHEfyJzs2MdRv' }
+        //auth: { user: 'tree.of.builder', pass: 'atsHEfyJzs2MdRv' }
+        auth: { user: 'tree.of.builder', pass: 'zklntxoahwtlbugy' }
     });
 
     var mailOptions = {  
