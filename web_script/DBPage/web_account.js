@@ -9,7 +9,7 @@ module.exports = function(app, serverSetting, tableData, scriptData){
 
     var smtpTransport = nodemailer.createTransport({  
         service: 'Gmail',
-        auth: { user: 'tree.of.builder', pass: '2009#*&&dltjdgml' }
+        auth: { user: 'tree.of.builder', pass: 'atsHEfyJzs2MdRv' }
     });
 
     var mailOptions = {  
