@@ -136,7 +136,10 @@ module.exports = function(app, serverSetting, tableData, scriptData){
             connection.query('SELECT * FROM user;', function (error, results, fields) {
                 if (error) throw error;
                 if (results != undefined && results.length > 0){
-                    index = results.length;
+                    index = 0;
+                    for(var i=0;i<results.length;i++){
+                        if (index <= results[i].userno) index = results[i].userno + 1;
+                    }
                 }
                 connection.query('INSERT INTO user (userno,email,pwd,pwd_salt,nickname) VALUES ('+index+',"'+email+'","'+sha256(pwd+pwd_salt)+'","'+pwd_salt+'","'+nickname+'");', function (error, results, fields) {
                     if (error) throw error;
