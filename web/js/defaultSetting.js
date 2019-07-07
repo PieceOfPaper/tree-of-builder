@@ -22,7 +22,7 @@ topMenuButtons['category_tool']["Img"] = "";
 topMenuButtons['category_tool']["Name"] = "TOOL";
 
 topMenuButtons['builder'] = [];
-topMenuButtons['builder']["Path"] = "Builder";
+topMenuButtons['builder']["Path"] = "BuilderV2";
 topMenuButtons['builder']["Img"] = "../img2/menu_icon/skillpower_icon.png";
 topMenuButtons['builder']["Name"] = "Builder";
 
