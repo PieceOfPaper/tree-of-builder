@@ -127,6 +127,8 @@ topMenuButtons['misc_ballenceReward']["Img"] = "../img2/menu_icon/icon_item_rank
 topMenuButtons['misc_ballenceReward']["Name"] = "B.R.";
 
 
+var topAccountButtons = [];
+
 
 
 function onInitTopMenu(isHome){
@@ -191,28 +193,28 @@ function onInitRightMenu(isHome){
     rightMenu.id = "right-menu";
     document.body.appendChild(rightMenu);
 
-    for(var param in topMenuButtons){
+    for(var param in topAccountButtons){
         var nodeDiv = document.createElement("div");
         var nodeButton = document.createElement("a");
         nodeDiv.append(nodeButton);
-        if (topMenuButtons[param].Path != undefined){
+        if (topAccountButtons[param].Path != undefined){
             nodeDiv.classList.add("node-item");
             //img
-            if (topMenuButtons[param]["Img"] != undefined){
+            if (topAccountButtons[param]["Img"] != undefined){
                 var nodeButtonImg = document.createElement("img");
-                nodeButtonImg.src=topMenuButtons[param].Img;
+                nodeButtonImg.src=topAccountButtons[param].Img;
                 nodeButton.appendChild(nodeButtonImg);
             }
             //path
-            if (isHome) nodeButton.href=topMenuButtons[param].Path;
-            else nodeButton.href="../"+topMenuButtons[param].Path;
+            if (isHome) nodeButton.href=topAccountButtons[param].Path;
+            else nodeButton.href="../"+topAccountButtons[param].Path;
         } else {
             nodeDiv.classList.add("node-category");
         }
         //text
         var nodeButtonText = document.createElement("p");
         nodeButton.id=param;
-        nodeButtonText.innerText=topMenuButtons[param].Name;
+        nodeButtonText.innerText=topAccountButtons[param].Name;
         nodeButton.appendChild(nodeButtonText);
         rightMenu.appendChild(nodeDiv);
     }
@@ -225,7 +227,7 @@ function onInitRightMenu(isHome){
     //rightMenuButton.classList.add("open-button");
     rightMenuButton.id = "right-menu-open-button";
     rightMenuButtonImg.src="../img2/book/prevbtn.png";
-    rightMenuButtonText.innerHTML="MENU";
+    rightMenuButtonText.innerHTML="MY";
     rightMenuButtonText.style.margin="0";
     rightMenuButtonA.appendChild(rightMenuButtonImg);
     rightMenuButtonA.appendChild(rightMenuButtonText);
