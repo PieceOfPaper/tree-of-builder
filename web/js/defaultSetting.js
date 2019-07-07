@@ -127,11 +127,20 @@ topMenuButtons['misc_ballenceReward']["Img"] = "../img2/menu_icon/icon_item_rank
 topMenuButtons['misc_ballenceReward']["Name"] = "B.R.";
 
 
+var topAccountButtons = [];
+
 
 
 function onInitTopMenu(isHome){
     var topMenuElement = document.getElementsByClassName("top-menu")[0];
 
+    onInitLeftMenu(isHome);
+    onInitRightMenu(isHome);
+
+    if (topMenuElement!=undefined) topMenuElement.outerHTML = "";
+}
+
+function onInitLeftMenu(isHome){
     var leftMenu = document.createElement("div");
     leftMenu.id = "left-menu";
     document.body.appendChild(leftMenu);
@@ -177,22 +186,91 @@ function onInitTopMenu(isHome){
     leftMenuButton.appendChild(leftMenuButtonA);
     //leftMenu.appendChild(leftMenuButton);
     document.body.appendChild(leftMenuButton);
+}
 
-    document.getElementsByClassName("top-menu")[0].outerHTML = "";
+function onInitRightMenu(isHome){
+    var rightMenu = document.createElement("div");
+    rightMenu.id = "right-menu";
+    document.body.appendChild(rightMenu);
+
+    for(var param in topAccountButtons){
+        var nodeDiv = document.createElement("div");
+        var nodeButton = document.createElement("a");
+        nodeDiv.append(nodeButton);
+        if (topAccountButtons[param].Path != undefined){
+            nodeDiv.classList.add("node-item");
+            //img
+            if (topAccountButtons[param]["Img"] != undefined){
+                var nodeButtonImg = document.createElement("img");
+                nodeButtonImg.src=topAccountButtons[param].Img;
+                nodeButton.appendChild(nodeButtonImg);
+            }
+            //path
+            if (isHome) nodeButton.href=topAccountButtons[param].Path;
+            else nodeButton.href="../"+topAccountButtons[param].Path;
+        } else {
+            nodeDiv.classList.add("node-category");
+        }
+        //text
+        var nodeButtonText = document.createElement("p");
+        nodeButton.id=param;
+        nodeButtonText.innerText=topAccountButtons[param].Name;
+        nodeButton.appendChild(nodeButtonText);
+        rightMenu.appendChild(nodeDiv);
+    }
+
+    var rightMenuButton = document.createElement("div");
+    var rightMenuButtonA = document.createElement("a");
+    var rightMenuButtonImg = document.createElement("img");
+    var rightMenuButtonText = document.createElement("p");
+    rightMenuButtonA.onclick=onclick_rightMenuOpen;
+    //rightMenuButton.classList.add("open-button");
+    rightMenuButton.id = "right-menu-open-button";
+    rightMenuButtonImg.src="../img2/book/prevbtn.png";
+    rightMenuButtonText.innerHTML="MY";
+    rightMenuButtonText.style.margin="0";
+    rightMenuButtonA.appendChild(rightMenuButtonImg);
+    rightMenuButtonA.appendChild(rightMenuButtonText);
+    rightMenuButton.appendChild(rightMenuButtonA);
+    //rightMenu.appendChild(rightMenuButton);
+    document.body.appendChild(rightMenuButton);
 }
 
 function onclick_leftMenuOpen(){
     var leftMenu = document.getElementById("left-menu");
+    var rightMenu = document.getElementById("right-menu");
     if (leftMenu.classList.contains("opened")){
         leftMenu.classList.remove("opened");
     } else {
         leftMenu.classList.add("opened");
+        rightMenu.classList.remove("opened");
     }
     var leftMenuButton = document.getElementById("left-menu-open-button");
+    var rightMenuButton = document.getElementById("right-menu-open-button");
     if (leftMenuButton.classList.contains("opened")){
         leftMenuButton.classList.remove("opened");
     } else {
         leftMenuButton.classList.add("opened");
+        rightMenuButton.classList.remove("opened");
+    }
+}
+
+function onclick_rightMenuOpen(){
+    var leftMenu = document.getElementById("left-menu");
+    var rightMenu = document.getElementById("right-menu");
+    if (rightMenu.classList.contains("opened")){
+        rightMenu.classList.remove("opened");
+    } else {
+        rightMenu.classList.add("opened");
+        leftMenu.classList.remove("opened");
+    }
+    var leftMenuButton = document.getElementById("left-menu-open-button");
+    var rightMenuButton = document.getElementById("right-menu-open-button");
+    if (rightMenuButton.classList.contains("opened")){
+        rightMenuButton.classList.remove("opened");
+    } else {
+        rightMenuButton.classList.add("opened");
+        leftMenuButton.classList.remove("opened");
     }
 }
 

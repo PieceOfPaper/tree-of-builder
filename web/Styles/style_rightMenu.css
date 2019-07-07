@@ -1,0 +1,97 @@
+#right-menu {
+    position: fixed;
+    padding: 0;
+    margin: 0;
+    top: 0;
+    right: -200;
+    width: 200px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    background-color: wheat;
+    z-index: 1000;
+    -webkit-transition:right 0.25s, -webkit-transform 0.25s;
+    transition:right 0.25s, transform 0.25s;
+}
+#right-menu.opened {
+    right: 0;
+}
+#right-menu-open-button {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 50px;
+    height: 60px;
+    text-align: center;
+    -webkit-transition:right 0.25s, -webkit-transform 0.25s;
+    transition:right 0.25s, transform 0.25s;
+    border: 0;
+    border-radius: 0.5em;
+    background-color: whitesmoke;
+    z-index: 1000;
+}
+#right-menu-open-button.opened {
+    right: 210px;
+}
+#right-menu-open-button img {
+    margin: 0;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+}
+#right-menu-open-button.opened img {
+    content: url("../img2/book/nextbtn.png");
+}
+#right-menu-open-button a:hover img{
+    transform:scale(1.1);
+}
+#right-menu-open-button a:active img{
+    transform:scale(0.9);
+}
+#right-menu .node-category {
+    margin: 0;
+    padding: 0;
+    padding-left: 10px;
+    width: calc(200px - 10px);
+    height: 50px;
+    background-color: whitesmoke;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+#right-menu .node-item {
+    margin: 0;
+    padding: 0;
+    padding-left: 30px;
+    width: calc(200px - 30px);
+    height: 50px;
+    background-color: rgba(0,0,0,0);
+    display: flex;
+    align-items: center;
+    justify-content: right;
+}
+#right-menu .node-item a {
+    margin: 0;
+    padding: 0;
+}
+#right-menu .node-item a img {
+    width: 40px;
+    vertical-align: middle;
+    display: inline-block;
+    text-decoration: none;
+}
+#right-menu .node-item a:hover img{
+    transform:scale(1.1);
+}
+#right-menu .node-item a:active img{
+    transform:scale(0.9);
+}
+#right-menu .node-item a p {
+    margin: 0;
+    margin-left: 10px;
+    vertical-align: middle;
+    display: inline-block;
+    text-decoration: none;
+}

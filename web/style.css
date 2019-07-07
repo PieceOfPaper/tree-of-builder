@@ -2,6 +2,7 @@
 /* System */
 @import 'Styles/style_font.css';
 @import 'Styles/style_leftMenu.css';
+@import 'Styles/style_rightMenu.css';
 
 /* Search / Datail */
 @import 'Styles/style_loading.css';
