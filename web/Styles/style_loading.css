@@ -17,7 +17,7 @@
     height: 80px;
     left: calc((100% - 112.857142857142857px)/2);
     top: calc((100% - 80px)/2);
-    background: url('img2/loading_bube.png') left center;
+    background: url('../img2/loading_bube.png') left center;
     z-index: 1001;
     animation: req-loading-indicator .8s steps(7) infinite;
 }
