@@ -1,0 +1,275 @@
+<html>
+
+<head>
+    <title>Builder V2</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img2/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <meta property="og:title" content="Builder V2" />
+    <!--<meta property="og:image" content="%ImagePath%" />-->
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/tga.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+
+    <div class="builder-class-area">
+        <div class="builder-class-selected">
+        </div>
+        <div class="builder-class-select">
+        </div>
+    </div>
+
+    <script>
+        var maxSelectClass = 3; // 최대 선택 가능한 클래스 수. 아마 변할 일 없어서 코드로 박음.
+
+        var url = window.location.href.split('?')[0];
+        var queryString = urlToFilter(decodeURIComponent(window.location.href));
+
+        var selected = {};
+        selected["class"] = [];
+        if (queryString.includes("class") == true && queryString["class"].length > 0){
+            var splited = queryString["class"].split(',');
+            for (var i=0;i<splited.length;i++){
+                selected["class"].push(StringToNumber(splited[i]));
+            }
+        }
+
+        var jobTypeIndex = undefined;
+        var jobList = {};
+        var skillTreeList = {};
+        var skillList = {};
+
+        createLoadingUI();
+        reqJobList(function(){
+            showSelectClass();
+            destroyLoadingUI();
+
+            if (selected["class"].length > 0){
+                createLoadingUI();
+                reqSkillList(function(){ reqAbilityList(function() {
+                    // 스킬/특성 관련 출력은 여기에서.
+                    destroyLoadingUI();
+                }); });
+            }
+        });
+
+
+        function reqJobList(callback){
+            requestGetData("job", undefined, function(arrJob){
+                arrJob.sort(function (a, b) {
+                    var class_a = Number(a.ClassName.replace("Char", "").split("_")[0]);
+                    var class_b = Number(b.ClassName.replace("Char", "").split("_")[0]);
+                    if (class_a != class_b){
+                        if(class_a > class_b) return 1;
+                        else return -1;
+                    }
+
+                    if (a.Rank == b.Rank) return 0;
+                    else if(Number(a.Rank) > Number(b.Rank)) return 1;
+                    else return -1;
+                });
+
+                for(var i=0;i<arrJob.length;i++){
+                    if (arrJob[i]==undefined) continue;
+                    var baseClass = Number(arrJob[i].ClassName.replace("Char", "").split("_")[0]);
+                    if (jobList[baseClass] == undefined) jobList[baseClass] = [];
+                    jobList[baseClass].push(arrJob[i]);
+                }
+
+                if (selected["class"] != undefined && selected["class"].length > 0){
+                    for (param in jobList){
+                        for (var j=0;j<jobList[param].length;j++){
+                            if (jobList[param][j].ClassID == selected["class"][0]){
+                                jobTypeIndex = param;
+                                break;
+                            }
+                        }
+                        if (jobTypeIndex != undefined) break;
+                    }
+                }
+
+                requestGetData("skilltree", undefined, function(arrSkilltree){
+                    for(var i=0;i<arrJob.length;i++){
+                        if (arrJob[i]==undefined) continue;
+                        if (skillTreeList[arrJob[i].ClassName] == undefined) skillTreeList[arrJob[i].ClassName] = [];
+                        for (var j=0;j<arrSkilltree.length;j++){
+                            if (arrSkilltree[j].ClassName.indexOf(arrJob[i].ClassName+"_") >= 0){
+                                skillTreeList[arrJob[i].ClassName].push(arrSkilltree[j]);
+                            }
+                        }
+                    }
+                    if (callback != undefined) callback();
+                });
+            });
+        }
+
+        function reqSkillList(callback){
+            // 선택된 직업별에 해당하는 스킬만 불러온다.
+            var filterStr = {};
+            filterStr["ClassName"] = "";
+            for (var i=0;i<selected["class"].length;i++){
+                var className = undefined;
+                for (var j=0;j<jobList[jobTypeIndex].length;j++){
+                    if (jobList[jobTypeIndex][j].ClassID == selected["class"][i]){
+                        className = jobList[jobTypeIndex][j].ClassName;
+                        break;
+                    }
+                }
+                if (className == undefined) continue;
+                var count = 0;
+                for (var j=0;j<skillTreeList[className].length;j++){
+                    if (skillTreeList[className][j].SkillName in skillList) continue;
+                    if (count > 0) filterStr["ClassName"] += ";";
+                    filterStr["ClassName"] += skillTreeList[className][j].SkillName;
+                    count ++;
+                }
+            }
+            requestGetData("skill", filterStr, function(arrSkill){
+                for (var i=0;i<arrSkill.length;i++){
+                    if (arrSkill[i] == undefined) continue;
+                    skillList[arrSkill[i].ClassName] = arrSkill[i];
+                }
+                console.log(JSON.stringify(skillList));
+                if (callback != undefined) callback();
+            });
+        }
+
+        function reqAbilityList(callback){
+            // 선택된 직업별에 해당하는 스킬만 불러온다.
+            requestGetData("ability", undefined, function(arrAbility){
+                
+                if (callback != undefined) callback();
+            });
+        }
+
+
+
+        function showSelectClass(){
+            if (selected["class"].length > 0){
+                // 선택된 클래스가 있는경우
+            }
+            else {
+                // 선택된 클래스가 없는 경우
+            }
+        }
+
+
+
+
+        function ImagePathToHTML2(data, imgpath, imgrect, height){
+            if (data == undefined) return '';
+            if (imgpath == undefined) return '';
+
+            var rect = [];
+            if (imgrect != undefined){
+                var splited = imgrect.split(' ');
+                if (splited != undefined){
+                    for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+                }
+            }
+
+            if (rect.length < 4) return '';
+
+            var generated = data.TableName+'_2_'+data.ClassName;
+            var canvasId = generated+'_canvas';
+            var scale = 1;
+            if (height != undefined) scale = height / rect[3];
+            var extention = getExtention(imgpath).toLowerCase();
+            
+            var output = '<div style="width:'+(splited[2]*scale)+'px; height:'+(splited[3]*scale)+'px; padding:0; margin:0; display:inline-block; vertical-align: middle; overflow:hidden;" >';
+            if (extention == 'tga'){
+                output += '<canvas id="'+canvasId+'" width="'+splited[2]+'" height="'+splited[3]+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></canvas>';
+            } else {
+                output += '<img id="'+canvasId+'" src="'+imgpath+'" style="margin:0; padding:0; margin-left: -'+(splited[2]*(1-scale)*0.5)+'px; margin-top: -'+(splited[3]*(1-scale)*0.5)+'px; transform:scale('+scale+');"></img>';
+            }
+            output += '</div>';
+
+            return output;
+        }
+
+        function ImageLoad2(data, column){
+            if (column == undefined) column = 'Icon';
+            if (data[column+'Path'] == undefined) return;
+
+            var rect = [];
+            if (data[column+'Rect'] != undefined){
+                var splited = data[column+'Rect'].split(' ');
+                if (splited != undefined){
+                    for (var i=0;i<splited.length;i++) rect.push(Number(splited[i]));
+                }
+            }
+
+            var generated = data.TableName+'_2_'+data.ClassName;
+            var canvasId = generated+'_canvas';
+            var extention = getExtention(data[column+'Path']).toLowerCase();
+
+            if (extention == 'tga'){
+                var tga = new TGA();
+                tga.open(data[column+'Path'], function() {
+                    var ctx = document.getElementById(canvasId).getContext("2d");
+                    var imageData = ctx.createImageData(tga.header.width, tga.header.height);
+                    ctx.putImageData(tga.getImageData(imageData), -rect[0], -rect[1]);
+                });
+            } else {
+
+            }
+        }
+
+        function AsciiToNumber(char){
+            var ascii = char.charCodeAt(0);
+            if (ascii >= 48 && ascii <= 57){ // 0 ~ 9
+                return Number(ascii - 48);
+            } else if (ascii >= 97 && ascii <= 122){ // a ~ z
+                return Number(ascii - 97 + 10);
+            } else if (ascii >= 65 && ascii <= 90){ // A ~ Z
+                return Number(ascii - 65 + 36);
+            }
+            return -1;
+        }
+
+        function StringToNumber(str){
+            if (str==undefined) return -1;
+            var result = 0;
+            var powMult = 0;
+            for (var i=str.length-1;i>=0;i++){
+                result += AsciiToNumber(str[i]) * Math.pow(getNumberAsciiMax(), powMult);
+                powMult ++;
+            }
+            return result;
+        }
+
+        function NumberToAscii(num){
+            if (num >= 0 && num <= 9){
+                return String.fromCharCode(48 + num); // 0 ~ 9
+            } else if (num >= 10 && num <= 35){
+                return String.fromCharCode(97 + num - 10); // a ~ z
+            } else if (num >= 36 && num <= 61){
+                return String.fromCharCode(65 + num - 36); // A ~ Z
+            }
+        }
+
+        function NumberToString(num){
+            var result = '';
+            var value = num;
+            while(true){
+                result = NumberToAscii(value % getNumberAsciiMax()) + result;
+                value /= getNumberAsciiMax();
+            }
+            return result;
+        }
+
+        function getNumberAsciiMax() { return 61; }
+    </script>
+</body>
+
+</html>
