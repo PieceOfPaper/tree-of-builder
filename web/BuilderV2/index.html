@@ -30,17 +30,18 @@
     </div>
 
     <script>
-        var maxSelectClass = 3; // 최대 선택 가능한 클래스 수. 아마 변할 일 없어서 코드로 박음.
+        var maxSelectClass = 4; // 최대 선택 가능한 클래스 수. 아마 변할 일 없어서 코드로 박음.
+        var iconSize = 50;
 
         var url = window.location.href.split('?')[0];
         var queryString = urlToFilter(decodeURIComponent(window.location.href));
 
         var selected = {};
         selected["class"] = [];
-        if (queryString.includes("class") == true && queryString["class"].length > 0){
+        if (queryString["class"] != undefined && queryString["class"].length > 0){
             var splited = queryString["class"].split(',');
             for (var i=0;i<splited.length;i++){
-                selected["class"].push(StringToNumber(splited[i]));
+                selected["class"].push(StringToNumber(splited[i]).toString());
             }
         }
 
@@ -51,13 +52,14 @@
 
         createLoadingUI();
         reqJobList(function(){
+            showSelectedClass();
             showSelectClass();
             destroyLoadingUI();
 
             if (selected["class"].length > 0){
                 createLoadingUI();
                 reqSkillList(function(){ reqAbilityList(function() {
-                    // 스킬/특성 관련 출력은 여기에서.
+                    // TO DO : 스킬/특성 관련 출력은 여기에서.
                     destroyLoadingUI();
                 }); });
             }
@@ -81,21 +83,7 @@
 
                 for(var i=0;i<arrJob.length;i++){
                     if (arrJob[i]==undefined) continue;
-                    var baseClass = Number(arrJob[i].ClassName.replace("Char", "").split("_")[0]);
-                    if (jobList[baseClass] == undefined) jobList[baseClass] = [];
-                    jobList[baseClass].push(arrJob[i]);
-                }
-
-                if (selected["class"] != undefined && selected["class"].length > 0){
-                    for (param in jobList){
-                        for (var j=0;j<jobList[param].length;j++){
-                            if (jobList[param][j].ClassID == selected["class"][0]){
-                                jobTypeIndex = param;
-                                break;
-                            }
-                        }
-                        if (jobTypeIndex != undefined) break;
-                    }
+                    jobList[arrJob[i].ClassID] = arrJob[i];
                 }
 
                 requestGetData("skilltree", undefined, function(arrSkilltree){
@@ -118,13 +106,7 @@
             var filterStr = {};
             filterStr["ClassName"] = "";
             for (var i=0;i<selected["class"].length;i++){
-                var className = undefined;
-                for (var j=0;j<jobList[jobTypeIndex].length;j++){
-                    if (jobList[jobTypeIndex][j].ClassID == selected["class"][i]){
-                        className = jobList[jobTypeIndex][j].ClassName;
-                        break;
-                    }
-                }
+                var className = jobList[selected["class"][i]].ClassName;
                 if (className == undefined) continue;
                 var count = 0;
                 for (var j=0;j<skillTreeList[className].length;j++){
@@ -139,7 +121,7 @@
                     if (arrSkill[i] == undefined) continue;
                     skillList[arrSkill[i].ClassName] = arrSkill[i];
                 }
-                console.log(JSON.stringify(skillList));
+                //console.log(JSON.stringify(skillList));
                 if (callback != undefined) callback();
             });
         }
@@ -153,13 +135,128 @@
         }
 
 
+        var selectedClassElements = [];
+        function showSelectedClass(){
+            var selectDiv = document.getElementsByClassName("builder-class-selected")[0];
+            var elemenetIndex = 0;
+            if (selected["class"]!=undefined && selected["class"].length > 0){
+                for (var i=0;i<selected["class"].length;i++){
+                    if (elemenetIndex >= selectedClassElements.length){
+                        var classDiv = document.createElement("div");
+                        classDiv.classList.add("builder-class-btn");
+                        selectDiv.appendChild(classDiv);
+                        selectedClassElements.push(classDiv);
+                    }
+                    selectedClassElements[elemenetIndex].id="class_"+jobList[selected["class"][i]].ClassID;
+                    selectedClassElements[elemenetIndex].innerHTML=ImagePathToHTML2(jobList[selected["class"][i]], jobList[selected["class"][i]]['IconPath'], jobList[selected["class"][i]]['IconRect'], iconSize);
+                    selectedClassElements[elemenetIndex].innerHTML+='<div class="class-name">' + jobList[selected["class"][i]].Name + '</div>';
+                    selectedClassElements[elemenetIndex].addEventListener("click", onclick_selectClass); 
+                    ImageLoad2(jobList[selected["class"][i]], 'Icon');
+                    elemenetIndex++;
+                }
+            }
+            for (;elemenetIndex<selectedClassElements.length;elemenetIndex++){
+                selectedClassElements[elemenetIndex].innerHTML="";
+                selectedClassElements[elemenetIndex].removeEventListener("click", onclick_selectClass); 
+            }
+        }
 
+
+        var selectClassElements = [];
         function showSelectClass(){
-            if (selected["class"].length > 0){
+            var selectDiv = document.getElementsByClassName("builder-class-select")[0];
+            if (selected["class"]!=undefined && selected["class"].length > 0){
                 // 선택된 클래스가 있는경우
+                var baseClass = jobList[selected["class"][0]];
+                var elemenetIndex = 0;
+                if (selected["class"].length < maxSelectClass){
+                    for (param in jobList){
+                        if (jobList[param].CtrlType != baseClass.CtrlType) continue;
+                        if (selected["class"].indexOf(param) >= 0) continue;
+                        if (elemenetIndex >= selectClassElements.length){
+                            var classDiv = document.createElement("div");
+                            classDiv.classList.add("builder-class-btn");
+                            selectDiv.appendChild(classDiv);
+                            selectClassElements.push(classDiv);
+                        }
+                        selectClassElements[elemenetIndex].id="class_"+jobList[param].ClassID;
+                        selectClassElements[elemenetIndex].innerHTML=ImagePathToHTML2(jobList[param], jobList[param]['IconPath'], jobList[param]['IconRect'], iconSize);
+                        selectClassElements[elemenetIndex].innerHTML+='<div class="class-name">' + jobList[param].Name + '</div>';
+                        selectClassElements[elemenetIndex].addEventListener("click", onclick_selectClass); 
+                        ImageLoad2(jobList[param], 'Icon');
+                        elemenetIndex++;
+                    }  
+                }
+                for (;elemenetIndex<selectClassElements.length;elemenetIndex++){
+                    selectClassElements[elemenetIndex].innerHTML="";
+                    selectClassElements[elemenetIndex].removeEventListener("click", onclick_selectClass); 
+                }
             }
             else {
                 // 선택된 클래스가 없는 경우
+                var elemenetIndex = 0;
+                for (param in jobList){
+                    if (jobList[param].Rank > 1) continue;
+                    if (elemenetIndex >= selectClassElements.length){
+                        var classDiv = document.createElement("div");
+                        classDiv.classList.add("builder-class-btn");
+                        selectDiv.appendChild(classDiv);
+                        selectClassElements.push(classDiv);
+                    }
+                    selectClassElements[elemenetIndex].id="class_"+jobList[param].ClassID;
+                    selectClassElements[elemenetIndex].innerHTML=ImagePathToHTML2(jobList[param], jobList[param]['IconPath'], jobList[param]['IconRect'], iconSize);
+                    selectClassElements[elemenetIndex].innerHTML+='<div class="class-name">' + jobList[param].Name + '</div>';
+                    selectClassElements[elemenetIndex].addEventListener("click", onclick_selectClass); 
+                    ImageLoad2(jobList[param], 'Icon');
+                    elemenetIndex++;
+                }
+                for (;elemenetIndex<selectClassElements.length;elemenetIndex++){
+                    selectClassElements[elemenetIndex].innerHTML="";
+                    selectClassElements[elemenetIndex].removeEventListener("click", onclick_selectClass); 
+                }
+            }
+        }
+
+
+
+        function onclick_selectClass(event){
+            var classid = findParentByClass(event.target,"builder-class-btn").id.split('_')[1];
+
+            var indexOf = selected["class"].indexOf(classid);
+            if (indexOf >= 0){
+                if (indexOf == 0) selected["class"].splice(0, selected["class"].length);
+                else selected["class"].splice(selected["class"].indexOf(classid), 1);
+            }
+            else {
+                selected["class"].push(classid);
+                createLoadingUI();
+                reqSkillList(function(){ reqAbilityList(function() {
+                    // TO DO : 스킬/특성 관련 출력은 여기에서.
+                    destroyLoadingUI();
+                }); });
+            }
+
+            showSelectedClass();
+            showSelectClass();
+            updateQuery();
+        }
+
+
+        function updateQuery(){
+            var queryStr = "?";
+            var paramCnt = 0;
+            for (param in selected){
+                if (paramCnt > 0) queryStr += "&";
+                queryStr += param + "=";
+                for (var i=0;i<selected[param].length;i++){
+                    if (i > 0) queryStr += ",";
+                    queryStr += NumberToString(selected[param][i]);
+                }
+                paramCnt ++;
+            }
+            if (history.pushState) {
+                var newurl = url + queryStr;
+                window.history.pushState({path:newurl},'',newurl);
             }
         }
 
@@ -225,6 +322,14 @@
             }
         }
 
+        function getExtention(filepath){
+            if (filepath === undefined || filepath.length === 0)
+            return filepath;
+        
+            var splited = filepath.split('.');
+            return splited[splited.length - 1];
+        }
+
         function AsciiToNumber(char){
             var ascii = char.charCodeAt(0);
             if (ascii >= 48 && ascii <= 57){ // 0 ~ 9
@@ -241,7 +346,7 @@
             if (str==undefined) return -1;
             var result = 0;
             var powMult = 0;
-            for (var i=str.length-1;i>=0;i++){
+            for (var i=str.length-1;i>=0;i--){
                 result += AsciiToNumber(str[i]) * Math.pow(getNumberAsciiMax(), powMult);
                 powMult ++;
             }
@@ -260,15 +365,21 @@
 
         function NumberToString(num){
             var result = '';
-            var value = num;
-            while(true){
+            var value = Number(num);
+            while(value > 0){
                 result = NumberToAscii(value % getNumberAsciiMax()) + result;
-                value /= getNumberAsciiMax();
+                value = Math.floor(value / getNumberAsciiMax());
             }
             return result;
         }
 
         function getNumberAsciiMax() { return 61; }
+
+
+        function findParentByClass(el, cls){
+            while ((el = el.parentElement) && !el.classList.contains(cls));
+            return el;
+        }
     </script>
 </body>
 
