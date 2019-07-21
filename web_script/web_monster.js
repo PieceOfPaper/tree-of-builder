@@ -117,7 +117,7 @@ module.exports = function(app, serverSetting, serverData){
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_GET_MON_JOBEXP']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_DEF']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_MDEF']);
-        statScript += tos.Lua2JS(serverData['scriptData']['SCR_RACE_TYPE_RATE']);
+        statScript += tos.Lua2JS(serverData['scriptData']['SCR_RACE_TYPE_RATE']).replace('for i = 1, #defTypeList do','for(i in defTypeList){').replace('#raceTypeRateTable','raceTypeRateTable.length').replace(/{"DEF", "MDEF"}/g,'["DEF", "MDEF"]').replace('raceTypeRateTable = {}','raceTypeRateTable = []');
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTATK']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTMATK']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_MINPATK']).replace('{ "PATK_BM", "MINPATK_BM" }', '[ "PATK_BM", "MINPATK_BM" ]').replace('{\'PATK_RATE_BM\', \'MINPATK_RATE_BM\' }', '[\'PATK_RATE_BM\', \'MINPATK_RATE_BM\' ]').replace('for i = 1, #byBuffList do','for(i in byBuffList){').replace('for i = 1, #rateBuffList do','for(i in byBuffList){');
@@ -130,10 +130,10 @@ module.exports = function(app, serverSetting, serverData){
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_REINFORCE_WEAPON_CALC']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_TRANSCEND_CALC']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_MHP']);
-        statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_MSP']);
+        statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_MSP']).replace('#defRatioTable','defRatioTable.length').replace('defRatioTable = {}','defRatioTable = []');
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_ARMOR_DEF_CALC']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_ARMOR_MDEF_CALC']);
-        statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_ARMOR_CALC']).replace('var basicGradeRatio, reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade);','var basicGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[0]; var reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[1];');
+        statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_ARMOR_CALC']).replace('var basicGradeRatio, reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade);','var basicGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[0]; var reinforceGradeRatio = SCR_MON_ITEM_GRADE_RATE(self, itemGrade)[1];').replace('for i = 1, #defTypeList do','for(i in defTypeList){').replace('#raceTypeRateTable','raceTypeRateTable.length').replace(/{"DEF", "MDEF"}/g,'["DEF", "MDEF"]').replace('raceTypeRateTable = {}','raceTypeRateTable = []').replace('#defRatioTable','defRatioTable.length').replace('defRatioTable = {}','defRatioTable = []');
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_MON_ITEM_REINFORCE_ARMOR_CALC']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTHR']);
         statScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_MON_CRTDR']);

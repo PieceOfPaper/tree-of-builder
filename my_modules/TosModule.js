@@ -61,6 +61,8 @@ class TosModule {
         output = output.replace(/\'YES\'/g, 'true');
         output = output.replace(/\'NO\'/g, 'false');
         output = output.replace(/\.\./g, '+');
+        output = output.replace(/}\n/g, '};\n');
+        output = output.replace(/]\n/g, '];\n');
 
         if (output.lastIndexOf('end') == output.length - 3){
             output = output.substring(0, output.length - 3);
