@@ -139,7 +139,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += '}';
 
     if (abilityJob != undefined){
-      captionScript += tos.Lua2JS(serverData['scriptData'][abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
+      captionScript += tos.Lua2JS(serverData['scriptData'][abilityJob.ScrCalcPrice]).replace('return price, time', 'return price').replace('return Math.floor(price), time', 'return Math.floor(price)').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
     }
     captionScript += tos.Lua2JS(serverData['scriptData']['ABIL_COMMON_PRICE']).replace('return price, time', 'return price').replace('var price, time', 'var price');
     
