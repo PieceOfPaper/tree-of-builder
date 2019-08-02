@@ -114,6 +114,9 @@ module.exports = function(app, serverSetting, serverData){
     captionScript +=  'MSP:Number(0),';
     captionScript += '};';
 
+    captionScript += 'var tableData = {};';
+    captionScript += 'tableData["HiddenAbility_Reinforce"]='+JSON.stringify(serverData['tableData']['HiddenAbility_Reinforce'])+';';
+
     captionScript += 'function GetSkillOwner(skill){ return playerSetting; }';
 
     captionScript += 'var info=undefined;';
@@ -130,6 +133,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += '}';
 
     captionScript += 'function TryGetProp(data, prop, defValue){ ';
+    // captionScript +=  'console.log(JSON.stringify(data) + " " + prop);';
     captionScript +=  'if (data[prop] === undefined) {';
     //captionScript +=    'console.log("TryGetProb:null");';
     //captionScript +=    'console.log(data);';
@@ -146,7 +150,11 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
     captionScript += 'function GetZoneName(pc){ return 0; }';
     captionScript += 'function GetAbilityAddSpendValue(pc, className, property){ return 0; }';
-    captionScript += 'function GetClass(property, className){ return 0; }';
+    
+    captionScript += 'function GetClass(tableName, className){';
+    captionScript +=  'for(param in tableData[tableName]){ if (tableData[tableName][param]["ClassName"]==className) return tableData[tableName][param]; }';
+    captionScript +=  'return 0;';
+    captionScript += '}';
 
     // captionScript += 'var currentSkill = {';
     // captionScript +=  'Level: Number(1),';

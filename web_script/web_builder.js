@@ -293,6 +293,10 @@ module.exports = function(app, serverSetting, serverData){
 
         output +=   '<script>';
 
+        output +=       'var tableData = {};';
+        output +=       'tableData["HiddenAbility_Reinforce"]='+JSON.stringify(serverData['tableData']['HiddenAbility_Reinforce'])+';';
+    
+
         output += 'function GetSkillOwner(skill){ return playerSetting; }';
 
         output +=       'function GetAbility(pc, ability){';
@@ -320,6 +324,12 @@ module.exports = function(app, serverSetting, serverData){
         output +=       'function SCR_CALC_BASIC_MDEF(pc){ return 0; }';
         output +=       'function GetZoneName(pc){ return 0; }';
         output +=       'function IsPVPField(pc){ return 0; }';
+        output +=       'function GetAbilityAddSpendValue(pc, className, property){ return 0; }';
+        
+        output +=       'function GetClass(tableName, className){';
+        output +=        'for(param in tableData[tableName]){ if (tableData[tableName][param]["ClassName"]==className) return tableData[tableName][param]; }';
+        output +=        'return 0;';
+        output +=       '}';
 
         output +=   'var methods=[];';
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR');

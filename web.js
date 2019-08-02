@@ -329,6 +329,7 @@ loadTable('skill', 'ies.ipf/skill.ies', function(){
     console.log('merge skill+skilltree');
   });
 });
+loadTable('HiddenAbility_Reinforce', 'ies.ipf/hiddenAbility_Reinforce.ies');
 loadTable('dialogtext', 'ies_client.ipf/dialogtext.ies');
 loadTable('skill_attribute', 'ies.ipf/skill_attribute.ies');
 //loadTable('skill_Simony', 'ies.ipf/skill_Simony.ies');
