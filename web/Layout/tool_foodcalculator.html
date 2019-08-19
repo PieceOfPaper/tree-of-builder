@@ -31,6 +31,15 @@
     (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
     -->
+
+    <br>
+    
+    <input class="lv-add-input" type="number" id="allcount" value=0><br>
+    <button onclick="onclick_setAllCount()">Set All Count</button>
+
+    <br>
+    <br>
+
     %ResultString%
     <script>
     for (var i=0;i<foodTable.length;i++){
@@ -40,6 +49,13 @@
     updateCount();
     function onclick_add(index, add){
         document.getElementById('cnt-'+index).value = Number(document.getElementById('cnt-'+index).value) + Number(add);
+        updateCount();
+    }
+
+    function onclick_setAllCount(){
+        for (var i=0;i<foodTable.length;i++){
+            document.getElementById('cnt-'+i).value = document.getElementById('allcount').value;
+        }
         updateCount();
     }
 
