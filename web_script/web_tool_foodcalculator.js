@@ -15,11 +15,10 @@ module.exports = function(app, serverSetting, serverData){
         var resultString = '';
         var totalMaterials = [];
         for (var i = 0; i < foodTable.length; i ++){
-            resultString += '<br/>';
-            resultString += '<div>';
-            //resultString += '<h3><img style="width:64px; height:64px; vertical-align:middle;" src="../img/icon/itemicon/'+foodTable[i].Icon.toLowerCase()+'.png" />'+foodTable[i].Name+'</h3>';
-            resultString += '<h3>'+tos.ImagePathToHTML(serverData['imagePath'][foodTable[i].Icon.toLowerCase()])+foodTable[i].Name+'</h3>';
-            resultString += '<p>Count <input type="number" id="cnt-'+i+'" value=0 onchange="updateCount()"></p>';
+            resultString += '<div style="text-align:center; display: inline-block; vertical-align: top;">';
+            resultString += tos.ImagePathToHTML(serverData['imagePath'][foodTable[i].Icon.toLowerCase()], 64);
+            resultString += '<p>'+foodTable[i].Name+'</p>';
+            resultString += '<input class="lv-add-input" style="width:64px;" type="number" id="cnt-'+i+'" value=0 onchange="updateCount()"><br>';
             resultString += '<button class="lv-add-button minus" onclick="onclick_add('+i+',-1)"><img src="../img2/button/btn_minus_cursoron.png" /></button>';
             resultString += '<button class="lv-add-button plus" onclick="onclick_add('+i+',1)"><img src="../img2/button/btn_plus_cursoron.png" /></button>';
             var material = foodTable[i].Material.split('/');
