@@ -290,6 +290,15 @@ module.exports = function(app, serverSetting, serverData){
     for (var i = 0; i < legendSetList.length; i ++){
       legendSetDataString += '<div>';
       legendSetDataString += '<h3>' + legendSetList[i].Name + '</h3>';
+      //material
+      if (legendSetList[i].NeedMaterial != undefined && legendSetList[i].NeedMaterial.length > 0){
+        legendSetDataString += '<p style="margin-top:0px; margin-bottom:0px;"><b>Need Material.</b></p>';
+        legendSetDataString += '<table><tbody>';
+        legendSetDataString += '<tr><td>Weapon</td><td>Armor</td></tr>';
+        legendSetDataString += '<tr><td>'+tos.GetItemResultString(serverData, legendSetList[i].NeedMaterial, legendSetList[i].NeedMaterial_WeaponCnt)+'</td><td>'+tos.GetItemResultString(serverData, legendSetList[i].NeedMaterial, legendSetList[i].NeedMaterial_ArmorCnt)+'</td></tr>';
+        legendSetDataString += '</tbody></table>';
+        legendSetDataString += '<br/>';
+      }
       //desc
       for(var j=1;j<=5;j++){
         if ((legendSetList[i]['EffectDesc_' + j] == undefined || legendSetList[i]['EffectDesc_' + j].length == 0) &&
