@@ -198,7 +198,8 @@ module.exports = function(app, serverSetting, serverData){
     //legend set data
     var legendSetList = [];
     for(var i = 0; i < serverData['tableData']['legend_setitem'].length; i ++){
-      if (serverData['tableData']['legend_setitem'][i].LegendGroup == itemTable[index].LegendGroup){
+      var splited = serverData['tableData']['legend_setitem'][i].LegendGroup.split('/');
+      if (splited.includes(itemTable[index].LegendGroup)==true){
         legendSetList.push(serverData['tableData']['legend_setitem'][i]);
       }
     }
