@@ -33,7 +33,7 @@
     -->
 
     <br>
-    
+
     <input class="lv-add-input" type="number" id="allcount" value=0><br>
     <button onclick="onclick_setAllCount()">Set All Count</button>
 
@@ -70,9 +70,13 @@
                 materialSum[material[j]] += Number(material[j+1]) * Number(foodTable[i]["Count"]);
             }
         }
+        var totalPrice = 0;
         for (param in materialSum){
             document.getElementById('totalmatcnt-'+param).innerHTML = materialSum[param];
+            document.getElementById('totalmatprice-'+param).innerHTML = (materialSum[param] * materialPrice[param]).toLocaleString();
+            totalPrice += materialSum[param] * materialPrice[param];
         }
+            document.getElementById('totalmatprice').innerHTML = totalPrice.toLocaleString();
     }
     </script>
 </body>

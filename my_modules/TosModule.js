@@ -231,13 +231,13 @@ class TosModule {
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_premium',className);
         if (itemData == undefined) itemData=this.FindDataClassName(serverData,'item_recipe',className);
         if (itemData != undefined){
-            output += '<p>';
+            // output += '<p>';
             var icon = this.GetItemImgString(serverData, className);
           output += '<a href="../Item?table=' + itemData.TableName + '&id=' + itemData.ClassID + '">' + icon + ' ' + itemData.Name + '</a>';
           if (itemcount != undefined){
             output += ' x '+itemcount;
           }
-          output += '</p>';
+        //   output += '</p>';
         }
         return output;
     }
