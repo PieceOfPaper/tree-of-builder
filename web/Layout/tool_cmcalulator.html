@@ -1,0 +1,84 @@
+<html>
+
+<head>
+    <title>Challenge Mode Silver Calculator</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img2/minimap_icons/questinfo_return.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/tga.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <!--
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2172243042066207"
+         data-ad-slot="8369609764"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+
+    <br>
+
+
+    <h3 style="width:calc(100vw - 20px); text-align:center;">빙시 같은 것의 가격<br>The price of something like SHIT</h3>
+    <div style="width:calc(100vw - 20px); text-align:center;"><input style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" type="number" id="InputSilver" value=0></input></div>
+    <div style="width:calc(100vw - 20px); text-align:center;"><button style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" onclick="calc()">CALCURATE</button></div>
+    <br/>
+
+    <br>
+
+    <button style="width:calc(100vw - 20px); text-align:center;" onclick="var div=document.getElementById('form-div'); if(div!=undefined){ div.style.display=(div.style.display=='none')?'block':'none'; }">▼ ▼ ▼</button>
+    <div id="form-div" style="display: none;">
+        %SilverForm%
+        %PlaniumForm%
+        %SierraForm%
+    </div>
+
+    <br>
+
+    <h1 style="width:calc(100vw - 20px); text-align:center; margin-bottom: 0;"><span id="ResultSilver" style="font-size: 1.5em;">0</span>CM</h1>
+    <p style="width:calc(100vw - 20px); text-align:center; margin-top: 0;">(CM = Challenge Mode)</p>
+
+    <br>
+    <br>
+
+    <h2 style="width:calc(100vw - 20px); text-align:center;">마! 그거 사는데 챌린지 <span id="ResultSilver_kor" style="font-size: 1.25em;">0</span>번이면 사네! 엄살 부리지 마라!</h2>
+    <h2 style="width:calc(100vw - 20px); text-align:center;">Hey! You can purchase it in <span id="ResultSilver_eng" style="font-size: 1.25em;">0</span>CM! Don't say it's hard!</h2>
+
+    <script>
+        function calc(){
+            var unitSilver = Number(0);
+
+            if (document.getElementById("CMSilver_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMSilver_Count").value);
+            }
+            if (document.getElementById("CMPlanium_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMPlanium_Silver").value) * Number(document.getElementById("CMPlanium_Count").value);
+            }
+            if (document.getElementById("CMSierra_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMSierra_Silver").value) * Number(document.getElementById("CMSierra_Count").value);
+            }
+
+            document.getElementById("ResultSilver").innerHTML = (document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_kor").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_eng").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+        }
+    </script>
+</body>
+
+</html>

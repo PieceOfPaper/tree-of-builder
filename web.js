@@ -1015,6 +1015,9 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, serverData);
 app.use('/FoodCalculator', toolFoodCalcPage);
 
+var toolCMCalcPage = require('./web_script/web_tool_cmcalulator')(app, serverSetting, serverData);
+app.use('/CMSilvrCalculator', toolCMCalcPage);
+
 // var db_loginPage = require('./web_script/DBPage/web_login')(app, serverSetting, serverData['tableData'], serverData['scriptData']);
 // app.use('/Login', db_loginPage);
 
