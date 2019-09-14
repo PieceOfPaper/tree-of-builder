@@ -35,8 +35,10 @@
     <br>
 
 
-    <h3 style="width:calc(100vw - 20px); text-align:center;">빙시 같은 것의 가격<br>The price of something like SHIT</h3>
-    <div style="width:calc(100vw - 20px); text-align:center;"><input style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" type="number" id="InputSilver" value=0></input></div>
+    <!--<h3 style="width:calc(100vw - 20px); text-align:center;">빙시 같은 것의 가격</h3>-->
+    <!--<h3 style="width:calc(100vw - 20px); text-align:center;">The price of something like SHIT</h3>-->
+    <div style="width:calc(100vw - 20px); text-align:center;"><input style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" type="number" id="InputSilver" placeholder="빙시 같은 것의 가격"></input></div>
+    <br>
     <div style="width:calc(100vw - 20px); text-align:center;"><button style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" onclick="calc()">CALCURATE</button></div>
     <br/>
 
@@ -51,14 +53,15 @@
 
     <br>
 
-    <h1 style="width:calc(100vw - 20px); text-align:center; margin-bottom: 0;"><span id="ResultSilver" style="font-size: 1.5em;">0</span>CM</h1>
+    <h1 style="width:calc(100vw - 20px); text-align:center; margin-bottom: 0; font-size: 3.0em;"><span id="ResultSilver" style="font-size: 1.5em;">0</span>CM</h1>
+    <p style="width:calc(100vw - 20px); text-align:center; margin-top: 0; margin-bottom: 0;" id="ResultSilver_real">0</p>
     <p style="width:calc(100vw - 20px); text-align:center; margin-top: 0;">(CM = Challenge Mode)</p>
 
     <br>
     <br>
 
-    <h2 style="width:calc(100vw - 20px); text-align:center;">마! 그거 사는데 챌린지 <span id="ResultSilver_kor" style="font-size: 1.25em;">0</span>번이면 사네! 엄살 부리지 마라!</h2>
-    <h2 style="width:calc(100vw - 20px); text-align:center;">Hey! You can purchase it in <span id="ResultSilver_eng" style="font-size: 1.25em;">0</span>CM! Don't say it's hard!</h2>
+    <h2 style="width:calc(100vw - 20px); text-align:center;">마!!<br/>그거 사는데 챌린지 <span id="ResultSilver_kor" style="font-size: 1.25em;">0</span>번 밖에 안되네!<br/>엄살 부리지 마라!</h2>
+    <!--<h2 style="width:calc(100vw - 20px); text-align:center;">Hey! You can purchase it in <span id="ResultSilver_eng" style="font-size: 1.25em;">0</span>CM! Don't say it's hard!</h2>-->
 
     <script>
         function calc(){
@@ -74,7 +77,8 @@
                 unitSilver += Number(document.getElementById("CMSierra_Silver").value) * Number(document.getElementById("CMSierra_Count").value);
             }
 
-            document.getElementById("ResultSilver").innerHTML = (document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_real").innerHTML = (document.getElementById("InputSilver").value / unitSilver).toLocaleString();
             document.getElementById("ResultSilver_kor").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
             document.getElementById("ResultSilver_eng").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
         }
