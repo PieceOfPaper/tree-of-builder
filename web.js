@@ -448,6 +448,7 @@ loadTable('collection', 'ies.ipf/collection.ies', function(name, path){
 loadTable('gacha_detail', 'ies.ipf/gacha_detail.ies');
 loadTable('Package_Item_List', 'ies.ipf/Package_Item_List.ies');
 loadTable('reward_property', 'ies.ipf/reward_property.ies');
+loadTable('socketprice', 'ies.ipf/socketprice.ies');
 function loadTable(name, path, callback, tryCnt){
   if (tryCnt == undefined) tryCnt = 1;
   if (serverData['tableData'][name] === undefined) serverData['tableData'][name] = [];
@@ -675,6 +676,8 @@ scriptArray.push('shared.ipf/script/item_transcend_shared.lua');
 scriptArray.push('shared.ipf/script/lib_reinforce_131014.lua');
 scriptArray.push('shared.ipf/script/calc_pvp_item.lua');
 scriptArray.push('shared.ipf/script/calc_property_monster.lua');
+scriptArray.push('shared.ipf/script/sharedscript.lua');
+scriptArray.push('shared.ipf/script/colony_tax_shared_lib.lua');
 scriptArray.push('script.ipf/buff/buff_monster_ability.lua');
 scriptArray.push('script.ipf/buff/colonywar_buff.lua');
 scriptArray.push('script.ipf/buff/etc_buff.lua');
@@ -699,6 +702,7 @@ scriptArray.push('script.ipf/skill/skill_select_by_cond.lua');
 scriptArray.push('script.ipf/mgame/mgame.lua');
 scriptArray.push('script_client.ipf/reaction/reaction.lua');
 scriptArray.push('ui.ipf/uiscp/mgame_action.lua');
+scriptArray.push('ui.ipf/uiscp/game.lua');
 //for (var i = 0; i < scriptArray.length; i ++) loadScript(scriptArray[i]);
 generateLuaScript(scriptArray, 0, function(result){
   // 기존 데이터 저장

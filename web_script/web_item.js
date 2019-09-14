@@ -371,6 +371,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'document.getElementById("UseLv").onchange=function(){';
     captionScript +=  'itemData.UseLv=Number(document.getElementById("UseLv").value);';
     captionScript +=  'updateBasicValue();';
+    captionScript +=  'updateSocketPrice();';
     captionScript +=  'updateReinforceSilverCount();';
     captionScript +=  'updateTranscendMaterialCount();';
     captionScript += '}\n';
@@ -421,6 +422,7 @@ module.exports = function(app, serverSetting, serverData){
     
     captionScript += 'function GetClassList(tablename){ ';
     captionScript +=  'if (tablename === "item_grade") return ' + JSON.stringify(serverData['tableData']['item_grade']) + ';'; 
+    captionScript +=  'if (tablename === "socketprice") return ' + JSON.stringify(serverData['tableData']['socketprice']) + ';'; 
     captionScript +=  'return undefined;'; 
     captionScript += '}';
     
@@ -429,6 +431,13 @@ module.exports = function(app, serverSetting, serverData){
     captionScript +=    'for(var i=0;i<baseClass.length;i++){';
     captionScript +=      'if (baseClass[i].ClassName == className){ return baseClass[i]; }';
     captionScript +=    '}';
+    captionScript +=  '}'; 
+    captionScript +=  'return undefined;'; 
+    captionScript += '}';
+    
+    captionScript += 'function GetClassByIndexFromList(baseClass, index){';
+    captionScript +=  'if (baseClass != undefined) {';
+    captionScript +=    'return baseClass[index]';
     captionScript +=  '}'; 
     captionScript +=  'return undefined;'; 
     captionScript += '}';
@@ -455,6 +464,8 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += 'function IS_MORU_FREE_PRICE(item){ return false; }\n';
     captionScript += 'function IsServerSection(){ return 0; }\n';
     captionScript += 'function SCR_EVENT_1903_WEEKEND_CHECK(str,boo){ return false; }\n';
+    captionScript += 'function CALC_PRICE_WITH_TAX_RATE(originalPriceStr, taxRate){ return originalPriceStr; }\n';
+    captionScript += 'function tonumber(value){ return Number(value); }\n';
 
     captionScript += 'function onChangeReinforceLevel(){';
     captionScript +=  'if(document.getElementById("ReinforceLevel")!=undefined) itemData.Reinforce_2=Number(document.getElementById("ReinforceLevel").value);';
@@ -538,6 +549,14 @@ module.exports = function(app, serverSetting, serverData){
     captionScript +=  'document.getElementById("reinforceSilverDia").innerText=GET_REINFORCE_PRICE(itemData,dummyMoruDia,undefined).toLocaleString();';
     captionScript += '}';
 
+    captionScript += 'updateSocketPrice();';
+    captionScript += 'function updateSocketPrice(){';
+    captionScript +=  'for(var i=0;i<itemData.MaxSocket_COUNT;i++){';
+    captionScript +=    'document.getElementById("socketAddPrice_"+i).innerText=GET_MAKE_SOCKET_PRICE(itemData.UseLv, itemData.ItemGrade, i).toLocaleString();';
+    captionScript +=    'document.getElementById("socketRemovePrice_"+i).innerText=GET_REMOVE_GEM_PRICE(itemData.UseLv).toLocaleString();';
+    captionScript +=  '}';
+    captionScript += '}';
+
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_BASIC_ATK']).replace('return maxAtk, minAtk', 'return [maxAtk, minAtk]').replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_BASIC_MATK']).replace('lv, grade = SCR_PVP_ITEM_LV_GRADE_REINFORCE_SET(item, lv, grade);','');
     captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REFRESH_WEAPON']).replace('for i = 1, #basicTooltipPropList do', 'for(var i=0; i<basicTooltipPropList.length; i++){').replace('for i = 1, #PropName do', 'for(var i=0; i<PropName.length; i++){').replace('item.MAXATK, item.MINATK = GET_BASIC_ATK(item);', 'var atkPair=GET_BASIC_ATK(item);\nitem.MAXATK=atkPair[0];\nitem.MINATK=atkPair[1];');
@@ -552,6 +571,10 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += tos.Lua2JS(serverData['scriptData']['SCR_PVP_ITEM_TRANSCEND_SET']);
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_TRANSCEND_MATERIAL_COUNT']).replace('lv ^ (0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05))','Math.pow(lv,(0.2 + ((Math.floor(transcendCount / 3) * 0.03)) + (transcendCount * 0.05)))');
     captionScript += tos.Lua2JS(serverData['scriptData']['GET_REINFORCE_PRICE']).replace("var value, value_diamond = 0, 0","var value=0; var value_diamond=0;").replace('lv ^ 1.1','Math.pow(lv,1.1)').replace('lv ^ 1.1','Math.pow(lv,1.1)');
+    // captionScript += tos.Lua2JS(serverData['scriptData']['APPLY_OPTION_SOCKET']).replace('for i=0, nextSlotIdx-1 do','for(var i=0; i<nextSlotIdx; i++){').replace('invItem:GetEquipGemID','invItem.GetEquipGemID').replace('for i = 0 , nextSlotIdx - 1 do','for(var i=0; i<nextSlotIdx; i++){');
+    // captionScript += tos.Lua2JS(serverData['scriptData']['GET_NEXT_SOCKET_SLOT_INDEX']).replace('for i = 0 , SKT_COUNT - 1 do','for(var i=0;i<SKT_COUNT;i++){').replace('invitem:IsAvailableSocket(','invitem.IsAvailableSocket(');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_MAKE_SOCKET_PRICE']).replace('clslist, cnt','clslist').replace('for i = 0, cnt - 1 do','for(var i=0; i<clslist.length; i++){').replace('gradRatio = { 1.2, 1, 0.5, 0.4, 0.3 }','gradRatio = [0, 1.2, 1, 0.5, 0.4, 0.3]').replace('priceRatio ^ 1','priceRatio');
+    captionScript += tos.Lua2JS(serverData['scriptData']['GET_REMOVE_GEM_PRICE']).replace('clslist, cnt','clslist').replace('for i = 0, cnt - 1 do','for(var i=0; i<clslist.length; i++){').replace('gradRatio = { 1.2, 1, 0.5, 0.4, 0.3 }','gradRatio = [0, 1.2, 1, 0.5, 0.4, 0.3]').replace('priceRatio ^ 1','priceRatio');
     captionScript += '</script>';
 
     var reinforceSilverItemString = '';
@@ -559,6 +582,18 @@ module.exports = function(app, serverSetting, serverData){
     reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_Diamond')+'  '+tos.GetItemImgString(serverData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
 
     var transcendMaterialItemString = tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+
+    var socketPriceString = '';
+    for (var i=0;i<itemTable[index].MaxSocket_COUNT;i++){
+      socketPriceString += '<p>';
+      socketPriceString += tos.GetItemImgString(serverData,'Vis')+'<span id="socketAddPrice_'+i+'">0</span>';
+      socketPriceString += ' / ';
+      socketPriceString += tos.GetItemImgString(serverData,'Vis')+'<span id="socketRemovePrice_'+i+'">0</span>';
+      socketPriceString += '</p>';
+    }
+
+
+
 
     var output = layout_itemEquip_detail.toString();
 
@@ -570,6 +605,7 @@ module.exports = function(app, serverSetting, serverData){
 
     output = output.replace(/%ReinforceSilverItem%/g, reinforceSilverItemString);
     output = output.replace(/%TranscendMaterialItem%/g, transcendMaterialItemString);
+    output = output.replace(/%SocketPrices%/g, socketPriceString);
 
     output = output.replace(/%Name%/g, itemTable[index].Name);
     output = output.replace(/%ClassName%/g, itemTable[index].ClassName);
