@@ -581,7 +581,7 @@ module.exports = function(app, serverSetting, serverData){
     reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_W_01')+'  '+tos.GetItemImgString(serverData,'Vis')+'<span id="reinforceSilver">0</span></p>';
     reinforceSilverItemString += '<p>'+tos.GetItemImgString(serverData,'Moru_Diamond')+'  '+tos.GetItemImgString(serverData,'Vis')+'<span id="reinforceSilverDia">0</span></p>';
 
-    var transcendMaterialItemString = tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)');
+    var transcendMaterialItemString = '<p>'+tos.GetItemResultString(serverData, 'Premium_item_transcendence_Stone', '<span id="transcendMatCnt">0</span> (Total:<span id="transcendMatTotalCnt">0</span>)')+'</p>';
 
     var socketPriceString = '';
     for (var i=0;i<itemTable[index].MaxSocket_COUNT;i++){
