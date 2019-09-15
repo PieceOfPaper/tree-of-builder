@@ -64,23 +64,87 @@
     <!--<h2 style="width:calc(100vw - 20px); text-align:center;">Hey! You can purchase it in <span id="ResultSilver_eng" style="font-size: 1.25em;">0</span>CM! Don't say it's hard!</h2>-->
 
     <script>
+        var defaultSilver_Count = 750000;
+
+        var defaultCMPlanium_Count = 0.05;
+        var defaultCMPlanium_Silver = 2000000;
+
+        var defaultCMSierra_Count = 15;
+        var defaultCMSierra_Silver = 9000;
+
+
+
+
+        var url = window.location.href.split('?')[0];
+        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
+        if (filterSetting == undefined) filterSetting = {};
+
+        if (filterSetting["InputSilver"]!=undefined) {
+            document.getElementById("InputSilver").value=filterSetting["InputSilver"];
+
+            if (filterSetting["CMSilver_Count"]!=undefined) {
+                document.getElementById("CMSilver_Check").checked = true;
+                document.getElementById("CMSilver_Count").value=filterSetting["CMSilver_Count"];
+            }
+            if (filterSetting["CMPlanium_Silver"]!=undefined&&filterSetting["CMPlanium_Count"]!=undefined) {
+                document.getElementById("CMPlanium_Check").checked = true;
+                document.getElementById("CMPlanium_Silver").value=filterSetting["CMPlanium_Silver"];
+                document.getElementById("CMPlanium_Count").value=filterSetting["CMPlanium_Count"];
+            }
+            if (filterSetting["CMSierra_Silver"]!=undefined&&filterSetting["CMPlanium_Count"]!=undefined) {
+                document.getElementById("CMSierra_Check").checked = true;
+                document.getElementById("CMSierra_Silver").value=filterSetting["CMSierra_Silver"];
+                document.getElementById("CMSierra_Count").value=filterSetting["CMSierra_Count"];
+            }
+
+            calc();
+        }
+        else
+        {
+            document.getElementById("InputSilver").value=undefined;
+            document.getElementById("CMSilver_Check").checked = true;
+            document.getElementById("CMSilver_Count").value=defaultSilver_Count;
+            document.getElementById("CMPlanium_Check").checked = false;
+            document.getElementById("CMPlanium_Silver").value=defaultCMPlanium_Silver;
+            document.getElementById("CMPlanium_Count").value=defaultCMPlanium_Count;
+            document.getElementById("CMSierra_Check").checked = false;
+            document.getElementById("CMSierra_Silver").value=defaultCMSierra_Silver;
+            document.getElementById("CMSierra_Count").value=defaultCMSierra_Count;
+        }
+
+
         function calc(){
+            filterSetting = {};
+
+            var input = document.getElementById("InputSilver").value;
+            filterSetting["InputSilver"] = document.getElementById("InputSilver").value;
             var unitSilver = Number(0);
 
             if (document.getElementById("CMSilver_Check").checked == true){
                 unitSilver += Number(document.getElementById("CMSilver_Count").value);
+                filterSetting["CMSilver_Count"] = document.getElementById("CMSilver_Count").value;
             }
             if (document.getElementById("CMPlanium_Check").checked == true){
                 unitSilver += Number(document.getElementById("CMPlanium_Silver").value) * Number(document.getElementById("CMPlanium_Count").value);
+                filterSetting["CMPlanium_Silver"] = document.getElementById("CMPlanium_Silver").value;
+                filterSetting["CMPlanium_Count"] = document.getElementById("CMPlanium_Count").value;
             }
             if (document.getElementById("CMSierra_Check").checked == true){
                 unitSilver += Number(document.getElementById("CMSierra_Silver").value) * Number(document.getElementById("CMSierra_Count").value);
+                filterSetting["CMSierra_Silver"] = document.getElementById("CMSierra_Silver").value;
+                filterSetting["CMSierra_Count"] = document.getElementById("CMSierra_Count").value;
             }
 
-            document.getElementById("ResultSilver").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
-            document.getElementById("ResultSilver_real").innerHTML = (document.getElementById("InputSilver").value / unitSilver).toLocaleString();
-            document.getElementById("ResultSilver_kor").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
-            document.getElementById("ResultSilver_eng").innerHTML = Math.ceil(document.getElementById("InputSilver").value / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_real").innerHTML = (input / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_kor").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+            // document.getElementById("ResultSilver_eng").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+
+
+            if (history.pushState) {
+                var newurl = url + filterToQueryStr(filterSetting);
+                window.history.pushState({path:newurl},'',newurl);
+            }
         }
     </script>
 </body>
