@@ -1,0 +1,155 @@
+<html>
+
+<head>
+    <title>Challenge Mode Silver Calculator</title>
+    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="icon" href="../img2/minimap_icons/questinfo_return.png">
+    <meta property="og:title" content="%OGTitle%" />
+    <meta property="og:description" content="%OGDesc%" />
+    <meta property="og:image" content="%OGImgPath%" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({
+        google_ad_client: "ca-pub-2172243042066207",
+        enable_page_level_ads: true
+    });
+    </script>
+    <script src="../js/requestMethod.js"></script>
+    <script src="../js/defaultSetting.js"></script>
+    <script src="../js/tga.js"></script>
+</head>
+
+<body>
+    <div class="top-menu" align="center"></div><script>onInitTopMenu(false);</script>
+    <!--
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2172243042066207"
+         data-ad-slot="8369609764"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+    (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+    -->
+
+    <br>
+
+
+    <!--<h3 style="width:calc(100vw - 20px); text-align:center;">빙시 같은 것의 가격</h3>-->
+    <!--<h3 style="width:calc(100vw - 20px); text-align:center;">The price of something like SHIT</h3>-->
+    <div style="width:calc(100vw - 20px); text-align:center;"><input style="max-width:calc(100vw - 30px); text-align:center; font-size: 1.5em; font-family: IMCM_Book;" type="number" id="InputSilver" placeholder="빙시 같은 것의 가격"></input></div>
+    <br>
+    <div style="width:calc(100vw - 20px); text-align:center;"><button style="text-align:center; font-size: 1.5em; font-family: IMCM_Book;" onclick="calc()">CALCURATE</button></div>
+    <br/>
+
+    <br>
+
+    <button style="width:calc(100vw - 20px); text-align:center;" onclick="var div=document.getElementById('form-div'); if(div!=undefined){ div.style.display=(div.style.display=='none')?'block':'none'; }">▼ ▼ ▼</button>
+    <div id="form-div" style="display: none;">
+        %SilverForm%
+        %PlaniumForm%
+        %SierraForm%
+    </div>
+
+    <br>
+
+    <h1 style="width:calc(100vw - 20px); text-align:center; margin-bottom: 0; font-size: 3.0em;"><span id="ResultSilver" style="font-size: 1.5em;">0</span>CM</h1>
+    <p style="width:calc(100vw - 20px); text-align:center; margin-top: 0; margin-bottom: 0;" id="ResultSilver_real">0</p>
+    <p style="width:calc(100vw - 20px); text-align:center; margin-top: 0;">(CM = Challenge Mode)</p>
+
+    <br>
+    <br>
+
+    <h2 style="width:calc(100vw - 20px); text-align:center;">마!!<br/>그거 사는데 챌린지 <span id="ResultSilver_kor" style="font-size: 1.25em;">0</span>번 밖에 안되네!<br/>엄살 부리지 마라!</h2>
+    <!--<h2 style="width:calc(100vw - 20px); text-align:center;">Hey! You can purchase it in <span id="ResultSilver_eng" style="font-size: 1.25em;">0</span>CM! Don't say it's hard!</h2>-->
+
+    <script>
+        var defaultSilver_Count = 750000;
+
+        var defaultCMPlanium_Count = 0.05;
+        var defaultCMPlanium_Silver = 2000000;
+
+        var defaultCMSierra_Count = 15;
+        var defaultCMSierra_Silver = 9000;
+
+
+
+
+        var url = window.location.href.split('?')[0];
+        var filterSetting = urlToFilter(decodeURIComponent(window.location.href));
+        if (filterSetting == undefined) filterSetting = {};
+
+        if (filterSetting["InputSilver"]!=undefined) {
+            document.getElementById("InputSilver").value=filterSetting["InputSilver"];
+
+            if (filterSetting["CMSilver_Count"]!=undefined) {
+                document.getElementById("CMSilver_Check").checked = true;
+                document.getElementById("CMSilver_Count").value=filterSetting["CMSilver_Count"];
+            }
+            if (filterSetting["CMPlanium_Silver"]!=undefined&&filterSetting["CMPlanium_Count"]!=undefined) {
+                document.getElementById("CMPlanium_Check").checked = true;
+                document.getElementById("CMPlanium_Silver").value=filterSetting["CMPlanium_Silver"];
+                document.getElementById("CMPlanium_Count").value=filterSetting["CMPlanium_Count"];
+            }
+            if (filterSetting["CMSierra_Silver"]!=undefined&&filterSetting["CMPlanium_Count"]!=undefined) {
+                document.getElementById("CMSierra_Check").checked = true;
+                document.getElementById("CMSierra_Silver").value=filterSetting["CMSierra_Silver"];
+                document.getElementById("CMSierra_Count").value=filterSetting["CMSierra_Count"];
+            }
+
+            calc();
+        }
+        else
+        {
+            document.getElementById("InputSilver").value=undefined;
+            document.getElementById("CMSilver_Check").checked = true;
+            document.getElementById("CMSilver_Count").value=defaultSilver_Count;
+            document.getElementById("CMPlanium_Check").checked = false;
+            document.getElementById("CMPlanium_Silver").value=defaultCMPlanium_Silver;
+            document.getElementById("CMPlanium_Count").value=defaultCMPlanium_Count;
+            document.getElementById("CMSierra_Check").checked = false;
+            document.getElementById("CMSierra_Silver").value=defaultCMSierra_Silver;
+            document.getElementById("CMSierra_Count").value=defaultCMSierra_Count;
+        }
+
+
+        function calc(){
+            filterSetting = {};
+
+            var input = document.getElementById("InputSilver").value;
+            filterSetting["InputSilver"] = document.getElementById("InputSilver").value;
+            var unitSilver = Number(0);
+
+            if (document.getElementById("CMSilver_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMSilver_Count").value);
+                filterSetting["CMSilver_Count"] = document.getElementById("CMSilver_Count").value;
+            }
+            if (document.getElementById("CMPlanium_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMPlanium_Silver").value) * Number(document.getElementById("CMPlanium_Count").value);
+                filterSetting["CMPlanium_Silver"] = document.getElementById("CMPlanium_Silver").value;
+                filterSetting["CMPlanium_Count"] = document.getElementById("CMPlanium_Count").value;
+            }
+            if (document.getElementById("CMSierra_Check").checked == true){
+                unitSilver += Number(document.getElementById("CMSierra_Silver").value) * Number(document.getElementById("CMSierra_Count").value);
+                filterSetting["CMSierra_Silver"] = document.getElementById("CMSierra_Silver").value;
+                filterSetting["CMSierra_Count"] = document.getElementById("CMSierra_Count").value;
+            }
+
+            document.getElementById("ResultSilver").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_real").innerHTML = (input / unitSilver).toLocaleString();
+            document.getElementById("ResultSilver_kor").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+            // document.getElementById("ResultSilver_eng").innerHTML = Math.ceil(input / unitSilver).toLocaleString();
+
+
+            if (history.pushState) {
+                var newurl = url + filterToQueryStr(filterSetting);
+                window.history.pushState({path:newurl},'',newurl);
+            }
+        }
+    </script>
+</body>
+
+</html>
