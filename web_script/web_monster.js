@@ -58,6 +58,7 @@ module.exports = function(app, serverSetting, serverData){
         
         statScript += 'function GetClass(table, className){';
         statScript +=   'if (table=="Monster" && className==rawData.ClassName) return rawData;';
+        statScript +=   'if (statDataTable[table]==undefined) return undefined;';
         statScript +=   'for(var i=0;i<statDataTable[table].length;i++){';
         statScript +=       'if (statDataTable[table][i].ClassName == className) return statDataTable[table][i];';
         statScript +=   '}';
@@ -65,10 +66,12 @@ module.exports = function(app, serverSetting, serverData){
         statScript += '}';
 
         statScript += 'function GetClassByType(table, id){';
+        statScript +=   'if (statDataTable[table]==undefined) return undefined;';
         statScript +=   'return statDataTable[table][id-1];'; 
         statScript += '}';
 
         statScript += 'function GetClassByNumProp(table, prob, id){';
+        statScript +=   'if (statDataTable[table]==undefined) return undefined;';
         statScript +=   'for(var i=0;i<statDataTable[table].length;i++){';
         statScript +=       'if (statDataTable[table][i][prob] == id) return statDataTable[table][i];';
         statScript +=   '}';
