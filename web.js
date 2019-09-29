@@ -678,6 +678,7 @@ scriptArray.push('shared.ipf/script/calc_pvp_item.lua');
 scriptArray.push('shared.ipf/script/calc_property_monster.lua');
 scriptArray.push('shared.ipf/script/sharedscript.lua');
 scriptArray.push('shared.ipf/script/colony_tax_shared_lib.lua');
+scriptArray.push('shared.ipf/script/itemskillmake.lua');
 scriptArray.push('script.ipf/buff/buff_monster_ability.lua');
 scriptArray.push('script.ipf/buff/colonywar_buff.lua');
 scriptArray.push('script.ipf/buff/etc_buff.lua');
@@ -1014,6 +1015,9 @@ app.use('/QuestCalculator', toolQuestCalcPage);
 
 var toolFoodCalcPage = require('./web_script/web_tool_foodcalculator')(app, serverSetting, serverData);
 app.use('/FoodCalculator', toolFoodCalcPage);
+
+var toolSimonyCalcPage = require('./web_script/web_tool_simonycalculator')(app, serverSetting, serverData);
+app.use('/SimonyCalculator', toolSimonyCalcPage);
 
 var toolCMCalcPage = require('./web_script/web_tool_cmcalulator')(app, serverSetting, serverData);
 app.use('/CMSilverCalculator', toolCMCalcPage);
