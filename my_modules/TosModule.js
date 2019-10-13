@@ -198,6 +198,26 @@ class TosModule {
         return this.FindDataClassName(serverData, 'job', 'Char' + this.GetJobNumber1(className) + '_' + this.GetJobNumber2(className));
     }
 
+    static GetSkilltree(serverData, className){
+        for (var i = 0; i < serverData['tableData']['skilltree'].length; i ++){
+            if (serverData['tableData']['skilltree'][i].SkillName == className){
+                return serverData['tableData']['skilltree'][i];
+            }
+        }
+        return undefined;
+    }
+
+    static GetSkillMaxLevel(serverData, className){
+        var skillMaxLevel = 1;
+        for (var i = 0; i < serverData['tableData']['skilltree'].length; i ++){
+            if (serverData['tableData']['skilltree'][i].SkillName == className){
+                skillMaxLevel = serverData['tableData']['skilltree'][i].MaxLevel;
+                break;
+            }
+        }
+        return skillMaxLevel;
+    }
+
     static GetItemImgString(serverData, className){
         var itemData = undefined;
         var icon = '';

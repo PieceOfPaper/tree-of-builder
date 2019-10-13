@@ -36,6 +36,11 @@ topMenuButtons['tool_foodcalc']["Path"] = "FoodCalculator";
 topMenuButtons['tool_foodcalc']["Img"] = "../img2/menu_icon/icon_item_bbq.png";
 topMenuButtons['tool_foodcalc']["Name"] = "Food Calc";
 
+topMenuButtons['tool_simonycalc'] = [];
+topMenuButtons['tool_simonycalc']["Path"] = "SimonyCalculator";
+topMenuButtons['tool_simonycalc']["Img"] = "../img2/menu_icon/icon_cler_simony.png";
+topMenuButtons['tool_simonycalc']["Name"] = "Simony Calc";
+
 topMenuButtons['tool_cmsilvercalc'] = [];
 topMenuButtons['tool_cmsilvercalc']["Path"] = "CMSilverCalculator";
 topMenuButtons['tool_cmsilvercalc']["Img"] = "../img2/menu_icon/icon_item_challengemode_scroll.png";

@@ -235,7 +235,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += '}';
 
     if (skillTable[index].SkillFactor != undefined && skillTable[index].SkillFactor.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillFactor]);
-    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillSR]);
+    if (skillTable[index].SkillSR != undefined && skillTable[index].SkillSR.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].SkillSR]).replace('ui.GetFrame("pub_createchar"):IsVisible()','0');
     if (skillTable[index].CaptionTime != undefined && skillTable[index].CaptionTime.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionTime]);
     if (skillTable[index].CaptionRatio != undefined && skillTable[index].CaptionRatio.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionRatio]);
     if (skillTable[index].CaptionRatio2 != undefined && skillTable[index].CaptionRatio2.length > 0) captionScript += tos.Lua2JS(serverData['scriptData'][skillTable[index].CaptionRatio2]);
@@ -245,6 +245,7 @@ module.exports = function(app, serverSetting, serverData){
     captionScript += tos.Lua2JS(serverData['scriptData']['SCR_ABIL_ADD_SKILLFACTOR']);
     captionScript += tos.Lua2JS(serverData['scriptData']['SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP']);
     captionScript += tos.Lua2JS(serverData['scriptData']['SCR_REINFORCEABILITY_TOOLTIP']);
+    captionScript += tos.Lua2JS(serverData['scriptData']['SCR_Get_SkillFactor_Reinforce_Ability']);
     captionScript += '</script>';
 
     var stanceString = '';
