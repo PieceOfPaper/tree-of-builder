@@ -336,10 +336,13 @@ module.exports = function(app, serverSetting, serverData){
         luaMethodList.push('SCR_ABIL_ADD_SKILLFACTOR_TOOLTIP');
         luaMethodList.push('SCR_REINFORCEABILITY_TOOLTIP');
         luaMethodList.push('ABIL_COMMON_PRICE');
+        luaMethodList.push('SCR_Get_SkillFactor_Reinforce_Ability');
         for (var i=0;i<luaMethodList.length;i++){ 
             if (serverData['scriptData'][luaMethodList[i]] == undefined) continue;
             if (luaMethodList[i] == 'ABIL_REINFORCE_PRICE' || luaMethodList[i] == 'ABIL_COMMON_PRICE'){
                 output += tos.Lua2JS(serverData['scriptData'][luaMethodList[i]]).replace('return price, time', 'return price').replace('var price, time', 'var price').replace('{ 1, 2, 3, 4, 5,','[ 1, 2, 3, 4, 5,').replace('6, 7, 8, 8.5, 9 }','6, 7, 8, 8.5, 9 ]').replace('#increseFactorList','increseFactorList.length').replace('baseFactor^(abilLevel - 1) * increseFactorList[index]','Math.pow(baseFactor,(abilLevel - 1)) * increseFactorList[index-1]');
+            } else if (luaMethodList[i] == 'SCR_GET_SR_LV') {
+                output += tos.Lua2JS(serverData['scriptData'][luaMethodList[i]]).replace('ui.GetFrame("pub_createchar"):IsVisible()', '0');
             } else {
                 output += tos.Lua2JS(serverData['scriptData'][luaMethodList[i]]);
             }
